@@ -49,6 +49,6 @@ export default {
 <style>
 /* pages/doctor/doctor.wxss */
 *{
-	background-color:white;
+	background-color:yellowgreen;
 }
 </style>

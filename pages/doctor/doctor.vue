@@ -48,4 +48,7 @@ export default {
 </script>
 <style>
 /* pages/doctor/doctor.wxss */
+*{
+	background-color:white;
+}
 </style>

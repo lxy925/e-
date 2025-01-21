@@ -9,6 +9,7 @@
        				</swiper-item>
        			</swiper>
        		</view>
+			<textarea name="" id="" cols="30" rows="10"></textarea>
     </view>
 </template>
 

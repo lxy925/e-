@@ -1,7 +1,8 @@
 <template>
     <view>
         <!-- pages/doctor/doctor.wxml -->
-        <text>pages/doctor/doctor.wxml</text>
+       <icon>ok</icon>
+	   <text>hhhh</text>
     </view>
 </template>
 

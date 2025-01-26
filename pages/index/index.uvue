@@ -1,38 +1,413 @@
-<template><!--模板-->
-	<view>
-		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">{{title}}</text>
-		</view>
-	</view>
+<template>
+  <view class="container">
+    <view class="chat-header">
+      <text class="doctor-name">陪诊咨询</text>
+      <text class="doctor-dept">AI助手智能回答</text>
+    </view>
+    
+    <scroll-view class="chat-content" scroll-y>
+      <view v-for="(item, index) in messageList" :key="index">
+        <!-- 时间显示 -->
+        <view class="time-wrap" v-if="showTime(index)">
+          <text class="time">{{formatTime(item.timestamp)}}</text>
+        </view> 
+                
+           <view :class="['message', item.type]">
+             <template v-if="item.type === 'doctor'">
+               <view class="user-info">
+                 <image class="avatar" src="/static/doctor.jpg"></image>
+                 <!--<text class="name">张医生</text>-->
+               </view>
+               <view class="msg-content">
+                 <text>{{item.content}}</text>
+               </view>
+             </template>
+             
+             <template v-else>
+			   <view class="user-info">
+                 <image class="avatar" src="/static/patient.png"></image>
+                 <!--<text class="name">我</text>-->
+               </view>
+               <view class="msg-content">
+                 <text>{{item.content}}</text>
+               </view>
+               
+             </template>
+           </view>
+        <!--<view v-for="(item, index) in messageList" :key="index">
+        <view class="time-wrap" v-if="showTime(index)">
+          <text class="time">{{formatTime(item.timestamp)}}</text>
+        </view>
+        
+        <view :class="['message', item.type]">
+          <view v-if="item.type === 'doctor'" class="user-info">
+            <image class="avatar" src="/static/doctor-avatar.png"></image>
+            <text class="name">张医生</text>
+          </view>
+          
+          <view class="msg-content">
+            <text>{{item.content}}</text>
+          </view>
+          
+          <view v-if="item.type === 'patient'" class="user-info">
+            <image class="avatar" src="/static/user-avatar.png"></image>
+            <text class="name">我</text>
+          </view>
+        </view>-->
+      </view>
+    </scroll-view>
+    
+    <view class="input-area">
+      <input type="text" v-model="messageText" placeholder="请输入内容" />
+      <button @click="sendMessage">发送</button>
+    </view>
+  </view>
 </template>
 
-<script> //js
-	export default {
-		data() {
-			return {
-				title: 'Hello'
-			}
-		},
-		onLoad() {
-
-		},
-		methods: {
-
-		}
-	}
+<script>
+export default {
+  data() {
+    return {
+      messageText: '',
+      messageList: [
+        {
+          type: 'doctor',
+          content: '您好，我是AI助手，请问有什么可以帮您？',
+          timestamp: Date.now()
+        }
+      ],
+      // AI配置信息
+      apiConfig: {
+        apiKey: 'PjZ06us3QMY9GKwP0XhW5Gk2',
+        secretKey: 'ejrLlyV5Az3JcyEZGX6CLwv8UNAgbp05'
+      },
+      accessToken: '',
+	  baseURL: 'http://localhost:3000' // 后端服务器地址
+    }
+  },
+  
+  /*onMounted() {
+    // 页面加载时获取access token
+    this.getAccessToken()
+  },*/
+  methods: {
+	  // 获取访问令牌
+	  getAccessToken() {
+	        uni.request({
+	          url: `${this.baseURL}/api/token`,
+	          method: 'POST',
+	          success: (res) => {
+	            if (res.data.access_token) {
+	              this.accessToken = res.data.access_token;
+	              console.log('Token获取成功');
+	            } else {
+	              console.error('Token获取失败：', res.data);
+	              uni.showToast({
+	                title: '系统初始化失败',
+	                icon: 'none'
+	              });
+	            }
+	          },
+	          fail: (err) => {
+	            console.error('请求失败：', err);
+	            uni.showToast({
+	              title: '网络请求失败',
+	              icon: 'none'
+	            });
+	          }
+	        });
+	      },
+		  
+    async sendMessage() {
+          if(!this.messageText.trim()) return;
+          
+          // 添加用户消息
+          this.messageList.push({
+            type: 'patient',
+            content: this.messageText,
+            timestamp: Date.now()
+          });
+          
+          const userQuestion = this.messageText;
+          this.messageText = '';
+          
+          // 显示医生正在输入状态
+          this.messageList.push({
+            type: 'doctor',
+            content: '正在思考中...',
+            timestamp: Date.now(),
+            isLoading: true
+          });
+          
+          try {
+                  const response = await uni.request({
+                    url: `${this.baseURL}/api/chat`,
+                    method: 'POST',
+                    data: {
+                      messages: [
+                        {
+                          role: 'system',
+                          content: '你是一位经验丰富的医生，请用专业且易懂的方式回答患者的问题。'
+                        },
+                        {
+                          role: 'user',
+                          content: userQuestion
+                        }
+                      ],
+                      access_token: this.accessToken
+                    }
+                  });
+          } catch (error) {
+            // 发生错误时显示提示
+            this.messageList[this.messageList.length - 1] = {
+              type: 'doctor',
+              content: '抱歉，我现在无法回答，请稍后再试。',
+              timestamp: Date.now()
+            };
+            console.error('AI回答出错：', error);
+          }
+        },
+        
+        // 调用AI接口获取回答
+        /*async getAIResponse(question) {
+		  this.getAccessToken();
+		
+          if (!this.accessToken) {
+            throw new Error('access token未获取');
+          }
+          
+          const response = await uni.request({
+            url: `https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions?access_token=${this.accessToken}`,
+            method: 'POST',
+            header: {
+              'Content-Type': 'application/json'
+            },
+            data: {
+              messages: [
+                {
+                  role: 'system',
+                  content: '你是一位经验丰富的医生，请用专业且易懂的方式回答患者的问题。回答要简洁明了，注意提醒患者及时就医。'
+                },
+                {
+                  role: 'user',
+                  content: question
+                }
+              ]
+            }
+          });
+          
+          if (response.data.error_code) {
+            throw new Error(response.data.error_msg);
+          }
+          
+          return response.data.result;
+        },
+    */
+    // 格式化时间
+    formatTime(timestamp) {
+      const date = new Date(timestamp);
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    },
+    
+    // 判断是否显示时间
+    showTime(index) {
+      if(index === 0) return true;
+      const currentMsg = this.messageList[index];
+      const prevMsg = this.messageList[index - 1];
+      // 如果与上一条消息间隔超过5分钟，显示时间
+      return currentMsg.timestamp - prevMsg.timestamp > 5 * 60 * 1000;
+    }
+  },
+}
 </script>
 
-<style> /*css*/
-	.logo {
-		height: 100px;
-		width: 100px;
-		margin: 100px auto 25px auto;
-	}
+<style>
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 
-	.title {
-		font-size: 18px;
-		color: #8f8f94;
-    text-align: center;
-	}
+.chat-header {
+  padding: 20rpx;
+  background-color: #ffffff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.doctor-name {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.doctor-dept {
+  font-size: 24rpx;
+  color: #666;
+  margin-left: 20rpx;
+}
+
+.chat-content {
+  flex: 1;
+  padding: 20rpx;
+  background-color: #f5f5f5;
+}
+
+.time-wrap {
+  text-align: center;
+  margin: 20rpx 0;
+}
+
+.time {
+  font-size: 24rpx;
+  color: #999;
+  background-color: rgba(0,0,0,0.1);
+  padding: 4rpx 10rpx;
+  border-radius: 8rpx;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 30rpx;
+  align-items: flex-start;
+}
+
+.doctor {
+  justify-content: flex-start;
+}
+
+/* 患者消息靠右 */
+.patient {
+  justify-content: flex-end;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  padding: 0 20rpx;
+  min-width: 140rpx;
+}
+
+.doctor .user-info {
+  flex-direction: row;
+}
+
+.patient .user-info {
+  flex-direction: row;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+
+.name {
+  font-size: 24rpx;
+  color: #999;
+  margin: 0 10rpx;
+}
+
+.msg-content {
+  max-width: 60vw;
+  padding: 20rpx;
+  border-radius: 10rpx;
+  word-break: break-all;
+}
+
+.doctor .msg-content {
+  background-color: #fff;
+  margin-right: 20rpx;
+  border-radius: 0 10rpx 10rpx 10rpx;
+}
+
+.patient .msg-content {
+  background-color: #a0e75a;
+  margin-left: 20rpx;
+  border-radius: 10rpx 0 10rpx 10rpx;
+}
+
+/* 添加加载状态的样式 */
+.msg-content.loading {
+  opacity: 0.6;
+}
+
+.loading-dots {
+  display: inline-block;
+  animation: loading 1.4s infinite;
+}
+
+@keyframes loading {
+  0%, 20%, 80%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+/*.message {
+  display: flex;
+  margin-bottom: 30rpx;
+}
+
+.doctor {
+  justify-content: flex-start;
+}
+
+.patient {
+  justify-content: flex-end;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+
+.msg-wrapper {
+  margin: 0 20rpx;
+}
+
+.name {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 6rpx;
+}
+
+.msg-content {
+  max-width: 60vw;
+  padding: 20rpx;
+  border-radius: 10rpx;
+  word-break: break-all;
+}
+
+.doctor .msg-content {
+  background-color: #fff;
+}
+
+.patient .msg-content {
+  background-color: #a0e75a;
+}
+*/
+.input-area {
+  display: flex;
+  padding: 20rpx;
+  background-color: #fff;
+  border-top: 1rpx solid #eee;
+}
+
+.input-area input {
+  flex: 1;
+  height: 70rpx;
+  padding: 0 20rpx;
+  border: 1rpx solid #ddd;
+  border-radius: 35rpx;
+  margin-right: 20rpx;
+}
+
+.input-area button {
+  width: 150rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  font-size: 28rpx;
+  background-color: #007AFF;
+  color: #fff;
+}
 </style>

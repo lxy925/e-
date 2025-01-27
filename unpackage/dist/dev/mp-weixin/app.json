@@ -3,15 +3,19 @@
     "pages/index/index",
     "pages/health/health",
     "pages/doctor/doctor",
-    "pages/mine/mine"
+    "pages/mine/mine",
+    "pages/more/more",
+    "pages/service/service",
+    "pages/consult/consult",
+    "pages/about/about"
   ],
   "subPackages": [],
   "window": {
-    "backgroundColor": "#F6F6F6",
+    "backgroundColor": "#02D4C6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
-    "navigationBarTextStyle": "black"
+    "navigationBarBackgroundColor": "#02D4C6",
+    "navigationBarTitleText": "e陪无忧",
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "color": "#A2A9B0",

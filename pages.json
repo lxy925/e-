@@ -3,25 +3,59 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"usingComponents": {}
+				"usingComponents": {},
+				"navigationBarTitleText" : "e陪无忧"
 			}
 		},
 		{
 			"path": "pages/health/health",
 			"style": {
-				"usingComponents": {}
+				"usingComponents": {},
+				"navigationBarTitleText" : "健康管理"
 			}
 		},
 		{
 			"path": "pages/doctor/doctor",
 			"style": {
-				"usingComponents": {}
+				"usingComponents": {},
+				"navigationBarTitleText" : "陪诊师"
 			}
 		},
 		{
 			"path": "pages/mine/mine",
 			"style": {
-				"usingComponents": {}
+				"usingComponents": {},
+				"navigationBarTitleText" : "我的"
+			}
+		},
+		{
+			"path" : "pages/more/more",
+			"style" : 
+			{
+				"navigationBarTitleText" : "更多"
+			}
+		},
+		{
+			"path" : "pages/service/service",
+			"style" : 
+			{
+				"usingComponents": {},
+				"navigationBarTitleText" : "我要陪诊",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path" : "pages/consult/consult",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/about/about",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
 			}
 		}
 	],
@@ -60,11 +94,11 @@
 		]
 	},
 	"globalStyle": {
-		"backgroundColor": "#F6F6F6",
+		"backgroundColor": "#02D4C6",
 		"backgroundTextStyle": "light",
-		"navigationBarBackgroundColor": "#F6F6F6",
-		"navigationBarTitleText": "云开发 QuickStart",
-		"navigationBarTextStyle": "black"
+		"navigationBarBackgroundColor": "#02D4C6",
+		"navigationBarTitleText": "e陪无忧",
+		"navigationBarTextStyle": "white"
 	},
 	"subPackages": []
 }

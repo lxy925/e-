@@ -9480,9 +9480,9 @@ internalMixin(Vue);
 
 /***/ }),
 /* 26 */
-/*!*****************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/pages.json ***!
-  \*****************************************/
+/*!******************************!*\
+  !*** D:/陪诊小程序/e-/pages.json ***!
+  \******************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10023,7 +10023,7 @@ var b = "development" === "development",
   k = "true" === undefined || !0 === undefined,
   P = T([]),
   C = "h5" === E ? "web" : "app-plus" === E || "app-harmony" === E ? "app" : E,
-  A = T({"address":["127.0.0.1","192.168.1.23"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/HBuilderX.4.45.2025010502/HBuilderX/plugins/unicloud/**/*.js"]}),
+  A = T({"address":["127.0.0.1","192.168.0.110"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/HBuilderX.4.45.2025010502/HBuilderX/plugins/unicloud/**/*.js"]}),
   O = T([{"provider":"aliyun","spaceName":"e-space","spaceId":"mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18","clientSecret":"rk5d8I7mtxu3FSrSipUvCA==","endpoint":"https://api.next.bspapp.com"}]) || [],
   x = true;
 var N = "";
@@ -18400,9 +18400,9 @@ module.exports = _isNativeFunction, module.exports.__esModule = true, module.exp
 
 /***/ }),
 /* 37 */
-/*!**********************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/pages.json?{"type":"origin-pages-json"} ***!
-  \**********************************************************************/
+/*!***********************************************************!*\
+  !*** D:/陪诊小程序/e-/pages.json?{"type":"origin-pages-json"} ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18417,22 +18417,48 @@ var _default = {
   "pages": [{
     "path": "pages/index/index",
     "style": {
-      "usingComponents": {}
+      "usingComponents": {},
+      "navigationBarTitleText": "e陪无忧"
     }
   }, {
     "path": "pages/health/health",
     "style": {
-      "usingComponents": {}
+      "usingComponents": {},
+      "navigationBarTitleText": "健康管理"
     }
   }, {
     "path": "pages/doctor/doctor",
     "style": {
-      "usingComponents": {}
+      "usingComponents": {},
+      "navigationBarTitleText": "陪诊师"
     }
   }, {
     "path": "pages/mine/mine",
     "style": {
-      "usingComponents": {}
+      "usingComponents": {},
+      "navigationBarTitleText": "我的"
+    }
+  }, {
+    "path": "pages/more/more",
+    "style": {
+      "navigationBarTitleText": "更多"
+    }
+  }, {
+    "path": "pages/service/service",
+    "style": {
+      "usingComponents": {},
+      "navigationBarTitleText": "我要陪诊",
+      "enablePullDownRefresh": false
+    }
+  }, {
+    "path": "pages/consult/consult",
+    "style": {
+      "navigationBarTitleText": ""
+    }
+  }, {
+    "path": "pages/about/about",
+    "style": {
+      "navigationBarTitleText": ""
     }
   }],
   "sitemapLocation": "sitemap.json",
@@ -18465,11 +18491,11 @@ var _default = {
     }]
   },
   "globalStyle": {
-    "backgroundColor": "#F6F6F6",
+    "backgroundColor": "#02D4C6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
-    "navigationBarTextStyle": "black"
+    "navigationBarBackgroundColor": "#02D4C6",
+    "navigationBarTitleText": "e陪无忧",
+    "navigationBarTextStyle": "white"
   },
   "subPackages": []
 };
@@ -18477,9 +18503,9 @@ exports.default = _default;
 
 /***/ }),
 /* 38 */
-/*!*********************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/pages.json?{"type":"stat"} ***!
-  \*********************************************************/
+/*!**********************************************!*\
+  !*** D:/陪诊小程序/e-/pages.json?{"type":"stat"} ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18633,9 +18659,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 45 */
-/*!*************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/index.js ***!
-  \*************************************************************/
+/*!**************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/index.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18681,9 +18707,9 @@ exports.default = _default;
 
 /***/ }),
 /* 46 */
-/*!*******************************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/lifecycle/pageLifetimes.js ***!
-  \*******************************************************************************/
+/*!********************************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/lifecycle/pageLifetimes.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18728,9 +18754,9 @@ exports.pageLifetimes = pageLifetimes;
 
 /***/ }),
 /* 47 */
-/*!*********************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/methods/clone.js ***!
-  \*********************************************************************/
+/*!**********************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/methods/clone.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18754,9 +18780,9 @@ function clone(target) {
 
 /***/ }),
 /* 48 */
-/*!***********************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/methods/dataset.js ***!
-  \***********************************************************************/
+/*!************************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/methods/dataset.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18792,9 +18818,9 @@ function handleDataset(event) {
 
 /***/ }),
 /* 49 */
-/*!**********************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/methods/escape.js ***!
-  \**********************************************************************/
+/*!***********************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/methods/escape.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18844,9 +18870,9 @@ function html2Escape(sHtml) {
 
 /***/ }),
 /* 50 */
-/*!*********************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/methods/event.js ***!
-  \*********************************************************************/
+/*!**********************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/methods/event.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18870,9 +18896,9 @@ function parseEventDynamicCode(e, exp) {
 
 /***/ }),
 /* 51 */
-/*!*************************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/methods/getTabBar.js ***!
-  \*************************************************************************/
+/*!**************************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/methods/getTabBar.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18905,9 +18931,9 @@ function getTabBar() {
 
 /***/ }),
 /* 52 */
-/*!************************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/methods/relation.js ***!
-  \************************************************************************/
+/*!*************************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/methods/relation.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18931,9 +18957,9 @@ function getRelationNodes(name) {
 
 /***/ }),
 /* 53 */
-/*!*******************************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/methods/selectComponent.js ***!
-  \*******************************************************************************/
+/*!********************************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/methods/selectComponent.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19149,9 +19175,9 @@ function selectAllComponents(args) {
 
 /***/ }),
 /* 54 */
-/*!***********************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/methods/setData.js ***!
-  \***********************************************************************/
+/*!************************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/methods/setData.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19255,9 +19281,9 @@ function setData(obj) {
 
 /***/ }),
 /* 55 */
-/*!******************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/utils/_set.js ***!
-  \******************************************************************/
+/*!*******************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/utils/_set.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19299,9 +19325,9 @@ exports.default = _default;
 
 /***/ }),
 /* 56 */
-/*!**********************************************************************!*\
-  !*** D:/陪诊小程序/e陪无忧/e陪无忧_uni/uni_modules/zp-mixins/utils/debounce.js ***!
-  \**********************************************************************/
+/*!***********************************************************!*\
+  !*** D:/陪诊小程序/e-/uni_modules/zp-mixins/utils/debounce.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 

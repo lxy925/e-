@@ -44,7 +44,7 @@ button::after {
 }
 
 page {
-    background: #f6f6f6;
+    background: linear-gradient(to bottom, #02D4C6, #a0fdf7,#e4fffd,#ffffff);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

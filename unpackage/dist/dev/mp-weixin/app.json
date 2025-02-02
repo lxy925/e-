@@ -7,7 +7,8 @@
     "pages/more/more",
     "pages/service/service",
     "pages/consult/consult",
-    "pages/about/about"
+    "pages/about/about",
+    "pages/prevent/prevent"
   ],
   "subPackages": [],
   "window": {

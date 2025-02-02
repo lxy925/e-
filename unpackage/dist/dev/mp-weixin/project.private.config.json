@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/prevent/prevent",
+          "pathName": "pages/prevent/prevent",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/more/more",
           "pathName": "pages/more/more",
           "query": "",

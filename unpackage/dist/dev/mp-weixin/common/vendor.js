@@ -18460,6 +18460,11 @@ var _default = {
     "style": {
       "navigationBarTitleText": ""
     }
+  }, {
+    "path": "pages/prevent/prevent",
+    "style": {
+      "navigationBarTitleText": "疾病预防"
+    }
   }],
   "sitemapLocation": "sitemap.json",
   "style": "v2",

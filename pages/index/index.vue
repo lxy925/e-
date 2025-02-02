@@ -190,6 +190,11 @@ export default {
    */
   onShareAppMessage() {},
   methods: {
+    handleNavClick(path){
+      uni.navigateTo({
+        url: path,
+      });
+    },
     navigateToMore() {
       uni.navigateTo({
         url: "/pages/more/more",

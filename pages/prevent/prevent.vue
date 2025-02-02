@@ -9,12 +9,17 @@
 				</view>
 				<input type="text" 
 					class="search-input"
-					:placeholder="'搜索医院'" 
+					:placeholder="currentType === 'hospital' ? '搜索医院' : '搜索疾病'" 
 					v-model="searchText"
 					@input="onSearch"/>
 				
 			</view>
-		
+			<!-- <view class="type-switch">
+				<view :class="['switch-item', currentType === 'hospital' ? 'active' : '']" 
+					  @tap="switchType('hospital')">医院</view>
+				<view :class="['switch-item', currentType === 'disease' ? 'active' : '']" 
+					  @tap="switchType('disease')">疾病</view>
+			</view> -->
 		</view>
 
 		<!-- 筛选弹出层 -->
@@ -25,74 +30,10 @@
 					<text class="close-btn" @tap="hideFilter">×</text>
 				</view>
 				
-				<!-- 医院筛选条件 -->
-				<view v-if="currentType === 'hospital'" class="filter-content">
-					<view class="filter-section location-section">
-						<view class="section-title">地理位置</view>
-						<view class="location-container">
-							<!-- 省份列表 -->
-							<scroll-view class="location-column" scroll-y>
-								<view 
-									v-for="province in locations.provinces" 
-									:key="province"
-									:class="['location-item', selectedProvince === province ? 'active' : '']"
-									@tap="selectProvince(province)">
-									{{province}}
-								</view>
-							</scroll-view>
-							
-							<!-- 城市列表 -->
-							<scroll-view class="location-column" scroll-y>
-								<view 
-									v-for="city in availableCities" 
-									:key="city"
-									:class="['location-item', selectedCity === city ? 'active' : '']"
-									@tap="selectCity(city)">
-									{{city}}
-								</view>
-							</scroll-view>
-							
-							<!-- 区域列表 -->
-							<scroll-view class="location-column" scroll-y>
-								<view 
-									v-for="district in availableDistricts" 
-									:key="district"
-									:class="['location-item', selectedDistrict === district ? 'active' : '']"
-									@tap="selectDistrict(district)">
-									{{district}}
-								</view>
-							</scroll-view>
-						</view>
-					</view>
-					<view class="filter-section">
-						<view class="section-title">医院等级</view>
-						<view class="filter-options">
-							<view 
-								v-for="level in hospitalLevels" 
-								:key="level"
-								:class="['filter-option', selectedLevel === level ? 'active' : '']"
-								@tap="selectLevel(level)">
-								{{level}}
-							</view>
-						</view>
-					</view>
-					<view class="filter-section">
-						<view class="section-title">医院类型</view>
-						<view class="filter-options">
-							<view 
-								v-for="type in hospitalTypes" 
-								:key="type"
-								:class="['filter-option', selectedType === type ? 'active' : '']"
-								@tap="selectType(type)">
-								{{type}}
-							</view>
-						</view>
-					</view>
-					
-				</view>
+				
 				
 				<!-- 疾病筛选条件 -->
-				<view v-else class="filter-content">
+				<view v-if="currentType === 'disease'" class="filter-content">
 					<view class="filter-section">
 						<view class="section-title">就医人群</view>
 						<view class="filter-options">
@@ -115,21 +56,30 @@
 			</view>
 		</view>
 
-		<!-- 医院列表内容 -->
-		<view class="hospital-content" v-if="currentType === 'hospital'">
-			<view class="hospital-grid">
-				<view class="hospital-card" v-for="hospital in hospitals" :key="hospital.id" @tap="goToHospitalDetail(hospital.id)">
-					<image :src="hospital.image" mode="aspectFill"></image>
-					<view class="hospital-info">
-						<text class="hospital-name">{{hospital.name}}</text>
-						<text class="hospital-level">{{hospital.level}}</text>
-						<text class="hospital-address">{{hospital.address}}</text>
-					</view>
-				</view>
-			</view>
-		</view>
-
 		
+
+		<!-- 疾病列表内容 -->
+		<view class="disease-content" v-if="currentType === 'disease'">
+			<scroll-view class="disease-categories" scroll-y>
+				<view 
+					v-for="category in diseaseCategories" 
+					:key="category.id"
+					:class="['category-item', selectedCategory === category.id ? 'active' : '']"
+					@tap="selectCategory(category.id)">
+					{{category.name}}
+				</view>
+			</scroll-view>
+			<scroll-view class="disease-list" scroll-y>
+				<view 
+					class="disease-item"
+					v-for="disease in diseases" 
+					:key="disease.id"
+					v-if="disease.categoryId==selectedCategory"
+					@tap="goToDiseaseDetail(disease.id)">
+					{{disease.name}}
+				</view>
+			</scroll-view>
+		</view>
 	</view>
 </template>
 
@@ -137,25 +87,26 @@
 	export default {
 		data() {
 			return {
-				currentType: 'hospital', // 当前选择的类型：hospital/disease
+				currentType: 'disease', // 当前选择的类型：hospital/disease
 				searchText: '', // 搜索文本
+				selectedCategory: null, // 选中的疾病分类
 				
-				hospitals: [
-					{
-						id: 1,
-						name: '北京协和医院',
-						level: '三级甲等',
-						address: '北京市东城区帅府园1号',
-						image: '/static/images/hospital1.jpg'
-					},
-					// ... 更多医院数据
+				diseaseCategories: [
+					{ id: 1, name: '内科' },
+					{ id: 2, name: '外科' },
+					{ id: 3, name: '妇产科' },
+					{ id: 4, name: '儿科' },
+					// ... 更多科室
 				],
-			
+				diseases: [
+					{ id: 1, categoryId: 1, name: '高血压' },
+					{ id: 2, categoryId: 1, name: '糖尿病' },
+					// ... 更多疾病
+				],
 				showFilterPanel: false,
-				hospitalLevels: ['三级甲等', '三级乙等', '二级甲等', '二级乙等'],
-				hospitalTypes: ['综合医院', '专科医院', '中医医院', '民营医院'],
-
 				
+
+				patientGroups: ['儿童', '老年人', '孕妇', '慢性病患者'],
 				selectedLevel: '',
 				selectedType: '',
 				selectedGroup: '',
@@ -168,33 +119,10 @@
 						group: ''
 					}
 				},
-				locations: {
-					provinces: ['北京', '上海', '广东', '江苏'], // 示例省份
-					cities: {
-						'北京': ['北京市'],
-						'上海': ['上海市'],
-						'广东': ['广州市', '深圳市', '珠海市'],
-						'江苏': ['南京市', '苏州市', '无锡市'],
-					},
-					districts: {
-						'北京市': ['东城区', '西城区', '朝阳区', '海淀区'],
-						'广州市': ['天河区', '越秀区', '海珠区', '白云区'],
-						// ... 其他城市的区域
-					}
-				},
-				selectedProvince: '',
-				selectedCity: '',
-				selectedDistrict: '',
+				
 			}
 		},
-		computed: {
-			availableCities() {
-				return this.selectedProvince ? this.locations.cities[this.selectedProvince] : []
-			},
-			availableDistricts() {
-				return this.selectedCity ? this.locations.districts[this.selectedCity] : []
-			}
-		},
+		
 		methods: {
 			switchType(type) {
 				this.currentType = type
@@ -203,13 +131,17 @@
 				// 实现搜索逻辑
 				console.log('搜索:', this.searchText)
 			},
-			
-			goToHospitalDetail(hospitalId) {
+			selectCategory(categoryId) {
+				this.selectedCategory = categoryId
+				// 根据分类筛选疾病
+				// this.diseases = ... 筛选逻辑
+			},
+		
+			goToDiseaseDetail(diseaseId) {
 				uni.navigateTo({
-					url: `/pages/hospital/detail?id=${hospitalId}`
+					url: `/pages/disease/detail?id=${diseaseId}`
 				})
 			},
-			
 			showFilter() {
 				this.showFilterPanel = true
 			},
@@ -229,9 +161,7 @@
 				this.selectedLevel = ''
 				this.selectedType = ''
 				this.selectedGroup = ''
-				this.selectedProvince = ''
-				this.selectedCity = ''
-				this.selectedDistrict = ''
+				
 			},
 			confirmFilter() {
 				// 保存筛选条件
@@ -245,37 +175,46 @@
 					}
 					// 执行医院筛选
 					this.filterHospitals()
+				} else {
+					this.filterConditions.disease = {
+						group: this.selectedGroup
+					}
+					// 执行疾病筛选
+					this.filterDiseases()
 				}
 				this.hideFilter()
 			},
-			filterHospitals() {
-				// 实现医院筛选逻辑
-				console.log('筛选条件：', this.filterConditions.hospital)
+			// filterHospitals() {
+			// 	// 实现医院筛选逻辑
+			// 	console.log('筛选条件：', this.filterConditions.hospital)
+			// },
+			filterDiseases() {
+				// 实现疾病筛选逻辑
+				console.log('筛选条件：', this.filterConditions.disease)
 			},
-			
-			selectProvince(province) {
-				if (this.selectedProvince === province) {
-					this.selectedProvince = ''
-					this.selectedCity = ''
-					this.selectedDistrict = ''
-				} else {
-					this.selectedProvince = province
-					this.selectedCity = ''
-					this.selectedDistrict = ''
-				}
-			},
-			selectCity(city) {
-				if (this.selectedCity === city) {
-					this.selectedCity = ''
-					this.selectedDistrict = ''
-				} else {
-					this.selectedCity = city
-					this.selectedDistrict = ''
-				}
-			},
-			selectDistrict(district) {
-				this.selectedDistrict = this.selectedDistrict === district ? '' : district
-			},
+			// selectProvince(province) {
+			// 	if (this.selectedProvince === province) {
+			// 		this.selectedProvince = ''
+			// 		this.selectedCity = ''
+			// 		this.selectedDistrict = ''
+			// 	} else {
+			// 		this.selectedProvince = province
+			// 		this.selectedCity = ''
+			// 		this.selectedDistrict = ''
+			// 	}
+			// },
+			// selectCity(city) {
+			// 	if (this.selectedCity === city) {
+			// 		this.selectedCity = ''
+			// 		this.selectedDistrict = ''
+			// 	} else {
+			// 		this.selectedCity = city
+			// 		this.selectedDistrict = ''
+			// 	}
+			// },
+			// selectDistrict(district) {
+			// 	this.selectedDistrict = this.selectedDistrict === district ? '' : district
+			// },
 		}
 	}
 </script>

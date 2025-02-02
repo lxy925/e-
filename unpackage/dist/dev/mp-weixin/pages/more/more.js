@@ -277,32 +277,6 @@ exports.default = void 0;
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 var _default = {
   data: function data() {
     return {
@@ -310,8 +284,7 @@ var _default = {
       // 当前选择的类型：hospital/disease
       searchText: '',
       // 搜索文本
-      selectedCategory: null,
-      // 选中的疾病分类
+
       hospitals: [{
         id: 1,
         name: '北京协和医院',
@@ -322,38 +295,9 @@ var _default = {
       // ... 更多医院数据
       ],
 
-      diseaseCategories: [{
-        id: 1,
-        name: '内科'
-      }, {
-        id: 2,
-        name: '外科'
-      }, {
-        id: 3,
-        name: '妇产科'
-      }, {
-        id: 4,
-        name: '儿科'
-      }
-      // ... 更多科室
-      ],
-
-      diseases: [{
-        id: 1,
-        categoryId: 1,
-        name: '高血压'
-      }, {
-        id: 2,
-        categoryId: 1,
-        name: '糖尿病'
-      }
-      // ... 更多疾病
-      ],
-
       showFilterPanel: false,
       hospitalLevels: ['三级甲等', '三级乙等', '二级甲等', '二级乙等'],
       hospitalTypes: ['综合医院', '专科医院', '中医医院', '民营医院'],
-      patientGroups: ['儿童', '老年人', '孕妇', '慢性病患者'],
       selectedLevel: '',
       selectedType: '',
       selectedGroup: '',
@@ -403,19 +347,9 @@ var _default = {
       // 实现搜索逻辑
       console.log('搜索:', this.searchText);
     },
-    selectCategory: function selectCategory(categoryId) {
-      this.selectedCategory = categoryId;
-      // 根据分类筛选疾病
-      // this.diseases = ... 筛选逻辑
-    },
     goToHospitalDetail: function goToHospitalDetail(hospitalId) {
       uni.navigateTo({
         url: "/pages/hospital/detail?id=".concat(hospitalId)
-      });
-    },
-    goToDiseaseDetail: function goToDiseaseDetail(diseaseId) {
-      uni.navigateTo({
-        url: "/pages/disease/detail?id=".concat(diseaseId)
       });
     },
     showFilter: function showFilter() {
@@ -453,22 +387,12 @@ var _default = {
         };
         // 执行医院筛选
         this.filterHospitals();
-      } else {
-        this.filterConditions.disease = {
-          group: this.selectedGroup
-        };
-        // 执行疾病筛选
-        this.filterDiseases();
       }
       this.hideFilter();
     },
     filterHospitals: function filterHospitals() {
       // 实现医院筛选逻辑
       console.log('筛选条件：', this.filterConditions.hospital);
-    },
-    filterDiseases: function filterDiseases() {
-      // 实现疾病筛选逻辑
-      console.log('筛选条件：', this.filterConditions.disease);
     },
     selectProvince: function selectProvince(province) {
       if (this.selectedProvince === province) {

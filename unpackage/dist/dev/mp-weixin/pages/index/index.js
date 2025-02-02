@@ -326,6 +326,11 @@ var _default = {
    */
   onShareAppMessage: function onShareAppMessage() {},
   methods: {
+    handleNavClick: function handleNavClick(path) {
+      uni.navigateTo({
+        url: path
+      });
+    },
     navigateToMore: function navigateToMore() {
       uni.navigateTo({
         url: "/pages/more/more"

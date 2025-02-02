@@ -1,10 +1,6 @@
 {
   "navigationBarTitleText": "陪诊师详情",
-<<<<<<< HEAD
-  "usingComponents": {}
-=======
   "usingComponents": {
     "custom-nav": "/components/custom-nav/custom-nav"
   }
->>>>>>> origin/lxy
 }

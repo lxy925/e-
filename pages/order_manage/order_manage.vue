@@ -1,8 +1,6 @@
 <template>
 	<view class="page">
  <view class="container">
-  <custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
-
    <view class="header">
      <view class="search-container">
        <input class="search-input" placeholder="请输入交易名称" />
@@ -65,9 +63,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   height: 100vh;
-  /* background-color: #ffffff; 背景颜色 */
-  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
-  padding-top: 200rpx;
+  background-color: #ffffff; /* 背景颜色 */
 }
 
 .header {

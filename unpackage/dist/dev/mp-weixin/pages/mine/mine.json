@@ -1,10 +1,6 @@
 {
-<<<<<<< HEAD
-  "usingComponents": {}
-=======
   "navigationBarTitleText": "我的",
   "usingComponents": {
     "custom-nav": "/components/custom-nav/custom-nav"
   }
->>>>>>> origin/lxy
 }

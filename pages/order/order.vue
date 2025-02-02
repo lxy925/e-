@@ -1,10 +1,10 @@
 <template>
-	<div class="page">
+	<view class="page">
   <!--index.wxml-->
     <view class="container">
       <view class="userinfo">
         <view class="appointment-info">
-          <image src="../" class="icon" />
+          <image src="../../static/images/icons/order/icon_1.png" class="icon" />
           <text class="title">预约信息</text>
         </view>
         <view class="input-group">
@@ -24,7 +24,7 @@
           <input class="input" placeholder="请选择陪诊师" />
         </view>
         <view class="note-info">
-          <image src="../../image/icon_2.png" class="icon" />
+          <image src="../../static/images/icons/order/icon_2.png" class="icon" />
           <text class="note">若不填陪诊师，我们将为您自动匹配优秀陪诊师</text>
         </view>
       </view>
@@ -48,7 +48,7 @@
           <text class="label_2">(就诊卡、病例、挂号记录等)</text>
         </view>
         <button class="upload-button">
-          <image src="../../image/icon_3.png" class="upload-icon" />
+          <image src="../../static/images/icons/order/icon_3.png" class="upload-icon" />
           <text class="upload-text">添加图片</text>
         </button>
       </view>
@@ -95,7 +95,7 @@
       </view>
       <button class="submit-button">提交订单</button>
     </view>
-	</div>
+	</view>
 </template>
 
 <script>
@@ -124,7 +124,6 @@ export default {
 .container {
   height:auto;
   margin: 0 20rpx;
-  margin-top: 40rpx;
   border-radius: 30rpx; /* 圆角 */
   background-color: #ffffff; /* 容器背景为白色 */
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* 更明显的阴影，调整为更接近图片的效果 */
@@ -199,13 +198,16 @@ export default {
 }
 
 .department-item {
-  font-weight:400;
-  flex: 0 0 25%; /* 每个按钮占据 28% 的宽度 */
-  margin:12rpx 5rpx; /* 按钮之间的间距 */
-  padding: 7rpx 0; /* 调整内边距 */
-  font-size: 16px; /* 字体大小 */
+font-size: 16px;
+  flex: 0 0 27%; /* 每个复选框占据 30% 的宽度 */
+  display: flex; /* 使用 flexbox 布局 */
+  align-items: center; /* 水平居中对齐 */
+  justify-content: center; /* 垂直居中对齐 */
   background-color: #E5E5E5; /* 背景颜色 */
   border-radius: 20px; /* 圆角 */
+  padding:0rpx ;
+  margin:0rpx 30rpx; /* 按钮之间的间距 */
+  margin-bottom: 20rpx; /* 按钮之间的间距 */
 }
 .department-item:nth-child(1){
   margin-left:1rpx ;
@@ -305,7 +307,7 @@ export default {
 }
 
 .submit-button {
-  width: 100px; /* 设置按钮宽度 */
+  width: 300rpx; /* 设置按钮宽度 */
   height: 80rpx; /* 设置高度 */
   background-color: #2196f3; /* 背景颜色 */
   color: white; /* 字体颜色 */

@@ -21,7 +21,24 @@
   "libVersion": "3.5.6",
   "appid": "wx73ff71f0487b4e8a",
   "projectname": "quickstart-wx-cloud",
-  "condition": {},
+  "condition": {
+    "search": {
+      "current": -1,
+      "list": []
+    },
+    "conversation": {
+      "current": -1,
+      "list": []
+    },
+    "game": {
+      "current": -1,
+      "list": []
+    },
+    "miniprogram": {
+      "current": -1,
+      "list": []
+    }
+  },
   "cloudfunctionRoot": "cloudfunctions/",
   "editorSetting": {
     "tabIndent": "insertSpaces",

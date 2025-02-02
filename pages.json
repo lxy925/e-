@@ -23,6 +23,20 @@
 			"style": {
 				"usingComponents": {}
 			}
+		},
+		{
+			"path" : "pages/doctorlist/doctorlist",
+			"style" : 
+			{
+				"navigationBarTitleText" : "陪诊师"
+			}
+		},
+		{
+			"path" : "pages/doctordetail/doctordetail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "陪诊师详情"
+			}
 		}
 	],
 	"sitemapLocation": "sitemap.json",
@@ -62,9 +76,10 @@
 	"globalStyle": {
 		"backgroundColor": "#F6F6F6",
 		"backgroundTextStyle": "light",
-		"navigationBarBackgroundColor": "#F6F6F6",
-		"navigationBarTitleText": "云开发 QuickStart",
+		"navigationBarBackgroundColor": "#54c69a",
+		"navigationBarTitleText": "即时陪诊",
 		"navigationBarTextStyle": "black"
 	},
+
 	"subPackages": []
 }

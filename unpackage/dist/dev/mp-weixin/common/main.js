@@ -21,9 +21,17 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 // @ts-ignore
 wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
+var CustomNav = function CustomNav() {
+  Promise.all(/*! require.ensure | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then((function () {
+    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 148));
+  }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+};
 _vue.default.use(_index2.default);
 _vue.default.config.productionTip = false;
 _App.default.mpType = 'app';
+
+// 全局注册 custom-nav 组件
+_vue.default.component('custom-nav', CustomNav);
 var app = new _vue.default(_objectSpread({}, _App.default));
 createApp(app).$mount();
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["createApp"]))

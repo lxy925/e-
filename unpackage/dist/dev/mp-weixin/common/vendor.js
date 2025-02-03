@@ -10023,7 +10023,7 @@ var b = "development" === "development",
   k = "true" === undefined || !0 === undefined,
   P = T([]),
   C = "h5" === E ? "web" : "app-plus" === E || "app-harmony" === E ? "app" : E,
-  A = T({"address":["127.0.0.1","192.168.0.110"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/HBuilderX.4.45.2025010502/HBuilderX/plugins/unicloud/**/*.js"]}),
+  A = T({"address":["127.0.0.1","172.20.10.4"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/HBuilderX.4.45.2025010502/HBuilderX/plugins/unicloud/**/*.js"]}),
   O = T([{"provider":"aliyun","spaceName":"e-space","spaceId":"mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18","clientSecret":"rk5d8I7mtxu3FSrSipUvCA==","endpoint":"https://api.next.bspapp.com"}]) || [],
   x = true;
 var N = "";
@@ -18465,6 +18465,16 @@ var _default = {
     "style": {
       "navigationBarTitleText": "疾病预防"
     }
+  }, {
+    "path": "pages/doctorlist/doctorlist",
+    "style": {
+      "navigationBarTitleText": "陪诊师"
+    }
+  }, {
+    "path": "pages/doctordetail/doctordetail",
+    "style": {
+      "navigationBarTitleText": "陪诊师详情"
+    }
   }],
   "sitemapLocation": "sitemap.json",
   "style": "v2",
@@ -18500,7 +18510,8 @@ var _default = {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#02D4C6",
     "navigationBarTitleText": "e陪无忧",
-    "navigationBarTextStyle": "white"
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom"
   },
   "subPackages": []
 };
@@ -19360,6 +19371,188 @@ var debounce = function debounce(scope, fn, delay) {
 };
 var _default = debounce;
 exports.default = _default;
+
+/***/ }),
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */
+/*!*************************************************!*\
+  !*** D:/陪诊小程序/e-/static/images/index/curse.jpg ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "static/images/index/curse.jpg";
+
+/***/ }),
+/* 78 */
+/*!*************************************************!*\
+  !*** D:/陪诊小程序/e-/static/images/index/value.png ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAmNJREFUWEftlT9oE3EUx7/vpQ7mj3RILv4dhGqS5uLgJjhYB/8sIkFFB8FRcBRcRNBRcNfN1QqhOCkuxkGnKojJRayVDtW2SQRpLio2+T1JtHqJSX6Xu2IdeuO9e9/f533fe78jrPND63w+NgB8OVBbSB5qtTCy7U3eayt9Adjl1JPWwWGjNPHPAVrVU4DbANJUE15d8OzAz+qp3QJA8l5d8ATgrH7Veq8ueALorP43gicXhgboVb0fF1wBLH/cG0VgUyJAkhDI+T+97559yYvQJBHNEalXoVhpQbcdHQC1xX0GoZEBi0lgU0QyIJgAQjqhPvFvAOaIMKMUXjLzNNB84QT7y4F6JX1CRHIARjwe2i+tQYxToaj1wPlBzxbYn8wj0lQ5AsJrAUGALaDTYaP4qFuv7wz8Grb7AGI+IaoBojObY8X2peUaoPXhl6XkAcU8CcEujxDzSujslnjxWb987RbUK6n9InQPwJ5hIAh4t9Lgc6PbC9OD8rQAreTaYsokptfDAIiSTGRrqaDLcQdQNVOklKUTc8YbwmOj8cKsLscVgF0evwDgrk7MGWeRbDBemtLluAKoV8Zvi+CiTswZF8GNSNy6rstxBdD75zNYWkBTEaOYXSuAeYB2dN5g8lwpvjbCstIErgI42nXDzYYMa8w3wNfPid3N74H3DqGnBNwMGdZDp/hyefwgCS4T4eTqe+bGzmD07Qdfa1hbSmaJOAfIYxbc0Q1WrZo+zAqXBJIF6Hiv67fLqcEm2dXUFQZmglH9RDuV7HL6GEjMcMy65csBXQ/9xl1tgd9DNhz4rx34AS6f1yESof0NAAAAAElFTkSuQmCC"
+
+/***/ }),
+/* 79 */
+/*!*************************************************!*\
+  !*** D:/陪诊小程序/e-/static/images/index/order.png ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAyZJREFUWEftV1toVFcUXevctFCFYKakAf2JTe60n4Uaf6SQIlST0J/SEj/SWpVCvaNi0H5ELY0gqKCihjzIAwVBVGyofUhBsUI/belPH+pEIyjRNs5ECBVpnLPKHZIh80runTy+PD/3zrl777XYe699zhCT69Xu+McSDgFYPrU3P0/eA9SR9NxjheLR3yzvvx8p++9ZYn4AC0ehtCkRi57O/ZomEOm81Q6arxaSgIDrY5777gsCs2dAdr+15vpcy2EctAF4bypOoBIUMyqFzLKOeL1x8FMoAgDGKXwr2KFSQLN9WAeyMSyBueMWjWA2O9LPfNmM//PZ639PmS2ODIl2SG8C3DAJ3Jr03OP++2IQGAD4ENC+6ckRzftjW2u+zyIgYZREzKYwWkotjLH1WQNNugLwPIj+PPkRnyS2umdyMqAbSS+6uhRw36ei504jrf0h7U/chLX+hD0LwOTEvFb+SlnTvU0rn+WW4F8K35SugkznPwWcTwF7AFA0B3yYUlMiFv1rwXqA4kYZNEPKyDAjR2Oaxj6vubxgKiD0pWgqIe0oMHa3JTy3c/r+PKuAvTD8E9amJZa1hKPJmLt71rPAgKsee7W/5hpGuoa+BvTBDA36I8leSYP5Nhok0J3woldnIzCS9NwVhUAinfEjIHYVIfCHyvgFJ3QKRFVOin9LEVsoHAt2HxAeiMg7CwjUAVhagMC4YJsJsxfAmpy0PwHRAPCcoOFgBEIOAREtRlgvoCXPlb4SsBnAukDHcUhsf47vEbQEYNaY9eOIaKPS5diZ/h3mSuYbFyNDoH5ygHSL5hfIDhTo+D4a/i7pREb/QQkkPTctzWKromuogdBl3y7SFVe+Ha+CtgfixenfAmdgNgKRrvhHAC5MOLbypZRzA1D1NKC7Fmg1wKX8MRDiVhykBNbYt4x1OgC9kwGj+RCyBwG4cyIQpBkpbpeja0ixQeCIQ922xGFIawv5By5BEPBJm/sSvks3JFEloJrA28X8F4JACK4hZRgqckDjGTPwWt/dqucTqUcBY5VkNuOfUz+ir29AJwnUloRQ3GkEsn3J2BvthUz+BxeiiTC0EYZ9AAAAAElFTkSuQmCC"
+
+/***/ }),
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */
+/*!**************************************************!*\
+  !*** D:/陪诊小程序/e-/static/images/index/doctor.jpg ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "static/images/index/doctor.jpg";
+
+/***/ }),
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */,
+/* 114 */,
+/* 115 */,
+/* 116 */,
+/* 117 */,
+/* 118 */,
+/* 119 */,
+/* 120 */,
+/* 121 */,
+/* 122 */,
+/* 123 */,
+/* 124 */,
+/* 125 */,
+/* 126 */,
+/* 127 */,
+/* 128 */,
+/* 129 */,
+/* 130 */,
+/* 131 */,
+/* 132 */,
+/* 133 */,
+/* 134 */,
+/* 135 */,
+/* 136 */,
+/* 137 */,
+/* 138 */,
+/* 139 */,
+/* 140 */,
+/* 141 */
+/*!************************************************!*\
+  !*** D:/陪诊小程序/e-/static/images/index/user.png ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAqRJREFUWEfVlz1oFFEUhb+7ziwmpBC7hAiClpLGwihi1EqwUATFRHAnZjMbbCwELbRQ0ELBwibiW8nOFhohhWAvRoVgpbA2BhSLFX+wEkLEzCRX1iSSn919b5IiODDFcs8593v3zexjhA2+ZIP7kxrAKwRHRPUoKrsQdgNfgTcKk4mJrqVdUCoAvxDcQxlq0mRS4PiMid67gjgDZMPcLUUuuQTHZLdgzE8XrROAN9R/WOb0mUvgvEZKsSmdc9E7Afhh8BrY4xK4qBHNnJgpjjyxeawAm4eC7bNzfLIFrawrXHd5KK0A/mAQIJTSAgBjsYlO2XxWgGyhv1dVH9mCVtVVR+Niuc/mswK05POdSSap2oJWb4FeTkz5ts1nBagF+GH/BOheW9jSekYzx34XR57aPG4AhdxZVMq2sH914VV8PzrgoncCmJ9CMAqcdgmNPdoZjr65aJ0BFrYiD1psGKyMx5Ltw5ja+eB0pQL4C5EPuhFyCF0gXaDfVbSCSsXlvV9JlRrAaVkpRP8JwPmTbV7c1iUZ7ULZh7Kt7iKFKsKEzkkl8acqDI9N2YZhnYA/GFxAuAgNmjbuUEW5Exeju80gmgL4YfACcHqfmzR5GZuop1G9IYAX5qqCdNpG6FJX9HNiynW3rS6AF+auCHLDJdxVo+jVxJRvWl/DbBj0KTx0DU6jEzgzY6JlJ+uqCaT5y03TfEH7ODZR71JfPYAPwI41hLtYPsYm2tkYIAzbfWa+uCStVROT7Vh6ViybgJcPDkqG52sNd/HpHIeSB9H4onb5FgwMbPU2zb4T6HAJS6+RtzH+foyZrg8A1D69MkqPKt1AK6KtIK0CLVr7PX/7DZrHwLTAtMIv0GlUas1q91icyBil0o+mD2H6Va3PYT0L1hdvd/8BtNXNIRIYKXEAAAAASUVORK5CYII="
+
+/***/ }),
+/* 142 */
+/*!****************************************************!*\
+  !*** D:/陪诊小程序/e-/static/images/index/star (2).png ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAvhJREFUWEfFlktIVFEcxr//nXtnmiKIFoEDRkS4cCEV2GMR1CKMCGyR7RrvJedOCgURGBWUEEQPiULSPDM4d6AHJRIIoYsgaREVRQupIAiCmhQKxE3qnOv8Y9RidB7de8epszmb833f77z+5xA8Nn9ruI5tGgDRWyLqSPcm3nuxIi+irEYzm7sBap3Xc48UyTYvXp4AgoZRbav8AYRVC6GTmq3U/uzr++YWwhOAaja3E+hKbhgDZ2xhXf4nAJqpfwKwcUnYqBRWXcUB/JHmw0z0oFCQwtw4E0sOuoFwvQWaaTwHeGehEAIep4V1oGIA2rHwNmSUl6UCpC+4Fj09E04hXK2AauqPCDhYypyAi2lhnV8+ANNcGcBM1WyGQqTgmQPjSYAafLDHpiemU+jvny0JHIiEa2yfr0bJZEIMChGoisFVBIQYmOsdhBYbkgYwDmCMGeOU7RVKEZBippSm2O9IM/VXAOrLCClH+pmc7Gs5CSW1zPfJHzVqmfkugM0VCypoTE+kSOydvwW6vkbzQwBo+hcQDBq0RaIxm7XoGqqm3kHAhcpC8B0pkkd+Z+TVgQpD3JDCOpk7wYKFSI0YDUQ8vJwrwcA5W1iXlnoWrYRai76DFQyUWQcW8jgqRTJ7xvJayVKsRvV9xBgqZyUIuJYWVnsxj5IAmml0AnyqPAAaSovEfq8ARZ9eF1BfpLDWewTQbQA+F2EFh8rA6hXo6ppxdQY009gK8Jtyw+f0pNTL3r7XrgBU02gn8KKPp1cYBp22ReKqKwAtoj8FYXeJvRtOSwojGJzS5NQtEIeLAjJGZMza4wpANfXsu13oL/ARCjrlbSuWa6i26LtIoZsAb8kLYnyXMWudYwDNNLYD/GKJYJSBezb8cQjxo9hstah+HEzXAVYXAWbU6ql4/KujSpj3HjC6ZMw64fQMBNqObsrY9lmAjD8ahiFjluUIwG/qTQw8BNDPGXTbcWvEaXjuuDkfRhsIG5DhQzKezLtVrn7FXiD+pvnvAL8A57z/JGy1mkMAAAAASUVORK5CYII="
+
+/***/ }),
+/* 143 */
+/*!****************************************************!*\
+  !*** D:/陪诊小程序/e-/static/images/index/hospital.png ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAdNJREFUWEftl7FKw1AUhv+bJi3SQcTZJ/Al6lQXB4UOgq1XMKk6CC7iINjiJC4KCiURTXVQbCdHF50dfAE3N8HBRbBNzZEGWpI2bW+aQBGaoZDTc/7/yzmnN5RhxBcbsT/CAeRy00pCqlpf32lUKvVhHmZoAEXlKhj0lilBSjf0y8egEMEBstlkfCJWJWC+04wBx3Xd3A0CEQhAUXkWDGWg7+heY/hd/NFv3kVAxAAymZg8lbxnwJKIaDOHEZbrhnk3KH8gQFzjGQIMAJODxLq+J5Qsw9zsV9cXQMnzKxB4YGNvwRske8UqXb/46fgCJPJ8wSacA5gJae4u37F088Rncb0hRVs7BWg7QmO3VMVCbQv67Wcr2O6AvMFTzMYZgFkRc0s3Pd1TNE4idQA+JCKtZpQfnGVtfsTV1UNibF9QwEkLAeDUM8JR3TD3mLzOU0zCUxDzKACaGmRjbgzgWSS/cRBQ9BtPQzcL7ris8QPXfVuXAe640/bGhfnc9StoBnoBdJqJ7ous8cIYIJIOwEZ7Zq32u+fYGl/XaCSkQgP0mvewB1HgJRwDjDsgeuiI5kW2hKKGnXn/AIB5Xx7DPmmvOiIUe76MojYT0Rv4v0BEJEzOHwb0BEh+SziIAAAAAElFTkSuQmCC"
+
+/***/ }),
+/* 144 */,
+/* 145 */,
+/* 146 */,
+/* 147 */,
+/* 148 */,
+/* 149 */,
+/* 150 */,
+/* 151 */,
+/* 152 */,
+/* 153 */,
+/* 154 */,
+/* 155 */,
+/* 156 */,
+/* 157 */,
+/* 158 */,
+/* 159 */,
+/* 160 */,
+/* 161 */,
+/* 162 */,
+/* 163 */,
+/* 164 */,
+/* 165 */,
+/* 166 */
+/*!******************************************************!*\
+  !*** D:/陪诊小程序/e-/static/images/icons/left-arrow.png ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,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"
 
 /***/ })
 ]]);

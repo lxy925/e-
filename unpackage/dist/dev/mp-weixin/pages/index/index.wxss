@@ -4,7 +4,7 @@
  height: min-content;
   /* background: linear-gradient(to bottom, #02D4C6, #1E90FF); */
   position: relative;
-
+  padding-top: 180rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -92,7 +92,7 @@
 .hospital-list {
   width: 650rpx;
   overflow: scroll;
-  height: 540rpx;
+  height: 544rpx;
 }
 .hospital-item {
   display: flex;

@@ -8,7 +8,9 @@
     "pages/service/service",
     "pages/consult/consult",
     "pages/about/about",
-    "pages/prevent/prevent"
+    "pages/prevent/prevent",
+    "pages/doctorlist/doctorlist",
+    "pages/doctordetail/doctordetail"
   ],
   "subPackages": [],
   "window": {
@@ -16,7 +18,8 @@
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#02D4C6",
     "navigationBarTitleText": "e陪无忧",
-    "navigationBarTextStyle": "white"
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom"
   },
   "tabBar": {
     "color": "#A2A9B0",
@@ -49,11 +52,17 @@
       }
     ]
   },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ],
   "permission": {
     "scope.userLocation": {
       "desc": "你的位置信息将用于小程序位置接口的效果展示"
     }
   },
   "plugins": {},
-  "usingComponents": {}
+  "usingComponents": {
+    "custom-nav": "/components/custom-nav/custom-nav"
+  }
 }

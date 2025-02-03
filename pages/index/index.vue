@@ -1,5 +1,6 @@
 <template>
   <view class="page-container" >
+    <custom-nav title="e陪无忧" :isHomePage="true"></custom-nav>
     <view class="textTop"> 祝您有一个健康的一天 </view>
     <view class="uni-margin-wrap">
       <swiper
@@ -251,11 +252,12 @@ export default {
 };
 </script>
 <style>
+
 .page-container {
  height: min-content;
   /* background: linear-gradient(to bottom, #02D4C6, #1E90FF); */
   position: relative;
-
+  padding-top: 180rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -353,7 +355,7 @@ export default {
 .hospital-list {
   width: 650rpx;
   overflow: scroll;
-  height: 540rpx;
+  height: 544rpx;
 }
 
 .hospital-item {

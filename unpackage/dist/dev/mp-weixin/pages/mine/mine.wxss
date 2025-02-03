@@ -47,5 +47,214 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* pages/mine/mine.wxss */
+.page {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #54c69a, #fffcf9);
+    padding-top: 0;
+    margin-top: -1px; /* 消除可能的间隙 */
+}
+.header {
+    display: flex;
+}
+.header ._img {
+    width: 180rpx;
+    height: 180rpx;
+    border-radius: 50%;
+    margin-left: 50rpx;
+    margin-top: 50rpx;
+}
+.username {
+    font-size: 25px;
+    font-weight: bold;
+    margin-left: 50rpx;
+    margin-top: 130rpx;
+}
+.user-info {
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 30rpx;
+    margin-top: 150rpx;
+    background-color: #A5D63F;
+    padding: 10rpx;
+    height: 40rpx;
+    border-radius: 15rpx;
+}
+.info-box {
+    display: flex;
+    margin-top: 40rpx;
+    justify-content:space-evenly;
+    background-color: #fff;
+    border-radius: 15rpx;
+    padding: 30rpx;
+    margin-left: 20rpx;
+    margin-right: 20rpx;
+}
+.money {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+.money-box {
+    display: flex;
+    align-items: center;
+    margin-right: 20rpx;
+    margin-top: 70rpx;
+}
+.benefit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+.benefit-box {
+    display: flex;
+    align-items: center;
+    margin-right: 40rpx;
+    margin-top: 70rpx;
+}
+.money-num {
+    font-size: 25px;
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+}
+.benefit-num {
+    font-size: 25px;
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+}
+.money-title {
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 10rpx;
+}
+.benefit-title {
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 10rpx;
+}
+.money image     {
+    width: 48rpx;
+    height: 48rpx;
+}
+.benefit image {  
+    width: 50rpx;
+    height: 50rpx;
+}
+.order-box {
+    margin-top: 40rpx;
+    background-color: #fff;
+    border-radius: 15rpx;
+    padding: 30rpx;
+    margin-left: 20rpx;
+    margin-right: 20rpx;
+}
+.order-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 20rpx;
+}
+.order-item {
+    display: flex;
+    justify-content:flex-start; 
+    margin-top: 20rpx;
+    flex-wrap: wrap;
+    gap: 20rpx 0;
+}
+.box {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-left: 30rpx;
+    width: 20%;
+    margin-bottom: 20rpx;
+}
+.box image {
+    width: 70rpx;
+    height: 70rpx;
+}
+.box-title {
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 10rpx;
+}
+
+
+
 

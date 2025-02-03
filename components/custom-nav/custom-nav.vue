@@ -13,6 +13,7 @@
         <template v-else>
           <view class="back-button" @click="goBack">
             <img src="../../static/images/icons/left-arrow.png" alt="左箭头" style="width: 50rpx;height: 50rpx;">
+             <!-- <text name="" id="">fanhui</text> -->
           </view>
         </template>
       </view>
@@ -127,7 +128,7 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  background-color: #1ee8d4;
+  background-color: #0bd6c8;
   z-index: 999;
 }
 

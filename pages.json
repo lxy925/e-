@@ -71,7 +71,19 @@
       "style": {
         "navigationBarTitleText": "陪诊师详情"
       }
-    }
+    },
+    {
+      "path" : "pages/order/order",
+      "style" : {}
+  },
+  {
+      "path" : "pages/order_details/order_details",
+      "style" : {}
+  },
+  {
+      "path" : "pages/order_manage/order_manage",
+      "style" : {}
+  }
   ],
   "sitemapLocation": "sitemap.json",
   "style": "v2",
@@ -108,10 +120,10 @@
     ]
   },
   "globalStyle": {
-    "backgroundColor": "#02D4C6",
+    "backgroundColor": "#0bd6c8",
     "backgroundTextStyle": "light",
 
-    "navigationBarBackgroundColor": "#02D4C6",
+    "navigationBarBackgroundColor": "#0bd6c8",
     "navigationBarTitleText": "e陪无忧",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom"
@@ -119,3 +131,4 @@
 
   "subPackages": []
 }
+  

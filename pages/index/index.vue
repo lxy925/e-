@@ -41,7 +41,7 @@
         </view>
 
         <view class="hospital-list">
-         <scroll-view>
+         <!-- <scroll-view> -->
           <view
             class="hospital-item"
             v-for="hospital in hospitals"
@@ -75,7 +75,7 @@
             </view>
             
           </view>
-        </scroll-view>
+        <!-- </scroll-view> -->
         </view>
      
     </view>
@@ -98,7 +98,7 @@ export default {
         {
           icon: "/static/images/index/index-service.png",
           text: "我要陪诊",
-          path: "/pages/service/service",
+          path: "/pages/order_details/order_details",
         },
         {
           icon: "/static/images/index/index-help.png",
@@ -254,14 +254,15 @@ export default {
 <style>
 
 .page-container {
- height: min-content;
-  /* background: linear-gradient(to bottom, #02D4C6, #1E90FF); */
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
   position: relative;
   padding-top: 180rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-self: center;
+  flex: 1;
 }
 .textTop {
   text-align: left;
@@ -354,8 +355,8 @@ export default {
 
 .hospital-list {
   width: 650rpx;
-  overflow: scroll;
-  height: 544rpx;
+  /* overflow: scroll; */
+  /* height: 544rpx; */
 }
 
 .hospital-item {
@@ -364,7 +365,7 @@ export default {
   padding: 20rpx;
   margin-bottom: 20rpx;
   border-radius: 20rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3rpx 10rpx rgba(0, 0, 0, 0.08);
 }
 
 .hospital-image {

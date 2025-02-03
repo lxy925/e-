@@ -10,13 +10,16 @@
     "pages/about/about",
     "pages/prevent/prevent",
     "pages/doctorlist/doctorlist",
-    "pages/doctordetail/doctordetail"
+    "pages/doctordetail/doctordetail",
+    "pages/order/order",
+    "pages/order_details/order_details",
+    "pages/order_manage/order_manage"
   ],
   "subPackages": [],
   "window": {
-    "backgroundColor": "#02D4C6",
+    "backgroundColor": "#0bd6c8",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#02D4C6",
+    "navigationBarBackgroundColor": "#0bd6c8",
     "navigationBarTitleText": "e陪无忧",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom"

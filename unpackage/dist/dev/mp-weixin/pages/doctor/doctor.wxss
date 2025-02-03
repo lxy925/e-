@@ -251,14 +251,14 @@
 
 /* pages/doctor/doctor.wxss */
 .page {
-  /* min-height: 100vh; */
+  min-height: 100vh;
   padding: 0 50rpx;
-  padding-top: 200rpx;
-  height: -webkit-min-content;
-  height: min-content;
+  padding-top: 150rpx;
+  /* height: min-content; */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
 }
 
 /* .custom-nav {
@@ -350,20 +350,20 @@
   justify-content: center;
   align-items: center;
   margin-top: 20px;
-  gap: 20px;
+  gap: 50rpx;
 }
 .second-item1 {
-  width: 160px;
-  height: 100px;
+  width: 350rpx;
+  height: 180rpx;
   background-color: #fff0b9;
-  border-radius: 10px;
+  border-radius: 20rpx;
   overflow: hidden;
 }
 .second-item2 {
-  width: 160px;
-  height: 100px;
+  width: 350rpx;
+  height: 180rpx;
   background-color: #bae7ff;
-  border-radius: 10px;
+  border-radius: 20rpx;
   overflow: hidden;
 }
 .second-item1-text {
@@ -372,24 +372,24 @@
   margin-left: 10px;
 }
 .second-item1 image {
-  width: 90px;
-  height: 90px;
+  width: 150rpx;
+  height: 150rpx;
   margin-left: 80px;
   margin-top: -80px;
 }
 .second-item1-text1 {
-  font-size: 20px;
+  font-size: 40rpx;
   font-weight: bold;
   margin-top: 20px;
   color: #ac6800;
 }
 .second-item1-text2 {
-  font-size: 12px;
+  font-size: 20rpx;
   color: #fbae13;
   margin-top: 2px;
 }
 .second-item1-text3 {
-  font-size: 9px;
+  font-size: 18rpx;
   color: #d38806;
   margin-top: 5px;
   background-color: #ffffff;
@@ -404,24 +404,24 @@
   margin-left: 10px;
 }
 .second-item2 image {
-  width: 100px;
-  height: 100px;
+  width: 150rpx;
+  height: 150rpx;
   margin-left: 90px;
   margin-top: -80px;
 }
 .second-item2-text1 {
-  font-size: 20px;
+  font-size: 40rpx;
   font-weight: bold;
   margin-top: 20px;
   color: #0050b2;
 }
 .second-item2-text2 {
-  font-size: 12px;
+  font-size: 20rpx;
   color: #178fff;
   margin-top: 2px;
 }
 .second-item2-text3 {
-  font-size: 9px;
+  font-size: 18rpx;
   color: #0a6dd9;
   margin-top: 5px;
   background-color: #ffffff;
@@ -485,8 +485,8 @@
 }
 .doctor-list {
   margin-top: 20rpx;
-  height: 365rpx;
-  overflow: scroll;
+  /* height: 365rpx;
+  overflow: scroll; */
 }
 .doctor-card {
   border-radius: 12rpx;

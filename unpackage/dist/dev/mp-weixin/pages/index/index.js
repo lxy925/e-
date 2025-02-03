@@ -266,7 +266,7 @@ var _default = {
       navItems: [{
         icon: "/static/images/index/index-service.png",
         text: "我要陪诊",
-        path: "/pages/service/service"
+        path: "/pages/order_details/order_details"
       }, {
         icon: "/static/images/index/index-help.png",
         text: "急救方法",

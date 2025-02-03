@@ -18475,6 +18475,15 @@ var _default = {
     "style": {
       "navigationBarTitleText": "陪诊师详情"
     }
+  }, {
+    "path": "pages/order/order",
+    "style": {}
+  }, {
+    "path": "pages/order_details/order_details",
+    "style": {}
+  }, {
+    "path": "pages/order_manage/order_manage",
+    "style": {}
   }],
   "sitemapLocation": "sitemap.json",
   "style": "v2",
@@ -18506,9 +18515,9 @@ var _default = {
     }]
   },
   "globalStyle": {
-    "backgroundColor": "#02D4C6",
+    "backgroundColor": "#0bd6c8",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#02D4C6",
+    "navigationBarBackgroundColor": "#0bd6c8",
     "navigationBarTitleText": "e陪无忧",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom"
@@ -19420,7 +19429,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAyZJREFUWEftV1toVFcUXevctFCFYKakAf2JTe60n4Uaf6SQIlST0J/SEj/SWpVCvaNi0H5ELY0gqKCihjzIAwVBVGyofUhBsUI/belPH+pEIyjRNs5ECBVpnLPKHZIh80runTy+PD/3zrl777XYe699zhCT69Xu+McSDgFYPrU3P0/eA9SR9NxjheLR3yzvvx8p++9ZYn4AC0ehtCkRi57O/ZomEOm81Q6arxaSgIDrY5777gsCs2dAdr+15vpcy2EctAF4bypOoBIUMyqFzLKOeL1x8FMoAgDGKXwr2KFSQLN9WAeyMSyBueMWjWA2O9LPfNmM//PZ639PmS2ODIl2SG8C3DAJ3Jr03OP++2IQGAD4ENC+6ckRzftjW2u+zyIgYZREzKYwWkotjLH1WQNNugLwPIj+PPkRnyS2umdyMqAbSS+6uhRw36ei504jrf0h7U/chLX+hD0LwOTEvFb+SlnTvU0rn+WW4F8K35SugkznPwWcTwF7AFA0B3yYUlMiFv1rwXqA4kYZNEPKyDAjR2Oaxj6vubxgKiD0pWgqIe0oMHa3JTy3c/r+PKuAvTD8E9amJZa1hKPJmLt71rPAgKsee7W/5hpGuoa+BvTBDA36I8leSYP5Nhok0J3woldnIzCS9NwVhUAinfEjIHYVIfCHyvgFJ3QKRFVOin9LEVsoHAt2HxAeiMg7CwjUAVhagMC4YJsJsxfAmpy0PwHRAPCcoOFgBEIOAREtRlgvoCXPlb4SsBnAukDHcUhsf47vEbQEYNaY9eOIaKPS5diZ/h3mSuYbFyNDoH5ygHSL5hfIDhTo+D4a/i7pREb/QQkkPTctzWKromuogdBl3y7SFVe+Ha+CtgfixenfAmdgNgKRrvhHAC5MOLbypZRzA1D1NKC7Fmg1wKX8MRDiVhykBNbYt4x1OgC9kwGj+RCyBwG4cyIQpBkpbpeja0ixQeCIQ922xGFIawv5By5BEPBJm/sSvks3JFEloJrA28X8F4JACK4hZRgqckDjGTPwWt/dqucTqUcBY5VkNuOfUz+ir29AJwnUloRQ3GkEsn3J2BvthUz+BxeiiTC0EYZ9AAAAAElFTkSuQmCC"
+throw new Error("Module build failed (from ./node_modules/url-loader/dist/cjs.js):\nError: ENOENT: no such file or directory, open 'D:\\陪诊小程序\\e-\\static\\images\\index\\order.png'");
 
 /***/ }),
 /* 80 */,
@@ -19500,7 +19509,7 @@ module.exports = __webpack_require__.p + "static/images/index/doctor.jpg";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAqRJREFUWEfVlz1oFFEUhb+7ziwmpBC7hAiClpLGwihi1EqwUATFRHAnZjMbbCwELbRQ0ELBwibiW8nOFhohhWAvRoVgpbA2BhSLFX+wEkLEzCRX1iSSn919b5IiODDFcs8593v3zexjhA2+ZIP7kxrAKwRHRPUoKrsQdgNfgTcKk4mJrqVdUCoAvxDcQxlq0mRS4PiMid67gjgDZMPcLUUuuQTHZLdgzE8XrROAN9R/WOb0mUvgvEZKsSmdc9E7Afhh8BrY4xK4qBHNnJgpjjyxeawAm4eC7bNzfLIFrawrXHd5KK0A/mAQIJTSAgBjsYlO2XxWgGyhv1dVH9mCVtVVR+Niuc/mswK05POdSSap2oJWb4FeTkz5ts1nBagF+GH/BOheW9jSekYzx34XR57aPG4AhdxZVMq2sH914VV8PzrgoncCmJ9CMAqcdgmNPdoZjr65aJ0BFrYiD1psGKyMx5Ltw5ja+eB0pQL4C5EPuhFyCF0gXaDfVbSCSsXlvV9JlRrAaVkpRP8JwPmTbV7c1iUZ7ULZh7Kt7iKFKsKEzkkl8acqDI9N2YZhnYA/GFxAuAgNmjbuUEW5Exeju80gmgL4YfACcHqfmzR5GZuop1G9IYAX5qqCdNpG6FJX9HNiynW3rS6AF+auCHLDJdxVo+jVxJRvWl/DbBj0KTx0DU6jEzgzY6JlJ+uqCaT5y03TfEH7ODZR71JfPYAPwI41hLtYPsYm2tkYIAzbfWa+uCStVROT7Vh6ViybgJcPDkqG52sNd/HpHIeSB9H4onb5FgwMbPU2zb4T6HAJS6+RtzH+foyZrg8A1D69MkqPKt1AK6KtIK0CLVr7PX/7DZrHwLTAtMIv0GlUas1q91icyBil0o+mD2H6Va3PYT0L1hdvd/8BtNXNIRIYKXEAAAAASUVORK5CYII="
+throw new Error("Module build failed (from ./node_modules/url-loader/dist/cjs.js):\nError: ENOENT: no such file or directory, open 'D:\\陪诊小程序\\e-\\static\\images\\index\\user.png'");
 
 /***/ }),
 /* 142 */
@@ -19520,7 +19529,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAdNJREFUWEftl7FKw1AUhv+bJi3SQcTZJ/Al6lQXB4UOgq1XMKk6CC7iINjiJC4KCiURTXVQbCdHF50dfAE3N8HBRbBNzZEGWpI2bW+aQBGaoZDTc/7/yzmnN5RhxBcbsT/CAeRy00pCqlpf32lUKvVhHmZoAEXlKhj0lilBSjf0y8egEMEBstlkfCJWJWC+04wBx3Xd3A0CEQhAUXkWDGWg7+heY/hd/NFv3kVAxAAymZg8lbxnwJKIaDOHEZbrhnk3KH8gQFzjGQIMAJODxLq+J5Qsw9zsV9cXQMnzKxB4YGNvwRske8UqXb/46fgCJPJ8wSacA5gJae4u37F088Rncb0hRVs7BWg7QmO3VMVCbQv67Wcr2O6AvMFTzMYZgFkRc0s3Pd1TNE4idQA+JCKtZpQfnGVtfsTV1UNibF9QwEkLAeDUM8JR3TD3mLzOU0zCUxDzKACaGmRjbgzgWSS/cRBQ9BtPQzcL7ris8QPXfVuXAe640/bGhfnc9StoBnoBdJqJ7ous8cIYIJIOwEZ7Zq32u+fYGl/XaCSkQgP0mvewB1HgJRwDjDsgeuiI5kW2hKKGnXn/AIB5Xx7DPmmvOiIUe76MojYT0Rv4v0BEJEzOHwb0BEh+SziIAAAAAElFTkSuQmCC"
+throw new Error("Module build failed (from ./node_modules/url-loader/dist/cjs.js):\nError: ENOENT: no such file or directory, open 'D:\\陪诊小程序\\e-\\static\\images\\index\\hospital.png'");
 
 /***/ }),
 /* 144 */,
@@ -19530,22 +19539,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz
 /* 148 */,
 /* 149 */,
 /* 150 */,
-/* 151 */,
-/* 152 */,
-/* 153 */,
-/* 154 */,
-/* 155 */,
-/* 156 */,
-/* 157 */,
-/* 158 */,
-/* 159 */,
-/* 160 */,
-/* 161 */,
-/* 162 */,
-/* 163 */,
-/* 164 */,
-/* 165 */,
-/* 166 */
+/* 151 */
 /*!******************************************************!*\
   !*** D:/陪诊小程序/e-/static/images/icons/left-arrow.png ***!
   \******************************************************/

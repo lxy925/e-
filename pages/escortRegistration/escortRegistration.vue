@@ -2,14 +2,14 @@
   <view class="page">
     <custom-nav title="陪诊师入驻" :isHomePage="false"></custom-nav>
     <view class="container">
-        <van-cell-group>
+       <!-- <van-cell-group>
   <van-field
     value="{{ value }}"
     placeholder="请输入用户名"
     border="{{ false }}"
     bind:change="onChange"
   />
-</van-cell-group>
+</van-cell-group> -->
 
       <form @submit.prevent="submitForm">
         <view class="form-item">

@@ -1,11 +1,13 @@
 <template>
     <view class="page">
-        <view class="header">
-     <img src="../../static/images/index/doctor.jpg" alt="">   
-     <text class="username"> 用户名</text> 
-     <text class="user-info"> 已实名</text>
-    </view>
+        <view class="header" @click="handleHeaderClick">
+    <img :src="userInfo.avatarUrl || '../../static/images/index/touxiang.jpg'" alt="">   
+    <text class="username" >{{userInfo.realName || '登录/注册'}}</text> 
+    <text class="user-info" v-if="userInfo.realName" >已实名</text>
+</view>
+
     <view class="info-box">
+
     <view class="money">
         <text class="money-num"> 1</text>
         <view class="money-box">
@@ -71,19 +73,30 @@
         </view>
     </view>
 </view>
+<view class="logout-box">
+    <image src="../../static/images/mine/logout.png" alt=""></image>
+<button class="logout" @click="logout" v-if="userInfo.realName" >退出登录</button>
+</view>
     </view>
 </template>
+
+
 
 <script>
 // pages/mine/mine.js
 export default {
     data() {
-        return {};
-    }
+        return {
+            userInfo: {
+                avatarUrl: '',
+                realName: ''
+            },
+        };
+    },
     /**
      * 生命周期函数--监听页面加载
-     */,
-    onLoad(options) {},
+     */
+    onLoad() {},
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
@@ -91,7 +104,14 @@ export default {
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow() {},
+    onShow() {
+         // 从本地存储获取用户信息
+    const userInfo = uni.getStorageSync('userInfo');
+    if (userInfo) {
+        this.userInfo = userInfo;
+    }
+       
+    },
     /**
      * 生命周期函数--监听页面隐藏
      */
@@ -112,8 +132,36 @@ export default {
      * 用户点击右上角分享
      */
     onShareAppMessage() {},
-    methods: {}
-};
+    methods: {
+       getUserProfilePage() {
+        uni.navigateTo({
+                url: '/pages/userInfoDetail/userInfoDetail'
+            });
+        },
+        logout() {
+        // 清除本地存储的用户信息
+        uni.removeStorageSync('userInfo');
+        // 重置当前页面的用户信息
+        this.userInfo = {
+            avatarUrl: '',
+            realName: ''
+        };
+        // 显示提示信息
+        uni.showToast({
+            title: '退出登录成功',
+            icon: 'success',
+            duration: 2000
+        });
+    },
+    handleHeaderClick() {
+        if (!this.userInfo.realName) {
+            this.getUserProfilePage();
+        }
+    }
+    }
+}
+
+
 </script>
 <style>
 /* pages/mine/mine.wxss */
@@ -254,6 +302,33 @@ export default {
     font-weight: bold;
     margin-top: 10rpx;
 }
+.logout-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40rpx;
+}
+.logout-box image {
+    width: 50rpx;
+    height: 50rpx;
+    position: absolute;  /* 使用绝对定位 */
+    left: calc(50% - 120rpx);  /* 调整图标位置 */
+    z-index: 1;
+
+}
+
+.logout-box button {
+    width: 400rpx;
+    height: 80rpx;
+    background-color: #54c69a;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 50rpx; 
+}
+
+
 
 
 

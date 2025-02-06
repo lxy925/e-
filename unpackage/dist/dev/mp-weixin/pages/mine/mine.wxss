@@ -116,6 +116,54 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* pages/mine/mine.wxss */
 .page {
     min-height: 100vh;
@@ -254,6 +302,31 @@
     font-weight: bold;
     margin-top: 10rpx;
 }
+.logout-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40rpx;
+}
+.logout-box image {
+    width: 50rpx;
+    height: 50rpx;
+    position: absolute;  /* 使用绝对定位 */
+    left: calc(50% - 120rpx);  /* 调整图标位置 */
+    z-index: 1;
+}
+.logout-box button {
+    width: 400rpx;
+    height: 80rpx;
+    background-color: #54c69a;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 50rpx;
+}
+
+
 
 
 

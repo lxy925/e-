@@ -37,6 +37,13 @@
 			{
 				"navigationBarTitleText" : "陪诊师详情"
 			}
+		},
+		{
+			"path" : "pages/userInfoDetail/userInfoDetail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "完善用户信息"
+			}
 		}
 	],
 	"sitemapLocation": "sitemap.json",

@@ -1,0 +1,94 @@
+
+.page {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #54c69a, #fffcf9);
+    padding-top: 0;
+    margin-top: -1px; /* 消除可能的间隙 */
+}
+.user-info-detail {
+    width: 100%;
+    height: 100%;
+    margin-top: 80rpx;
+}
+.user-info-detail image {
+    width: 150rpx;
+    height: 150rpx;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-top: 50rpx;
+}
+.avatar-btn {
+    padding: 0;
+    width: auto !important;
+    background: none;
+    border: none;
+    line-height: 1;
+}
+.avatar-btn::after {
+    border: none;
+}
+.tip {
+    font-size: 30rpx;
+    color: #fff;
+    text-align: center;
+    margin-top: 20rpx;
+}
+.user-info-item {
+    display: flex;
+  align-items: center;
+  padding: 25rpx;
+  font-size: 30rpx;
+  font-weight: inherit;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 10rpx;
+  border: 1rpx solid #5352528a;
+}
+.user-info-item image {
+    width: 45rpx;
+    height: 45rpx;
+    margin:0  0 0 0;
+}
+.user-info-item-title {
+    width: 150rpx;
+    text-align: left;
+    margin-left: 20rpx;
+}
+.username {
+    flex: 1;
+    text-align: right;
+    margin-right: 20rpx;
+}
+.get-code {
+    margin-left: 20rpx;
+    background-color: #54c69a;
+    color: #fff;
+    border-radius: 10rpx;
+    width: 150rpx;
+    height: 60rpx;
+    font-size: 28rpx;
+    line-height: 60rpx;
+}
+.submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 80rpx;
+}
+.submit-btn { width: 400rpx;
+    height: 80rpx;
+    background-color: #54c69a;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 50rpx;
+}
+.submit image {
+    width: 60rpx;
+    height: 60rpx;
+    position: absolute;  /* 使用绝对定位 */
+    left: calc(50% - 120rpx);  /* 调整图标位置 */
+    z-index: 1;
+}
+
+

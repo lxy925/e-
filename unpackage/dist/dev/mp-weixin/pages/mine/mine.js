@@ -102,15 +102,6 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var m0 = __webpack_require__(/*! ../../static/images/index/doctor.jpg */ 107)
-  _vm.$mp.data = Object.assign(
-    {},
-    {
-      $root: {
-        m0: m0,
-      },
-    }
-  )
 }
 var recyclableRender = false
 var staticRenderFns = []
@@ -144,7 +135,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(uni) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -226,16 +217,28 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 // pages/mine/mine.js
 var _default = {
   data: function data() {
-    return {};
-  }
+    return {
+      userInfo: {
+        avatarUrl: '',
+        realName: ''
+      }
+    };
+  },
   /**
    * 生命周期函数--监听页面加载
    */
-  ,
-  onLoad: function onLoad(options) {},
+  onLoad: function onLoad() {},
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -243,7 +246,13 @@ var _default = {
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function onShow() {},
+  onShow: function onShow() {
+    // 从本地存储获取用户信息
+    var userInfo = uni.getStorageSync('userInfo');
+    if (userInfo) {
+      this.userInfo = userInfo;
+    }
+  },
   /**
    * 生命周期函数--监听页面隐藏
    */
@@ -264,9 +273,36 @@ var _default = {
    * 用户点击右上角分享
    */
   onShareAppMessage: function onShareAppMessage() {},
-  methods: {}
+  methods: {
+    getUserProfilePage: function getUserProfilePage() {
+      uni.navigateTo({
+        url: '/pages/userInfoDetail/userInfoDetail'
+      });
+    },
+    logout: function logout() {
+      // 清除本地存储的用户信息
+      uni.removeStorageSync('userInfo');
+      // 重置当前页面的用户信息
+      this.userInfo = {
+        avatarUrl: '',
+        realName: ''
+      };
+      // 显示提示信息
+      uni.showToast({
+        title: '退出登录成功',
+        icon: 'success',
+        duration: 2000
+      });
+    },
+    handleHeaderClick: function handleHeaderClick() {
+      if (!this.userInfo.realName) {
+        this.getUserProfilePage();
+      }
+    }
+  }
 };
 exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 

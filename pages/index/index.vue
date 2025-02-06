@@ -98,7 +98,7 @@ export default {
         {
           icon: "/static/images/index/index-service.png",
           text: "我要陪诊",
-          path: "/pages/order_details/order_details",
+          path: "/pages/serviceSelection/serviceSelection",
         },
         {
           icon: "/static/images/index/index-help.png",

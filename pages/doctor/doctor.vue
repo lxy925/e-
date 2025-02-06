@@ -57,47 +57,49 @@
     </view>
 
     <view class="doctor-list">
-      <!-- <scroll-view> -->
-        <view
-          class="doctor-card"
-          v-for="(doctor, index) in doctors"
-          :key="index"
-          @click="goToDoctorListPage"
-        >
-          <view class="doctor-avatar">
-            <image :src="doctor.avatar" mode="aspectFill"></image>
-          </view>
-          <view class="doctor-info">
-            <view class="doctor-name">{{ doctor.name }}</view>
-            <view class="doctor-location">{{ doctor.location }}</view>
-            <view class="doctor-department">
-              <img
-                class="value-icon"
-                src="../../static/images/index/value.png"
-                alt=""
-              />
-              {{ doctor.value }} &nbsp; | &nbsp;
-              <img
+      <view class="doctor-card" v-for="(doctor, index) in doctors" :key="index" @click="goToDoctorDetailPage(doctor)">
+        <view class="doctor-avatar">
+          <image :src="doctor.avatar" mode="aspectFill"></image>
+        </view>
+        <view class="doctor-info">
+          <view class="doctor-name">{{ doctor.name }}</view>
+          <view class="doctor-location">{{ doctor.address}}</view>
+          <view class="doctor-department">
+            <img class="value-icon" src="../../static/images/index/value.png" alt="" />
+            {{ doctor.moreInfo.rating }} &nbsp; | &nbsp;
+            <img
                 class="order-icon"
-                src="../../static/images/index/order.png"
+                src="../../static/images/doctor/order.png"
                 alt=""
               />
-              {{ doctor.order }}
-            </view>
-            <view class="specialty-container">
-              <text class="doctor-specialty">{{ doctor.specialty }}</text>
-              <text class="doctor-specialty">{{ doctor.specialty2 }}</text>
-            </view>
+            {{ doctor.moreInfo.order }}
           </view>
-          <view class="doctor-need">
-            <view class="doctor-need-item">
-              <view class="doctor-need-item-text">最近咨询</view>
-              <image src="../../static/images/index/star.png" alt=""></image>
-            </view>
+          <view class="specialty-container">
+            <text class="doctor-specialty1">{{ doctor.moreInfo.language }}</text>
+            <text class="doctor-specialty2" v-if="doctor.moreInfo.provide_transport">
+              可接送
+            </text>
+          </view>
+          <view class="doctor-tags">
+            <text :class="['doctor-gender', (doctor.gender=='男')? 'male' : 'female']">{{ doctor.gender }}</text>
+            <text :class="['doctor-certification', doctor.is_certified  ? 'certified' : 'uncertified']">
+              {{ doctor.is_certified ? '已认证' : '未认证' }}
+            </text>
+            <text :class="['doctor-availability', doctor.is_bookable? 'available' : 'unavailable']">
+              {{ doctor.is_bookable ? '可预约' : '不可预约' }}
+            </text>
           </view>
         </view>
-      <!-- </scroll-view> -->
+        <view class="doctor-need">
+          <view class="doctor-need-item">
+            <view class="doctor-need-item-text">最近咨询</view>
+            <image src="../../static/images/index/star.png" alt=""></image>
+          </view>
+        </view>
+      </view>
     </view>
+      <!-- </scroll-view> -->
+    
 
     <!-- <view class="process-flow">
             <view class="flow-item" v-for="(item, index) in processSteps" :key="index">
@@ -128,25 +130,7 @@ export default {
       // ],
       banners: [],
       doctors: [
-        {
-          avatar: "/static/images/index/doctor.jpg",
-          name: "张医生",
-          location: "广州市 天河区",
-          value: "4.9",
-          order: "739",
-          specialty: "尽职尽责",
-          specialty2: "陪诊技能",
-        },
-        {
-          avatar: "/static/images/index/doctor.jpg",
-          name: "李医生",
-          location: "广州市 天河区",
-          value: "4.9",
-          order: "739",
-          specialty: "尽职尽责",
-          specialty2: "陪诊技能",
-        },
-        // 可以添加更多医生数据
+       
       ],
     };
   },
@@ -180,6 +164,7 @@ export default {
     //     }
     // });
     this.getBanners();
+    this.fetchDoctors();
   },
 
   /**
@@ -198,10 +183,11 @@ export default {
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-    uni.setNavigationBarColor({
-      frontColor: "#ffffff",
-      backgroundColor: "#54c69a",
-    });
+    // uni.setNavigationBarColor({
+    //   frontColor: "#ffffff",
+    //   backgroundColor: "#54c69a",
+    // });
+    
   },
   /**
    * 页面相关事件处理函数--监听用户下拉动作
@@ -216,9 +202,32 @@ export default {
    */
   onShareAppMessage() {},
   methods: {
-    goToDoctorListPage() {
+    async fetchDoctors() {
+      try {
+        const location = uni.getStorageSync('location');
+        if (!location) {
+          console.error('未找到缓存的位置信息');
+          location="广州市";
+        }
+        const res = await uniCloud.callFunction({
+          name: 'getEscorts', // 云函数名称
+          data: { location: location }
+        });
+        if (res.result.success) {
+          console.log('获取陪诊师数据成功:', res.result.data);
+          this.doctors = res.result.data.data;
+        } else {
+          console.error('获取陪诊师数据失败:', res.result.error);
+        }
+      } catch (err) {
+        console.error('调用云函数失败:', err);
+      }
+    },
+    goToDoctorDetailPage(doctor) {
+      
+      const doctorData = encodeURIComponent(JSON.stringify(doctor));
       uni.navigateTo({
-        url: "/pages/doctorlist/doctorlist",
+        url: `/pages/doctordetail/doctordetail?doctor=${doctorData}`
       });
     },
     async getBanners() {
@@ -254,7 +263,7 @@ export default {
 .page {
   min-height: 100vh;
   padding: 0 50rpx;
-  padding-top: 150rpx;
+  padding-top: 80rpx;
   /* height: min-content; */
   display: flex;
   flex-direction: column;
@@ -396,7 +405,7 @@ export default {
   color: #d38806;
   margin-top: 5px;
   background-color: #ffffff;
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 5px;
   width: 40px;
   text-align: center;
@@ -428,7 +437,7 @@ export default {
   color: #0a6dd9;
   margin-top: 5px;
   background-color: #ffffff;
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 5px;
   width: 40px;
   text-align: center;
@@ -488,13 +497,17 @@ export default {
   font-size: 40rpx;
   color: #e50707;
 }
+
 .doctor-list {
+  padding: 20 0rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
   margin-top: 20rpx;
-  /* height: 365rpx;
-  overflow: scroll; */
 }
+
 .doctor-card {
-  border-radius: 12rpx;
+  border-radius: 20rpx;
   padding: 20rpx;
   display: flex;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
@@ -562,13 +575,61 @@ export default {
   gap: 10rpx;
 }
 
-.doctor-specialty {
+.doctor-specialty1 {
   font-size: 22rpx;
   color: #3498db;
   line-height: 1.4;
   border: 1px solid #3498db;
   border-radius: 15rpx;
   padding: 4rpx 10rpx;
+}
+
+.doctor-specialty2 {
+  font-size: 22rpx;
+  line-height: 1.4;
+  border-radius: 15rpx;
+  padding: 4rpx 10rpx;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+}
+
+
+
+.doctor-tags {
+  display: flex;
+  gap: 10rpx;
+  margin-top: 10rpx;
+}
+
+.doctor-gender,
+.doctor-availability,
+.doctor-certification {
+  font-size: 20rpx;
+  padding: 4rpx 8rpx;
+  border-radius: 10rpx;
+  color: #fff;
+}
+
+.doctor-gender {
+  background-color: #3498db;
+}
+.doctor-gender {
+  background-color: #ed32be;
+}
+.doctor-availability.available {
+  background-color: #2ecc71;
+}
+
+.doctor-availability.unavailable {
+  background-color: #e74c3c;
+}
+
+.doctor-certification.certified {
+  background-color: #f1c40f;
+}
+
+.doctor-certification.uncertified {
+  background-color: #95a5a6;
 }
 
 .doctor-need {
@@ -601,76 +662,4 @@ export default {
   padding: 20rpx;
   border-radius: 50%;
 }
-/* .process-flow {
-    display: flex;
-    margin: 0 10px;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    overflow-x: auto;
-    white-space: nowrap;
-}
-
-.flow-item {
-    display: flex;
-    align-items: center;
-    position: relative;
-    padding: 5px;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-    width: 80px;
-}
-
-.flow-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-.flow-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-}
-
-.flow-circle {
-    width: 30px;
-    height: 30px;
-    background: #54c69a;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.flow-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    white-space: normal;
-    min-width: 100px;
-}
-
-.flow-title {
-    font-size: 15px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 4px;
-}
-
-.flow-desc {
-    font-size: 10px;
-    color: #666;
-}
-
-.flow-arrow {
-    margin: 0 10px;
-    color: #54c69a;
-    font-size: 25px;
-    position: relative;
-    left: -25px; /* 添加这行来向左移动箭头 */
-/* } */
 </style>

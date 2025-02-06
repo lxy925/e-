@@ -50,5 +50,5 @@ page {
     justify-content: flex-start;
     min-height: 100vh;;
 }
-
+@import "/wxcomponents/vant/common/index.wxss";
 </style>

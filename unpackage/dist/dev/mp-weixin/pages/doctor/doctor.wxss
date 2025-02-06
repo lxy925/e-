@@ -249,11 +249,20 @@
 
 
 
+
+
+
+
+
+
+
+
+
 /* pages/doctor/doctor.wxss */
 .page {
   min-height: 100vh;
   padding: 0 50rpx;
-  padding-top: 150rpx;
+  padding-top: 80rpx;
   /* height: min-content; */
   display: flex;
   flex-direction: column;
@@ -393,7 +402,7 @@
   color: #d38806;
   margin-top: 5px;
   background-color: #ffffff;
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 5px;
   width: 40px;
   text-align: center;
@@ -425,7 +434,7 @@
   color: #0a6dd9;
   margin-top: 5px;
   background-color: #ffffff;
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 5px;
   width: 40px;
   text-align: center;
@@ -484,12 +493,14 @@
   color: #e50707;
 }
 .doctor-list {
+  padding: 20 0rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
   margin-top: 20rpx;
-  /* height: 365rpx;
-  overflow: scroll; */
 }
 .doctor-card {
-  border-radius: 12rpx;
+  border-radius: 20rpx;
   padding: 20rpx;
   display: flex;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
@@ -548,13 +559,52 @@
   display: flex;
   gap: 10rpx;
 }
-.doctor-specialty {
+.doctor-specialty1 {
   font-size: 22rpx;
   color: #3498db;
   line-height: 1.4;
   border: 1px solid #3498db;
   border-radius: 15rpx;
   padding: 4rpx 10rpx;
+}
+.doctor-specialty2 {
+  font-size: 22rpx;
+  line-height: 1.4;
+  border-radius: 15rpx;
+  padding: 4rpx 10rpx;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+}
+.doctor-tags {
+  display: flex;
+  gap: 10rpx;
+  margin-top: 10rpx;
+}
+.doctor-gender,
+.doctor-availability,
+.doctor-certification {
+  font-size: 20rpx;
+  padding: 4rpx 8rpx;
+  border-radius: 10rpx;
+  color: #fff;
+}
+.doctor-gender {
+  background-color: #3498db;
+}
+.doctor-gender {
+  background-color: #ed32be;
+}
+.doctor-availability.available {
+  background-color: #2ecc71;
+}
+.doctor-availability.unavailable {
+  background-color: #e74c3c;
+}
+.doctor-certification.certified {
+  background-color: #f1c40f;
+}
+.doctor-certification.uncertified {
+  background-color: #95a5a6;
 }
 .doctor-need {
   position: absolute;
@@ -583,78 +633,4 @@
   padding: 20rpx;
   border-radius: 50%;
 }
-
-/* .process-flow {
-    display: flex;
-    margin: 0 10px;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    overflow-x: auto;
-    white-space: nowrap;
-}
-
-.flow-item {
-    display: flex;
-    align-items: center;
-    position: relative;
-    padding: 5px;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-    width: 80px;
-}
-
-.flow-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-.flow-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-}
-
-.flow-circle {
-    width: 30px;
-    height: 30px;
-    background: #54c69a;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.flow-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    white-space: normal;
-    min-width: 100px;
-}
-
-.flow-title {
-    font-size: 15px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 4px;
-}
-
-.flow-desc {
-    font-size: 10px;
-    color: #666;
-}
-
-.flow-arrow {
-    margin: 0 10px;
-    color: #54c69a;
-    font-size: 25px;
-    position: relative;
-    left: -25px; /* 添加这行来向左移动箭头 */
-
-/* } */
 

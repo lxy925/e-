@@ -13,7 +13,10 @@
     "pages/doctordetail/doctordetail",
     "pages/order/order",
     "pages/order_details/order_details",
-    "pages/order_manage/order_manage"
+    "pages/order_manage/order_manage",
+    "pages/AI/AI",
+    "pages/serviceSelection/serviceSelection",
+    "pages/escortRegistration/escortRegistration"
   ],
   "subPackages": [],
   "window": {
@@ -66,6 +69,7 @@
   },
   "plugins": {},
   "usingComponents": {
+    "van-field": "/wxcomponents/vant/field/index",
     "custom-nav": "/components/custom-nav/custom-nav"
   }
 }

@@ -77,8 +77,14 @@ export default {
   },
   methods: {
     getLocationInfo() {
-      uni.getSetting({
+      const cachedLocation = uni.getStorageSync('location');
+      if (cachedLocation) {
+        this.location = cachedLocation;
+        console.log('使用缓存的位置信息:', cachedLocation);
+      } else {
+        uni.getSetting({
         success: (res) => {
+          console.log('获取新的位置信息');
           if (!res.authSetting['scope.userLocation']) {
             uni.authorize({
               scope: 'scope.userLocation',
@@ -91,6 +97,8 @@ export default {
           }
         }
       })
+      }
+      
     },
     getLocation() {
       uni.getLocation({
@@ -110,7 +118,8 @@ export default {
         },
         success: (res) => {
           if (res.data.status === '1') {
-            this.location = res.data.regeocode.addressComponent.city
+            this.location = res.data.regeocode.addressComponent.city;
+            uni.setStorageSync('location', this.location);
           }
         }
       })

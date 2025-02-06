@@ -1,5 +1,6 @@
 
 .page{
+  padding:0 50rpx;
 padding-top: 200rpx;
 }
 .search-box {
@@ -10,20 +11,22 @@ padding-top: 200rpx;
   border-radius: 16px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  margin: 10px 10px;
+  padding: 0 px;
+  margin: 10px 0px;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
 }
 .search-box input {
   flex: 1;
   height: 100%;
   font-size: 14px;
-  padding-right: 30px;
-  margin-left: 10px;
+  padding-right: 20px;
+  margin-left: 20px;
+  /* background-color: #2980b9; */
 }
 .search-icon {
   width: 20px;
   height: 20px;
+  margin-left: 20px;
 }
 .placeholder-style {
   color: #999;
@@ -31,7 +34,8 @@ padding-top: 200rpx;
   margin-left: 10px;
 }
 .doctor-list {
-  padding: 20rpx;
+  /* padding: 20rpx; */
+  padding-top: 20rpx;
   display: flex;
   flex-direction: column;
   gap: 20rpx;
@@ -96,13 +100,52 @@ padding-top: 200rpx;
   display: flex;
   gap: 10rpx;
 }
-.doctor-specialty {
+.doctor-specialty1 {
   font-size: 22rpx;
   color: #3498db;
   line-height: 1.4;
   border: 1px solid #3498db;
   border-radius: 15rpx;
   padding: 4rpx 10rpx;
+}
+.doctor-specialty2 {
+  font-size: 22rpx;
+  line-height: 1.4;
+  border-radius: 15rpx;
+  padding: 4rpx 10rpx;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+}
+.doctor-tags {
+  display: flex;
+  gap: 10rpx;
+  margin-top: 10rpx;
+}
+.doctor-gender,
+.doctor-availability,
+.doctor-certification {
+  font-size: 20rpx;
+  padding: 4rpx 8rpx;
+  border-radius: 10rpx;
+  color: #fff;
+}
+.doctor-gender {
+  background-color: #3498db;
+}
+.doctor-gender {
+  background-color: #ed32be;
+}
+.doctor-availability.available {
+  background-color: #2ecc71;
+}
+.doctor-availability.unavailable {
+  background-color: #e74c3c;
+}
+.doctor-certification.certified {
+  background-color: #f1c40f;
+}
+.doctor-certification.uncertified {
+  background-color: #95a5a6;
 }
 .doctor-need {
   position: absolute;

@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 148))
+      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 178))
     },
   }
 } catch (e) {
@@ -266,7 +266,7 @@ var _default = {
       navItems: [{
         icon: "/static/images/index/index-service.png",
         text: "我要陪诊",
-        path: "/pages/order_details/order_details"
+        path: "/pages/serviceSelection/serviceSelection"
       }, {
         icon: "/static/images/index/index-help.png",
         text: "急救方法",

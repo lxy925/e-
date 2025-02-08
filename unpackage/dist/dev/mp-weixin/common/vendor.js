@@ -9480,857 +9480,16 @@ internalMixin(Vue);
 
 /***/ }),
 /* 26 */
-/*!*********************************!*\
-  !*** D:/HBuilder/e-/pages.json ***!
-  \*********************************/
+/*!***********************************!*\
+  !*** D:/HBuilder/e/e-/pages.json ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 
 
 /***/ }),
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */
-/*!**********************************************************************************************************!*\
-  !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js ***!
-  \**********************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent (
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier, /* server only */
-  shadowMode, /* vue-cli only */
-  components, // fixed by xxxxxx auto components
-  renderjs // fixed by xxxxxx renderjs
-) {
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // fixed by xxxxxx auto components
-  if (components) {
-    if (!options.components) {
-      options.components = {}
-    }
-    var hasOwn = Object.prototype.hasOwnProperty
-    for (var name in components) {
-      if (hasOwn.call(components, name) && !hasOwn.call(options.components, name)) {
-        options.components[name] = components[name]
-      }
-    }
-  }
-  // fixed by xxxxxx renderjs
-  if (renderjs) {
-    if(typeof renderjs.beforeCreate === 'function'){
-			renderjs.beforeCreate = [renderjs.beforeCreate]
-		}
-    (renderjs.beforeCreate || (renderjs.beforeCreate = [])).unshift(function() {
-      this[renderjs.__module] = this
-    });
-    (options.mixins || (options.mixins = [])).push(renderjs)
-  }
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-/* 33 */
-/*!*****************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/index.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
-var _pageLifetimes = __webpack_require__(/*! ./lifecycle/pageLifetimes */ 34);
-var _clone = __webpack_require__(/*! ./methods/clone */ 35);
-var _dataset = __webpack_require__(/*! ./methods/dataset */ 36);
-var _escape = __webpack_require__(/*! ./methods/escape */ 37);
-var _event = __webpack_require__(/*! ./methods/event */ 38);
-var _getTabBar = __webpack_require__(/*! ./methods/getTabBar */ 39);
-var _relation = __webpack_require__(/*! ./methods/relation */ 40);
-var _selectComponent = __webpack_require__(/*! ./methods/selectComponent */ 41);
-var _setData = __webpack_require__(/*! ./methods/setData */ 42);
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-var _default = {
-  install: function install(Vue, option) {
-    Vue.mixin(_objectSpread(_objectSpread({}, _pageLifetimes.pageLifetimes), {}, {
-      methods: {
-        clone: _clone.clone,
-        handleDataset: _dataset.handleDataset,
-        escape2Html: _escape.escape2Html,
-        html2Escape: _escape.html2Escape,
-        parseEventDynamicCode: _event.parseEventDynamicCode,
-        getTabBar: _getTabBar.getTabBar,
-        getRelationNodes: _relation.getRelationNodes,
-        zpSelectComponent: _selectComponent.selectComponent,
-        zpSelectAllComponents: _selectComponent.selectAllComponents,
-        setData: _setData.setData
-      }
-    }));
-  }
-};
-exports.default = _default;
-
-/***/ }),
-/* 34 */
-/*!***********************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/lifecycle/pageLifetimes.js ***!
-  \***********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.pageLifetimes = void 0;
-/**
- * 组件pageLifetimes处理，需在页面生命周期里调用
- * @param {Object} node
- * @param {Object} lifeName
- */
-function handlePageLifetime(node, lifeName) {
-  node.$children.map(function (child) {
-    if (typeof child[lifeName] == 'function') child[lifeName]();
-    handlePageLifetime(child, lifeName);
-  });
-}
-var pageLifetimes = {
-  onLoad: function onLoad() {
-    // uni.onWindowResize(CALLBACK)  监听窗口尺寸变化事件
-    // 平台差异说明
-    // App	H5	微信小程序	支付宝小程序	百度小程序	抖音小程序	飞书小程序	QQ小程序
-    // √	√	√	x	x	x	√	√
-  },
-  onShow: function onShow() {
-    handlePageLifetime(this, "handlePageShow");
-  },
-  onHide: function onHide() {
-    handlePageLifetime(this, "handlePageHide");
-  },
-  onResize: function onResize() {
-    //onResize	监听窗口尺寸变化	App、微信小程序、快手小程序
-
-    handlePageLifetime(this, "handlePageResize");
-  }
-};
-exports.pageLifetimes = pageLifetimes;
-
-/***/ }),
-/* 35 */
-/*!*************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/methods/clone.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.clone = clone;
-/**
- * 用于处理对props进行赋值的情况
- * //简单处理一下就行了
- *
- * @param {*} target
- * @returns
- */
-function clone(target) {
-  return JSON.parse(JSON.stringify(target));
-}
-
-/***/ }),
-/* 36 */
-/*!***************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/methods/dataset.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.handleDataset = handleDataset;
-/**
- * 用于处理dataset
- * 自定义组件的事件里，是获取不到e.currentTarget.dataset的
- * 因此收集data-参数，手动传进去
- *
- * @param {*} event
- * @param {*} dataSet
- */
-function handleDataset(event) {
-  var dataSet = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  if (event && !event.currentTarget) {
-    if (dataSet.tagId) {
-      event.currentTarget = {
-        id: dataSet.tagId
-      };
-    } else {
-      event.currentTarget = {
-        dataset: dataSet
-      };
-    }
-  }
-}
-
-/***/ }),
-/* 37 */
-/*!**************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/methods/escape.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.escape2Html = escape2Html;
-exports.html2Escape = html2Escape;
-/**
- * 转义符换成普通字符
- * @param {*} str
- * @returns
- */
-function escape2Html(str) {
-  if (!str) return str;
-  var arrEntities = {
-    'lt': '<',
-    'gt': '>',
-    'nbsp': ' ',
-    'amp': '&',
-    'quot': '"'
-  };
-  return str.replace(/&(lt|gt|nbsp|amp|quot);/ig, function (all, t) {
-    return arrEntities[t];
-  });
-}
-
-/**
- * 普通字符转换成转义符
- * @param {*} sHtml
- * @returns
- */
-function html2Escape(sHtml) {
-  if (!sHtml) return sHtml;
-  return sHtml.replace(/[<>&"]/g, function (c) {
-    return {
-      '<': '&lt;',
-      '>': '&gt;',
-      '&': '&amp;',
-      '"': '&quot;'
-    }[c];
-  });
-}
-
-/***/ }),
-/* 38 */
-/*!*************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/methods/event.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.parseEventDynamicCode = parseEventDynamicCode;
-/**
- * 解析事件里的动态函数名，这种没有()的函数名，在uniapp不被执行
- * 比如：<view bindtap="{{openId==undefined?'denglu':'hy_to'}}">立即</view>
- * @param {*} exp
- */
-function parseEventDynamicCode(e, exp) {
-  if (typeof this[exp] === 'function') {
-    this[exp](e);
-  }
-}
-
-/***/ }),
-/* 39 */
-/*!*****************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/methods/getTabBar.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getTabBar = getTabBar;
-/**
- * 接管getTabBar函数，默认uni-app是没有这个函数的
- * 适用于使用custom-tab-bar自定义导航栏的小程序项目
- * 需注意：
- * 1.custom-tab-bar下面仍是小程序文件
- * 2.pages.json里面需使用条件编译区分好小程序和非小程序的tabBar配置
- */
-function getTabBar() {
-  return {
-    setData: function setData(obj) {
-      var _this$$mp, _this$$mp$page, _this$$mp2, _this$$mp2$page;
-      if (typeof ((_this$$mp = this.$mp) === null || _this$$mp === void 0 ? void 0 : (_this$$mp$page = _this$$mp.page) === null || _this$$mp$page === void 0 ? void 0 : _this$$mp$page.getTabBar) === 'function' && (_this$$mp2 = this.$mp) !== null && _this$$mp2 !== void 0 && (_this$$mp2$page = _this$$mp2.page) !== null && _this$$mp2$page !== void 0 && _this$$mp2$page.getTabBar()) {
-        this.$mp.page.getTabBar().setData(obj);
-      } else {
-        console.log("当前平台不支持getTabBar()，已稍作处理，详细请参见相关文档。");
-      }
-    }
-  };
-}
-
-/***/ }),
-/* 40 */
-/*!****************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/methods/relation.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getRelationNodes = getRelationNodes;
-/**
- * 组件间关系
- * 注意：须与p-f-unicom配合使用！！！
- * @param {*} name
- * @returns
- */
-function getRelationNodes(name) {
-  if (!this.$unicom) throw "this.getRelationNodes()需与p-f-unicom配合使用！";
-  return this.$unicom('@' + name);
-}
-
-/***/ }),
-/* 41 */
-/*!***********************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/methods/selectComponent.js ***!
-  \***********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.selectAllComponents = selectAllComponents;
-exports.selectComponent = selectComponent;
-var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
-var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
-var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
-var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
-var createTraverse = function createTraverse() {
-  var stop = false;
-  return function traverse(root, callback) {
-    if (!stop && typeof callback === 'function') {
-      var children = root.$children;
-      for (var index = 0; !stop && index < children.length; index++) {
-        var element = children[index];
-        stop = callback(element) === true;
-        traverse(element, callback);
-      }
-    }
-  };
-};
-
-/**
- * 安全的JSON.stringify
- * @param {Object} node
- */
-function safeStringify(node) {
-  var cache = [];
-  var str = JSON.stringify(node, function (key, value) {
-    if ((0, _typeof2.default)(value) === 'object' && value !== null) {
-      if (cache.indexOf(value) !== -1) {
-        // 移除
-        return;
-      }
-      // 收集所有的值
-      cache.push(value);
-    }
-    return value;
-  });
-  cache = null; // 清空变量，便于垃圾回收机制回收
-  return str;
-}
-var match = function match(node, selector) {
-  var _vnode$context$$vnode, _vnode, _vnode$context;
-  var vnode = node._vnode;
-
-  //好家伙，在微信小程序里，node里面根本找不到class，因此这种方式没法搞了
-
-  //关键之处！
-  // console.log("attrs", (vnode.context.$vnode.data));
-  vnode = (_vnode$context$$vnode = (_vnode = vnode) === null || _vnode === void 0 ? void 0 : (_vnode$context = _vnode.context) === null || _vnode$context === void 0 ? void 0 : _vnode$context.$vnode) !== null && _vnode$context$$vnode !== void 0 ? _vnode$context$$vnode : "";
-  //console.log(vnode.data) -->  [Object] {"staticClass":"bar","attrs":{"_i":0}}  at selectComponent.js:72
-  if (!vnode || !vnode.data) {
-    return false;
-  }
-  var attrs = vnode.data.attrs || {};
-  var staticClass = vnode.data.staticClass || '';
-  var id = attrs.id || '';
-  if (selector[0] === '#') {
-    return selector.substr(1) === id;
-  } else {
-    staticClass = staticClass.trim().split(' ');
-    selector = selector.substr(1).split('.');
-    return selector.reduce(function (a, c) {
-      return a && staticClass.includes(c);
-    }, true);
-  }
-};
-var selectorBuilder = function selectorBuilder(selector) {
-  selector = selector.replace(/>>>/g, '>');
-  selector = selector.split('>').map(function (s) {
-    return s.trim().split(' ').join("').descendant('");
-  }).join("').child('");
-
-  // 替换掉new Function方式，因为小程序不支持new Function和eval
-  //return new Function('Selector', 'node', 'all', `return new Selector(node, all).descendant('` + selector + `')`);
-  return function (Selector, node, all) {
-    return new Selector(node, all).descendant(selector);
-  };
-};
-var Selector = /*#__PURE__*/function () {
-  function Selector(node) {
-    var all = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    (0, _classCallCheck2.default)(this, Selector);
-    this.nodes = [node];
-    this.all = all;
-  }
-  (0, _createClass2.default)(Selector, [{
-    key: "child",
-    value: function child(selector) {
-      var matches = [];
-      if (this.all) {
-        this.nodes.forEach(function (node) {
-          var _matches;
-          (_matches = matches).push.apply(_matches, (0, _toConsumableArray2.default)(node.$children.filter(function (node) {
-            return match(node, selector);
-          })));
-        });
-      } else {
-        if (this.nodes.length > 0) {
-          var node = this.nodes[0].$children.find(function (node) {
-            return match(node, selector);
-          });
-          matches = node ? [node] : [];
-        }
-      }
-      this.nodes = matches;
-      return this;
-    }
-  }, {
-    key: "descendant",
-    value: function descendant(selector) {
-      var _this = this;
-      var matches = [];
-      this.nodes.forEach(function (root) {
-        createTraverse()(root, function (node) {
-          if (match(node, selector)) {
-            matches.push(node);
-            return !_this.all;
-          }
-        });
-      });
-      this.nodes = matches;
-      return this;
-    }
-  }]);
-  return Selector;
-}(); ////////////////////////////////////////////selectComponent//////////////////////////////////////////////////
-/**
- * 其他平台，如APP
- * @param {Object} selector
- */
-function selectComponentOther(selector) {
-  var selectors = selector.split(',').map(function (s) {
-    return s.trim();
-  });
-  if (!selectors[0]) {
-    return null;
-  }
-  var querySelector = selectorBuilder(selectors[0]);
-  return querySelector(Selector, this, false, selector).nodes[0];
-}
-
-/**
- * 还是用这个微信小程序的实现吧
- * @param {Object} selector
- */
-var selectComponentWeiXin2 = function selectComponentWeiXin2(selector) {
-  var _this$$scope$selectCo;
-  console.log(".$scope", this.$scope.selectComponent(selector));
-  return ((_this$$scope$selectCo = this.$scope.selectComponent(selector)) === null || _this$$scope$selectCo === void 0 ? void 0 : _this$$scope$selectCo.data) || undefined;
-};
-
-/**
- * selectComponent
- * @param {Object} args
- */
-function selectComponent(args) {
-  // console.log(".$scope",this.$scope)
-
-  //H5和小程序能正常使用这个函数
-  //重写selectComponent函数，因为默认会多一层$vm
-  return selectComponentWeiXin2.call(this, args);
-}
-
-////////////////////////////////////////////selectAllComponents//////////////////////////////////////////////////
-/**
- * 其他平台，如APP
- * @param {Object} selector
- */
-function selectAllComponentsOther(selector) {
-  var _this2 = this;
-  var selectors = selector.split(',').map(function (s) {
-    return s.trim();
-  });
-  var selected = [];
-  selectors.forEach(function (selector) {
-    var querySelector = selectorBuilder(selector);
-    selected = selected.concat(querySelector(Selector, _this2, true, selector).nodes);
-  });
-  return selected;
-}
-
-/**
- * 还是用这个微信小程序的实现吧
- * @param {Object} selector
- */
-var selectAllComponentsWeiXin2 = function selectAllComponentsWeiXin2(selector) {
-  var list = this.$scope.selectAllComponents(selector) || [];
-  list = list.map(function (item) {
-    return item.data;
-  });
-  return list;
-};
-
-/**
- * selectAllComponents
- * @param {Object} args
- */
-function selectAllComponents(args) {
-  //H5和小程序能正常使用这个函数
-  //重写selectComponent函数，因为默认会多一层$vm
-  return selectAllComponentsWeiXin2.call(this, args);
-}
-
-/***/ }),
-/* 42 */
-/*!***************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/methods/setData.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.setData = setData;
-var _set2 = _interopRequireDefault(__webpack_require__(/*! ../utils/_set */ 43));
-var _debounce = _interopRequireDefault(__webpack_require__(/*! ../utils/debounce */ 44));
-/**
- * 老setData polyfill
- * 用于转换后的uniapp的项目能直接使用this.setData()函数
- * @param {*} obj
- * @param {*} callback
- */
-function oldSetData(obj, callback) {
-  var that = this;
-  var handleData = function handleData(tepData, tepKey, afterKey) {
-    var tepData2 = tepData;
-    tepKey = tepKey.split('.');
-    tepKey.forEach(function (item) {
-      if (tepData[item] === null || tepData[item] === undefined) {
-        var reg = /^[0-9]+$/;
-        tepData[item] = reg.test(afterKey) ? [] : {};
-        tepData2 = tepData[item];
-      } else {
-        tepData2 = tepData[item];
-      }
-    });
-    return tepData2;
-  };
-  var isFn = function isFn(value) {
-    return typeof value == 'function' || false;
-  };
-  Object.keys(obj).forEach(function (key) {
-    var val = obj[key];
-    key = key.replace(/\]/g, '').replace(/\[/g, '.');
-    var front, after;
-    var index_after = key.lastIndexOf('.');
-    if (index_after != -1) {
-      after = key.slice(index_after + 1);
-      front = handleData(that, key.slice(0, index_after), after);
-    } else {
-      after = key;
-      front = that;
-    }
-    if (front.$data && front.$data[after] === undefined) {
-      Object.defineProperty(front, after, {
-        get: function get() {
-          return front.$data[after];
-        },
-        set: function set(newValue) {
-          front.$data[after] = newValue;
-          that.hasOwnProperty("$forceUpdate") && that.$forceUpdate();
-        },
-        enumerable: true,
-        configurable: true
-      });
-      front[after] = val;
-    } else {
-      that.$set(front, after, val);
-    }
-  });
-  // this.$forceUpdate();
-  isFn(callback) && this.$nextTick(callback);
-}
-
-/**
- * 变量名正则
- */
-var variableNameReg = /^([^\x00-\xff]|[a-zA-Z_$])([^\x00-\xff]|[a-zA-Z0-9_$])*$/;
-
-/**
- * 2022-10-31 重写setData
- * 2023-05-08 增加微信“简易双向绑定”支持
- * 用于转换后的uniapp的项目能直接使用this.setData()函数
- * @param {Object} obj
- * @param {Object} callback
- */
-function setData(obj) {
-  var _this = this;
-  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  Object.keys(obj).forEach(function (key) {
-    (0, _set2.default)(_this, key, obj[key]);
-
-    //处理微信“简易双向绑定”
-    if (variableNameReg.test(key) && key.endsWith("Clone")) {
-      var propName = key.replace(/Clone$/, "");
-      if (_this.$options && _this.$options.propsData[propName]) {
-        _this.$emit("update:".concat(propName), obj[key]);
-      }
-    }
-  });
-  this.$forceUpdate();
-  if (typeof callback == 'function') this.$nextTick(callback);
-}
-
-/***/ }),
-/* 43 */
-/*!**********************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/utils/_set.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-/**
- * lodash set
- * @param {*} obj
- * @param {*} path
- * @param {*} value
- * @returns
- */
-function _set(obj, path, value) {
-  if (Object(obj) !== obj) return obj; // When obj is not an object
-  // If not yet an array, get the keys from the string-path
-  if (!Array.isArray(path)) path = path.toString().match(/[^.[\]]+/g) || [];
-  path.slice(0, -1).reduce(function (a, c, i) {
-    return (
-      // Iterate all of them except the last one
-      Object(a[c]) === a[c] // Does the key exist and is its value an object?
-      // Yes: then follow that path
-      ? a[c]
-      // No: create the key. Is the next key a potential array-index?
-      : a[c] = Math.abs(path[i + 1]) >> 0 === +path[i + 1] ? [] // Yes: assign a new array object
-      : {}
-    );
-  },
-  // No: assign a new plain object
-  obj)[path[path.length - 1]] = value; // Finally assign the value to the last key
-  return obj; // Return the top-level object to allow chaining
-}
-var _default = _set;
-exports.default = _default;
-
-/***/ }),
-/* 44 */
-/*!**************************************************************!*\
-  !*** D:/HBuilder/e-/uni_modules/zp-mixins/utils/debounce.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-/**
- * 防抖
- * @param {Object} scope  //引用的this，发现不显式传this，拿不到。
- * @param {Object} fn
- * @param {Object} delay
- */
-var t = null;
-var debounce = function debounce(scope, fn, delay) {
-  if (t !== null) {
-    clearTimeout(t);
-  }
-  t = setTimeout(function () {
-    scope[fn]();
-  }, delay);
-};
-var _default = debounce;
-exports.default = _default;
-
-/***/ }),
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */
+/* 27 */
 /*!************************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js ***!
   \************************************************************************************/
@@ -10345,20 +9504,20 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.uniCloud = exports.default = exports.UniCloudError = void 0;
-var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 52));
-var _assertThisInitialized2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ 54));
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
+var _assertThisInitialized2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ 30));
 var _slicedToArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ 5));
 var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
-var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 55));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
-var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 56));
-var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 57));
-var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 58));
-var _wrapNativeSuper2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ 59));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 32));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 33));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 34));
+var _wrapNativeSuper2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ 35));
 var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
 var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
-var _pages = _interopRequireDefault(__webpack_require__(/*! @/pages.json */ 61));
+var _pages = _interopRequireDefault(__webpack_require__(/*! @/pages.json */ 37));
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e34) { throw _e34; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e35) { didErr = true; err = _e35; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
@@ -10864,12 +10023,12 @@ var b = "development" === "development",
   k = "true" === undefined || !0 === undefined,
   P = T([]),
   C = "h5" === E ? "web" : "app-plus" === E || "app-harmony" === E ? "app" : E,
-  A = T(undefined),
-  O = T([]) || [],
+  A = T({"address":["127.0.0.1","2.0.0.1","192.168.31.109"],"servePort":7001,"debugPort":9001,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/桌面/HBuilderX.4.45.2025010502/HBuilderX/plugins/unicloud/**/*.js"]}),
+  O = T([{"provider":"aliyun","spaceName":"e-space","spaceId":"mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18","clientSecret":"rk5d8I7mtxu3FSrSipUvCA==","endpoint":"https://api.next.bspapp.com"}]) || [],
   x = true;
 var N = "";
 try {
-  N = (__webpack_require__(/*! uni-stat-config */ 62).default || __webpack_require__(/*! uni-stat-config */ 62)).appid;
+  N = (__webpack_require__(/*! uni-stat-config */ 38).default || __webpack_require__(/*! uni-stat-config */ 38)).appid;
 } catch (e) {}
 var R,
   L = {};
@@ -18730,7 +17889,7 @@ exports.default = Zs;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../webpack/buildin/global.js */ 3), __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
 
 /***/ }),
-/* 52 */
+/* 28 */
 /*!************************************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/@babel/runtime/regenerator/index.js ***!
   \************************************************************************************************/
@@ -18739,11 +17898,11 @@ exports.default = Zs;
 
 // TODO(Babel 8): Remove this file.
 
-var runtime = __webpack_require__(/*! @babel/runtime/helpers/regeneratorRuntime */ 53)();
+var runtime = __webpack_require__(/*! @babel/runtime/helpers/regeneratorRuntime */ 29)();
 module.exports = runtime;
 
 /***/ }),
-/* 53 */
+/* 29 */
 /*!*******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/regeneratorRuntime.js ***!
   \*******************************************************************/
@@ -19064,7 +18223,7 @@ function _regeneratorRuntime() {
 module.exports = _regeneratorRuntime, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 54 */
+/* 30 */
 /*!**********************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/assertThisInitialized.js ***!
   \**********************************************************************/
@@ -19080,7 +18239,7 @@ function _assertThisInitialized(self) {
 module.exports = _assertThisInitialized, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 55 */
+/* 31 */
 /*!*****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/asyncToGenerator.js ***!
   \*****************************************************************/
@@ -19120,7 +18279,7 @@ function _asyncToGenerator(fn) {
 module.exports = _asyncToGenerator, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 56 */
+/* 32 */
 /*!*********************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/inherits.js ***!
   \*********************************************************/
@@ -19147,7 +18306,7 @@ function _inherits(subClass, superClass) {
 module.exports = _inherits, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 57 */
+/* 33 */
 /*!**************************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js ***!
   \**************************************************************************/
@@ -19155,7 +18314,7 @@ module.exports = _inherits, module.exports.__esModule = true, module.exports["de
 /***/ (function(module, exports, __webpack_require__) {
 
 var _typeof = __webpack_require__(/*! ./typeof.js */ 13)["default"];
-var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized.js */ 54);
+var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized.js */ 30);
 function _possibleConstructorReturn(self, call) {
   if (call && (_typeof(call) === "object" || typeof call === "function")) {
     return call;
@@ -19167,7 +18326,7 @@ function _possibleConstructorReturn(self, call) {
 module.exports = _possibleConstructorReturn, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 58 */
+/* 34 */
 /*!***************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/getPrototypeOf.js ***!
   \***************************************************************/
@@ -19183,16 +18342,16 @@ function _getPrototypeOf(o) {
 module.exports = _getPrototypeOf, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 59 */
+/* 35 */
 /*!****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/wrapNativeSuper.js ***!
   \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getPrototypeOf = __webpack_require__(/*! ./getPrototypeOf.js */ 58);
+var getPrototypeOf = __webpack_require__(/*! ./getPrototypeOf.js */ 34);
 var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf.js */ 16);
-var isNativeFunction = __webpack_require__(/*! ./isNativeFunction.js */ 60);
+var isNativeFunction = __webpack_require__(/*! ./isNativeFunction.js */ 36);
 var construct = __webpack_require__(/*! ./construct.js */ 15);
 function _wrapNativeSuper(Class) {
   var _cache = typeof Map === "function" ? new Map() : undefined;
@@ -19223,7 +18382,7 @@ function _wrapNativeSuper(Class) {
 module.exports = _wrapNativeSuper, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 60 */
+/* 36 */
 /*!*****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/isNativeFunction.js ***!
   \*****************************************************************/
@@ -19240,10 +18399,10 @@ function _isNativeFunction(fn) {
 module.exports = _isNativeFunction, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 61 */
-/*!**************************************************************!*\
-  !*** D:/HBuilder/e-/pages.json?{"type":"origin-pages-json"} ***!
-  \**************************************************************/
+/* 37 */
+/*!****************************************************************!*\
+  !*** D:/HBuilder/e/e-/pages.json?{"type":"origin-pages-json"} ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19315,6 +18474,9 @@ var _default = {
   }, {
     "path": "pages/order_manage/order_manage",
     "style": {}
+  }, {
+    "path": "pages/object/object",
+    "style": {}
   }],
   "sitemapLocation": "sitemap.json",
   "style": "v2",
@@ -19357,10 +18519,10 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 62 */
-/*!*************************************************!*\
-  !*** D:/HBuilder/e-/pages.json?{"type":"stat"} ***!
-  \*************************************************/
+/* 38 */
+/*!***************************************************!*\
+  !*** D:/HBuilder/e/e-/pages.json?{"type":"stat"} ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19374,6 +18536,841 @@ exports.default = void 0;
 var _default = {
   "appid": "__UNI__E059568"
 };
+exports.default = _default;
+
+/***/ }),
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */
+/*!**********************************************************************************************************!*\
+  !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js ***!
+  \**********************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode, /* vue-cli only */
+  components, // fixed by xxxxxx auto components
+  renderjs // fixed by xxxxxx renderjs
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // fixed by xxxxxx auto components
+  if (components) {
+    if (!options.components) {
+      options.components = {}
+    }
+    var hasOwn = Object.prototype.hasOwnProperty
+    for (var name in components) {
+      if (hasOwn.call(components, name) && !hasOwn.call(options.components, name)) {
+        options.components[name] = components[name]
+      }
+    }
+  }
+  // fixed by xxxxxx renderjs
+  if (renderjs) {
+    if(typeof renderjs.beforeCreate === 'function'){
+			renderjs.beforeCreate = [renderjs.beforeCreate]
+		}
+    (renderjs.beforeCreate || (renderjs.beforeCreate = [])).unshift(function() {
+      this[renderjs.__module] = this
+    });
+    (options.mixins || (options.mixins = [])).push(renderjs)
+  }
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 45 */
+/*!*******************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/index.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _pageLifetimes = __webpack_require__(/*! ./lifecycle/pageLifetimes */ 46);
+var _clone = __webpack_require__(/*! ./methods/clone */ 47);
+var _dataset = __webpack_require__(/*! ./methods/dataset */ 48);
+var _escape = __webpack_require__(/*! ./methods/escape */ 49);
+var _event = __webpack_require__(/*! ./methods/event */ 50);
+var _getTabBar = __webpack_require__(/*! ./methods/getTabBar */ 51);
+var _relation = __webpack_require__(/*! ./methods/relation */ 52);
+var _selectComponent = __webpack_require__(/*! ./methods/selectComponent */ 53);
+var _setData = __webpack_require__(/*! ./methods/setData */ 54);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+var _default = {
+  install: function install(Vue, option) {
+    Vue.mixin(_objectSpread(_objectSpread({}, _pageLifetimes.pageLifetimes), {}, {
+      methods: {
+        clone: _clone.clone,
+        handleDataset: _dataset.handleDataset,
+        escape2Html: _escape.escape2Html,
+        html2Escape: _escape.html2Escape,
+        parseEventDynamicCode: _event.parseEventDynamicCode,
+        getTabBar: _getTabBar.getTabBar,
+        getRelationNodes: _relation.getRelationNodes,
+        zpSelectComponent: _selectComponent.selectComponent,
+        zpSelectAllComponents: _selectComponent.selectAllComponents,
+        setData: _setData.setData
+      }
+    }));
+  }
+};
+exports.default = _default;
+
+/***/ }),
+/* 46 */
+/*!*************************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/lifecycle/pageLifetimes.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.pageLifetimes = void 0;
+/**
+ * 组件pageLifetimes处理，需在页面生命周期里调用
+ * @param {Object} node
+ * @param {Object} lifeName
+ */
+function handlePageLifetime(node, lifeName) {
+  node.$children.map(function (child) {
+    if (typeof child[lifeName] == 'function') child[lifeName]();
+    handlePageLifetime(child, lifeName);
+  });
+}
+var pageLifetimes = {
+  onLoad: function onLoad() {
+    // uni.onWindowResize(CALLBACK)  监听窗口尺寸变化事件
+    // 平台差异说明
+    // App	H5	微信小程序	支付宝小程序	百度小程序	抖音小程序	飞书小程序	QQ小程序
+    // √	√	√	x	x	x	√	√
+  },
+  onShow: function onShow() {
+    handlePageLifetime(this, "handlePageShow");
+  },
+  onHide: function onHide() {
+    handlePageLifetime(this, "handlePageHide");
+  },
+  onResize: function onResize() {
+    //onResize	监听窗口尺寸变化	App、微信小程序、快手小程序
+
+    handlePageLifetime(this, "handlePageResize");
+  }
+};
+exports.pageLifetimes = pageLifetimes;
+
+/***/ }),
+/* 47 */
+/*!***************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/methods/clone.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.clone = clone;
+/**
+ * 用于处理对props进行赋值的情况
+ * //简单处理一下就行了
+ *
+ * @param {*} target
+ * @returns
+ */
+function clone(target) {
+  return JSON.parse(JSON.stringify(target));
+}
+
+/***/ }),
+/* 48 */
+/*!*****************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/methods/dataset.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleDataset = handleDataset;
+/**
+ * 用于处理dataset
+ * 自定义组件的事件里，是获取不到e.currentTarget.dataset的
+ * 因此收集data-参数，手动传进去
+ *
+ * @param {*} event
+ * @param {*} dataSet
+ */
+function handleDataset(event) {
+  var dataSet = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  if (event && !event.currentTarget) {
+    if (dataSet.tagId) {
+      event.currentTarget = {
+        id: dataSet.tagId
+      };
+    } else {
+      event.currentTarget = {
+        dataset: dataSet
+      };
+    }
+  }
+}
+
+/***/ }),
+/* 49 */
+/*!****************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/methods/escape.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.escape2Html = escape2Html;
+exports.html2Escape = html2Escape;
+/**
+ * 转义符换成普通字符
+ * @param {*} str
+ * @returns
+ */
+function escape2Html(str) {
+  if (!str) return str;
+  var arrEntities = {
+    'lt': '<',
+    'gt': '>',
+    'nbsp': ' ',
+    'amp': '&',
+    'quot': '"'
+  };
+  return str.replace(/&(lt|gt|nbsp|amp|quot);/ig, function (all, t) {
+    return arrEntities[t];
+  });
+}
+
+/**
+ * 普通字符转换成转义符
+ * @param {*} sHtml
+ * @returns
+ */
+function html2Escape(sHtml) {
+  if (!sHtml) return sHtml;
+  return sHtml.replace(/[<>&"]/g, function (c) {
+    return {
+      '<': '&lt;',
+      '>': '&gt;',
+      '&': '&amp;',
+      '"': '&quot;'
+    }[c];
+  });
+}
+
+/***/ }),
+/* 50 */
+/*!***************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/methods/event.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.parseEventDynamicCode = parseEventDynamicCode;
+/**
+ * 解析事件里的动态函数名，这种没有()的函数名，在uniapp不被执行
+ * 比如：<view bindtap="{{openId==undefined?'denglu':'hy_to'}}">立即</view>
+ * @param {*} exp
+ */
+function parseEventDynamicCode(e, exp) {
+  if (typeof this[exp] === 'function') {
+    this[exp](e);
+  }
+}
+
+/***/ }),
+/* 51 */
+/*!*******************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/methods/getTabBar.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getTabBar = getTabBar;
+/**
+ * 接管getTabBar函数，默认uni-app是没有这个函数的
+ * 适用于使用custom-tab-bar自定义导航栏的小程序项目
+ * 需注意：
+ * 1.custom-tab-bar下面仍是小程序文件
+ * 2.pages.json里面需使用条件编译区分好小程序和非小程序的tabBar配置
+ */
+function getTabBar() {
+  return {
+    setData: function setData(obj) {
+      var _this$$mp, _this$$mp$page, _this$$mp2, _this$$mp2$page;
+      if (typeof ((_this$$mp = this.$mp) === null || _this$$mp === void 0 ? void 0 : (_this$$mp$page = _this$$mp.page) === null || _this$$mp$page === void 0 ? void 0 : _this$$mp$page.getTabBar) === 'function' && (_this$$mp2 = this.$mp) !== null && _this$$mp2 !== void 0 && (_this$$mp2$page = _this$$mp2.page) !== null && _this$$mp2$page !== void 0 && _this$$mp2$page.getTabBar()) {
+        this.$mp.page.getTabBar().setData(obj);
+      } else {
+        console.log("当前平台不支持getTabBar()，已稍作处理，详细请参见相关文档。");
+      }
+    }
+  };
+}
+
+/***/ }),
+/* 52 */
+/*!******************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/methods/relation.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getRelationNodes = getRelationNodes;
+/**
+ * 组件间关系
+ * 注意：须与p-f-unicom配合使用！！！
+ * @param {*} name
+ * @returns
+ */
+function getRelationNodes(name) {
+  if (!this.$unicom) throw "this.getRelationNodes()需与p-f-unicom配合使用！";
+  return this.$unicom('@' + name);
+}
+
+/***/ }),
+/* 53 */
+/*!*************************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/methods/selectComponent.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.selectAllComponents = selectAllComponents;
+exports.selectComponent = selectComponent;
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
+var createTraverse = function createTraverse() {
+  var stop = false;
+  return function traverse(root, callback) {
+    if (!stop && typeof callback === 'function') {
+      var children = root.$children;
+      for (var index = 0; !stop && index < children.length; index++) {
+        var element = children[index];
+        stop = callback(element) === true;
+        traverse(element, callback);
+      }
+    }
+  };
+};
+
+/**
+ * 安全的JSON.stringify
+ * @param {Object} node
+ */
+function safeStringify(node) {
+  var cache = [];
+  var str = JSON.stringify(node, function (key, value) {
+    if ((0, _typeof2.default)(value) === 'object' && value !== null) {
+      if (cache.indexOf(value) !== -1) {
+        // 移除
+        return;
+      }
+      // 收集所有的值
+      cache.push(value);
+    }
+    return value;
+  });
+  cache = null; // 清空变量，便于垃圾回收机制回收
+  return str;
+}
+var match = function match(node, selector) {
+  var _vnode$context$$vnode, _vnode, _vnode$context;
+  var vnode = node._vnode;
+
+  //好家伙，在微信小程序里，node里面根本找不到class，因此这种方式没法搞了
+
+  //关键之处！
+  // console.log("attrs", (vnode.context.$vnode.data));
+  vnode = (_vnode$context$$vnode = (_vnode = vnode) === null || _vnode === void 0 ? void 0 : (_vnode$context = _vnode.context) === null || _vnode$context === void 0 ? void 0 : _vnode$context.$vnode) !== null && _vnode$context$$vnode !== void 0 ? _vnode$context$$vnode : "";
+  //console.log(vnode.data) -->  [Object] {"staticClass":"bar","attrs":{"_i":0}}  at selectComponent.js:72
+  if (!vnode || !vnode.data) {
+    return false;
+  }
+  var attrs = vnode.data.attrs || {};
+  var staticClass = vnode.data.staticClass || '';
+  var id = attrs.id || '';
+  if (selector[0] === '#') {
+    return selector.substr(1) === id;
+  } else {
+    staticClass = staticClass.trim().split(' ');
+    selector = selector.substr(1).split('.');
+    return selector.reduce(function (a, c) {
+      return a && staticClass.includes(c);
+    }, true);
+  }
+};
+var selectorBuilder = function selectorBuilder(selector) {
+  selector = selector.replace(/>>>/g, '>');
+  selector = selector.split('>').map(function (s) {
+    return s.trim().split(' ').join("').descendant('");
+  }).join("').child('");
+
+  // 替换掉new Function方式，因为小程序不支持new Function和eval
+  //return new Function('Selector', 'node', 'all', `return new Selector(node, all).descendant('` + selector + `')`);
+  return function (Selector, node, all) {
+    return new Selector(node, all).descendant(selector);
+  };
+};
+var Selector = /*#__PURE__*/function () {
+  function Selector(node) {
+    var all = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    (0, _classCallCheck2.default)(this, Selector);
+    this.nodes = [node];
+    this.all = all;
+  }
+  (0, _createClass2.default)(Selector, [{
+    key: "child",
+    value: function child(selector) {
+      var matches = [];
+      if (this.all) {
+        this.nodes.forEach(function (node) {
+          var _matches;
+          (_matches = matches).push.apply(_matches, (0, _toConsumableArray2.default)(node.$children.filter(function (node) {
+            return match(node, selector);
+          })));
+        });
+      } else {
+        if (this.nodes.length > 0) {
+          var node = this.nodes[0].$children.find(function (node) {
+            return match(node, selector);
+          });
+          matches = node ? [node] : [];
+        }
+      }
+      this.nodes = matches;
+      return this;
+    }
+  }, {
+    key: "descendant",
+    value: function descendant(selector) {
+      var _this = this;
+      var matches = [];
+      this.nodes.forEach(function (root) {
+        createTraverse()(root, function (node) {
+          if (match(node, selector)) {
+            matches.push(node);
+            return !_this.all;
+          }
+        });
+      });
+      this.nodes = matches;
+      return this;
+    }
+  }]);
+  return Selector;
+}(); ////////////////////////////////////////////selectComponent//////////////////////////////////////////////////
+/**
+ * 其他平台，如APP
+ * @param {Object} selector
+ */
+function selectComponentOther(selector) {
+  var selectors = selector.split(',').map(function (s) {
+    return s.trim();
+  });
+  if (!selectors[0]) {
+    return null;
+  }
+  var querySelector = selectorBuilder(selectors[0]);
+  return querySelector(Selector, this, false, selector).nodes[0];
+}
+
+/**
+ * 还是用这个微信小程序的实现吧
+ * @param {Object} selector
+ */
+var selectComponentWeiXin2 = function selectComponentWeiXin2(selector) {
+  var _this$$scope$selectCo;
+  console.log(".$scope", this.$scope.selectComponent(selector));
+  return ((_this$$scope$selectCo = this.$scope.selectComponent(selector)) === null || _this$$scope$selectCo === void 0 ? void 0 : _this$$scope$selectCo.data) || undefined;
+};
+
+/**
+ * selectComponent
+ * @param {Object} args
+ */
+function selectComponent(args) {
+  // console.log(".$scope",this.$scope)
+
+  //H5和小程序能正常使用这个函数
+  //重写selectComponent函数，因为默认会多一层$vm
+  return selectComponentWeiXin2.call(this, args);
+}
+
+////////////////////////////////////////////selectAllComponents//////////////////////////////////////////////////
+/**
+ * 其他平台，如APP
+ * @param {Object} selector
+ */
+function selectAllComponentsOther(selector) {
+  var _this2 = this;
+  var selectors = selector.split(',').map(function (s) {
+    return s.trim();
+  });
+  var selected = [];
+  selectors.forEach(function (selector) {
+    var querySelector = selectorBuilder(selector);
+    selected = selected.concat(querySelector(Selector, _this2, true, selector).nodes);
+  });
+  return selected;
+}
+
+/**
+ * 还是用这个微信小程序的实现吧
+ * @param {Object} selector
+ */
+var selectAllComponentsWeiXin2 = function selectAllComponentsWeiXin2(selector) {
+  var list = this.$scope.selectAllComponents(selector) || [];
+  list = list.map(function (item) {
+    return item.data;
+  });
+  return list;
+};
+
+/**
+ * selectAllComponents
+ * @param {Object} args
+ */
+function selectAllComponents(args) {
+  //H5和小程序能正常使用这个函数
+  //重写selectComponent函数，因为默认会多一层$vm
+  return selectAllComponentsWeiXin2.call(this, args);
+}
+
+/***/ }),
+/* 54 */
+/*!*****************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/methods/setData.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setData = setData;
+var _set2 = _interopRequireDefault(__webpack_require__(/*! ../utils/_set */ 55));
+var _debounce = _interopRequireDefault(__webpack_require__(/*! ../utils/debounce */ 56));
+/**
+ * 老setData polyfill
+ * 用于转换后的uniapp的项目能直接使用this.setData()函数
+ * @param {*} obj
+ * @param {*} callback
+ */
+function oldSetData(obj, callback) {
+  var that = this;
+  var handleData = function handleData(tepData, tepKey, afterKey) {
+    var tepData2 = tepData;
+    tepKey = tepKey.split('.');
+    tepKey.forEach(function (item) {
+      if (tepData[item] === null || tepData[item] === undefined) {
+        var reg = /^[0-9]+$/;
+        tepData[item] = reg.test(afterKey) ? [] : {};
+        tepData2 = tepData[item];
+      } else {
+        tepData2 = tepData[item];
+      }
+    });
+    return tepData2;
+  };
+  var isFn = function isFn(value) {
+    return typeof value == 'function' || false;
+  };
+  Object.keys(obj).forEach(function (key) {
+    var val = obj[key];
+    key = key.replace(/\]/g, '').replace(/\[/g, '.');
+    var front, after;
+    var index_after = key.lastIndexOf('.');
+    if (index_after != -1) {
+      after = key.slice(index_after + 1);
+      front = handleData(that, key.slice(0, index_after), after);
+    } else {
+      after = key;
+      front = that;
+    }
+    if (front.$data && front.$data[after] === undefined) {
+      Object.defineProperty(front, after, {
+        get: function get() {
+          return front.$data[after];
+        },
+        set: function set(newValue) {
+          front.$data[after] = newValue;
+          that.hasOwnProperty("$forceUpdate") && that.$forceUpdate();
+        },
+        enumerable: true,
+        configurable: true
+      });
+      front[after] = val;
+    } else {
+      that.$set(front, after, val);
+    }
+  });
+  // this.$forceUpdate();
+  isFn(callback) && this.$nextTick(callback);
+}
+
+/**
+ * 变量名正则
+ */
+var variableNameReg = /^([^\x00-\xff]|[a-zA-Z_$])([^\x00-\xff]|[a-zA-Z0-9_$])*$/;
+
+/**
+ * 2022-10-31 重写setData
+ * 2023-05-08 增加微信“简易双向绑定”支持
+ * 用于转换后的uniapp的项目能直接使用this.setData()函数
+ * @param {Object} obj
+ * @param {Object} callback
+ */
+function setData(obj) {
+  var _this = this;
+  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  Object.keys(obj).forEach(function (key) {
+    (0, _set2.default)(_this, key, obj[key]);
+
+    //处理微信“简易双向绑定”
+    if (variableNameReg.test(key) && key.endsWith("Clone")) {
+      var propName = key.replace(/Clone$/, "");
+      if (_this.$options && _this.$options.propsData[propName]) {
+        _this.$emit("update:".concat(propName), obj[key]);
+      }
+    }
+  });
+  this.$forceUpdate();
+  if (typeof callback == 'function') this.$nextTick(callback);
+}
+
+/***/ }),
+/* 55 */
+/*!************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/utils/_set.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+/**
+ * lodash set
+ * @param {*} obj
+ * @param {*} path
+ * @param {*} value
+ * @returns
+ */
+function _set(obj, path, value) {
+  if (Object(obj) !== obj) return obj; // When obj is not an object
+  // If not yet an array, get the keys from the string-path
+  if (!Array.isArray(path)) path = path.toString().match(/[^.[\]]+/g) || [];
+  path.slice(0, -1).reduce(function (a, c, i) {
+    return (
+      // Iterate all of them except the last one
+      Object(a[c]) === a[c] // Does the key exist and is its value an object?
+      // Yes: then follow that path
+      ? a[c]
+      // No: create the key. Is the next key a potential array-index?
+      : a[c] = Math.abs(path[i + 1]) >> 0 === +path[i + 1] ? [] // Yes: assign a new array object
+      : {}
+    );
+  },
+  // No: assign a new plain object
+  obj)[path[path.length - 1]] = value; // Finally assign the value to the last key
+  return obj; // Return the top-level object to allow chaining
+}
+var _default = _set;
+exports.default = _default;
+
+/***/ }),
+/* 56 */
+/*!****************************************************************!*\
+  !*** D:/HBuilder/e/e-/uni_modules/zp-mixins/utils/debounce.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+/**
+ * 防抖
+ * @param {Object} scope  //引用的this，发现不显式传this，拿不到。
+ * @param {Object} fn
+ * @param {Object} delay
+ */
+var t = null;
+var debounce = function debounce(scope, fn, delay) {
+  if (t !== null) {
+    clearTimeout(t);
+  }
+  t = setTimeout(function () {
+    scope[fn]();
+  }, delay);
+};
+var _default = debounce;
 exports.default = _default;
 
 /***/ })

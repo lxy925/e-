@@ -4,14 +4,14 @@
  <view class="container">
      <scroll-view scroll-y="true" class="scroll-content">
      <view class="accompany-service">
-       <image src="../../static/images/order/img_2.png" id="service-introduce" mode=""/>
+      <image v-if="details.length > 0" :src="details[0].image" id="service-introduce" mode="aspectFill" />
       <view class="intro_1">
       <text>认证陪诊师提供专业服务</text>
       <text>家人般温暖</text>
       </view>
       <view class="intro_2">
       <view class="text-with-icon">
-                     <image src="../../static/images/icons/ordericon_6.png" class="icon" />
+                     <image src="../../static/images/order/icon_6.png" class="icon" />
                        <view class="text-container">
                          <text class="i_1">全程陪诊</text>
                          <text class="i_2">全程陪同服务，手续代办服务</text>
@@ -53,13 +53,13 @@
  <text>容</text>
  </view>
  <view class="service-image">
- <image src="../../static/images/order/img_1.png" alt=""/>
+  <image v-if="details.length > 0" :src="details[1].image" mode="aspectFill" />
  </view>
        </view>
      </scroll-view>
      <view class="fixed-buttons">
          <button class="customer-service">
-         <image src="../../static/images/icons/order/icon_7.png" alt=""/>
+         <image src="../../static/images/order/icon_7.png" alt=""/>
          </button>
          <button class="order-now" style="border: none; position: relative;">
              <text class="button-text">立即下单</text>
@@ -75,11 +75,42 @@ export default {
   data() {
     return {
       // Define your data properties here
+	  details:[],
     };
   },
   methods: {
     // Define your methods here
+	async getDetailsImage() {
+      try {
+        uni.showLoading({
+          title: '加载中'
+        })
+        
+        const { result } = await uniCloud.callFunction({
+          name: 'Order_details'
+        })
+        
+        if (result.code === 0) {
+          this.details = result.data
+        } else {
+          uni.showToast({
+            title: result.msg || '获取图片失败',
+            icon: 'none'
+          })
+        }
+      } catch (e) {
+        uni.showToast({
+          title: '获取图片失败',
+          icon: 'none'
+        })
+      } finally {
+        uni.hideLoading()
+      }
   }
+},
+onLoad() {
+  this.getDetailsImage()
+}
 }
 </script>
 
@@ -142,7 +173,7 @@ page{
 .intro_1 {
   position: absolute; /* 绝对定位 */
   left: 5%; /* 距离左边5% */
-  top: 12%; /* 距离顶部10% */
+  top: 10%; /* 距离顶部10% */
   color: white; /* 文字颜色 */
   padding: 5rpx; /* 内边距 */
   display: flex;
@@ -210,6 +241,10 @@ page{
   color: #02A89D;
   padding: 20rpx;
   padding-bottom: 5rpx;
+  display: flex; /* 使用 Flexbox 布局 */
+  justify-content: flex-end; /* 默认情况下，内容靠右对齐 */
+  align-items: flex-end;
+  flex-wrap: wrap; /* 允许换行 */
 }
 .s_1{
   margin-left: 10rpx;
@@ -228,8 +263,12 @@ font-size: 30rpx;
   font-weight: 300;
 }
 .s_5{
+  flex: 1; /* 允许文本占据剩余空间 */
+  text-align: left; /* 换行时文本居左对齐 */
+  white-space: nowrap;
   color: #909090;
-  margin-left: 70rpx;
+  text-align: right;
+  display: block;
 }
 .s_6{
   color: #000000;
@@ -320,7 +359,6 @@ font-size: 30rpx;
   height: 80%;
   object-fit: contain;
 }
-
 
 
 </style>

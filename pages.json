@@ -71,6 +71,10 @@
         {
             "path" : "pages/order_manage/order_manage",
             "style" : {}
+        },
+        {
+            "path" : "pages/object/object",
+            "style" : {}
         }
     ],
     "sitemapLocation" : "sitemap.json",

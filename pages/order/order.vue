@@ -1,100 +1,148 @@
 <template>
 	<view class="page">
-  <!--index.wxml-->
-    <view class="container">
-      <view class="userinfo">
-        <view class="appointment-info">
-          <image src="../../static/images/icons/order/icon_1.png" class="icon" />
-          <text class="title">预约信息</text>
-        </view>
-        <view class="input-group">
-          <text class="label">就诊人</text>
-          <input class="input" placeholder="请选择就诊人" />
-        </view>
-        <view class="input-group">
-          <text class="label">服务医院</text>
-          <input class="input" placeholder="请选择医院" />
-        </view>
-        <view class="input-group">
-          <text class="label">服务时间</text>
-          <input class="input" placeholder="请选择服务时间" />
-        </view>
-        <view class="input-group">
-          <text class="label">陪诊师</text>
-          <input class="input" placeholder="请选择陪诊师" />
-        </view>
-        <view class="note-info">
-          <image src="../../static/images/icons/order/icon_2.png" class="icon" />
-          <text class="note">若不填陪诊师，我们将为您自动匹配优秀陪诊师</text>
-        </view>
+<!--index.wxml-->
+  <view class="container">
+    <view class="userinfo">
+      <view class="appointment-info">
+        <image src="../../image/icon_1.png" class="icon" />
+        <text class="title">预约信息</text>
       </view>
-      
-      <view class="department">
-        <text class="label_1">科室</text> 
-        <text class="more">更多>></text>
-        <view class="department-list">
-          <button class="department-item top-margin">儿科</button>
-          <button class="department-item top-margin">妇产科</button>
-          <button class="department-item top-margin">内科</button>
-          <button class="department-item">外科</button>
-          <button class="department-item">精神科</button>
-          <button class="department-item">心胸外科</button>
-        </view>
+      <view class="input-group">
+        <text class="label">就诊人</text>
+        <input class="input" placeholder="请选择就诊人" />
       </view>
-  
-      <view class="upload-section">
-        <view class="upload-labels">
-          <text class="label_1">上传材料</text>
-          <text class="label_2">(就诊卡、病例、挂号记录等)</text>
-        </view>
-        <button class="upload-button">
-          <image src="../../static/images/icons/order/icon_3.png" class="upload-icon" />
-          <text class="upload-text">添加图片</text>
+      <view class="input-group">
+        <text class="label">服务医院</text>
+        <input class="input" placeholder="请选择医院" />
+      </view>
+      <view class="input-group">
+        <text class="label">服务时间</text>
+        <input class="input" placeholder="请选择服务时间" />
+      </view>
+      <view class="input-group">
+        <text class="label">陪诊师</text>
+        <input class="input" placeholder="请选择陪诊师" />
+      </view>
+      <view class="note-info">
+        <image src="../../image/icon_2.png" class="icon" />
+        <text class="note">若不填陪诊师，我们将为您自动匹配优秀陪诊师</text>
+      </view>
+    </view>
+    
+    <view class="department">
+      <text class="label_1">科室</text> 
+      <text class="more">更多>></text>
+      <view class="department-list">
+        <button 
+          class="department-item top-margin {{selectedDepartment === '儿科' ? 'selected' : ''}}" 
+          data-department="儿科" 
+          @tap="selectDepartment">儿科
+        </button>
+        <button 
+          class="department-item top-margin {{selectedDepartment === '妇产科' ? 'selected' : ''}}" 
+          data-department="妇产科" 
+          @tap="selectDepartment">妇产科
+        </button>
+        <button 
+          class="department-item top-margin {{selectedDepartment === '内科' ? 'selected' : ''}}" 
+          data-department="内科" 
+          @tap="selectDepartment">内科
+        </button>
+        <button 
+          class="department-item {{selectedDepartment === '外科' ? 'selected' : ''}}" 
+          data-department="外科" 
+          @tap="selectDepartment">外科
+        </button>
+        <button 
+          class="department-item {{selectedDepartment === '精神科' ? 'selected' : ''}}" 
+          data-department="精神科" 
+          @tap="selectDepartment">精神科
+        </button>
+        <button 
+          class="department-item {{selectedDepartment === '心胸外科' ? 'selected' : ''}}" 
+          data-department="心胸外科" 
+          @tap="selectDepartment">心胸外科
         </button>
       </view>
-  
-      <view class="requirements">
-        <text class="label_1">就诊人特点及陪诊需求</text>
-        <view class="requirements-list">
-          <label class="custom-checkbox">
-            <text class="checkbox-text">半自理</text>
-            <checkbox value="halfSelf" class="hidden-checkbox" />
-          </label>
-          <label class="custom-checkbox">
-            <text class="checkbox-text">无法自理</text>
-            <checkbox value="noSelf" class="hidden-checkbox" />
-          </label>
-          <label class="custom-checkbox">
-            <text class="checkbox-text">普通话沟通</text>
-            <checkbox value="common" class="hidden-checkbox" />
-          </label>
-          <label class="custom-checkbox">
-            <text class="checkbox-text">有家属陪同</text>
-            <checkbox value="family" class="hidden-checkbox" />
-          </label>
-          <label class="custom-checkbox">
-            <text class="checkbox-text">男陪诊师</text>
-            <checkbox value="family" class="hidden-checkbox" />
-          </label>
-          <label class="custom-checkbox">
-            <text class="checkbox-text">女陪诊师</text>
-            <checkbox value="family" class="hidden-checkbox" />
-          </label>
-        </view>
+    </view>
+
+    <view class="upload-section">
+      <view class="upload-labels">
+        <text class="label_1">上传材料</text>
+        <text class="label_2">(就诊卡、病例、挂号记录等)</text>
+      </view>
+      <button class="upload-button">
+        <image src="../../image/icon_3.png" class="upload-icon" />
+        <text class="upload-text">添加图片</text>
+      </button>
+    </view>
+
+    <view class="requirements">
+      <text class="label_1">就诊人特点及陪诊需求</text>
+      <view>{{selectedCheckboxes}}</view>
+      <view class="requirements-list">
+        <label 
+          class="custom-checkbox" 
+          :class="{ selected: selectedCheckboxes.includes('halfSelf') }" 
+          @tap="toggleCheckbox" 
+          data-value="halfSelf">
+          <text class="checkbox-text">半自理</text>
+          <checkbox value="halfSelf" class="hidden-checkbox" />
+        </label>
+        <label 
+          class="custom-checkbox" 
+          :class="{ selected: selectedCheckboxes.includes('noSelf') }" 
+          @tap="toggleCheckbox" 
+          data-value="noSelf">
+          <text class="checkbox-text">无法自理</text>
+          <checkbox value="noSelf" class="hidden-checkbox" />
+        </label>
+        <label 
+          class="custom-checkbox" 
+          :class="{ selected: selectedCheckboxes.includes('common') }" 
+          @tap="toggleCheckbox" 
+          data-value="common">
+          <text class="checkbox-text">普通话沟通</text>
+          <checkbox value="common" class="hidden-checkbox" />
+        </label>
+        <label 
+          class="custom-checkbox" 
+          :class="{ selected: selectedCheckboxes.includes('family') }" 
+          @tap="toggleCheckbox" 
+          data-value="family">
+          <text class="checkbox-text">有家属陪同</text>
+          <checkbox value="family" class="hidden-checkbox" />
+        </label>
+        <label 
+          class="custom-checkbox" 
+          :class="{ selected: selectedCheckboxes.includes('male') }" 
+          @tap="toggleCheckbox" 
+          data-value="male">
+          <text class="checkbox-text">男陪诊师</text>
+          <checkbox value="male" class="hidden-checkbox" />
+        </label>
+        <label 
+          class="custom-checkbox" 
+          :class="{ selected: selectedCheckboxes.includes('female') }" 
+          @tap="toggleCheckbox" 
+          data-value="female">
+          <text class="checkbox-text">女陪诊师</text>
+          <checkbox value="female" class="hidden-checkbox" />
+        </label>
       </view>
     </view>
-	
-    <view class="submit">
-      <view class="total">
-        <view class="total-info">
-          <text class="total-label">总额</text>
-          <text class="currency" style="color: black;">¥</text>
-          <text class="total-amount" style="color:#DD5858;">90.00</text>
-        </view>
-        <text class="discount">含单值保险 ¥30 优惠抵扣 ¥5</text>
+  </view>
+  <view class="submit">
+    <view class="total">
+      <view class="total-info">
+        <text class="total-label">总额</text>
+        <text class="currency" style="color: black;">¥</text>
+        <text class="total-amount" style="color:#DD5858;">90.00</text>
       </view>
-      <button class="submit-button">提交订单</button>
+      <text class="discount">含单值保险 ¥30 优惠抵扣 ¥5</text>
     </view>
+    <button class="submit-button">提交订单</button>
+  </view>
 	</view>
 </template>
 
@@ -104,17 +152,36 @@ export default {
   data() {
     return {
       // Define your data properties here
+      selectedDepartment: null, // 当前选中的科室
+      selectedCheckboxes: [], // 存储选中的复选框值
     };
   },
   methods: {
     // Define your methods here
+    selectDepartment(event) {
+      const department = event.currentTarget.dataset.department; // 获取选中的科室
+      this.selectedDepartment = department; // 更新选中的科室
+      console.log("Selected Department:", this.selectedDepartment); // 调试信息
+    },
+    toggleCheckbox(event) {
+      const value = event.currentTarget.dataset.value; // 获取复选框的值
+      const selectedCheckboxes = this.selectedCheckboxes;
+
+      if (selectedCheckboxes.includes(value)) {
+        this.selectedCheckboxes = selectedCheckboxes.filter(item => item !== value);
+      } else {
+        this.selectedCheckboxes = [...selectedCheckboxes, value];
+      }
+
+      console.log("Selected Checkboxes:", this.selectedCheckboxes); // 调试信息
+    }
   }
 }
 </script>
 
 <style scoped>
 /**index.wxss**/
-.page {
+page {
   height: 100vh;
   display: flex;
   flex-direction: column; /* 垂直排列子元素 */
@@ -124,6 +191,7 @@ export default {
 .container {
   height:auto;
   margin: 0 20rpx;
+  margin-top: 40rpx;
   border-radius: 30rpx; /* 圆角 */
   background-color: #ffffff; /* 容器背景为白色 */
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* 更明显的阴影，调整为更接近图片的效果 */
@@ -198,16 +266,13 @@ export default {
 }
 
 .department-item {
-font-size: 16px;
-  flex: 0 0 27%; /* 每个复选框占据 30% 的宽度 */
-  display: flex; /* 使用 flexbox 布局 */
-  align-items: center; /* 水平居中对齐 */
-  justify-content: center; /* 垂直居中对齐 */
+  font-weight:400;
+  flex: 0 0 25%; /* 每个按钮占据 28% 的宽度 */
+  margin:12rpx 5rpx; /* 按钮之间的间距 */
+  padding: 17rpx 0; /* 调整内边距 */
+  font-size: 16px; /* 字体大小 */
   background-color: #E5E5E5; /* 背景颜色 */
   border-radius: 20px; /* 圆角 */
-  padding:0rpx ;
-  margin:0rpx 30rpx; /* 按钮之间的间距 */
-  margin-bottom: 20rpx; /* 按钮之间的间距 */
 }
 .department-item:nth-child(1){
   margin-left:1rpx ;
@@ -221,7 +286,10 @@ font-size: 16px;
 .department-item:nth-child(6){
   margin-right:1rpx ;
 }
-
+.department-item.selected {
+  background-color: #18d1c2; /* 选中时背景颜色 */
+  color: white; /* 选中时字体颜色 */
+}
 .upload-section {
   display: flex;
   flex-direction: column; /* 垂直排列 */
@@ -307,7 +375,7 @@ font-size: 16px;
 }
 
 .submit-button {
-  width: 300rpx; /* 设置按钮宽度 */
+  width: 100px; /* 设置按钮宽度 */
   height: 80rpx; /* 设置高度 */
   background-color: #2196f3; /* 背景颜色 */
   color: white; /* 字体颜色 */
@@ -358,13 +426,14 @@ margin-left: 35rpx;
 .custom-checkbox {
   flex: 0 0 24%; /* 每个复选框占据 30% 的宽度 */
   display: flex; /* 使用 flexbox 布局 */
-  align-items: center; /* 水平居中对齐 */
-  justify-content: center; /* 垂直居中对齐 */
-  background-color: #E5E5E5; /* 背景颜色 */
+  align-items: center; /* 垂直居中对齐 */
+  justify-content: center; /* 水平居中对齐 */
+  background-color: #E5E5E5; /* 默认背景颜色 */
   border-radius: 20px; /* 圆角 */
   padding: 7rpx 10rpx; /* 内边距 */
-  margin:12rpx 28rpx; /* 按钮之间的间距 */
+  margin: 12rpx 28rpx; /* 按钮之间的间距 */
   margin-bottom: 10rpx; /* 按钮之间的间距 */
+  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */
 }
 .custom-checkbox:nth-child(1){
   margin-top: 30rpx;
@@ -386,6 +455,10 @@ margin-left: 35rpx;
 .hidden-checkbox {
   display: none; /* 隐藏原始复选框 */
 }
+.custom-checkbox.selected {
+  background-color: #18d1c2; /* 选中时背景颜色 */
+  color: white; /* 选中时字体颜色 */
+}
 
 .checkbox-text {
   font-size: 16px; /* 字体大小 */
@@ -398,5 +471,4 @@ margin-left: 35rpx;
   margin-bottom: 0; /* 确保没有底部外边距 */
   padding: 0; /* 确保没有内边距 */
 }
-
 </style>

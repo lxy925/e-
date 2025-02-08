@@ -84,6 +84,37 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**index.wxss**/
 /* pages/order_details/order_details.wxss */
 page.data-v-8cff30ac{
@@ -136,7 +167,7 @@ page.data-v-8cff30ac{
 .intro_1.data-v-8cff30ac {
   position: absolute; /* 绝对定位 */
   left: 5%; /* 距离左边5% */
-  top: 12%; /* 距离顶部10% */
+  top: 10%; /* 距离顶部10% */
   color: white; /* 文字颜色 */
   padding: 5rpx; /* 内边距 */
   display: flex;
@@ -200,6 +231,10 @@ page.data-v-8cff30ac{
   color: #02A89D;
   padding: 20rpx;
   padding-bottom: 5rpx;
+  display: flex; /* 使用 Flexbox 布局 */
+  justify-content: flex-end; /* 默认情况下，内容靠右对齐 */
+  align-items: flex-end;
+  flex-wrap: wrap; /* 允许换行 */
 }
 .s_1.data-v-8cff30ac{
   margin-left: 10rpx;
@@ -218,8 +253,12 @@ font-size: 30rpx;
   font-weight: 300;
 }
 .s_5.data-v-8cff30ac{
+  flex: 1; /* 允许文本占据剩余空间 */
+  text-align: left; /* 换行时文本居左对齐 */
+  white-space: nowrap;
   color: #909090;
-  margin-left: 70rpx;
+  text-align: right;
+  display: block;
 }
 .s_6.data-v-8cff30ac{
   color: #000000;
@@ -310,7 +349,6 @@ font-size: 30rpx;
   height: 80%;
   object-fit: contain;
 }
-
 
 
 

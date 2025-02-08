@@ -1,0 +1,42 @@
+{
+	"bsonType": "object",
+	"required": [],
+	"permission": {
+		"read": true,
+		"create": false,
+		"update": false,
+		"delete": false
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"name":{
+			"bsonType": "string",
+			"description": "服务对象姓名",
+			"maxLength": 500
+		},
+		"gender": {
+			"bsonType": "string",
+			"description": "服务对象性别",
+			"enum": ["男", "女", " "]
+		},
+		"age": {
+			"bsonType": "int",
+			"description": "服务对象年龄"
+		},
+		"phone": {
+			"bsonType": "string",
+			"description": "服务对象手机",
+			"maxLength": 15
+		},
+		"relationship": {
+			"bsonType": "string",
+			"description": "与就诊人关系"
+		},
+		"createAt": {
+      "bsonType": "string",
+      "description": "创建时间"
+    }
+	}
+}

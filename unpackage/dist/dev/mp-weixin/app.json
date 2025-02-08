@@ -1,6 +1,5 @@
 {
   "pages": [
-    "pages/order_manage/order_manage",
     "pages/index/index",
     "pages/health/health",
     "pages/doctor/doctor",
@@ -11,7 +10,9 @@
     "pages/about/about",
     "pages/prevent/prevent",
     "pages/order/order",
-    "pages/order_details/order_details"
+    "pages/order_details/order_details",
+    "pages/order_manage/order_manage",
+    "pages/object/object"
   ],
   "subPackages": [],
   "window": {

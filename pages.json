@@ -139,8 +139,17 @@
     "navigationBarTitleText": "e陪无忧",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom",
+    
     "usingComponents": {
-      "van-field": "/wxcomponents/vant/field/index"
+      "van-field": "/wxcomponents/vant/field/index",
+  "van-button": "/wxcomponents/vant/button/index",
+  "van-radio-group": "/wxcomponents/vant/radio-group/index",
+  "van-radio": "/wxcomponents/vant/radio/index",
+  "van-action-sheet": "/wxcomponents/vant/action-sheet/index",
+  "van-area": "/wxcomponents/vant/area/index",
+  "van-uploader": "/wxcomponents/vant/uploader/index",
+  "van-checkbox": "/wxcomponents/vant/checkbox/index",
+  "van-row": "/wxcomponents/vant/row/index"
     }
   },
 
@@ -151,4 +160,5 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   }
+  
 }

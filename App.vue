@@ -44,9 +44,11 @@ button::after {
 }
 
 page {
-    background: #f6f6f6;
+    background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    min-height: 100vh;;
 }
+
 </style>

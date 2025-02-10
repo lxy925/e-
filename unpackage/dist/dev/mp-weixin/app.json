@@ -4,17 +4,27 @@
     "pages/health/health",
     "pages/doctor/doctor",
     "pages/mine/mine",
+    "pages/more/more",
+    "pages/service/service",
+    "pages/consult/consult",
+    "pages/about/about",
+    "pages/prevent/prevent",
     "pages/doctorlist/doctorlist",
     "pages/doctordetail/doctordetail",
-    "pages/userInfoDetail/userInfoDetail"
+    "pages/order/order",
+    "pages/order_details/order_details",
+    "pages/order_manage/order_manage",
+    "pages/userInfoDetail/userInfoDetail",
+    "pages/doctorlogin/doctorlogin"
   ],
   "subPackages": [],
   "window": {
-    "backgroundColor": "#F6F6F6",
+    "backgroundColor": "#0bd6c8",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#54c69a",
-    "navigationBarTitleText": "即时陪诊",
-    "navigationBarTextStyle": "black"
+    "navigationBarBackgroundColor": "#0bd6c8",
+    "navigationBarTitleText": "e陪无忧",
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom"
   },
   "tabBar": {
     "color": "#A2A9B0",
@@ -63,5 +73,7 @@
     }
   },
   "plugins": {},
-  "usingComponents": {}
+  "usingComponents": {
+    "custom-nav": "/components/custom-nav/custom-nav"
+  }
 }

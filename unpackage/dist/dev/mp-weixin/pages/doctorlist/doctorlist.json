@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "陪诊师",
-  "usingComponents": {}
+  "usingComponents": {
+    "custom-nav": "/components/custom-nav/custom-nav"
+  }
 }

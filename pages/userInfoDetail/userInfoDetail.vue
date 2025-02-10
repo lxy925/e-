@@ -15,6 +15,7 @@
             </view>
             <view class="user-info-item">
                 <image src="../../static/images/mine/name.png" alt=""></image>
+
                 <view class="user-info-item-title">真实姓名</view>
                 <input type="text" class="username" placeholder="设置你的真实姓名" v-model="realName" />
             </view>
@@ -48,12 +49,18 @@ export default {
 				js_code: "",
 				session_key: "",
                 realName: '',
+                ID: '',
+                fromPage: '',
         };
     }
     /**
+
      * 生命周期函数--监听页面加载
      */,
-    onLoad(options) {},
+    onLoad(options) {
+         // 获取来源页面参数
+         this.fromPage = options.from || 'mine';
+    },
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
@@ -96,6 +103,7 @@ export default {
             this.nickName = e.detail.value;
         },
 
+
         go() {
 				uni.login({
 					provider: 'weixin',
@@ -113,6 +121,7 @@ export default {
 							},
 							success: (res) => {
 								console.log('获取信息', res.data);
+                                this.ID = res.data.openid
 								this.session_key = res.data.session_key
  
 							}
@@ -137,10 +146,18 @@ export default {
             // 保存用户信息到本地存储
             const userInfo = {
                 avatarUrl: this.avatar,
-                realName: this.realName
+                realName: this.realName,
+                ID: this.ID,
             };
-            uni.setStorageSync('userInfo', userInfo);
+             // 根据来源页面存储不同的信息
+             if (this.fromPage === 'doctorlogin') {
+                uni.setStorageSync('doctorInfo', userInfo);
+            } else {
+                uni.setStorageSync('userInfo', userInfo);
+            }
             
+
+
             // 返回上一页
             uni.navigateBack({
                 delta: 1

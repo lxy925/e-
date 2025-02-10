@@ -1,92 +1,148 @@
 {
-	"pages": [
-		{
-			"path": "pages/index/index",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/health/health",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/doctor/doctor",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/mine/mine",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path" : "pages/doctorlist/doctorlist",
-			"style" : 
-			{
-				"navigationBarTitleText" : "陪诊师"
-			}
-		},
-		{
-			"path" : "pages/doctordetail/doctordetail",
-			"style" : 
-			{
-				"navigationBarTitleText" : "陪诊师详情"
-			}
-		},
-		{
-			"path" : "pages/userInfoDetail/userInfoDetail",
-			"style" : 
-			{
-				"navigationBarTitleText" : "完善用户信息"
-			}
-		}
-	],
-	"sitemapLocation": "sitemap.json",
-	"style": "v2",
-	"lazyCodeLoading": "requiredComponents",
-	"tabBar": {
-		"color": "#A2A9B0",
-		"selectedColor": "#15cbbc",
-		"backgroundColor": "#ffffff",
-		"list": [
-			{
-				"pagePath": "pages/index/index",
-				"text": "首页",
-				"iconPath": "static/images/icons/home.png",
-				"selectedIconPath": "static/images/icons/home-active.png"
-			},
-			{
-				"pagePath": "pages/doctor/doctor",
-				"text": "陪诊师",
-				"iconPath": "static/images/icons/doctor.png",
-				"selectedIconPath": "static/images/icons/doctor-active.png"
-			},
-			{
-				"pagePath": "pages/health/health",
-				"text": "健康管理",
-				"iconPath": "static/images/icons/health.png",
-				"selectedIconPath": "static/images/icons/health-active.png"
-			},
-			{
-				"pagePath": "pages/mine/mine",
-				"text": "我的",
-				"iconPath": "static/images/icons/mine.png",
-				"selectedIconPath": "static/images/icons/mine-active.png"
-			}
-		]
-	},
-	"globalStyle": {
-		"backgroundColor": "#F6F6F6",
-		"backgroundTextStyle": "light",
-		"navigationBarBackgroundColor": "#54c69a",
-		"navigationBarTitleText": "即时陪诊",
-		"navigationBarTextStyle": "black"
-	},
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "usingComponents": {},
+        "navigationBarTitleText": "e陪无忧"
+      }
+    },
+    {
+      "path": "pages/health/health",
+      "style": {
+        "usingComponents": {},
+        "navigationBarTitleText": "健康管理"
+      }
+    },
+    {
+      "path": "pages/doctor/doctor",
+      "style": {
+        "usingComponents": {},
+        "navigationBarTitleText": "陪诊师"
+      }
+    },
+    {
+      "path": "pages/mine/mine",
+      "style": {
+        "usingComponents": {},
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/more/more",
+      "style": {
+        "navigationBarTitleText": "更多"
+      }
+    },
+    {
+      "path": "pages/service/service",
+      "style": {
+        "usingComponents": {},
+        "navigationBarTitleText": "我要陪诊",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/consult/consult",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/about/about",
+      "style": {
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/prevent/prevent",
+      "style": {
+        "navigationBarTitleText": "疾病预防"
+      }
+    },
+    {
+      "path": "pages/doctorlist/doctorlist",
+      "style": {
+        "navigationBarTitleText": "陪诊师"
+      }
+    },
+    {
+      "path": "pages/doctordetail/doctordetail",
+      "style": {
+        "navigationBarTitleText": "陪诊师详情"
+      }
+    },
+    {
+      "path" : "pages/order/order",
+      "style" : {}
+  },
+  {
+      "path" : "pages/order_details/order_details",
+      "style" : {}
+  },
+  {
+      "path" : "pages/order_manage/order_manage",
+      "style" : {}
+  },
+  {
+   			"path" : "pages/userInfoDetail/userInfoDetail",
+   			"style" : 
+   			{
+   				"navigationBarTitleText" : "完善用户信息"
+   			}
+   		},
+   		{
+   			"path" : "pages/doctorlogin/doctorlogin",
+   			"style" : 
+   			{
+   				"navigationBarTitleText" : ""
+   			}
+   		}
+  ],
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "tabBar": {
+    "color": "#A2A9B0",
+    "selectedColor": "#15cbbc",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/images/icons/home.png",
+        "selectedIconPath": "static/images/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/doctor/doctor",
+        "text": "陪诊师",
+        "iconPath": "static/images/icons/doctor.png",
+        "selectedIconPath": "static/images/icons/doctor-active.png"
+      },
+      {
+        "pagePath": "pages/health/health",
+        "text": "健康管理",
+        "iconPath": "static/images/icons/health.png",
+        "selectedIconPath": "static/images/icons/health-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "static/images/icons/mine.png",
+        "selectedIconPath": "static/images/icons/mine-active.png"
+      }
+    ]
+  },
+  "globalStyle": {
+    "backgroundColor": "#0bd6c8",
+    "backgroundTextStyle": "light",
 
-	"subPackages": []
+    "navigationBarBackgroundColor": "#0bd6c8",
+    "navigationBarTitleText": "e陪无忧",
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom"
+  },
+
+  "subPackages": []
 }
+  

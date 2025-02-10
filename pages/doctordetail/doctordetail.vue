@@ -1,5 +1,6 @@
 <template>
     <view class="container">
+        <custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
         <view class="doctor-card">
             <view class="doctor-info">
                 <view class="name">{{doctor.name}}</view>
@@ -114,6 +115,9 @@ export default {
 </script>
 
 <style>
+.container{
+    padding-top: 200rpx;
+}
 .doctor-card {
     display: flex;
     flex-direction: row;

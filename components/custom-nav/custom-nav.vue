@@ -74,10 +74,12 @@ export default {
         });
     // 获取位置信息
     // this.getLocationInfo()
+	 // this.getLocation()
+	
   },
   methods: {
     getLocationInfo() {
-      const cachedLocation = uni.getStorageSync('location');
+      const cachedLocation = uni.getStorageSync('areaName');
       if (cachedLocation) {
         this.location = cachedLocation;
         console.log('使用缓存的位置信息:', cachedLocation);
@@ -118,8 +120,11 @@ export default {
         },
         success: (res) => {
           if (res.data.status === '1') {
-            this.location = res.data.regeocode.addressComponent.city;
-            uni.setStorageSync('location', this.location);
+            this.location = res.data.regeocode.addressComponent.district;
+			console.log(res.data.regeocode.addressComponent)
+            uni.setStorageSync('cityName', res.data.regeocode.addressComponent.city);
+			uni.setStorageSync('provinceName', res.data.regeocode.addressComponent.province);
+			uni.setStorageSync('areaName', res.data.regeocode.addressComponent.district);
           }
         }
       })

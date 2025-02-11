@@ -37,9 +37,9 @@
                 ]
             },
             "ios" : {
-                "plist": {
-                    "NSCameraUsageDescription": "需要使用摄像头来拍摄照片或视频",
-                    "NSPhotoLibraryUsageDescription": "需要访问相册以保存和选择照片"
+                "plist" : {
+                    "NSCameraUsageDescription" : "需要使用摄像头来拍摄照片或视频",
+                    "NSPhotoLibraryUsageDescription" : "需要访问相册以保存和选择照片"
                 }
             },
             "sdkConfigs" : {}
@@ -47,7 +47,7 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wx73ff71f0487b4e8a",
+        "appid" : "wxf8afb6dce14d487a",
         "setting" : {
             "urlCheck" : false
         },

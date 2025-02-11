@@ -229,41 +229,41 @@
 			},
 			
 			
-			async uploadImage() {
-				if (!(this.avatarList && this.certificateList && this.idCardFrontList && this.idCardBackList)) {
-					uni.showToast({
-						title: '请先选择图片',
-						icon: 'none',
-						duration: 2000,
-					});
-					return;
-				}
+			// async uploadImage() {
+			// 	if (!(this.avatarList && this.certificateList && this.idCardFrontList && this.idCardBackList)) {
+			// 		uni.showToast({
+			// 			title: '请先选择图片',
+			// 			icon: 'none',
+			// 			duration: 2000,
+			// 		});
+			// 		return;
+			// 	}
 
-				const uploadTask = uniCloud.uploadFile({
-					filePath: this.imagePath,
-					cloudPath: `escorts/${Date.now()}-${Math.random().toString(36).substr(2, 6)}.png`, // 云端路径
-					onUploadProgress: (progress) => {
-						console.log('上传进度:', progress);
-					},
-				});
+			// 	const uploadTask = uniCloud.uploadFile({
+			// 		filePath: this.imagePath,
+			// 		cloudPath: `escorts/${Date.now()}-${Math.random().toString(36).substr(2, 6)}.png`, // 云端路径
+			// 		onUploadProgress: (progress) => {
+			// 			console.log('上传进度:', progress);
+			// 		},
+			// 	});
 
-				try {
-					const result = await uploadTask;
-					this.formData.avatarUrl = result.fileID; // 获取上传后的文件 ID
-					uni.showToast({
-						title: '上传成功',
-						icon: 'success',
-						duration: 2000,
-					});
-				} catch (err) {
-					console.error('上传失败:', err);
-					uni.showToast({
-						title: '上传失败',
-						icon: 'none',
-						duration: 2000,
-					});
-				}
-			},
+			// 	try {
+			// 		const result = await uploadTask;
+			// 		this.formData.avatarUrl = result.fileID; // 获取上传后的文件 ID
+			// 		uni.showToast({
+			// 			title: '上传成功',
+			// 			icon: 'success',
+			// 			duration: 2000,
+			// 		});
+			// 	} catch (err) {
+			// 		console.error('上传失败:', err);
+			// 		uni.showToast({
+			// 			title: '上传失败',
+			// 			icon: 'none',
+			// 			duration: 2000,
+			// 		});
+			// 	}
+			// },
 			onCityChange(event) {
 				const [provinceIndex, cityIndex, areaIndex] = event.detail.value;
 

@@ -19,7 +19,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "3.5.6",
-  "appid": "wx73ff71f0487b4e8a",
+  "appid": "wxf8afb6dce14d487a",
   "projectname": "quickstart-wx-cloud",
   "condition": {},
   "cloudfunctionRoot": "cloudfunctions/",

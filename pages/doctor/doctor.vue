@@ -59,11 +59,11 @@
     <view class="doctor-list">
       <view class="doctor-card" v-for="(doctor, index) in doctors" :key="index" @click="goToDoctorDetailPage(doctor)">
         <view class="doctor-avatar">
-          <image :src="doctor.avatar" mode="aspectFill"></image>
+          <image :src="doctor.avatarUrl" mode="aspectFill"></image>
         </view>
         <view class="doctor-info">
           <view class="doctor-name">{{ doctor.name }}</view>
-          <view class="doctor-location">{{ doctor.address}}</view>
+          <view class="doctor-location">{{doctor.address.cityName}}&nbsp;{{doctor.address.areaName}}</view>
           <view class="doctor-department">
             <img class="value-icon" src="../../static/images/index/value.png" alt="" />
             {{ doctor.moreInfo.rating }} &nbsp; | &nbsp;
@@ -75,7 +75,7 @@
             {{ doctor.moreInfo.order }}
           </view>
           <view class="specialty-container">
-            <text class="doctor-specialty1">{{ doctor.moreInfo.language }}</text>
+            <text class="doctor-specialty1" v-if="doctor.moreInfo.language">{{ doctor.moreInfo.language }}</text>
             <text class="doctor-specialty2" v-if="doctor.moreInfo.provide_transport">
               可接送
             </text>
@@ -204,11 +204,17 @@ export default {
   methods: {
     async fetchDoctors() {
       try {
-        const location = uni.getStorageSync('location');
-        if (!location) {
-          console.error('未找到缓存的位置信息');
-          location="广州市";
-        }
+       const cityName = uni.getStorageSync('cityName');
+       
+        const provinceName = uni.getStorageSync('provinceName');
+         const areaName = uni.getStorageSync('areaName');
+         this.Location={provinceName,cityName,areaName}
+         const location= this.Location;
+         console.log("地址",this.Location)
+       if (!location) {
+         console.error('未找到缓存的位置信息');
+         
+       }
         const res = await uniCloud.callFunction({
           name: 'getEscorts', // 云函数名称
           data: { location: location }
@@ -216,6 +222,7 @@ export default {
         if (res.result.success) {
           console.log('获取陪诊师数据成功:', res.result.data);
           this.doctors = res.result.data.data;
+		 
         } else {
           console.error('获取陪诊师数据失败:', res.result.error);
         }
@@ -230,6 +237,12 @@ export default {
         url: `/pages/doctordetail/doctordetail?doctor=${doctorData}`
       });
     },
+	goToDoctorListPage(){
+		
+		uni.navigateTo({
+		  url: `/pages/doctorlist/doctorlist`
+		});
+	},
     async getBanners() {
       try {
         uni.showLoading({
@@ -261,14 +274,14 @@ export default {
 /* pages/doctor/doctor.wxss */
 
 .page {
-  min-height: 100vh;
+  height: min-content;
   padding: 0 50rpx;
-  padding-top: 80rpx;
+  padding-top: 200rpx;
   /* height: min-content; */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
+  background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239));
 }
 /* .custom-nav {
     position: fixed;
@@ -610,11 +623,11 @@ export default {
   color: #fff;
 }
 
-.doctor-gender {
-  background-color: #3498db;
-}
-.doctor-gender {
+.doctor-gender.female {
   background-color: #ed32be;
+}
+.doctor-gender.male {
+  background-color: #3498db;
 }
 .doctor-availability.available {
   background-color: #2ecc71;

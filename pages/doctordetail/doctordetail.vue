@@ -37,7 +37,7 @@
         </view>
       </view>
       <view class="doctor-avatar">
-        <image :src="doctor.photo" mode="aspectFill"></image>
+        <image :src="doctor.avatarUrl" mode="aspectFill"></image>
       </view>
     </view>
     <view class="introduction">

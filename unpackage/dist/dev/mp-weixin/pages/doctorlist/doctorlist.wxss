@@ -129,11 +129,11 @@ padding-top: 200rpx;
   border-radius: 10rpx;
   color: #fff;
 }
-.doctor-gender {
-  background-color: #3498db;
-}
-.doctor-gender {
+.doctor-gender.female {
   background-color: #ed32be;
+}
+.doctor-gender.male {
+  background-color: #3498db;
 }
 .doctor-availability.available {
   background-color: #2ecc71;

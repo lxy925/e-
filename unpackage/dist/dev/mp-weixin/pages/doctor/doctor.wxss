@@ -258,16 +258,30 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* pages/doctor/doctor.wxss */
 .page {
-  min-height: 100vh;
+  height: -webkit-min-content;
+  height: min-content;
   padding: 0 50rpx;
-  padding-top: 80rpx;
+  padding-top: 200rpx;
   /* height: min-content; */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
+  background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239));
 }
 
 /* .custom-nav {
@@ -588,11 +602,11 @@
   border-radius: 10rpx;
   color: #fff;
 }
-.doctor-gender {
-  background-color: #3498db;
-}
-.doctor-gender {
+.doctor-gender.female {
   background-color: #ed32be;
+}
+.doctor-gender.male {
+  background-color: #3498db;
 }
 .doctor-availability.available {
   background-color: #2ecc71;

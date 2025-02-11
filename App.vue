@@ -44,7 +44,7 @@ button::after {
 }
 
 page {
-    background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
+    background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239));
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

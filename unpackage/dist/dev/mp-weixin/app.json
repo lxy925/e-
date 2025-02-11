@@ -16,7 +16,9 @@
     "pages/order_manage/order_manage",
     "pages/AI/AI",
     "pages/serviceSelection/serviceSelection",
-    "pages/escortRegistration/escortRegistration"
+    "pages/escortRegistration/escortRegistration",
+    "pages/userInfoDetail/userInfoDetail",
+    "pages/doctorlogin/doctorlogin"
   ],
   "subPackages": [],
   "window": {

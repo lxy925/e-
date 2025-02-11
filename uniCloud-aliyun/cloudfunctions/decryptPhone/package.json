@@ -1,0 +1,7 @@
+{
+  "name": "decryptPhone",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

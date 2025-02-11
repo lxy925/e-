@@ -2,13 +2,13 @@
 // 云函数 addEscort/index.js
 exports.main = async (event, context) => {
   const db = uniCloud.database();
-  const { name, age, gender, phone, city, idNumber, avatarList,  } = event;
+  const { user_id,name, age, gender, phone, city, idNumber, avatarList,  } = event;
 
 
   try {
     // 将数据存储到云数据库
     const result = await db.collection('escorts').add({
-		user_id:3,
+		user_id:user_id,
       name:name,
       age:age,
       gender:gender,
@@ -36,7 +36,17 @@ if (!result.id ) {
         }
        });
    console.log('Insert result:', moreResult);
-      
+      // const moreResult = await uniCloud.callFunction({
+      //   name: 'addEscortMore',
+      //   data: {
+      //     // 传递需要存储到 escorts_more 表的数据
+      //     moreData: {
+      //      user_id:3,
+      // 			rating:0,
+      // 			order:0
+      //     },
+      //  }
+      // });
    
        return {
          code: 200,

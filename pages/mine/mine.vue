@@ -3,8 +3,8 @@
 		 <custom-nav title="e陪无忧" :isHomePage="true"></custom-nav>
         <view class="header" @click="handleHeaderClick">
     <img :src="userInfo.avatarUrl || '../../static/images/index/touxiang.jpg'" alt="">   
-    <text class="username" >{{userInfo.realName || '登录/注册'}}</text> 
-    <text class="user-info" v-if="userInfo.realName" >已实名</text>
+    <text class="username" >{{userInfo.nickName || '登录'}}</text> 
+    <text class="user-info"> {{ userInfo.realName ? '已实名' : '未实名' }}</text>
 </view>
 
     <view class="info-box">
@@ -90,14 +90,20 @@ export default {
         return {
             userInfo: {
                 avatarUrl: '',
-                realName: ''
+                nickName: '',
+                realName: '',
+                ID: '',
+                phone: '',
+                idNumber: ''
             },
         };
     },
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad() {},
+    onLoad() {
+		
+	},
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
@@ -144,8 +150,12 @@ export default {
         uni.removeStorageSync('userInfo');
         // 重置当前页面的用户信息
         this.userInfo = {
-            avatarUrl: '',
-            realName: ''
+           avatarUrl: '',
+           nickName: '',
+           realName: '',
+           ID: '',
+           phone: '',
+           idNumber: ''
         };
         // 显示提示信息
         uni.showToast({
@@ -156,7 +166,7 @@ export default {
     },
     doctorRegister() {
         uni.navigateTo({
-            url: '/pages/doctorlogin/doctorlogin'
+            url: '/pages/escortRegistration/escortRegistration'
         });
     },
     handleHeaderClick() {

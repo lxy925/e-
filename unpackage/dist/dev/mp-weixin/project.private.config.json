@@ -8,8 +8,8 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/mine/mine",
-          "pathName": "pages/mine/mine",
+          "name": "pages/escortRegistration/escortRegistration",
+          "pathName": "pages/escortRegistration/escortRegistration",
           "query": "",
           "launchMode": "default",
           "scene": null

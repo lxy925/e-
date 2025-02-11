@@ -256,7 +256,11 @@ var _default = {
     return {
       userInfo: {
         avatarUrl: '',
-        realName: ''
+        nickName: '',
+        realName: '',
+        ID: '',
+        phone: '',
+        idNumber: ''
       }
     };
   },
@@ -310,7 +314,11 @@ var _default = {
       // 重置当前页面的用户信息
       this.userInfo = {
         avatarUrl: '',
-        realName: ''
+        nickName: '',
+        realName: '',
+        ID: '',
+        phone: '',
+        idNumber: ''
       };
       // 显示提示信息
       uni.showToast({
@@ -321,7 +329,7 @@ var _default = {
     },
     doctorRegister: function doctorRegister() {
       uni.navigateTo({
-        url: '/pages/doctorlogin/doctorlogin'
+        url: '/pages/escortRegistration/escortRegistration'
       });
     },
     handleHeaderClick: function handleHeaderClick() {

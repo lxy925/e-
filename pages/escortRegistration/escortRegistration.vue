@@ -7,7 +7,7 @@
 			<view class="custom-field custom-field1">
 				<text class="label">头像</text>
 				<view class="input" @click="chooseMedia('avatarList')">
-					<view v-if="!(formData.avatarList)" class="placeholder">点击上传头像</view>
+					<view v-if="!(formData.avatarList)" class="placeholder">点击上传真实头像</view>
 					<image v-else :src="formData.avatarList" class="avatar"></image>
 				</view>
 			</view>
@@ -75,19 +75,19 @@
 			</view>
 
 			<!-- 资格证号 -->
-		<!-- 	<view class="custom-field">
+			<view class="custom-field">
 				<text class="label">资格证号</text>
 				<input v-model="formData.qualificationNumber" placeholder="请输入资格证号" class="input" />
-			</view> -->
+			</view>
 
 			<!-- 证书上传 -->
-			<!-- <view class="custom-field custom-field1">
+			<view class="custom-field custom-field1">
 				<text class="label">证书</text>
 				<view class="input" @click="chooseMedia('certificateList')">
 					<view v-if="!(formData.certificateList)" class="placeholder">点击上传证书</view>
 					<image v-else :src="formData.certificateList" class="book"></image>
 				</view>
-			</view> -->
+			</view>
 
 			<!-- 身份证号码 -->
 			<view class="custom-field">
@@ -136,6 +136,7 @@
 		data() {
 			return {
 				formData: {
+					user_id:"",
 					name: "",
 					age: "",
 					gender: "",
@@ -148,8 +149,13 @@
 					},
 					qualificationNumber: "",
 					idNumber: "",
-					avatarList: ""
-					// certificateList: "",
+					avatarList: "",
+					certificateList: "",
+					self_introduction:"",
+					language:"",
+					provide_transport:"",
+					familiar_hospitals:"",
+					familiar_departments:""
 					// idCardFrontList: "",
 					// idCardBackList: "",
 				},
@@ -167,6 +173,16 @@
 				currentCityList: [],
 				currentAreaList: [],
 			};
+		},
+		onLoad() {
+			const userInfo = uni.getStorageSync('userInfo');
+			if (userInfo) {
+				this.formData.user_id=userInfo.ID,
+			    this.formData.name = userInfo.realName,
+				this.formData.phone=userInfo.phone,
+				this.formData.idNumber=userInfo.idNumber
+			}
+			
 		},
 		computed: {
 			// 过滤出广东省

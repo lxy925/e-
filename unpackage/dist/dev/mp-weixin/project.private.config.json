@@ -3,18 +3,5 @@
   "projectname": "xxq-ai",
   "setting": {
     "compileHotReLoad": true
-  },
-  "condition": {
-    "miniprogram": {
-      "list": [
-        {
-          "name": "pages/escortRegistration/escortRegistration",
-          "pathName": "pages/escortRegistration/escortRegistration",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        }
-      ]
-    }
   }
 }

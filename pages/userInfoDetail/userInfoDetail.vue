@@ -197,7 +197,8 @@
 					realName: this.realName,
 					ID: this.ID,
 					phone: this.phone,
-					idNumber: this.idNumber
+					idNumber: this.idNumber,
+					type:"普通用户"
 				}
 				console.log(userInfo)
 				// 根据来源页面存储不同的信息

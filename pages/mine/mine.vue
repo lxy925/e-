@@ -94,7 +94,8 @@ export default {
                 realName: '',
                 ID: '',
                 phone: '',
-                idNumber: ''
+                idNumber: '',
+				type:''
             },
         };
     },
@@ -155,7 +156,8 @@ export default {
            realName: '',
            ID: '',
            phone: '',
-           idNumber: ''
+           idNumber: '',
+		   type:''
         };
         // 显示提示信息
         uni.showToast({

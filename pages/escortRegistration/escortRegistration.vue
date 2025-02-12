@@ -406,6 +406,7 @@
 				          icon: 'success',
 				          duration: 2000,
 				        });
+						
 				      } else {
 				        uni.showToast({
 				          title: result.message || '注册失败',

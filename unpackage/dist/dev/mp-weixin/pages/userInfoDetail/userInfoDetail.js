@@ -369,7 +369,8 @@ var _default = {
                   realName: _this2.realName,
                   ID: _this2.ID,
                   phone: _this2.phone,
-                  idNumber: _this2.idNumber
+                  idNumber: _this2.idNumber,
+                  type: "普通用户"
                 };
                 console.log(userInfo);
                 // 根据来源页面存储不同的信息

@@ -15,8 +15,8 @@ exports.main = async (event, context) => {
       phone:phone,
       address:city,
       card_id:idNumber,
-      avatarUrl:avatarList,
-      info_id:null
+      avatarUrl:avatarList
+      
      
     });
 console.log('Insert result:', result);
@@ -29,25 +29,24 @@ if (!result.id ) {
          data: {
            // 传递需要存储到 escorts_more 表的数据
            moreData: {
-            user_id:3,
+            user_id:user_id,
 			rating:0,
 			order:0
            },
         }
        });
    console.log('Insert result:', moreResult);
-      // const moreResult = await uniCloud.callFunction({
-      //   name: 'addEscortMore',
-      //   data: {
-      //     // 传递需要存储到 escorts_more 表的数据
-      //     moreData: {
-      //      user_id:3,
-      // 			rating:0,
-      // 			order:0
-      //     },
-      //  }
-      // });
-   
+      const updateResult = await uniCloud.callFunction({
+        name: 'updateUser',
+        data: {
+          // 传递需要存储到 escorts_more 表的数据
+          
+			  user_id:user_id,
+			  type:"陪诊师"
+		 
+       }
+      });
+   console.log('updateResult:', updateResult);
        return {
          code: 200,
          message: '数据提交成功',

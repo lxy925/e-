@@ -260,7 +260,8 @@ var _default = {
         realName: '',
         ID: '',
         phone: '',
-        idNumber: ''
+        idNumber: '',
+        type: ''
       }
     };
   },
@@ -318,7 +319,8 @@ var _default = {
         realName: '',
         ID: '',
         phone: '',
-        idNumber: ''
+        idNumber: '',
+        type: ''
       };
       // 显示提示信息
       uni.showToast({

@@ -19,13 +19,8 @@
     }
   },
   "compileType": "miniprogram",
-<<<<<<< HEAD
-  "libVersion": "3.7.7",
-  "appid": "wx73ff71f0487b4e8a",
-=======
   "libVersion": "3.5.6",
   "appid": "wxf8afb6dce14d487a",
->>>>>>> origin/lxy
   "projectname": "quickstart-wx-cloud",
   "condition": {},
   "cloudfunctionRoot": "cloudfunctions/",

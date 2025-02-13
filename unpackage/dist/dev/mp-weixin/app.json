@@ -4,18 +4,6 @@
     "pages/health/health",
     "pages/doctor/doctor",
     "pages/mine/mine",
-<<<<<<< HEAD
-    "pages/doctorlist/doctorlist",
-    "pages/doctordetail/doctordetail"
-  ],
-  "subPackages": [],
-  "window": {
-    "backgroundColor": "#F6F6F6",
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#54c69a",
-    "navigationBarTitleText": "即时陪诊",
-    "navigationBarTextStyle": "black"
-=======
     "pages/more/more",
     "pages/service/service",
     "pages/consult/consult",
@@ -40,7 +28,6 @@
     "navigationBarTitleText": "e陪无忧",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom"
->>>>>>> origin/lxy
   },
   "tabBar": {
     "color": "#A2A9B0",

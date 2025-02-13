@@ -4,23 +4,16 @@
     "pages/health/health",
     "pages/doctor/doctor",
     "pages/mine/mine",
-    "pages/more/more",
-    "pages/service/service",
-    "pages/consult/consult",
-    "pages/about/about",
-    "pages/prevent/prevent",
-    "pages/order/order",
-    "pages/order_details/order_details",
-    "pages/order_manage/order_manage",
-    "pages/object/object"
+    "pages/doctorlist/doctorlist",
+    "pages/doctordetail/doctordetail"
   ],
   "subPackages": [],
   "window": {
-    "backgroundColor": "#02D4C6",
+    "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#02D4C6",
-    "navigationBarTitleText": "e陪无忧",
-    "navigationBarTextStyle": "white"
+    "navigationBarBackgroundColor": "#54c69a",
+    "navigationBarTitleText": "即时陪诊",
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
     "color": "#A2A9B0",
@@ -53,6 +46,10 @@
       }
     ]
   },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ],
   "permission": {
     "scope.userLocation": {
       "desc": "你的位置信息将用于小程序位置接口的效果展示"

@@ -1,14 +1,14 @@
 
 .page-container {
- height: -webkit-min-content;
- height: min-content;
-  /* background: linear-gradient(to bottom, #02D4C6, #1E90FF); */
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239));
   position: relative;
-
+  padding-top: 180rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-self: center;
+  flex: 1;
 }
 .textTop {
   text-align: left;
@@ -91,8 +91,8 @@
 }
 .hospital-list {
   width: 650rpx;
-  overflow: scroll;
-  height: 540rpx;
+  /* overflow: scroll; */
+  /* height: 544rpx; */
 }
 .hospital-item {
   display: flex;
@@ -100,7 +100,7 @@
   padding: 20rpx;
   margin-bottom: 20rpx;
   border-radius: 20rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3rpx 10rpx rgba(0, 0, 0, 0.08);
 }
 .hospital-image {
   width: 180rpx;

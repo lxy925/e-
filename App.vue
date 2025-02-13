@@ -44,9 +44,11 @@ button::after {
 }
 
 page {
-    background: linear-gradient(to bottom, #02D4C6, #a0fdf7,#e4fffd,#ffffff);
+    background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239));
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    min-height: 100vh;;
 }
+@import "/wxcomponents/vant/common/index.wxss";
 </style>

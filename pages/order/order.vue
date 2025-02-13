@@ -1,11 +1,42 @@
 <template>
 	<view class="page">
+<<<<<<< HEAD
 <!--index.wxml-->
   <view class="container">
     <view class="userinfo">
       <view class="appointment-info">
         <image src="../../image/icon_1.png" class="icon" />
         <text class="title">预约信息</text>
+=======
+    <custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
+  <!--index.wxml-->
+    <view class="container">
+      <view class="userinfo">
+        <view class="appointment-info">
+          <image src="../../static/images/icons/order/icon_1.png" class="icon" />
+          <text class="title">预约信息</text>
+        </view>
+        <view class="input-group">
+          <text class="label">就诊人</text>
+          <input class="input" placeholder="请选择就诊人" />
+        </view>
+        <view class="input-group">
+          <text class="label">服务医院</text>
+          <input class="input" placeholder="请选择医院" />
+        </view>
+        <view class="input-group">
+          <text class="label">服务时间</text>
+          <input class="input" placeholder="请选择服务时间" />
+        </view>
+        <view class="input-group">
+          <text class="label">陪诊师</text>
+          <input class="input" placeholder="请选择陪诊师" />
+        </view>
+        <view class="note-info">
+          <image src="../../static/images/icons/order/icon_2.png" class="icon" />
+          <text class="note">若不填陪诊师，我们将为您自动匹配优秀陪诊师</text>
+        </view>
+>>>>>>> origin/lxy
       </view>
       <view class="input-group">
         <text class="label">就诊人</text>
@@ -185,11 +216,12 @@ page {
   height: 100vh;
   display: flex;
   flex-direction: column; /* 垂直排列子元素 */
-  background:linear-gradient(#18d1c2,#F2F3F9,white); 
+  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
+  padding-top: 200rpx; 
 }
 
 .container {
-  height:auto;
+  height:100vh;
   margin: 0 20rpx;
   margin-top: 40rpx;
   border-radius: 30rpx; /* 圆角 */
@@ -339,6 +371,9 @@ page {
   background-color: #ffffff; /* 背景颜色 */
   border-radius: 10rpx; /* 圆角 */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  position: fixed;
+  bottom: 2rpx;
+  width: 100%;
 }
 
 .total {

@@ -7,6 +7,12 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "",
-	"dependencies": {},
+	"dependencies": {
+		"@dcloudio/vue-cli-plugin-uni": "^2.0.2-4040520250103001",
+		"@vant/area-data": "^2.0.0",
+		"@vant/weapp": "^1.11.7",
+		"vant": "^4.9.16",
+		"vue-loader": "^17.4.2"
+	},
 	"license": "ISC"
 }

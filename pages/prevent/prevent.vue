@@ -1,5 +1,6 @@
 <template>
 	<view class="more-container">
+		<custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
 		<!-- 顶部搜索和切换区域 -->
 		<view class="header">
 			<view class="search-box">
@@ -224,6 +225,7 @@
 	width: 100%;
 	min-height: 100vh;
 	background-color: #f5f5f5;
+	padding-top: 180rpx;
 }
 
 .header {
@@ -235,7 +237,7 @@
 	padding: 20rpx 30rpx;
 	background-color: #ffffff;
 	position: fixed;
-	top: 0;
+	top: 180rpx;
 	left: 0;
 	right: 0;
 	z-index: 100;

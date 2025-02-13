@@ -1,0 +1,49 @@
+
+.custom-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #0bd6c8;
+  z-index: 999;
+}
+.nav-content {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+.location {
+  display: flex;
+  align-items: center;
+}
+.location-icon image {
+  width: 20px;
+  height: 20px;
+}
+.location-text {
+  color: #fff;
+  font-size: 14px;
+  margin-left: 5px;
+}
+.back-button {
+  color: #fff;
+  font-size: 16px;
+  
+  margin-right: 75rpx;
+}
+.nav-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+.nav-right {
+  width: 60px;
+}
+

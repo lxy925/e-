@@ -183,6 +183,147 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* pages/mine/mine.wxss */
 .page {
   min-height: 100vh;
@@ -229,6 +370,37 @@
   height: 40rpx;
   border-radius: 15rpx;
 }
+.down {
+		display: flex;
+		margin-top: 40rpx;
+		justify-content: space-evenly;
+		background-color: #fff;
+		border-radius: 15rpx;
+		padding: 20rpx;
+		margin-left: 50rpx;
+		margin-right: 50rpx;
+		color: #333;
+}
+.box {
+		border-radius: 20rpx;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 200rpx;
+}
+.header-num {
+		font-size: 25px;
+		font-weight: bold;
+		margin-top: 20rpx;
+		margin-bottom: 10rpx;
+		font-weight: bold;
+}
+.header-title {
+		font-size: 13px;
+		font-weight: bold;
+		/* color: #fff; */
+		margin-top: 0;
+}
 .info-box {
   display: flex;
   margin-top: 40rpx;
@@ -238,6 +410,7 @@
   padding: 20rpx;
   margin-left: 50rpx;
   margin-right: 50rpx;
+  color: #333;
   /* width: 100%; */
 }
 .money {
@@ -298,6 +471,44 @@
   width: 50rpx;
   height: 50rpx;
 }
+.all-box {
+		display: flex;
+		margin: 30rpx;
+		border-radius: 20rpx;
+		background-color: #ddf5f4;
+		padding: 30rpx;
+		justify-content: center;
+		height: 120rpx;
+}
+.data-box {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		/* margin-left: 50rpx;
+		margin-right: 50rpx;
+		margin-top: 20rpx; */
+		margin-top: 20rpx;
+		width: 250rpx;
+		gap: 10rpx;
+}
+.first{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.num {
+		font-size: 35rpx;
+		color: #333;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
+		font-weight: bold;
+}
+.title {
+		font-size: 28rpx;
+		color: #333;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
+}
 .order-box {
   margin-top: 40rpx;
   background-color: #fff;
@@ -318,6 +529,25 @@
   
   flex-wrap: wrap;
   /* justify-content: space-a; */
+}
+.boxed {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 30%;
+		margin-bottom: 20rpx;
+		margin-left: 15rpx;
+}
+.boxed image {
+		width: 70rpx;
+		height: 70rpx;
+		margin-bottom: 10rpx;
+}
+.box-title {
+		font-size: 13px;
+		font-weight: bold;
+		margin-top: 10rpx;
 }
 .box {
   display: flex;

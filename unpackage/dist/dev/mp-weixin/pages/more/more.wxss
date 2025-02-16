@@ -238,7 +238,8 @@
 	display: flex;
 	gap: 20rpx;
 }
-.reset-btn.data-v-5796f226, .confirm-btn.data-v-5796f226 {
+.reset-btn.data-v-5796f226,
+.confirm-btn.data-v-5796f226 {
 	flex: 1;
 	height: 80rpx;
 	line-height: 80rpx;

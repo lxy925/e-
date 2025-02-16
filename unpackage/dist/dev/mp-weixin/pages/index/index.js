@@ -1,6 +1,6 @@
 (global["webpackJsonp"] = global["webpackJsonp"] || []).push([["pages/index/index"],{
 
-/***/ 57:
+/***/ 378:
 /*!************************************************************!*\
   !*** D:/陪诊小程序/e-/main.js?{"page":"pages%2Findex%2Findex"} ***!
   \************************************************************/
@@ -252,6 +252,7 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
 // pages/index/index.js
 var _default = {
   data: function data() {
@@ -357,7 +358,7 @@ var _default = {
     },
     navigateToMore: function navigateToMore() {
       uni.navigateTo({
-        url: "/pages/more/more"
+        url: '/pages/more/more?from=index'
       });
     },
     navigateToHospital: function navigateToHospital(id) {
@@ -385,33 +386,35 @@ var _default = {
               case 4:
                 _yield$uniCloud$callF = _context.sent;
                 result = _yield$uniCloud$callF.result;
+                console.log(result);
                 if (result.code === 0) {
                   _this.banners = result.data;
+                  console.log(result.data);
                 } else {
                   uni.showToast({
                     title: result.msg || '获取轮播图失败',
                     icon: 'none'
                   });
                 }
-                _context.next = 12;
+                _context.next = 13;
                 break;
-              case 9:
-                _context.prev = 9;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 uni.showToast({
                   title: '获取轮播图失败',
                   icon: 'none'
                 });
-              case 12:
-                _context.prev = 12;
+              case 13:
+                _context.prev = 13;
                 uni.hideLoading();
-                return _context.finish(12);
-              case 15:
+                return _context.finish(13);
+              case 16:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 9, 12, 15]]);
+        }, _callee, null, [[0, 10, 13, 16]]);
       }))();
     },
     // 处理轮播图点击
@@ -464,5 +467,5 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ })
 
-},[[57,"common/runtime","common/vendor"]]]);
+},[[378,"common/runtime","common/vendor"]]]);
 //# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/index/index.js.map

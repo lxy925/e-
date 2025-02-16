@@ -80,6 +80,7 @@
      
     </view>
   </view>
+  
 </template>
 
 <script>
@@ -196,10 +197,11 @@ export default {
         url: path,
       });
     },
+	
     navigateToMore() {
-      uni.navigateTo({
-        url: "/pages/more/more",
-      });
+    uni.navigateTo({
+    	url: '/pages/more/more?from=index'
+    })
     },
     navigateToHospital(id) {
       uni.navigateTo({
@@ -216,9 +218,10 @@ export default {
         const { result } = await uniCloud.callFunction({
           name: 'getBanners'
         })
-        
+        console.log(result)
         if (result.code === 0) {
           this.banners = result.data
+		  console.log(result.data)
         } else {
           uni.showToast({
             title: result.msg || '获取轮播图失败',

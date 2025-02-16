@@ -156,15 +156,19 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   name: 'custom-nav',
   data: function data() {
     return {
       statusBarHeight: 0,
       navHeight: 0,
-      location: '广州'
+      location: {},
+      locationName: '广州',
+      locationInfo: null // 存储用户选择的位置信息
     };
   },
+
   props: {
     title: {
       type: String,
@@ -211,11 +215,30 @@ var _default = {
   },
 
   methods: {
-    getLocationInfo: function getLocationInfo() {
+    chooseLocation: function chooseLocation() {
       var _this2 = this;
-      var cachedLocation = uni.getStorageSync('areaName');
+      if (!this.location) {
+        uni.showToast({
+          title: '正在获取定位...',
+          icon: 'loading'
+        });
+        return;
+      }
+      uni.chooseLocation({
+        success: function success(res) {
+          _this2.getCity(res.latitude, res.longitude);
+          console.log("选择位置成功：", res);
+        },
+        fail: function fail(err) {
+          console.error("选择位置失败：", err);
+        }
+      });
+    },
+    getLocationInfo: function getLocationInfo() {
+      var _this3 = this;
+      var cachedLocation = uni.getStorageSync('cityName');
       if (cachedLocation) {
-        this.location = cachedLocation;
+        this.locationName = cachedLocation;
         console.log('使用缓存的位置信息:', cachedLocation);
       } else {
         uni.getSetting({
@@ -225,27 +248,30 @@ var _default = {
               uni.authorize({
                 scope: 'scope.userLocation',
                 success: function success() {
-                  _this2.getLocation();
+                  _this3.getLocation();
                 }
               });
             } else {
-              _this2.getLocation();
+              _this3.getLocation();
             }
           }
         });
       }
     },
     getLocation: function getLocation() {
-      var _this3 = this;
+      var _this4 = this;
       uni.getLocation({
         type: 'gcj02',
         success: function success(res) {
-          _this3.getCity(res.latitude, res.longitude);
+          _this4.location.latitude = res.latitude;
+          _this4.location.longitude = res.longitude;
+          console.log("获取到的位置数据", _this4.location);
+          _this4.getCity(res.latitude, res.longitude);
         }
       });
     },
     getCity: function getCity(latitude, longitude) {
-      var _this4 = this;
+      var _this5 = this;
       uni.request({
         url: 'https://restapi.amap.com/v3/geocode/regeo',
         data: {
@@ -255,8 +281,8 @@ var _default = {
         },
         success: function success(res) {
           if (res.data.status === '1') {
-            _this4.location = res.data.regeocode.addressComponent.district;
-            console.log(res.data.regeocode.addressComponent);
+            _this5.locationName = res.data.regeocode.addressComponent.city;
+            console.log("识别到的城市名字", res.data.regeocode.addressComponent);
             uni.setStorageSync('cityName', res.data.regeocode.addressComponent.city);
             uni.setStorageSync('provinceName', res.data.regeocode.addressComponent.province);
             uni.setStorageSync('areaName', res.data.regeocode.addressComponent.district);

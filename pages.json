@@ -121,7 +121,8 @@
 		"color": "#A2A9B0",
 		"selectedColor": "#15cbbc",
 		"backgroundColor": "#ffffff",
-		"list": [{
+		"list": [
+			{
 				"pagePath": "pages/index/index",
 				"text": "首页",
 				"iconPath": "static/images/icons/home.png",
@@ -145,6 +146,8 @@
 				"iconPath": "static/images/icons/mine.png",
 				"selectedIconPath": "static/images/icons/mine-active.png"
 			}
+		
+		
 			
 		]
 	},

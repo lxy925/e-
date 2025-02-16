@@ -257,14 +257,26 @@ var _default = {
       userInfo: {
         avatarUrl: '',
         realName: '',
-        ID: ''
+        ID: '',
+        escortData: null // 用于存储接收到的数据
       }
     };
   },
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function onLoad() {},
+  onLoad: function onLoad(options) {
+    // 获取 URL 参数中的 escortData
+    if (options.escortData) {
+      try {
+        // 解码并解析 JSON 字符串
+        this.escortData = JSON.parse(decodeURIComponent(options.escortData));
+        console.log('接收到的 escortData 数据：', this.escortData);
+      } catch (error) {
+        console.error('解析 escortData 失败：', error);
+      }
+    }
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

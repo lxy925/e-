@@ -25,7 +25,7 @@
         </view>
         <image src="../../static/images/index/listen.png" alt=""></image>
       </view>
-      <view class="second-item2" >
+      <view class="second-item2" @click="goToStudyPage">
         <view class="second-item2-text">
           <text class="second-item2-text1">学习</text>
           <text class="second-item2-text2">一起来分享</text>
@@ -244,7 +244,12 @@ export default {
       } finally {
         uni.hideLoading();
       }
-    },
+      },
+      goToStudyPage() {
+        uni.navigateTo({
+          url: "/pages/study/study",
+        });
+      },
   },
 };
 </script>

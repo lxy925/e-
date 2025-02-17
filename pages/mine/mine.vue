@@ -73,9 +73,9 @@
         </view>
     </view>
 </view>
-<view class="logout-box">
+<view class="logout-box" v-if="userInfo.realName">
     <image src="../../static/images/mine/logout.png" alt=""></image>
-<button class="logout" @click="logout" v-if="userInfo.realName" >退出登录</button>
+<button class="logout" @click="logout"  >退出登录</button>
 </view>
     </view>
 </template>

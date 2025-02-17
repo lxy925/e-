@@ -15,7 +15,9 @@
     "pages/order_details/order_details",
     "pages/order_manage/order_manage",
     "pages/userInfoDetail/userInfoDetail",
-    "pages/doctorlogin/doctorlogin"
+    "pages/doctorlogin/doctorlogin",
+    "pages/study/study",
+    "pages/showerror/showerror"
   ],
   "subPackages": [],
   "window": {

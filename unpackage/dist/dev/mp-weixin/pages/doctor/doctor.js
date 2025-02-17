@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 337))
+      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 361))
     },
   }
 } catch (e) {
@@ -449,6 +449,11 @@ var _default = {
           }
         }, _callee, null, [[0, 13, 16, 19]]);
       }))();
+    },
+    goToStudyPage: function goToStudyPage() {
+      uni.navigateTo({
+        url: "/pages/study/study"
+      });
     }
   }
 };

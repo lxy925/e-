@@ -97,6 +97,20 @@
    			{
    				"navigationBarTitleText" : ""
    			}
+   		},
+   		{
+   			"path" : "pages/study/study",
+   			"style" : 
+   			{
+   				"navigationBarTitleText" : "考证题库"
+   			}
+   		},
+   		{
+   			"path" : "pages/showerror/showerror",
+   			"style" : 
+   			{
+   				"navigationBarTitleText" : "错题集"
+   			}
    		}
   ],
   "sitemapLocation": "sitemap.json",

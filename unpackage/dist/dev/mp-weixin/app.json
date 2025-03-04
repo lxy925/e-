@@ -1,0 +1,85 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/health/health",
+    "pages/doctor/doctor",
+    "pages/mine/mine",
+    "pages/more/more",
+    "pages/service/service",
+    "pages/consult/consult",
+    "pages/about/about",
+    "pages/prevent/prevent",
+    "pages/doctorlist/doctorlist",
+    "pages/doctordetail/doctordetail",
+    "pages/order/order",
+    "pages/order_details/order_details",
+    "pages/order_manage/order_manage",
+    "pages/AI/AI",
+    "pages/serviceSelection/serviceSelection",
+    "pages/escortRegistration/escortRegistration",
+    "pages/userInfoDetail/userInfoDetail",
+    "pages/doctorlogin/doctorlogin"
+  ],
+  "subPackages": [],
+  "window": {
+    "backgroundColor": "#0bd6c8",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#0bd6c8",
+    "navigationBarTitleText": "e陪无忧",
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom"
+  },
+  "tabBar": {
+    "color": "#A2A9B0",
+    "selectedColor": "#15cbbc",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/images/icons/home.png",
+        "selectedIconPath": "static/images/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/doctor/doctor",
+        "text": "陪诊师",
+        "iconPath": "static/images/icons/doctor.png",
+        "selectedIconPath": "static/images/icons/doctor-active.png"
+      },
+      {
+        "pagePath": "pages/health/health",
+        "text": "健康管理",
+        "iconPath": "static/images/icons/health.png",
+        "selectedIconPath": "static/images/icons/health-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "static/images/icons/mine.png",
+        "selectedIconPath": "static/images/icons/mine-active.png"
+      }
+    ]
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  },
+  "plugins": {},
+  "usingComponents": {
+    "van-field": "/wxcomponents/vant/field/index",
+    "van-button": "/wxcomponents/vant/button/index",
+    "van-radio-group": "/wxcomponents/vant/radio-group/index",
+    "van-radio": "/wxcomponents/vant/radio/index",
+    "van-action-sheet": "/wxcomponents/vant/action-sheet/index",
+    "van-area": "/wxcomponents/vant/area/index",
+    "van-uploader": "/wxcomponents/vant/uploader/index",
+    "van-checkbox": "/wxcomponents/vant/checkbox/index",
+    "van-row": "/wxcomponents/vant/row/index",
+    "custom-nav": "/components/custom-nav/custom-nav"
+  }
+}

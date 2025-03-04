@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "e陪无忧",
+  "usingComponents": {
+    "custom-nav": "/components/custom-nav/custom-nav"
+  }
+}

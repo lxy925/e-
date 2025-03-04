@@ -1,0 +1,376 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**index.wxss**/
+.page.data-v-127632e4 {
+  height: 100vh;
+  display: flex;
+  flex-direction: column; /* 垂直排列子元素 */
+  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
+  padding-top: 200rpx;
+}
+.container.data-v-127632e4 {
+  height:100vh;
+  margin: 0 20rpx;
+  border-radius: 30rpx; /* 圆角 */
+  background-color: #ffffff; /* 容器背景为白色 */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* 更明显的阴影，调整为更接近图片的效果 */
+  display: flex; /* 使用 flexbox 布局 */
+  flex-direction: column; /* 垂直排列子元素 */
+  justify-content: flex-start; /* 顶部对齐 */
+  align-items: flex-start; /* 确保子元素顶部对齐 */
+  padding: 20rpx; /* 保持内边距 */
+  padding-bottom: 50rpx;
+}
+.userinfo.data-v-127632e4 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #333;
+  margin-top: 0; /* 确保没有顶部外边距 */
+  padding: 0; /* 确保没有内边距 */
+  margin-bottom: 20rpx;
+}
+.title.data-v-127632e4 {
+  font-size: 23px; /* 字体大小与图片一致 */
+  font-weight:normal;
+  margin-bottom: 15rpx;
+  color: #000000 /* 主色调 */
+}
+.input-group.data-v-127632e4 {
+  display: flex;
+  width: 100%;
+  margin-bottom: 15rpx;
+  border-bottom: 0.5px solid rgba(224, 224, 224, 0.5); /* 更细更淡的底部边框 */
+  padding-bottom: 10rpx; /* 可选：为输入框留出一些空间 */
+}
+.label.data-v-127632e4 {
+  width: 100px;
+  color: #646464;
+  font-weight: 500; /* 标签稍微加粗 */
+}
+.input.data-v-127632e4 {
+  font-size: 15px;
+  color: #B3B3B3;
+  flex: 1;
+  border: none;
+  border-radius: 4px;
+  padding: 10rpx;
+}
+.note-info.data-v-127632e4 {
+  display: flex; /* 使用 flexbox 布局 */
+  align-items: center; /* 垂直居中对齐 */
+  margin-top: 5rpx; /* 与上方内容的间距 */
+}
+.note.data-v-127632e4 {
+  font-size: 16px;
+  color: #B29A6C;
+}
+.department.data-v-127632e4 {
+  margin-top: 0; /* 确保没有顶部外边距 */
+  padding: 0; /* 确保没有内边距 */
+}
+.department-list.data-v-127632e4 {
+  display: flex;
+  flex-wrap: wrap; /* 允许换行 */
+}
+.department-item.data-v-127632e4 {
+font-size: 16px;
+  flex: 0 0 27%; /* 每个复选框占据 30% 的宽度 */
+  display: flex; /* 使用 flexbox 布局 */
+  align-items: center; /* 水平居中对齐 */
+  justify-content: center; /* 垂直居中对齐 */
+  background-color: #E5E5E5; /* 背景颜色 */
+  border-radius: 20px; /* 圆角 */
+  padding:0rpx ;
+  margin:0rpx 30rpx; /* 按钮之间的间距 */
+  margin-bottom: 20rpx; /* 按钮之间的间距 */
+}
+.department-item.data-v-127632e4:nth-child(1){
+  margin-left:1rpx ;
+}
+.department-item.data-v-127632e4:nth-child(4){
+  margin-left:1rpx ;
+}
+.department-item.data-v-127632e4:nth-child(3){
+  margin-right:1rpx ;
+}
+.department-item.data-v-127632e4:nth-child(6){
+  margin-right:1rpx ;
+}
+.upload-section.data-v-127632e4 {
+  display: flex;
+  flex-direction: column; /* 垂直排列 */
+  margin-top: 20rpx; /* 顶部间距 */
+  width: 100%; /* 确保父容器宽度为 100% */
+  align-items: flex-start; /* 确保子元素靠左对齐 */
+}
+.upload-labels.data-v-127632e4 {
+  display: flex; /* 使用 flexbox 布局 */
+  align-items: center; /* 垂直居中对齐 */
+  margin-bottom: 10rpx; /* 与按钮的间距 */
+}
+.upload-button.data-v-127632e4 {
+  width: 200rpx !important; /* 强制设置按钮宽度 */
+  height: 200rpx !important; /* 强制设置高度 */
+  background-color: #E5E5E5; /* 背景颜色 */
+  color: #333; /* 字体颜色 */
+  border-radius: 15px; /* 圆角 */
+  border: none; /* 边框 */
+  font-size: 16px; /* 字体大小 */
+  display: flex; /* 使用 flexbox 布局 */
+  flex-direction: column; /* 垂直排列 */
+  align-items: center; /* 水平居中对齐 */
+  justify-content: center; /* 垂直居中对齐 */
+  margin-top: 10rpx; /* 顶部间距 */
+}
+.upload-icon.data-v-127632e4 {
+  width: 70rpx; /* 图标宽度 */
+  height: 70rpx; /* 图标高度 */
+  margin-bottom: 5rpx; /* 图标与文本之间的间距 */
+}
+.upload-text.data-v-127632e4{
+  font-size: 13px;
+  color:#BABABA;
+}
+.submit.data-v-127632e4 {
+  display: flex; /* 使用 flexbox 布局 */
+  justify-content: space-between; /* 在两端对齐 */
+  align-items: center; /* 垂直居中对齐 */
+  margin-top: 70rpx; /* 顶部间距 */
+  padding: 20rpx; /* 内边距 */
+  background-color: #ffffff; /* 背景颜色 */
+  border-radius: 10rpx; /* 圆角 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  position: fixed;
+  bottom: 2rpx;
+  width: 100%;
+}
+.total.data-v-127632e4 {
+  margin-left: 10rpx;
+  display: flex; /* 使用 flexbox 布局 */
+  flex-direction: column; /* 垂直排列 */
+  justify-content: flex-start; /* 顶部对齐 */
+  margin-right: 100rpx; /* 与按钮的间距 */
+}
+.total-info.data-v-127632e4 {
+  display: flex; /* 使用 flexbox 布局 */
+  align-items: center; /* 垂直居中对齐 */
+}
+.total-label.data-v-127632e4 {
+  font-size: 16px; /* 字体大小 */
+  color: #333; /* 字体颜色 */
+  margin-right: 10rpx; /* 标签与金额之间的间距 */
+}
+.currency.data-v-127632e4 {
+  font-size: 18px; /* 字体大小 */
+  margin-right: 5rpx; /* 与金额之间的间距 */
+}
+.total-amount.data-v-127632e4 {
+  font-size: 18px; /* 字体大小 */
+  font-weight: bold; /* 加粗 */
+}
+.discount.data-v-127632e4 {
+  font-size: 12px; /* 字体大小 */
+  color: #999; /* 字体颜色 */
+}
+.submit-button.data-v-127632e4 {
+  width: 300rpx; /* 设置按钮宽度 */
+  height: 80rpx; /* 设置高度 */
+  background-color: #2196f3; /* 背景颜色 */
+  color: white; /* 字体颜色 */
+  border-radius: 30px; /* 圆角 */
+  border: none; /* 去掉边框 */
+  font-size: 16px; /* 字体大小 */
+  display: flex; /* 使用 flexbox 布局 */
+  align-items: center; /* 垂直居中对齐 */
+  justify-content: center; /* 水平居中对齐 */
+}
+.icon.data-v-127632e4 {
+  width: 45rpx; /* 图标宽度 */
+  height: 45rpx; /* 图标高度 */
+  margin-right: 20rpx; /* 图标与文本之间的间距 */
+}
+.appointment-info.data-v-127632e4 {
+ display: flex; /* 使用 flexbox 布局 */
+  align-items: center; /* 垂直居中对齐 */
+  margin-bottom: 15rpx; /* 与下方内容的间距 */
+}
+.label_1.data-v-127632e4{
+  font-size: 17px;
+  color: #545454;
+}
+.more.data-v-127632e4 {
+  font-size: 16px; /* 字体大小 */
+  color:#808080; /* 颜色 */
+  margin-left: 500rpx; /* 自动左边距以右对齐 */
+  align-self: center; /* 垂直居中对齐 */
+}
+.top-margin.data-v-127632e4 {
+  margin-top: 25rpx; /* 仅为这三个按钮添加顶部间距 */
+}
+.label_2.data-v-127632e4{
+margin-left: 35rpx;
+  font-size:15px;
+  color: #B0B0B0;
+}
+.requirements-list.data-v-127632e4 {
+  display: flex; /* 使用 flexbox 布局 */
+  flex-wrap: wrap; /* 允许换行 */
+}
+.custom-checkbox.data-v-127632e4 {
+  flex: 0 0 24%; /* 每个复选框占据 30% 的宽度 */
+  display: flex; /* 使用 flexbox 布局 */
+  align-items: center; /* 水平居中对齐 */
+  justify-content: center; /* 垂直居中对齐 */
+  background-color: #E5E5E5; /* 背景颜色 */
+  border-radius: 20px; /* 圆角 */
+  padding: 7rpx 10rpx; /* 内边距 */
+  margin:12rpx 28rpx; /* 按钮之间的间距 */
+  margin-bottom: 10rpx; /* 按钮之间的间距 */
+}
+.custom-checkbox.data-v-127632e4:nth-child(1){
+  margin-top: 30rpx;
+  margin-left: 1rpx;
+}
+.custom-checkbox.data-v-127632e4:nth-child(4){
+  margin-left: 1rpx !important;
+}
+.custom-checkbox.data-v-127632e4:nth-child(3){
+  margin-top: 30rpx;
+  margin-right: 1rpx;
+}
+.custom-checkbox.data-v-127632e4:nth-child(2){
+  margin-top: 30rpx;
+}
+.custom-checkbox.data-v-127632e4:nth-child(6){
+  margin-right: 1rpx !important;
+}
+.hidden-checkbox.data-v-127632e4 {
+  display: none; /* 隐藏原始复选框 */
+}
+.checkbox-text.data-v-127632e4 {
+  font-size: 16px; /* 字体大小 */
+  color: #333; /* 字体颜色 */
+  margin-left: 10rpx; /* 文本与复选框之间的间距 */
+}
+.requirements.data-v-127632e4 {
+  margin-top: 0; /* 确保没有顶部外边距 */
+  margin-bottom: 0; /* 确保没有底部外边距 */
+  padding: 0; /* 确保没有内边距 */
+}
+
+

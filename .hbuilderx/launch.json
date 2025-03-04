@@ -6,7 +6,11 @@
                 "launchtype" : "local"
             },
             "mp-weixin" : {
+<<<<<<< HEAD
                 "launchtype" : "local"
+=======
+                "launchtype" : "remote"
+>>>>>>> lxy
             },
             "provider" : "aliyun",
             "type" : "uniCloud"

@@ -1,0 +1,135 @@
+
+.container.data-v-23b7b074 {
+  margin: 0; /* 重置外边距 */
+  padding: 0; /* 重置内边距 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  /* background-color: #ffffff; 背景颜色 */
+  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
+  padding-top: 200rpx;
+}
+.header.data-v-23b7b074 {
+  margin: 0; /* 重置外边距 */
+  padding: 10rpx; /* 添加内边距 */
+  display: flex;
+  justify-content: space-between; /* 使输入框和通知图标分开 */
+  align-items: center; /* 垂直居中 */
+  width: 100%; /* 使头部占满宽度 */
+  background-color: #ffffff; /* 背景颜色 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+}
+.title.data-v-23b7b074 {
+  font-size: 28px; /* 增大标题字体大小 */
+  font-weight: bold;
+  color: #333;
+}
+.search-container.data-v-23b7b074 {
+  position: relative; /* 使子元素可以绝对定位 */
+  width: 80%; /* 容器宽度 */
+}
+.search-icon.data-v-23b7b074 {
+  position: absolute; /* 绝对定位 */
+  left: 60rpx; /* 距离左边的距离 */
+  top: 50%; /* 垂直居中 */
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%); /* 使图标垂直居中 */
+  width: 45rpx; /* 图标宽度 */
+  height: 45rpx; /* 图标高度 */
+}
+.search-input.data-v-23b7b074 {
+  margin-left: 40rpx;
+  width: 80%; /* 输入框宽度 */
+  padding: 20rpx 10rpx 20rpx 80rpx; /* 内边距，左边留出空间给图标 */
+  border: none; /* 边框 */
+  background-color: #F5F5F5;
+  border-radius: 15px; /* 圆角 */
+}
+.notification.data-v-23b7b074 {
+  border: none;
+  background-color:#D64444; /* 红色背景 */
+  color: #fff; /* 字体颜色 */
+  border-radius: 40%; /* 圆形 */
+  width: 60rpx; /* 宽度 */
+  height: 38rpx; /* 高度 */
+  display: flex; /* 使用 flex 布局 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  position: absolute; /* 绝对定位 */
+  top: -25rpx; /* 调整位置 */
+  right: -20rpx; /* 调整位置 */
+}
+.tabs.data-v-23b7b074 {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 20rpx;
+}
+.tab.data-v-23b7b074 {
+  font-size: 18px; /* 字体大小 */
+  color: #383838; /* 默认字体颜色 */
+  padding: 10rpx; /* 增加内边距 */
+  position: relative; /* 使横线相对定位 */
+}
+.active.data-v-23b7b074 {
+  color: #568EFF !important; /* 选中时字体颜色 */
+  border-bottom: 2rpx solid #568EFF !important; /* 选中时下方横线 */
+}
+.content.data-v-23b7b074 {
+  background-color: #F5F5F5;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.trade-container.data-v-23b7b074 {
+  display: flex; /* 使用 Flexbox 布局 */
+  justify-content: space-between; /* 左右对齐 */
+  width: calc(100% - 20rpx); /* 减去内边距 */
+  box-sizing: border-box; /* 包括内边距和边框在内 */
+  padding: 10rpx; /* 添加内边距 */
+  margin-top: 20rpx;
+}
+.trade-info.data-v-23b7b074 {
+  margin-left: 20rpx;
+  color: #383838; /* 默认字体颜色 */
+  font-size: 16px; /* 字体大小 */
+}
+.bulk-operation.data-v-23b7b074 {
+  color: #568EFF; /* 批量操作字体颜色 */
+  font-size: 16px; /* 字体大小 */
+  cursor: pointer; /* 鼠标悬停时显示为可点击 */
+}
+.empty-image.data-v-23b7b074 {
+  width: 70%;
+  height: 400rpx;
+  margin: 40rpx auto;
+}
+.empty-text.data-v-23b7b074 {
+  text-align: center;
+  margin-top: 10rpx;
+  font-size: 18px;
+  color: #26D7CF;
+}
+.filter-container.data-v-23b7b074 {
+  display: flex; /* 使用 flex 布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: flex-end; /* 靠右对齐 */
+  width: 15%; /* 容器宽度 */
+  margin-top: 10rpx; /* 顶部间距 */
+  margin-right: 40rpx;
+  position: relative;
+}
+.filter-icon.data-v-23b7b074 {
+  width: 40rpx; /* 图标宽度 */
+  height: 40rpx; /* 图标高度 */
+  margin-right: 5rpx; /* 图标与文本之间的间距 */
+}
+.filter-text.data-v-23b7b074 {
+  font-size: 16px; /* 字体大小 */
+  color: #B9B9B9; /* 字体颜色 */
+}
+

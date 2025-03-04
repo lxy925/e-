@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "疾病预防",
+  "usingComponents": {
+    "custom-nav": "/components/custom-nav/custom-nav"
+  }
+}

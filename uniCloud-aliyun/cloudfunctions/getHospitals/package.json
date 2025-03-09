@@ -1,0 +1,7 @@
+{
+  "name": "getHospitals",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

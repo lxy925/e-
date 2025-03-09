@@ -85,18 +85,21 @@
 
 		<!-- 医院列表内容 -->
 		<view class="hospital-content" v-if="currentType === 'hospital'">
-			<view class="hospital-grid">
-				<view class="hospital-card" v-for="hospital in hospitals" :key="hospital.id"
-					@tap="handleHospitalTap(hospital)">
-					<image :src="hospital.image" mode="aspectFill"></image>
-					<view class="hospital-info">
-						<text class="hospital-name">{{hospital.name}}</text>
-						<text class="hospital-level">{{hospital.level}}</text>
-						<text class="hospital-type">{{hospital.type}}</text>
-						<text class="hospital-address">{{hospital.address.city}}{{hospital.address.area}}</text>
-					</view>
-				</view>
-			</view>
+		  <view class="hospital-grid">
+		    <view class="hospital-card" v-for="hospital in filteredHospitals" :key="hospital._id"
+		      @tap="handleHospitalTap(hospital)">
+		      <!-- 修改图片部分，添加默认图片 -->
+		      <image src="/static/images/hospital1.jpg" mode="aspectFill"></image>
+		      <view class="hospital-info">
+		        <text class="hospital-name">{{hospital.name}}</text>
+		        <view class="type-level-container">
+		          <text class="hospital-level">{{hospital.level}}</text>
+		          <text class="hospital-type">{{hospital.type}}</text>
+		        </view>
+		        <text class="hospital-address">{{hospital.address.city}}{{hospital.address.detail}}</text>
+		      </view>
+		    </view>
+		  </view>
 		</view>
 	</view>
 </template>
@@ -107,29 +110,19 @@
 			return {
 				currentType: 'hospital',
 				searchText: '',
-				hospitals: [
-					{
-						id: 1,
-						name: '北京协和医院',
-						level: '三级甲等',
-						type: '综合医院',
-						address: {
-							city: "惠州市",
-							area: "惠城区"
-						},
-						website: "http://www.hzcrmyy.com/",
-						image: '/static/images/hospital1.jpg'
-					},
+				hospitals: [],
+				filteredHospitals: [], 
 					// 更多医院数据
-				],
 				showFilterPanel: false,
 				hospitalLevels: ['三级甲等', '三级乙等', '二级甲等', '二级乙等'],
-				hospitalTypes: ['综合医院', '专科医院', '中医医院', '民营医院'],
+				hospitalTypes: ['国营','股份制'],
 				selectedLevel: '',
 				selectedType: '',
 				selectedGroup: '',
 				filterConditions: {
 					hospital: {
+						province:'',
+						city:'',
 						level: '',
 						type: ''
 					},
@@ -138,12 +131,12 @@
 					}
 				},
 				locations: {
-					provinces: ['北京', '上海', '广东', '江苏'],
+					provinces: ['北京', '上海', '广东省', '江苏省'],
 					cities: {
 						'北京': ['北京市'],
 						'上海': ['上海市'],
-						'广东': ['广州市', '深圳市', '珠海市'],
-						'江苏': ['南京市', '苏州市', '无锡市'],
+						'广东省': ['广州市', '深圳市', '珠海市'],
+						'江苏省': ['南京市', '苏州市', '无锡市'],
 					},
 					districts: {
 						'北京市': ['东城区', '西城区', '朝阳区', '海淀区'],
@@ -168,9 +161,15 @@
 			switchType(type) {
 				this.currentType = type
 			},
-			onSearch(e) {
-				console.log('搜索:', this.searchText)
-			},
+			onSearch() {
+			        if (!this.searchText) {
+			            this.filteredHospitals = this.hospitals; // 如果没有搜索关键词，显示所有医院
+			        } else {
+			            this.filteredHospitals = this.hospitals.filter(hospital => {
+			                return hospital.name.toLowerCase().includes(this.searchText.toLowerCase());
+			            });
+			        }
+			    },
 			showFilter() {
 				this.showFilterPanel = true
 			},
@@ -208,11 +207,20 @@
 				this.hideFilter()
 			},
 			filterHospitals() {
-				console.log('筛选条件：', this.filterConditions.hospital)
+			    console.log('筛选条件：', this.filterConditions.hospital);
+			    const { province, city, level, type } = this.filterConditions.hospital;
+			    this.filteredHospitals = this.hospitals.filter(hospital => {
+			        const matchesProvince = province ? hospital.address.province === province : true;
+			        const matchesCity = city ? hospital.address.city === city : true;
+			        const matchesLevel = level ? hospital.level === level : true;
+			        const matchesType = type ? hospital.type === type : true;
+			        return matchesProvince && matchesCity && matchesLevel && matchesType;
+			    });
 			},
 			selectProvince(province) {
 				if (this.selectedProvince === province) {
 					this.selectedProvince = ''
+					//this.filterConditions.hospital.province = province
 					this.selectedCity = ''
 					this.selectedDistrict = ''
 				} else {
@@ -224,36 +232,88 @@
 			selectCity(city) {
 				if (this.selectedCity === city) {
 					this.selectedCity = ''
+					//this.filterConditions.hospital.city = city
 					this.selectedDistrict = ''
 				} else {
 					this.selectedCity = city
 					this.selectedDistrict = ''
 				}
 			},
-			selectDistrict(district) {
-				this.selectedDistrict = this.selectedDistrict === district ? '' : district
-			},
+			//selectDistrict(district) {
+			//	this.selectedDistrict = this.selectedDistrict === district ? '' : district
+			//},
+			    // 获取医院列表数据
+			    async getHospitalList() {
+			      try {
+			        uni.showLoading({ title: '加载中...' });
+			        const res = await uniCloud.callFunction({
+			          name: 'getHospitals',
+			          data: {
+			            page: 1,
+			            pageSize: 999
+			          }
+			        });
+			        console.log("获取到的医院列表数据：", res); // 调试信息
+			        if (res.result.code === 0) {
+			          this.hospitals = res.result.data.list;
+			          this.filteredHospitals = [...this.hospitals];
+			        } else {
+			          uni.showToast({
+			            title: `获取数据失败：${res.result.msg}`,
+			            icon: 'none'
+			          });
+			        }
+			      } catch (e) {
+			        uni.showToast({
+			          title: '获取医院列表失败',
+			          icon: 'none'
+			        });
+			        console.error("获取医院列表失败：", e);
+			      } finally {
+			        uni.hideLoading();
+			      }
+			    },
 			// 处理医院列表点击事件
 			handleHospitalTap(hospital) {
-				if (this.fromPage === 'index') {
-					// 如果从 index 页面进入，跳转到医院官网
-					uni.navigateTo({
-						url: hospital.website
-					})
-				} else {
-					// 如果从其他页面进入，返回数据到上一页
-					uni.navigateBack({
-						delta: 1,
-						success: () => {
-							uni.$emit('select-hospital', hospital) // 发送事件到上一页
-						}
-					})
-				}
+			    if (!hospital.website || hospital.website === "") {
+			        uni.showToast({
+			            title: '暂无医院官网信息',
+			            icon: 'none',
+			            duration: 2000
+			        });
+			        return;
+			    }
+			
+			    try {
+			        let url = hospital.website;
+			        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+			            url = 'http://' + url;
+			        }
+			
+			        // 使用微信小程序的API打开网页
+			        uni.navigateTo({
+			            url: `/pages/web-view/web-view?url=${encodeURIComponent(url)}`,
+			            fail: (err) => {
+			                console.error('跳转失败:', err);
+			                uni.showToast({
+			                    title: '打开网页失败',
+			                    icon: 'none'
+			                });
+			            }
+			        });
+			    } catch (error) {
+			        console.error('打开网页错误:', error);
+			        uni.showToast({
+			            title: '打开网页失败',
+			            icon: 'none'
+			        });
+			    }
 			}
 		},
 		onLoad(options) {
 			// 获取页面来源信息
 			this.fromPage = options.from || null
+			this.getHospitalList() // 页面加载时获取数据
 		},
 		
 	}
@@ -374,12 +434,22 @@
 		margin-bottom: 10rpx;
 	}
 
-	.hospital-level {
-		display: block;
-		font-size: 24rpx;
-		color: #02D4C6;
-		margin-bottom: 10rpx;
-	}
+    .type-level-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10rpx;
+    }
+    
+    .hospital-level {
+        font-size: 24rpx;
+        color: #02D4C6;
+        margin-right: 10rpx; /* 添加间隔 */
+    }
+    
+    .hospital-type {
+        font-size: 24rpx;
+        color: #02D4C6;
+    }
 
 	.hospital-address {
 		display: block;

@@ -151,6 +151,7 @@
 			
 		]
 	},
+
 	"globalStyle": {
 		"backgroundColor": "#0bd6c8",
 		"backgroundTextStyle": "light",
@@ -182,3 +183,12 @@
 	}
 
 }
+
+	"uniIdRouter": {},
+	
+	"scripts": {
+	    "start": "node server.js",
+	    "dev": "nodemon server.js"
+	}
+}
+

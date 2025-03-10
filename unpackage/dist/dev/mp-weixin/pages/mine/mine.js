@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 370))
+      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 367))
     },
   }
 } catch (e) {
@@ -159,12 +159,15 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
+/* WEBPACK VAR INJECTION */(function(uni, uniCloud, wx) {
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
 //
 //
 //
@@ -289,195 +292,289 @@ exports.default = void 0;
 //
 //
 //
-// pages/mine/mine.js
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   data: function data() {
     return {
+      isLoggedIn: false,
+      // 是否登录过
+
       userInfo: {
-        avatarUrl: '',
+        session_key: '',
+        avatar: '',
         nickName: '',
         is_certified: '',
-        ID: '',
+        user_id: '',
         phone: '',
         idNumber: '',
-        type: ''
+        type: '',
+        moreInfo: {}
       }
     };
   },
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function onLoad() {
-    // 监听缓存变化
-    //  uni.onStorageChange((res) => {
-    //    if (res.key === 'userInfo') {
-    //      this.updateTabBar();
-    //    }
-    // });
-    var userInfo = uni.getStorageSync('userInfo');
-    this.userInfo = userInfo;
+    this.initUserInfo();
   },
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function onReady() {},
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow: function onShow() {
-    // uni.onStorageChange((res) => {
-    //   if (res.key === 'userInfo') {
-    //     this.updateTabBar();
-    //   }
-    //   })
+    this.initUserInfo();
   },
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function onHide() {},
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function onUnload() {},
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function onPullDownRefresh() {},
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function onReachBottom() {},
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function onShareAppMessage() {},
   methods: {
-    // updateTabBar() {
-    //   // 获取缓存的 userInfo
-    //   const userInfo = uni.getStorageSync('userInfo');
-    //   console.log("使用了方法",userInfo)
-    //   if (userInfo) {
-    //     const type = userInfo.type;
-    //     // 根据 type 动态设置 tabBar
-    //     let tabBarList = [];
-    //     if (type === '陪诊师') {
-    //       tabBarList = [
-    //        {
-    //        	"pagePath": "pages/index/index",
-    //        	"text": "首页",
-    //        	"iconPath": "static/images/icons/home.png",
-    //        	"selectedIconPath": "static/images/icons/home-active.png"
-    //        },
-    //        {
-    //        	"pagePath": "pages/doctor/doctor",
-    //        	"text": "陪诊师",
-    //        	"iconPath": "static/images/icons/doctor.png",
-    //        	"selectedIconPath": "static/images/icons/doctor-active.png"
-    //        },
-    //        {
-    //        	"pagePath": "pages/health/health",
-    //        	"text": "健康管理",
-    //        	"iconPath": "static/images/icons/health.png",
-    //        	"selectedIconPath": "static/images/icons/health-active.png"
-    //        },
-    //        {
-    //        	"pagePath": "pages/doctorlogin/doctorlogin",
-    //        	"text": "我的",
-    //        	"iconPath": "static/images/icons/mine.png",
-    //        	"selectedIconPath": "static/images/icons/mine-active.png"
-    //        }
-    //       ];
-    //     } else {
-    //       tabBarList = [
-    //        {
-    //        	"pagePath": "pages/index/index",
-    //        	"text": "首页",
-    //        	"iconPath": "static/images/icons/home.png",
-    //        	"selectedIconPath": "static/images/icons/home-active.png"
-    //        },
-    //        {
-    //        	"pagePath": "pages/doctor/doctor",
-    //        	"text": "陪诊师",
-    //        	"iconPath": "static/images/icons/doctor.png",
-    //        	"selectedIconPath": "static/images/icons/doctor-active.png"
-    //        },
-    //        {
-    //        	"pagePath": "pages/health/health",
-    //        	"text": "健康管理",
-    //        	"iconPath": "static/images/icons/health.png",
-    //        	"selectedIconPath": "static/images/icons/health-active.png"
-    //        },
-    //        {
-    //        	"pagePath": "pages/mine/mine",
-    //        	"text": "我的",
-    //        	"iconPath": "static/images/icons/mine.png",
-    //        	"selectedIconPath": "static/images/icons/mine-active.png"
-    //        }
-    //       ];
-    //     }
-    //     // 更新 tabBar
-    //     if (tabBarList.length > 0) {
-    //      uni.setTabBarItem({
-    //        index: 0,
-    //        ...tabBarList[0],
-    //      				success: () => {
-    //      				    console.log('tabBar 更新成功');
-    //      				  },
-    //      });
-    //       uni.setTabBarItem({
-    //         index: 1,
-    //         ...tabBarList[1]
-    //       });
-    // 				uni.setTabBarItem({
-    // 				  index: 2,
-    // 				  ...tabBarList[2]
-    // 				});
-    // 				uni.setTabBarItem({
-    // 				  index: 3,
-    // 				  ...tabBarList[3]
-    // 				});
-    //     }
-    //   }
-    //     },
-    getUserProfilePage: function getUserProfilePage() {
-      uni.navigateTo({
-        url: '/pages/userInfoDetail/userInfoDetail?from=mine'
+    // 初始化用户信息
+    initUserInfo: function initUserInfo() {
+      var userInfo = uni.getStorageSync('userInfo');
+      this.userInfo.type = uni.getStorageSync('type');
+      console.log("返回后的值：", userInfo);
+      if (userInfo) {
+        this.userInfo = userInfo;
+        this.isLoggedIn = true;
+        this.checkSession(); // 检查 session_key 是否过期
+        this.getUser();
+      }
+    },
+    // 获取用户信息
+    getUser: function getUser() {
+      var _this = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var _yield$uniCloud$callF, result;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                console.log("调取前检查", _this.userInfo);
+                _context.prev = 1;
+                uni.showLoading({
+                  title: '加载中'
+                });
+                _context.next = 5;
+                return uniCloud.callFunction({
+                  name: 'getUser',
+                  data: _this.userInfo
+                });
+              case 5:
+                _yield$uniCloud$callF = _context.sent;
+                result = _yield$uniCloud$callF.result;
+                if (result.code != 0) {
+                  console.log("调取后", result);
+                  _this.userInfo = result.data[0];
+                  console.log("调取后检查", _this.userInfo);
+                  uni.setStorageSync('userInfo', _this.userInfo);
+                } else {
+                  uni.showToast({
+                    title: result.msg || '获取用户数据失败',
+                    icon: 'none'
+                  });
+                }
+                _context.next = 13;
+                break;
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](1);
+                uni.showToast({
+                  title: '获取用户数据失败',
+                  icon: 'none'
+                });
+              case 13:
+                _context.prev = 13;
+                uni.hideLoading();
+                return _context.finish(13);
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[1, 10, 13, 16]]);
+      }))();
+    },
+    // 登录方法
+    login: function login() {
+      var _this2 = this;
+      uni.login({
+        provider: 'weixin',
+        success: function success(res) {
+          console.log(res);
+          _this2.js_code = res.code;
+          uni.request({
+            url: 'https://api.weixin.qq.com/sns/jscode2session',
+            // 请求微信服务器
+            method: 'GET',
+            data: {
+              appid: 'wxf8afb6dce14d487a',
+              //你的小程序的APPID
+              secret: 'f00ab7cf65338de89b24cb5a52c640a4',
+              //你的小程序秘钥secret,  
+              js_code: _this2.js_code,
+              //uni.login 登录成功后的code
+              grant_type: 'authorization_code' //此处为固定值
+            },
+
+            success: function success(res) {
+              console.log('获取信息', res.data);
+              _this2.userInfo.user_id = res.data.openid;
+              _this2.userInfo.session_key = res.data.session_key;
+              // 获取用户信息
+              console.log("获取后检查", _this2.userInfo);
+              _this2.getUser();
+              _this2.isLoggedIn = true;
+              uni.setStorageSync('isLoggedIn', true);
+            }
+          });
+        }
       });
     },
+    // 退出登录
     logout: function logout() {
-      // 清除本地存储的用户信息
       uni.removeStorageSync('userInfo');
-      // 重置当前页面的用户信息
+      uni.removeStorageSync('isLoggedIn');
       this.userInfo = {
-        avatarUrl: '',
+        session_key: '',
+        avatar: '',
         nickName: '',
-        realName: '',
-        ID: '',
+        is_certified: '',
+        user_id: '',
         phone: '',
         idNumber: '',
-        type: ''
+        type: '',
+        moreInfo: {}
       };
-      // 显示提示信息
+      console.log("头像？", this.userInfo.moreInfo.avatarUrl);
+      this.isLoggedIn = true;
       uni.showToast({
         title: '退出登录成功',
         icon: 'success',
         duration: 2000
       });
     },
-    doctorRegister: function doctorRegister() {
-      uni.navigateTo({
-        url: '/pages/escortRegistration/escortRegistration'
+    // 检查 session_key 是否过期
+    checkSession: function checkSession() {
+      var _this3 = this;
+      wx.checkSession({
+        success: function success() {
+          console.log('session_key 有效');
+        },
+        fail: function fail() {
+          console.log('session_key 已过期');
+          wx.showModal({
+            title: '提示',
+            content: '登录状态已过期，请重新登录',
+            success: function success(res) {
+              if (res.confirm) {
+                _this3.login(); // 重新登录
+              }
+            }
+          });
+        }
       });
     },
+    // 处理头部点击事件
     handleHeaderClick: function handleHeaderClick() {
-      if (!this.userInfo.realName) {
-        this.getUserProfilePage();
+      if (this.userInfo.user_id) {
+        console.log('已登录');
+        return;
+      } else if (this.isLoggedIn) {
+        console.log('重新登录');
+        this.login();
+      } else {
+        console.log('首次登录');
+        uni.navigateTo({
+          url: '/pages/userInfoDetail/userInfoDetail'
+        });
       }
+    },
+    doctorRegister: function doctorRegister() {
+      if (this.userInfo.user_id) {
+        console.log('已登录');
+        uni.navigateTo({
+          url: '/pages/escortRegistration/escortRegistration'
+        });
+      } else if (this.isLoggedIn) {
+        console.log('重新登录');
+        this.login();
+        uni.navigateTo({
+          url: '/pages/escortRegistration/escortRegistration'
+        });
+      } else {
+        console.log('首次登录');
+
+        // uni.navigateTo({
+        // 	url:'/pages/userInfoDetail/userInfoDetail'
+        // })
+        uni.navigateTo({
+          url: '/pages/escortRegistration/escortRegistration'
+        });
+      }
+    },
+    // 切换陪诊状态
+    onSwitchChange: function onSwitchChange() {
+      var _this4 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+        var _yield$uniCloud$callF2, result;
+        return _regenerator.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                console.log("改变之前的值", _this4.userInfo.moreInfo.is_bookable);
+                _context2.prev = 1;
+                _context2.next = 4;
+                return uniCloud.callFunction({
+                  name: 'updateEscort',
+                  data: {
+                    user_id: _this4.userInfo.user_id,
+                    is_bookable: !_this4.userInfo.moreInfo.is_bookable
+                  }
+                });
+              case 4:
+                _yield$uniCloud$callF2 = _context2.sent;
+                result = _yield$uniCloud$callF2.result;
+                if (result.code === 200) {
+                  uni.showToast({
+                    title: '修改成功',
+                    icon: 'success'
+                  });
+                  _this4.getUser();
+                  console.log("改变之后的值", _this4.userInfo.moreInfo.is_bookable);
+                } else {
+                  uni.showToast({
+                    title: result.message || '修改失败',
+                    icon: 'none'
+                  });
+                }
+                _context2.next = 12;
+                break;
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](1);
+                uni.showToast({
+                  title: '修改失败',
+                  icon: 'none'
+                });
+              case 12:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[1, 9]]);
+      }))();
     }
   }
 };
 exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27)["uniCloud"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
 
 /***/ }),
 

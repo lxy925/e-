@@ -125,7 +125,7 @@ export default {
           type: "综合医院",
           phone: "010-69156114",
           address: "北京市东城区帅府园一号",
-          image: "/static/images/hospitals/hospital1.jpg",
+          image: "/static/images/hospital1.jpg",
         },
         {
           id: 2,
@@ -134,7 +134,7 @@ export default {
           type: "综合医院",
           phone: "010-83572211",
           address: "北京市西城区西什库大街8号",
-          image: "/static/images/hospitals/hospital2.jpg",
+          image: "/static/images/hospital1.jpg",
         },
         {
           id: 3,
@@ -143,7 +143,7 @@ export default {
           type: "综合医院",
           phone: "010-65156114",
           address: "北京市朝阳区潘家园南里17号",
-          image: "/static/images/hospitals/hospital3.jpg",
+          image: "/static/images/hospital1.jpg",
         },
         {
           id: 4,
@@ -152,7 +152,7 @@ export default {
           type: "综合医院",
           phone: "010-65156114",
           address: "北京市西城区永安路95号",
-          image: "/static/images/hospitals/hospital4.jpg",
+          image: "/static/images/hospital1.jpg",
         },
       ],
     };

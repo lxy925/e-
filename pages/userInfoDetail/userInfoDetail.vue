@@ -105,9 +105,54 @@
 			// 获取头像
 			getAvatar(e) {
 				console.log(e);
-				this.avatar = e.detail.avatarUrl;
+				const avatar = e.detail.avatarUrl;
 				this.show = true;
 
+			        // 生成唯一的文件名
+			        const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
+			
+			        // 指定云存储路径
+			        const cloudPath = `avatar/${fileName}`; // 例如：avatarList/1741500000000_abc123.jpg
+			// 上传图片到云存储
+			uniCloud.uploadFile({
+			  filePath:avatar, // 本地临时文件路径
+			  cloudPath, // 云存储路径
+			  onUploadProgress: (progressEvent) => {
+			    // 上传进度回调
+			    const percentCompleted = Math.round(
+			      (progressEvent.loaded * 100) / progressEvent.total
+			    );
+			    console.log(`上传进度：${percentCompleted}%`);
+			  },
+			  success: (uploadRes) => {
+			    // 上传成功回调
+			    console.log("上传成功：", uploadRes);
+						
+			    // 获取云存储的文件 ID
+			    const fileID = uploadRes.fileID;
+						
+			    // 更新前端数据
+			    this.avatar = fileID; // 将 fileID 赋值给 this.formData[listName]
+			    uni.showToast({
+			      title: '上传成功',
+			      icon: 'success',
+			      duration: 2000,
+			    });
+			  },
+			  fail: (err) => {
+			    // 上传失败回调
+			    console.error("上传失败：", err);
+			    uni.showToast({
+			      title: '上传失败',
+			      icon: 'none',
+			      duration: 2000,
+			    });
+			  },
+			  complete: () => {
+			    // 上传完成回调
+			    console.log("上传完成");
+			  },
+			});
 			},
 			getName(e) {
 				this.nickName = e.detail.value;
@@ -192,18 +237,22 @@
 					});
 				}
 				const userInfo = {
+					
 					avatarUrl: this.avatar,
 					nickName: this.nickName,
 					realName: this.realName,
-					ID: this.ID,
+					user_id: this.ID,
 					phone: this.phone,
 					idNumber: this.idNumber,
+					session_key:this.session_key,
 					type:"普通用户"
 				}
 				console.log(userInfo)
 				// 根据来源页面存储不同的信息
 				uni.setStorageSync('userInfo', userInfo);
 				console.log(uni.getStorageSync('userInfo'))
+				const isLoggedIn=true;
+				uni.setStorageSync('isLoggedIn', isLoggedIn);
 
 
 				const {result} = await uniCloud.callFunction({
@@ -217,6 +266,7 @@
 				          icon: 'success',
 				          duration: 2000,
 				        });
+						uni.setStorageSync('isLoggedIn', true);
 				      } else {
 				        uni.showToast({
 				          title: result.message || '登录失败',
@@ -226,9 +276,7 @@
 				      }
 
 				// 返回上一页
-				uni.navigateBack({
-					delta: 1
-				});
+				uni.navigateBack();
 			},
 			validateFormData() {
 				const errors = [];
@@ -276,7 +324,7 @@
 <style>
 	.page {
 		min-height: 100vh;
-		background: linear-gradient(to bottom, #54c69a, #fffcf9);
+		background: linear-gradient(to bottom, #15cbbc, #fffcf9);
 		padding: 50rpx;
 		padding-top: 100rpx;
 

@@ -71,6 +71,11 @@ padding-top: 200rpx;
   color: #333;
   margin-bottom: 5rpx;
 }
+.doctor-first{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
 .doctor-location {
   font-size: 22rpx;
   color: #666;
@@ -121,7 +126,6 @@ padding-top: 200rpx;
   gap: 10rpx;
   margin-top: 10rpx;
 }
-.doctor-gender,
 .doctor-availability,
 .doctor-certification {
   font-size: 20rpx;
@@ -129,11 +133,12 @@ padding-top: 200rpx;
   border-radius: 10rpx;
   color: #fff;
 }
-.doctor-gender.female {
-  background-color: #ed32be;
-}
-.doctor-gender.male {
-  background-color: #3498db;
+.doctor-gender {
+ font-size: 20rpx;
+ padding: 4rpx 8rpx;
+ color: #3498db;
+ margin-left: 20rpx;
+/* background-color: #2ecc71; */
 }
 .doctor-availability.available {
   background-color: #2ecc71;

@@ -3,6 +3,7 @@
 exports.main = async (event, context) => {
 	const db = uniCloud.database();
 	const {
+		type,
 		user_id,
 		name,
 		age,
@@ -20,37 +21,60 @@ exports.main = async (event, context) => {
 		familiar_departments
 	} = event;
 
+let result;
+let moreResult;
 
 	try {
 		// 将数据存储到云数据库
-		const result = await db.collection('escorts').add({
-			user_id: user_id,
-			name: name,
-			age: age,
-			gender: gender,
-			phone: phone,
-			address: city,
-			card_id: idNumber,
-			avatarUrl: avatarList,
-			qualification_id: qualificationNumber,
-			is_certified:false,
-			is_bookable:false,
-			state:"待审核"
-
-
-		});
-		console.log('Insert result:', result);
-		if (!result.id) {
-			throw new Error('Insert operation did not return a valid _id');
+			
+		if(type=="陪诊师"){
+				
+			result = await db.collection('escorts')
+				
+			.where({
+				user_id: user_id
+			})
+			.update({
+				name: name,
+				age: age,
+				gender: gender,
+				phone: phone,
+				address: city,
+				card_id: idNumber,
+				avatarUrl: avatarList,
+				qualification_id: qualificationNumber,
+				is_certified:false,
+				is_bookable:false,
+				state:"待审核"
+			})
+		}else{
+			result = await db.collection('escorts').add({
+				user_id: user_id,
+				name: name,
+				age: age,
+				gender: gender,
+				phone: phone,
+				address: city,
+				card_id: idNumber,
+				avatarUrl: avatarList,
+				qualification_id: qualificationNumber,
+				is_certified:false,
+				is_bookable:false,
+				state:"待审核"
+			});
 		}
+	
+		
 		
 		// 调用 addEscortMore 云函数
-		const moreResult = await uniCloud.callFunction({
+		
+		moreResult = await uniCloud.callFunction({
 			name: 'addEscortMore',
 			data: {
 				// 传递需要存储到 escorts_more 表的数据
 				moreData: {
 					user_id: user_id,
+					type:type,
 					rating: 0,
 					order: 0,
 

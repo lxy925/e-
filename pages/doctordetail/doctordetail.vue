@@ -41,11 +41,11 @@
       </view>
     </view>
     <view class="introduction">
-      <img
+      <!-- <img
         class="introduction-icon"
         src="../../static/images/doctor/user.png"
         alt=""
-      />
+      /> -->
       <text class="introduction-title">自我介绍</text>
       <view class="introduction-content">
         <text>{{ doctor.moreInfo.self_introduction }}</text>
@@ -58,32 +58,48 @@
       </view>
     </view>
     <view class="tech">
-      <img
+   <!--   <img
         class="tech-icon"
         src="../../static/images/index/star (2).png"
         alt=""
-      />
+      /> -->
       <text class="tech-title">技能证书</text>
       <image :src="doctor.moreInfo.certificate" mode="aspectFill" class="tech-container"></image>
     </view>
-    <view class="appointment">
-      <img
-        class="appointment-icon"
-        src="../../static/images/doctor/hospital.png"
-        alt=""
-      />
-      <text class="appointment-title">评价</text>
-      <view class="reviews">
-        <view
-          class="review-item"
-          v-for="(item, index) in doctor.moreInfo.review"
-          :key="index"
-        >
-          <view class="review-rating">评分: {{ item.rating }}</view>
-          <view class="review-text">{{ item.review }}</view>
+   
+    <view class="familiar-hospitals">
+      <text class="section-title">熟悉医院</text>
+      <view class="hospital-list">
+        <view v-for="(hospital, index) in doctor.moreInfo.familiar_hospitals" :key="index" class="hospital-item">
+          {{ hospital }}
+        </view>
+      </view>
+   
+      <text class="section-title">熟悉科室</text>
+      <view class="department-tags">
+        <view v-for="(department, index) in doctor.moreInfo.familiar_departments" :key="index" class="department-tag">
+          {{ department }}
         </view>
       </view>
     </view>
+	<view class="appointment">
+	<!--  <img
+	    class="appointment-icon"
+	    src="../../static/images/doctor/hospital.png"
+	    alt=""
+	  /> -->
+	  <text class="appointment-title">评价</text>
+	  <view class="reviews">
+	    <view
+	      class="review-item"
+	      v-for="(item, index) in doctor.moreInfo.review"
+	      :key="index"
+	    >
+	      <view class="review-rating">评分: {{ item.rating }}</view>
+	      <view class="review-text">{{ item.review }}</view>
+	    </view>
+	  </view>
+	</view>
   </view>
 </template>
 
@@ -91,7 +107,8 @@
 export default {
   data() {
     return {
-      doctor: {},
+      doctor: {}
+      
     };
   },
 
@@ -140,9 +157,10 @@ export default {
 
 <style>
 .container {
-    padding: 0 20rpx;
+    padding: 50rpx 20rpx;
   padding-top: 200rpx;
-  
+  height: min-content;
+  background: linear-gradient(to bottom, #0bd6c8, #99efe9, #ddf5f4, rgb(226, 226, 226));
 }
 .doctor-card {
   display: flex;
@@ -248,7 +266,7 @@ export default {
   padding: 20rpx;
   border-radius: 50rpx;
   width: 95%;
-  height: 250rpx;
+  height: auto;
 }
 .introduction-icon {
   width: 40rpx;
@@ -258,7 +276,9 @@ export default {
   margin-left: 30rpx;
 }
 .introduction-title {
-  font-size: 35rpx;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 .introduction-content {
   font-size: 30rpx;
@@ -290,7 +310,7 @@ export default {
   padding: 20rpx;
   border-radius: 50rpx;
   width: 95%;
-  height: 230rpx;
+  height: auto;
 }
 .tech-icon {
   width: 40rpx;
@@ -301,7 +321,9 @@ export default {
   margin-left: 30rpx;
 }
 .tech-title {
-  font-size: 35rpx;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 .tech-container {
   font-size: 35rpx;
@@ -321,7 +343,7 @@ export default {
   padding: 20rpx;
   border-radius: 50rpx;
   width: 95%;
-  height: 280rpx;
+  height: auto;
 }
 .appointment-icon {
   width: 40rpx;
@@ -332,7 +354,9 @@ export default {
   margin-left: 30rpx;
 }
 .appointment-title {
-  font-size: 35rpx;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 .appointment-title2 {
   font-size: 35rpx;
@@ -391,5 +415,52 @@ export default {
 .review-text {
   font-size: 30rpx;
   color: #333;
+}
+.familiar-hospitals{
+  margin-top: 30rpx;
+  background-color: #ffffff;
+  padding: 20rpx;
+  border-radius: 50rpx;
+  width: 95%;
+  height: auto;
+}
+.familiar-departments{
+	margin-top: 30rpx;
+	background-color: #ffffff;
+	padding: 20rpx;
+	border-radius: 50rpx;
+	width: 95%;
+	height: auto;
+}
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.hospital-list {
+	margin-top:20rpx ;
+  margin-bottom: 20px;
+}
+
+.hospital-item {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.department-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top:20rpx ;
+}
+
+.department-tag {
+  background-color: #007AFF;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  margin: 5px;
 }
 </style>

@@ -1,6 +1,6 @@
 (global["webpackJsonp"] = global["webpackJsonp"] || []).push([["pages/index/index"],{
 
-/***/ 378:
+/***/ 57:
 /*!************************************************************!*\
   !*** D:/陪诊小程序/e-/main.js?{"page":"pages%2Findex%2Findex"} ***!
   \************************************************************/
@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 370))
+      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 367))
     },
   }
 } catch (e) {
@@ -288,7 +288,7 @@ var _default = {
         type: "综合医院",
         phone: "010-69156114",
         address: "北京市东城区帅府园一号",
-        image: "/static/images/hospitals/hospital1.jpg"
+        image: "/static/images/hospital1.jpg"
       }, {
         id: 2,
         name: "北京大学第一医院",
@@ -296,7 +296,7 @@ var _default = {
         type: "综合医院",
         phone: "010-83572211",
         address: "北京市西城区西什库大街8号",
-        image: "/static/images/hospitals/hospital2.jpg"
+        image: "/static/images/hospital1.jpg"
       }, {
         id: 3,
         name: "中国医学科学院肿瘤医院",
@@ -304,7 +304,7 @@ var _default = {
         type: "综合医院",
         phone: "010-65156114",
         address: "北京市朝阳区潘家园南里17号",
-        image: "/static/images/hospitals/hospital3.jpg"
+        image: "/static/images/hospital1.jpg"
       }, {
         id: 4,
         name: "北京友谊医院",
@@ -312,7 +312,7 @@ var _default = {
         type: "综合医院",
         phone: "010-65156114",
         address: "北京市西城区永安路95号",
-        image: "/static/images/hospitals/hospital4.jpg"
+        image: "/static/images/hospital1.jpg"
       }]
     };
   },
@@ -467,5 +467,5 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ })
 
-},[[378,"common/runtime","common/vendor"]]]);
+},[[57,"common/runtime","common/vendor"]]]);
 //# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/index/index.js.map

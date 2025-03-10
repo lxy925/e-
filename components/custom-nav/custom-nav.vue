@@ -7,7 +7,7 @@
 						<view class="location-icon">
 							<image src="/static/images/icons/position.png"></image>
 						</view>
-						<text class="location-text">{{ locationName }}</text>
+						<text class="location-text">{{ locationName }} ></text>
 					</view>
 				</template>
 				<template v-else>
@@ -169,7 +169,7 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		background-color: #0bd6c8;
+		background-color: #14cfcf;
 		z-index: 999;
 	}
 

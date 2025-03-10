@@ -62,7 +62,10 @@
           <image :src="doctor.avatarUrl" mode="aspectFill"></image>
         </view>
         <view class="doctor-info">
-          <view class="doctor-name">{{ doctor.name }}</view>
+         <view class="doctor-first">
+         	<view class="doctor-name">{{ doctor.name }}</view>
+         	 <view class="doctor-gender">{{ doctor.gender }}</view>
+         </view>
           <view class="doctor-location">{{doctor.address.cityName}}&nbsp;{{doctor.address.areaName}}</view>
           <view class="doctor-department">
             <img class="value-icon" src="../../static/images/index/value.png" alt="" />
@@ -81,7 +84,7 @@
             </text>
           </view>
           <view class="doctor-tags">
-            <text :class="['doctor-gender', (doctor.gender=='男')? 'male' : 'female']">{{ doctor.gender }}</text>
+          
             <text :class="['doctor-certification', doctor.is_certified  ? 'certified' : 'uncertified']">
               {{ doctor.is_certified ? '已认证' : '未认证' }}
             </text>
@@ -613,8 +616,12 @@ export default {
   gap: 10rpx;
   margin-top: 10rpx;
 }
+.doctor-first{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
 
-.doctor-gender,
 .doctor-availability,
 .doctor-certification {
   font-size: 20rpx;
@@ -623,12 +630,14 @@ export default {
   color: #fff;
 }
 
-.doctor-gender.female {
-  background-color: #ed32be;
+.doctor-gender {
+ font-size: 20rpx;
+ padding: 4rpx 8rpx;
+ color: #3498db;
+ margin-left: 20rpx;
+/* background-color: #2ecc71; */
 }
-.doctor-gender.male {
-  background-color: #3498db;
-}
+
 .doctor-availability.available {
   background-color: #2ecc71;
 }

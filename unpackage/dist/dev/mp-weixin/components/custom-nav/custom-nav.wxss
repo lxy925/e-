@@ -4,7 +4,7 @@
 	top: 0;
 	left: 0;
 	right: 0;
-	background-color: #0bd6c8;
+	background-color: #14cfcf;
 	z-index: 999;
 }
 .nav-content {

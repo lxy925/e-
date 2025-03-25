@@ -61,7 +61,7 @@
          <button class="customer-service">
          <image src="../../static/images/order/icon_7.png" alt=""/>
          </button>
-         <button class="order-now" style="border: none; position: relative;">
+         <button class="order-now" style="border: none; position: relative;" @click="goToOrder">
              <text class="button-text">立即下单</text>
          </button>
      </view>
@@ -80,6 +80,11 @@ export default {
   },
   methods: {
     // Define your methods here
+    goToOrder() {
+      uni.navigateTo({
+        url: '/pages/order/order'
+      })
+    },
 	async getDetailsImage() {
       try {
         uni.showLoading({

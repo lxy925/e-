@@ -36,12 +36,7 @@
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ]
             },
-            "ios" : {
-                "plist" : {
-                    "NSCameraUsageDescription" : "需要使用摄像头来拍摄照片或视频",
-                    "NSPhotoLibraryUsageDescription" : "需要访问相册以保存和选择照片"
-                }
-            },
+            "ios" : {},
             "sdkConfigs" : {}
         }
     },
@@ -74,5 +69,15 @@
         "enable" : false
     },
     "vueVersion" : "2",
-    "locale" : "zh-Hans"
+    "locale" : "zh-Hans",
+    "app-harmony" : {
+        "distribute" : {
+            "modules" : {}
+        }
+    },
+    "h5" : {
+        "sdkConfigs" : {
+            "maps" : {}
+        }
+    }
 }

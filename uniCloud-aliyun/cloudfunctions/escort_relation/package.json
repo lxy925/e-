@@ -1,0 +1,7 @@
+{
+  "name": "escort_relation",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

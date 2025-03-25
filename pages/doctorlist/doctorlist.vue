@@ -6,38 +6,27 @@
       <input type="text" placeholder="搜索陪诊师的名字" placeholder-class="placeholder-style" />
     </view>
     <view class="doctor-list">
-      <view class="doctor-card" v-for="(doctor, index) in doctors" :key="index" @click="goToDoctorDetailPage(doctor)">
+      <view class="doctor-card" v-for="(doctor, index) in doctors" :key="index" @click="selectDoctor(doctor)">
         <view class="doctor-avatar">
           <image :src="doctor.avatarUrl" mode="aspectFill"></image>
         </view>
         <view class="doctor-info">
           <view class="doctor-name">{{ doctor.name }}</view>
-          <view class="doctor-location">{{doctor.address.cityName}}&nbsp;{{doctor.address.areaName}}</view>
+          <view class="doctor-location">{{ doctor.address.cityName }}&nbsp;{{ doctor.address.areaName }}</view>
           <view class="doctor-department">
             <img class="value-icon" src="../../static/images/index/value.png" alt="" />
             {{ doctor.moreInfo.rating }} &nbsp; | &nbsp;
-            <img
-                class="order-icon"
-                src="../../static/images/doctor/order.png"
-                alt=""
-              />
+            <img class="order-icon" src="../../static/images/doctor/order.png" alt="" />
             {{ doctor.moreInfo.order }}
           </view>
           <view class="specialty-container">
-              <text class="doctor-specialty1" v-if="doctor.moreInfo.language">{{ doctor.moreInfo.language }}</text>
-            <text class="doctor-specialty2" v-if="doctor.moreInfo.provide_transport">
-              可接送
-            </text>
+            <text class="doctor-specialty1" v-if="doctor.moreInfo.language">{{ doctor.moreInfo.language }}</text>
+            <text class="doctor-specialty2" v-if="doctor.moreInfo.provide_transport">可接送</text>
           </view>
           <view class="doctor-tags">
-            <text :class="['doctor-gender', (doctor.gender=='男')? 'male' : 'female']">{{ doctor.gender }}</text>
-            
-            <text :class="['doctor-certification', doctor.is_certified  ? 'certified' : 'uncertified']">
-              {{ doctor.is_certified ? '已认证' : '未认证' }}
-            </text>
-            <text :class="['doctor-availability', doctor.is_bookable? 'available' : 'unavailable']">
-              {{ doctor.is_bookable ? '可预约' : '不可预约' }}
-            </text>
+            <text :class="['doctor-gender', (doctor.gender == '男') ? 'male' : 'female']">{{ doctor.gender }}</text>
+            <text :class="['doctor-certification', doctor.is_certified ? 'certified' : 'uncertified']">{{ doctor.is_certified ? '已认证' : '未认证' }}</text>
+            <text :class="['doctor-availability', doctor.is_bookable ? 'available' : 'unavailable']">{{ doctor.is_bookable ? '可预约' : '不可预约' }}</text>
           </view>
         </view>
         <view class="doctor-need">
@@ -129,6 +118,12 @@ export default {
         url: `/pages/doctordetail/doctordetail?doctor=${doctorData}`
       });
     },
+    selectDoctor(doctor) {
+      // 将整个 doctor 对象存储到本地
+      uni.setStorageSync('selectedDoctor', doctor);
+      // 跳转回 order 页面
+      uni.navigateBack();
+    }
   },
 };
 </script>

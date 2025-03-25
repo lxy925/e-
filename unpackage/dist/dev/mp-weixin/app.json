@@ -4,29 +4,22 @@
     "pages/health/health",
     "pages/doctor/doctor",
     "pages/mine/mine",
-    "pages/more/more",
-    "pages/service/service",
-    "pages/consult/consult",
-    "pages/about/about",
-    "pages/prevent/prevent",
     "pages/doctorlist/doctorlist",
     "pages/doctordetail/doctordetail",
+    "pages/hospital/hospital",
+    "pages/object/object",
+    "pages/object_serverDetail/object_serverDetail",
+    "pages/patientManagement/patientManagement",
     "pages/order/order",
     "pages/order_details/order_details",
     "pages/order_manage/order_manage",
-    "pages/AI/AI",
-    "pages/serviceSelection/serviceSelection",
-    "pages/escortRegistration/escortRegistration",
-    "pages/userInfoDetail/userInfoDetail",
-    "pages/doctorlogin/doctorlogin"
+    "pages/department/department",
+    "pages/myAddress/myAddress"
   ],
   "subPackages": [],
   "window": {
-    "backgroundColor": "#0bd6c8",
+    "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#0bd6c8",
-    "navigationBarTitleText": "e陪无忧",
-    "navigationBarTextStyle": "white",
     "navigationStyle": "custom"
   },
   "tabBar": {
@@ -71,15 +64,6 @@
   },
   "plugins": {},
   "usingComponents": {
-    "van-field": "/wxcomponents/vant/field/index",
-    "van-button": "/wxcomponents/vant/button/index",
-    "van-radio-group": "/wxcomponents/vant/radio-group/index",
-    "van-radio": "/wxcomponents/vant/radio/index",
-    "van-action-sheet": "/wxcomponents/vant/action-sheet/index",
-    "van-area": "/wxcomponents/vant/area/index",
-    "van-uploader": "/wxcomponents/vant/uploader/index",
-    "van-checkbox": "/wxcomponents/vant/checkbox/index",
-    "van-row": "/wxcomponents/vant/row/index",
     "custom-nav": "/components/custom-nav/custom-nav"
   }
 }

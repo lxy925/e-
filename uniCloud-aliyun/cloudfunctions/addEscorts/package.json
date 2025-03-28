@@ -1,0 +1,7 @@
+{
+  "name": "addEscorts",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

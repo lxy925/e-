@@ -9,6 +9,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/order_manage/order_manage",
+          "pathName": "pages/order_manage/order_manage",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/study/study",
           "pathName": "pages/study/study",
           "query": "",

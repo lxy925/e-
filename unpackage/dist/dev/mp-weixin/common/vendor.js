@@ -39,6 +39,15 @@ function initWx() {
   return newWx;
 }
 target[key] = initWx();
+if (!target[key].canIUse('getAppBaseInfo')) {
+  target[key].getAppBaseInfo = target[key].getSystemInfoSync;
+}
+if (!target[key].canIUse('getWindowInfo')) {
+  target[key].getWindowInfo = target[key].getSystemInfoSync;
+}
+if (!target[key].canIUse('getDeviceInfo')) {
+  target[key].getDeviceInfo = target[key].getSystemInfoSync;
+}
 var _default = target[key];
 exports.default = _default;
 
@@ -364,7 +373,7 @@ var promiseInterceptor = {
     });
   }
 };
-var SYNC_API_RE = /^\$|Window$|WindowStyle$|sendHostEvent|sendNativeEvent|restoreGlobal|requireGlobal|getCurrentSubNVue|getMenuButtonBoundingClientRect|^report|interceptors|Interceptor$|getSubNVueById|requireNativePlugin|rpx2px|upx2px|hideKeyboard|canIUse|^create|Sync$|Manager$|base64ToArrayBuffer|arrayBufferToBase64|getLocale|setLocale|invokePushCallback|getWindowInfo|getDeviceInfo|getAppBaseInfo|getSystemSetting|getAppAuthorizeSetting|initUTS|requireUTS|registerUTS/;
+var SYNC_API_RE = /^\$|__f__|Window$|WindowStyle$|sendHostEvent|sendNativeEvent|restoreGlobal|requireGlobal|getCurrentSubNVue|getMenuButtonBoundingClientRect|^report|interceptors|Interceptor$|getSubNVueById|requireNativePlugin|rpx2px|upx2px|hideKeyboard|canIUse|^create|Sync$|Manager$|base64ToArrayBuffer|arrayBufferToBase64|getLocale|setLocale|invokePushCallback|getWindowInfo|getDeviceInfo|getAppBaseInfo|getSystemSetting|getAppAuthorizeSetting|initUTS|requireUTS|registerUTS/;
 var CONTEXT_API_RE = /^create|Manager$/;
 
 // Context例外情况
@@ -476,9 +485,18 @@ var LOCALE_EN = 'en';
 var LOCALE_FR = 'fr';
 var LOCALE_ES = 'es';
 var messages = {};
+function getLocaleLanguage() {
+  var localeLanguage = '';
+  {
+    var appBaseInfo = wx.getAppBaseInfo();
+    var language = appBaseInfo && appBaseInfo.language ? appBaseInfo.language : LOCALE_EN;
+    localeLanguage = normalizeLocale(language) || LOCALE_EN;
+  }
+  return localeLanguage;
+}
 var locale;
 {
-  locale = normalizeLocale(wx.getAppBaseInfo().language) || LOCALE_EN;
+  locale = getLocaleLanguage();
 }
 function initI18nMessages() {
   if (!isEnableLocale()) {
@@ -600,7 +618,7 @@ function getLocale$1() {
       return app.$vm.$locale;
     }
   }
-  return normalizeLocale(wx.getAppBaseInfo().language) || LOCALE_EN;
+  return getLocaleLanguage();
 }
 function setLocale$1(locale) {
   var app = isFn(getApp) ? getApp() : false;
@@ -787,9 +805,9 @@ function populateParameters(result) {
     appVersion: "1.0.0",
     appVersionCode: "100",
     appLanguage: getAppLanguage(hostLanguage),
-    uniCompileVersion: "4.45",
-    uniCompilerVersion: "4.45",
-    uniRuntimeVersion: "4.45",
+    uniCompileVersion: "4.57",
+    uniCompilerVersion: "4.57",
+    uniRuntimeVersion: "4.57",
     uniPlatform: undefined || "mp-weixin",
     deviceBrand: deviceBrand,
     deviceModel: model,
@@ -895,9 +913,9 @@ var getAppBaseInfo = {
       hostTheme: theme,
       isUniAppX: false,
       uniPlatform: undefined || "mp-weixin",
-      uniCompileVersion: "4.45",
-      uniCompilerVersion: "4.45",
-      uniRuntimeVersion: "4.45"
+      uniCompileVersion: "4.57",
+      uniCompilerVersion: "4.57",
+      uniRuntimeVersion: "4.57"
     }));
   }
 };
@@ -1262,6 +1280,12 @@ var offPushMessage = function offPushMessage(fn) {
     }
   }
 };
+function __f__(type) {
+  for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+    args[_key3 - 1] = arguments[_key3];
+  }
+  console[type].apply(console, args);
+}
 var baseInfo = wx.getAppBaseInfo && wx.getAppBaseInfo();
 if (!baseInfo) {
   baseInfo = wx.getSystemInfoSync();
@@ -1274,7 +1298,8 @@ var api = /*#__PURE__*/Object.freeze({
   getPushClientId: getPushClientId,
   onPushMessage: onPushMessage,
   offPushMessage: offPushMessage,
-  invokePushCallback: invokePushCallback
+  invokePushCallback: invokePushCallback,
+  __f__: __f__
 });
 var mocks = ['__route__', '__wxExparserNodeId__', '__wxWebviewId__'];
 function findVmByVueId(vm, vuePid) {
@@ -1416,8 +1441,8 @@ var customize = cached(function (str) {
 function initTriggerEvent(mpInstance) {
   var oldTriggerEvent = mpInstance.triggerEvent;
   var newTriggerEvent = function newTriggerEvent(event) {
-    for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-      args[_key3 - 1] = arguments[_key3];
+    for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+      args[_key4 - 1] = arguments[_key4];
     }
     // 事件名统一转驼峰格式，仅处理：当前组件为 vue 组件、当前组件为 vue 组件子组件
     if (this.$vm || this.dataset && this.dataset.comType) {
@@ -1444,8 +1469,8 @@ function initHook(name, options, isComponent) {
     markMPComponent(this);
     initTriggerEvent(this);
     if (oldHook) {
-      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
+      for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        args[_key5] = arguments[_key5];
       }
       return oldHook.apply(this, args);
     }
@@ -2124,10 +2149,19 @@ function parseBaseApp(vm, _ref4) {
       appOptions[name] = methods[name];
     });
   }
-  initAppLocale(_vue.default, vm, normalizeLocale(wx.getAppBaseInfo().language) || LOCALE_EN);
+  initAppLocale(_vue.default, vm, getLocaleLanguage$1());
   initHooks(appOptions, hooks);
   initUnknownHooks(appOptions, vm.$options);
   return appOptions;
+}
+function getLocaleLanguage$1() {
+  var localeLanguage = '';
+  {
+    var appBaseInfo = wx.getAppBaseInfo();
+    var language = appBaseInfo && appBaseInfo.language ? appBaseInfo.language : LOCALE_EN;
+    localeLanguage = normalizeLocale(language) || LOCALE_EN;
+  }
+  return localeLanguage;
 }
 function parseApp(vm) {
   return parseBaseApp(vm, {
@@ -2345,16 +2379,16 @@ function createSubpackageApp(vm) {
   });
   if (isFn(appOptions.onShow) && wx.onAppShow) {
     wx.onAppShow(function () {
-      for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        args[_key5] = arguments[_key5];
+      for (var _len6 = arguments.length, args = new Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+        args[_key6] = arguments[_key6];
       }
       vm.__call_hook('onShow', args);
     });
   }
   if (isFn(appOptions.onHide) && wx.onAppHide) {
     wx.onAppHide(function () {
-      for (var _len6 = arguments.length, args = new Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-        args[_key6] = arguments[_key6];
+      for (var _len7 = arguments.length, args = new Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+        args[_key7] = arguments[_key7];
       }
       vm.__call_hook('onHide', args);
     });
@@ -2369,16 +2403,16 @@ function createPlugin(vm) {
   var appOptions = parseApp(vm);
   if (isFn(appOptions.onShow) && wx.onAppShow) {
     wx.onAppShow(function () {
-      for (var _len7 = arguments.length, args = new Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-        args[_key7] = arguments[_key7];
+      for (var _len8 = arguments.length, args = new Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+        args[_key8] = arguments[_key8];
       }
       vm.__call_hook('onShow', args);
     });
   }
   if (isFn(appOptions.onHide) && wx.onAppHide) {
     wx.onAppHide(function () {
-      for (var _len8 = arguments.length, args = new Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-        args[_key8] = arguments[_key8];
+      for (var _len9 = arguments.length, args = new Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
+        args[_key9] = arguments[_key9];
       }
       vm.__call_hook('onHide', args);
     });
@@ -9480,9 +9514,9 @@ internalMixin(Vue);
 
 /***/ }),
 /* 26 */
-/*!******************************!*\
-  !*** D:/医伴小程序/e-/pages.json ***!
-  \******************************/
+/*!**********************************************!*\
+  !*** C:/Users/27921/Documents/e-/pages.json ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10023,7 +10057,7 @@ var b = "development" === "development",
   k = "true" === undefined || !0 === undefined,
   P = T([]),
   C = "h5" === E ? "web" : "app-plus" === E || "app-harmony" === E ? "app" : E,
-  A = T({"address":["127.0.0.1","172.20.182.205"],"servePort":7000,"debugPort":9000,"initialLaunchType":"remote","skipFiles":["<node_internals>/**","D:/HBuilderX/plugins/unicloud/**/*.js"]}),
+  A = T({"address":["127.0.0.1","192.168.175.147"],"servePort":7000,"debugPort":9000,"initialLaunchType":"remote","skipFiles":["<node_internals>/**","D:/HBuilderX.4.45.2025010502/HBuilderX/plugins/unicloud/**/*.js"]}),
   O = T([{"provider":"aliyun","spaceName":"e-space","spaceId":"mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18","clientSecret":"rk5d8I7mtxu3FSrSipUvCA==","endpoint":"https://api.next.bspapp.com"}]) || [],
   x = true;
 var N = "";
@@ -18400,9 +18434,9 @@ module.exports = _isNativeFunction, module.exports.__esModule = true, module.exp
 
 /***/ }),
 /* 37 */
-/*!***********************************************************!*\
-  !*** D:/医伴小程序/e-/pages.json?{"type":"origin-pages-json"} ***!
-  \***********************************************************/
+/*!***************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/pages.json?{"type":"origin-pages-json"} ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18548,9 +18582,9 @@ exports.default = _default;
 
 /***/ }),
 /* 38 */
-/*!**********************************************!*\
-  !*** D:/医伴小程序/e-/pages.json?{"type":"stat"} ***!
-  \**********************************************/
+/*!**************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/pages.json?{"type":"stat"} ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18704,9 +18738,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 45 */
-/*!**************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/index.js ***!
-  \**************************************************/
+/*!******************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/index.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18752,9 +18786,9 @@ exports.default = _default;
 
 /***/ }),
 /* 46 */
-/*!********************************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/lifecycle/pageLifetimes.js ***!
-  \********************************************************************/
+/*!************************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/lifecycle/pageLifetimes.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18799,9 +18833,9 @@ exports.pageLifetimes = pageLifetimes;
 
 /***/ }),
 /* 47 */
-/*!**********************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/methods/clone.js ***!
-  \**********************************************************/
+/*!**************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/methods/clone.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18825,9 +18859,9 @@ function clone(target) {
 
 /***/ }),
 /* 48 */
-/*!************************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/methods/dataset.js ***!
-  \************************************************************/
+/*!****************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/methods/dataset.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18863,9 +18897,9 @@ function handleDataset(event) {
 
 /***/ }),
 /* 49 */
-/*!***********************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/methods/escape.js ***!
-  \***********************************************************/
+/*!***************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/methods/escape.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18915,9 +18949,9 @@ function html2Escape(sHtml) {
 
 /***/ }),
 /* 50 */
-/*!**********************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/methods/event.js ***!
-  \**********************************************************/
+/*!**************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/methods/event.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18941,9 +18975,9 @@ function parseEventDynamicCode(e, exp) {
 
 /***/ }),
 /* 51 */
-/*!**************************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/methods/getTabBar.js ***!
-  \**************************************************************/
+/*!******************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/methods/getTabBar.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18976,9 +19010,9 @@ function getTabBar() {
 
 /***/ }),
 /* 52 */
-/*!*************************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/methods/relation.js ***!
-  \*************************************************************/
+/*!*****************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/methods/relation.js ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19002,9 +19036,9 @@ function getRelationNodes(name) {
 
 /***/ }),
 /* 53 */
-/*!********************************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/methods/selectComponent.js ***!
-  \********************************************************************/
+/*!************************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/methods/selectComponent.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19220,9 +19254,9 @@ function selectAllComponents(args) {
 
 /***/ }),
 /* 54 */
-/*!************************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/methods/setData.js ***!
-  \************************************************************/
+/*!****************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/methods/setData.js ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19326,9 +19360,9 @@ function setData(obj) {
 
 /***/ }),
 /* 55 */
-/*!*******************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/utils/_set.js ***!
-  \*******************************************************/
+/*!***********************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/utils/_set.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19370,9 +19404,9 @@ exports.default = _default;
 
 /***/ }),
 /* 56 */
-/*!***********************************************************!*\
-  !*** D:/医伴小程序/e-/uni_modules/zp-mixins/utils/debounce.js ***!
-  \***********************************************************/
+/*!***************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/uni_modules/zp-mixins/utils/debounce.js ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19423,9 +19457,9 @@ exports.default = _default;
 /* 75 */,
 /* 76 */,
 /* 77 */
-/*!*************************************************!*\
-  !*** D:/医伴小程序/e-/static/images/index/curse.jpg ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/static/images/index/curse.jpg ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19433,9 +19467,9 @@ module.exports = __webpack_require__.p + "static/images/index/curse.jpg";
 
 /***/ }),
 /* 78 */
-/*!*************************************************!*\
-  !*** D:/医伴小程序/e-/static/images/index/value.png ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/static/images/index/value.png ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19443,9 +19477,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz
 
 /***/ }),
 /* 79 */
-/*!*************************************************!*\
-  !*** D:/医伴小程序/e-/static/images/index/order.png ***!
-  \*************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/static/images/index/order.png ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19513,9 +19547,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz
 /* 138 */,
 /* 139 */,
 /* 140 */
-/*!************************************************!*\
-  !*** D:/医伴小程序/e-/static/images/index/user.png ***!
-  \************************************************/
+/*!****************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/static/images/index/user.png ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19523,9 +19557,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz
 
 /***/ }),
 /* 141 */
-/*!****************************************************!*\
-  !*** D:/医伴小程序/e-/static/images/index/star (2).png ***!
-  \****************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/static/images/index/star (2).png ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19533,9 +19567,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz
 
 /***/ }),
 /* 142 */
-/*!****************************************************!*\
-  !*** D:/医伴小程序/e-/static/images/index/hospital.png ***!
-  \****************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/static/images/index/hospital.png ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -19577,9 +19611,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz
 /* 175 */,
 /* 176 */,
 /* 177 */
-/*!***********************************************************************************!*\
-  !*** D:/医伴小程序/e-/pages/userInfoDetail/aes-sample.eae1f364/Node/WXBizDataCrypt.js ***!
-  \***********************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/pages/userInfoDetail/aes-sample.eae1f364/Node/WXBizDataCrypt.js ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19610,7 +19644,7 @@ WXBizDataCrypt.prototype.decryptData = function (encryptedData, iv) {
   return decoded;
 };
 module.exports = WXBizDataCrypt;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../../HBuilderX/plugins/uniapp-cli/node_modules/buffer/index.js */ 178).Buffer))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/buffer/index.js */ 178).Buffer))
 
 /***/ }),
 /* 178 */
@@ -43040,9 +43074,9 @@ function randomFillSync (buf, offset, size) {
 /* 362 */,
 /* 363 */,
 /* 364 */
-/*!******************************************************!*\
-  !*** D:/医伴小程序/e-/static/images/icons/left-arrow.png ***!
-  \******************************************************/
+/*!**********************************************************************!*\
+  !*** C:/Users/27921/Documents/e-/static/images/icons/left-arrow.png ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 

@@ -170,6 +170,26 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* pages/mine/mine.wxss */
 .page {
   min-height: 100vh;
@@ -186,7 +206,7 @@
 }
 .header {
   display: flex;
-  align-items:center;
+  align-items: center;
 }
 .header ._img {
   width: 180rpx;
@@ -195,7 +215,7 @@
   margin-left: 50rpx;
   margin-top: 50rpx;
 }
-.user{
+.user {
   display: flex;
   flex-direction: column;
   justify-content: baseline;
@@ -302,7 +322,7 @@
 .order-item {
   margin-top: 20rpx;
   display: flex;
-  
+
   flex-wrap: wrap;
   /* justify-content: space-a; */
 }
@@ -313,7 +333,7 @@
   justify-content: center;
   width: 23%;
   margin-bottom: 20rpx;
-  margin-left:  15rpx;
+  margin-left: 15rpx;
 }
 .box image {
   width: 70rpx;
@@ -321,36 +341,31 @@
   margin-bottom: 10rpx;
 }
 .box-title {
-    font-size: 13px;
-    font-weight: bold;
-    margin-top: 10rpx;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 10rpx;
 }
 .logout-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 40rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40rpx;
 }
 .logout-box image {
-    width: 50rpx;
-    height: 50rpx;
-    position: absolute;  /* 使用绝对定位 */
-    left: calc(50% - 120rpx);  /* 调整图标位置 */
-    z-index: 1;
+  width: 50rpx;
+  height: 50rpx;
+  position: absolute; /* 使用绝对定位 */
+  left: calc(50% - 120rpx); /* 调整图标位置 */
+  z-index: 1;
 }
 .logout-box button {
-    width: 400rpx;
-    height: 80rpx;
-    background-color: #54c69a;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 50rpx;
+  width: 400rpx;
+  height: 80rpx;
+  background-color: #54c69a;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 50rpx;
 }
-
-
-
-
-
 

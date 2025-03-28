@@ -8,11 +8,22 @@ exports.main = async (event, context) => {
     console.log("当前类型", type);
 
     try {
+<<<<<<< HEAD
         let res; // 提前声明 res，确保其在整个 try 块中可用
 
         if (type === "陪诊师") {
             const servicesCollection = db.collection('users');
             res = await servicesCollection
+=======
+         let res;// 提前声明 res，确保其在整个 try 块中可用
+ const servicesCollection = db.collection('users');
+           res = await servicesCollection.where({
+                user_id: user_id
+            }).get();
+        if (res.data[0].type === "陪诊师") {
+            const servicesCollection = db.collection('users');
+             res = await servicesCollection
+>>>>>>> origin/lxy
                 .aggregate()
                 .match({
                     user_id: user_id
@@ -25,12 +36,18 @@ exports.main = async (event, context) => {
                 })
                 .unwind('$moreInfo') // 展开 moreInfo 数组
                 .end();
+<<<<<<< HEAD
         } else {
             const servicesCollection = db.collection('users');
             res = await servicesCollection.where({
                 user_id: user_id
             }).get();
         }
+=======
+        } 
+           
+        
+>>>>>>> origin/lxy
 
         // 检查 res 是否存在
         if (!res || !res.data || res.data.length === 0) {

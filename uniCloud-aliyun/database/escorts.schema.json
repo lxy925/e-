@@ -1,0 +1,87 @@
+{
+    "bsonType": "object",
+    "required": [
+      "user_id",
+      "qualification_id",
+      "name",
+	  "photo",
+      "gender",
+      "age",
+      "phone",
+      "address",
+      "is_certified",
+      "is_bookable",
+      "info_id"
+    ],
+    "permission": {
+      "read": true,
+      "create": true,
+      "update": true,
+      "delete": true
+    },
+    "properties": {
+      "_id": {
+        "description": "ID，系统自动生成"
+      },
+      "user_id": {
+        "bsonType": "objectId",
+        "description": "用户ID，关联user表的ID字段，且唯一",
+        "uniqueItems": true
+      },
+      "qualification_id": {
+        "bsonType": "string",
+        "description": "资格证号ID",
+        "maxLength": 50
+      },
+      "name": {
+        "bsonType": "string",
+        "description": "姓名",
+        "maxLength": 50
+      },
+		  
+	  "photo":{
+		  "bsonType": "string",
+		  "description": "图片地址",
+		  "maxLength": 500
+	  },
+      "gender": {
+        "bsonType": "string",
+        "description": "性别：'male' 或 'female'",
+       "enum": [
+               "男",
+               "女"
+             ]
+      },
+      "age": {
+        "bsonType": "int",
+        "description": "年龄",
+        "minimum": 0
+      },
+      "phone": {
+        "bsonType": "string",
+        "description": "手机号",
+        "maxLength": 20
+      },
+      "address": {
+        "bsonType": "string",
+        "description": "地址",
+        "maxLength": 200
+      },
+      "is_certified": {
+        "bsonType": "bool",
+        "description": "是否认证：true 或 false"
+      },
+      "is_bookable": {
+        "bsonType": "bool",
+        "description": "是否可预约：true 或 false"
+      },
+      "info_id": {
+        "bsonType": "objectId",
+        "description": "具体信息ID，关联其他表的ID字段"
+      },
+      "create_time": {
+        "bsonType": "string",
+        "description": "创建时间"
+      }
+    }
+  }

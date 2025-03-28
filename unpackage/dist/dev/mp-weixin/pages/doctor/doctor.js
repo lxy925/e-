@@ -128,7 +128,7 @@ var render = function () {
   var _c = _vm._self._c || _h
   var m0 = __webpack_require__(/*! ../../static/images/index/curse.jpg */ 77)
   var m1 = __webpack_require__(/*! ../../static/images/index/value.png */ 78)
-  var m2 = __webpack_require__(/*! ../../static/images/index/order.png */ 79)
+  var m2 = __webpack_require__(/*! ../../static/images/doctor/order.png */ 79)
   _vm.$mp.data = Object.assign(
     {},
     {
@@ -297,6 +297,11 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
+//
+//
+//
+//
 // pages/doctor/doctor.js
 var _default = {
   data: function data() {
@@ -309,25 +314,7 @@ var _default = {
       //     { title: '考试认证', desc: '参加资格考试' }
       // ],
       banners: [],
-      doctors: [{
-        avatar: "/static/images/index/doctor.jpg",
-        name: "张医生",
-        location: "广州市 天河区",
-        value: "4.9",
-        order: "739",
-        specialty: "尽职尽责",
-        specialty2: "陪诊技能"
-      }, {
-        avatar: "/static/images/index/doctor.jpg",
-        name: "李医生",
-        location: "广州市 天河区",
-        value: "4.9",
-        order: "739",
-        specialty: "尽职尽责",
-        specialty2: "陪诊技能"
-      }
-      // 可以添加更多医生数据
-      ]
+      doctors: []
     };
   },
   /**
@@ -360,6 +347,7 @@ var _default = {
     //     }
     // });
     this.getBanners();
+    this.fetchDoctors();
   },
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -377,10 +365,10 @@ var _default = {
    * 生命周期函数--监听页面卸载
    */
   onUnload: function onUnload() {
-    uni.setNavigationBarColor({
-      frontColor: "#ffffff",
-      backgroundColor: "#54c69a"
-    });
+    // uni.setNavigationBarColor({
+    //   frontColor: "#ffffff",
+    //   backgroundColor: "#54c69a",
+    // });
   },
   /**
    * 页面相关事件处理函数--监听用户下拉动作
@@ -395,59 +383,117 @@ var _default = {
    */
   onShareAppMessage: function onShareAppMessage() {},
   methods: {
+    fetchDoctors: function fetchDoctors() {
+      var _this = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var cityName, provinceName, areaName, location, res;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                cityName = uni.getStorageSync('cityName');
+                provinceName = uni.getStorageSync('provinceName');
+                areaName = uni.getStorageSync('areaName');
+                _this.Location = {
+                  provinceName: provinceName,
+                  cityName: cityName,
+                  areaName: areaName
+                };
+                location = _this.Location;
+                console.log("地址", _this.Location);
+                if (!location) {
+                  console.error('未找到缓存的位置信息');
+                }
+                _context.next = 10;
+                return uniCloud.callFunction({
+                  name: 'getEscorts',
+                  // 云函数名称
+                  data: {
+                    location: location
+                  }
+                });
+              case 10:
+                res = _context.sent;
+                if (res.result.success) {
+                  console.log('获取陪诊师数据成功:', res.result.data);
+                  _this.doctors = res.result.data.data;
+                } else {
+                  console.error('获取陪诊师数据失败:', res.result.error);
+                }
+                _context.next = 17;
+                break;
+              case 14:
+                _context.prev = 14;
+                _context.t0 = _context["catch"](0);
+                console.error('调用云函数失败:', _context.t0);
+              case 17:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 14]]);
+      }))();
+    },
+    goToDoctorDetailPage: function goToDoctorDetailPage(doctor) {
+      var doctorData = encodeURIComponent(JSON.stringify(doctor));
+      uni.navigateTo({
+        url: "/pages/doctordetail/doctordetail?doctor=".concat(doctorData)
+      });
+    },
     goToDoctorListPage: function goToDoctorListPage() {
       uni.navigateTo({
         url: "/pages/doctorlist/doctorlist"
       });
     },
     getBanners: function getBanners() {
-      var _this = this;
-      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      var _this2 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
         var _yield$uniCloud$callF, result;
-        return _regenerator.default.wrap(function _callee$(_context) {
+        return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.prev = 0;
+                _context2.prev = 0;
                 uni.showLoading({
                   title: "加载中"
                 });
-                _context.next = 4;
+                _context2.next = 4;
                 return uniCloud.callFunction({
                   name: "getBanners"
                 });
               case 4:
-                _yield$uniCloud$callF = _context.sent;
+                _yield$uniCloud$callF = _context2.sent;
                 result = _yield$uniCloud$callF.result;
                 if (!(result.code === 0)) {
-                  _context.next = 10;
+                  _context2.next = 10;
                   break;
                 }
-                _this.banners = result.data;
-                _context.next = 11;
+                _this2.banners = result.data;
+                _context2.next = 11;
                 break;
               case 10:
                 throw new Error(result.msg);
               case 11:
-                _context.next = 16;
+                _context2.next = 16;
                 break;
               case 13:
-                _context.prev = 13;
-                _context.t0 = _context["catch"](0);
+                _context2.prev = 13;
+                _context2.t0 = _context2["catch"](0);
                 uni.showToast({
                   title: "获取轮播图失败",
                   icon: "none"
                 });
               case 16:
-                _context.prev = 16;
+                _context2.prev = 16;
                 uni.hideLoading();
-                return _context.finish(16);
+                return _context2.finish(16);
               case 19:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, null, [[0, 13, 16, 19]]);
+        }, _callee2, null, [[0, 13, 16, 19]]);
       }))();
     },
     goToStudyPage: function goToStudyPage() {

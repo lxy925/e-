@@ -268,55 +268,24 @@ exports.default = void 0;
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 var _default = {
   data: function data() {
     return {
       currentType: 'hospital',
-      // 当前选择的类型：hospital/disease
       searchText: '',
-      // 搜索文本
-
       hospitals: [{
         id: 1,
         name: '北京协和医院',
         level: '三级甲等',
-        address: '北京市东城区帅府园1号',
+        type: '综合医院',
+        address: {
+          city: "惠州市",
+          area: "惠城区"
+        },
+        website: "http://www.hzcrmyy.com/",
         image: '/static/images/hospital1.jpg'
       }
-      // ... 更多医院数据
+      // 更多医院数据
       ],
 
       showFilterPanel: false,
@@ -336,7 +305,6 @@ var _default = {
       },
       locations: {
         provinces: ['北京', '上海', '广东', '江苏'],
-        // 示例省份
         cities: {
           '北京': ['北京市'],
           '上海': ['上海市'],
@@ -346,15 +314,15 @@ var _default = {
         districts: {
           '北京市': ['东城区', '西城区', '朝阳区', '海淀区'],
           '广州市': ['天河区', '越秀区', '海珠区', '白云区']
-          // ... 其他城市的区域
         }
       },
-
       selectedProvince: '',
       selectedCity: '',
-      selectedDistrict: ''
+      selectedDistrict: '',
+      fromPage: null // 用于记录来源页面
     };
   },
+
   computed: {
     availableCities: function availableCities() {
       return this.selectedProvince ? this.locations.cities[this.selectedProvince] : [];
@@ -368,13 +336,7 @@ var _default = {
       this.currentType = type;
     },
     onSearch: function onSearch(e) {
-      // 实现搜索逻辑
       console.log('搜索:', this.searchText);
-    },
-    goToHospitalDetail: function goToHospitalDetail(hospitalId) {
-      uni.navigateTo({
-        url: "/pages/hospital/detail?id=".concat(hospitalId)
-      });
     },
     showFilter: function showFilter() {
       this.showFilterPanel = true;
@@ -400,7 +362,6 @@ var _default = {
       this.selectedDistrict = '';
     },
     confirmFilter: function confirmFilter() {
-      // 保存筛选条件
       if (this.currentType === 'hospital') {
         this.filterConditions.hospital = {
           province: this.selectedProvince,
@@ -409,13 +370,11 @@ var _default = {
           level: this.selectedLevel,
           type: this.selectedType
         };
-        // 执行医院筛选
         this.filterHospitals();
       }
       this.hideFilter();
     },
     filterHospitals: function filterHospitals() {
-      // 实现医院筛选逻辑
       console.log('筛选条件：', this.filterConditions.hospital);
     },
     selectProvince: function selectProvince(province) {
@@ -440,7 +399,28 @@ var _default = {
     },
     selectDistrict: function selectDistrict(district) {
       this.selectedDistrict = this.selectedDistrict === district ? '' : district;
+    },
+    // 处理医院列表点击事件
+    handleHospitalTap: function handleHospitalTap(hospital) {
+      if (this.fromPage === 'index') {
+        // 如果从 index 页面进入，跳转到医院官网
+        uni.navigateTo({
+          url: hospital.website
+        });
+      } else {
+        // 如果从其他页面进入，返回数据到上一页
+        uni.navigateBack({
+          delta: 1,
+          success: function success() {
+            uni.$emit('select-hospital', hospital); // 发送事件到上一页
+          }
+        });
+      }
     }
+  },
+  onLoad: function onLoad(options) {
+    // 获取页面来源信息
+    this.fromPage = options.from || null;
   }
 };
 exports.default = _default;

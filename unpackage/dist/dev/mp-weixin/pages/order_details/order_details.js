@@ -226,25 +226,18 @@ exports.default = void 0;
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 var _default = {
-  name: 'OrderComponent',
+  name: "OrderComponent",
   data: function data() {
     return {
-      // Define your data properties here
+      service: {}
     };
+  },
+  onLoad: function onLoad(options) {
+    if (options.service) {
+      this.service = JSON.parse(decodeURIComponent(options.service));
+    }
+    console.log(this.service);
   },
   methods: {
     goToOrder: function goToOrder() {

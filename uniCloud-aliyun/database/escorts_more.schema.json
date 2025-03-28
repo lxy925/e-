@@ -1,0 +1,87 @@
+{
+  "bsonType": "object",
+  "required": [
+    "info_id",
+    "language",
+    "provide_transport",
+    "rating",
+    "review",
+    "certificate",
+    "self_introduction",
+    "order"
+  ],
+  "permission": {
+    "read": true,
+    "create": true,
+    "update": true,
+    "delete": true
+  },
+  "properties": {
+    "_id": {
+      "description": "ID，系统自动生成"
+    },
+    "info_id": {
+      "bsonType": "string",
+      "description": "信息ID（唯一）",
+      "maxLength": 50,
+      "uniqueItems": true
+    },
+    "language": {
+      "bsonType": "array",
+      "description": "语言",
+      "items": {
+        "bsonType": "string",
+        "maxLength": 50
+      }
+    },
+    "provide_transport": {
+      "bsonType": "bool",
+      "description": "是否提供接送"
+    },
+    "rating": {
+      "bsonType": "double",
+      "description": "评分（浮点类型）",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "order": {
+      "bsonType": "int",
+      "description": "订单数量"
+    },
+    "review": {
+      "bsonType": "array",
+        "description": "评价",
+        "items": {
+          "bsonType": "object",
+          "required": ["rating", "review"],
+          "properties": {
+            "rating": {
+              "bsonType": "int",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "评分（1到5分）"
+            },
+            "review": {
+              "bsonType": "string",
+              "maxLength": 1000,
+              "description": "评价内容"
+            }
+          }
+      }
+    },
+    "certificate": {
+      "bsonType": "string",
+      "description": "证书（图片类型）",
+      "maxLength": 500
+    },
+    "self_introduction": {
+      "bsonType": "string",
+      "description": "自我介绍",
+      "maxLength": 1000
+    },
+    "create_time": {
+      "bsonType": "string",
+      "description": "创建时间"
+    }
+  }
+}

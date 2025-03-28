@@ -12,8 +12,111 @@ export default {
                 //   如不填则使用默认环境（第一个创建的环境）
                 env: 'mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18'
             });
+<<<<<<< HEAD
+=======
+        }
+		
+        this.globalData = {};
+		
+		
+>>>>>>> origin/lxy
     },
+	onShow() {
+	    
+	  },
+	   methods: {
+	  //     updateTabBar() {
+	  //       // 获取缓存的 userInfo
+	  //       const userInfo = uni.getStorageSync('userInfo');
+			// console.log("userInfo",userInfo)
+	  //       if (userInfo) {
+	  //         const type = userInfo.type;
+	  
+	  //         // 根据 type 动态设置 tabBar
+	  //         let tabBarList = [];
+	  //         if (type === '陪诊师') {
+	  //           tabBarList = [
+	  //            {
+	  //            	"pagePath": "pages/index/index",
+	  //            	"text": "首页",
+	  //            	"iconPath": "static/images/icons/home.png",
+	  //            	"selectedIconPath": "static/images/icons/home-active.png"
+	  //            },
+	  //            {
+	  //            	"pagePath": "pages/doctor/doctor",
+	  //            	"text": "陪诊师",
+	  //            	"iconPath": "static/images/icons/doctor.png",
+	  //            	"selectedIconPath": "static/images/icons/doctor-active.png"
+	  //            },
+	  //            {
+	  //            	"pagePath": "pages/health/health",
+	  //            	"text": "健康管理",
+	  //            	"iconPath": "static/images/icons/health.png",
+	  //            	"selectedIconPath": "static/images/icons/health-active.png"
+	  //            },
+	  //            {
+	  //            	"pagePath": "pages/doctorlogin/doctorlogin",
+	  //            	"text": "我的",
+	  //            	"iconPath": "static/images/icons/mine.png",
+	  //            	"selectedIconPath": "static/images/icons/mine-active.png"
+	  //            }
+	  //           ];
+	  //         } else {
+	  //           tabBarList = [
+	  //            {
+	  //            	"pagePath": "pages/index/index",
+	  //            	"text": "首页",
+	  //            	"iconPath": "static/images/icons/home.png",
+	  //            	"selectedIconPath": "static/images/icons/home-active.png"
+	  //            },
+	  //            {
+	  //            	"pagePath": "pages/doctor/doctor",
+	  //            	"text": "陪诊师",
+	  //            	"iconPath": "static/images/icons/doctor.png",
+	  //            	"selectedIconPath": "static/images/icons/doctor-active.png"
+	  //            },
+	  //            {
+	  //            	"pagePath": "pages/health/health",
+	  //            	"text": "健康管理",
+	  //            	"iconPath": "static/images/icons/health.png",
+	  //            	"selectedIconPath": "static/images/icons/health-active.png"
+	  //            },
+	  //            {
+	  //            	"pagePath": "pages/mine/mine",
+	  //            	"text": "我的",
+	  //            	"iconPath": "static/images/icons/mine.png",
+	  //            	"selectedIconPath": "static/images/icons/mine-active.png"
+	  //            }
+	  //           ];
+	  //         }
+	  
+	  //         // 更新 tabBar
+	  //         if (tabBarList.length > 0) {
+	  //           uni.setTabBarItem({
+	  //             index: 0,
+	  //             ...tabBarList[0],
+			// 				success: () => {
+			// 					console.log('tabBar 更新成功');
+			// 				},
+	  //           });
+	  //           uni.setTabBarItem({
+	  //             index: 1,
+	  //             ...tabBarList[1]
+	  //           });
+			// 	uni.setTabBarItem({
+			// 	  index: 2,
+			// 	  ...tabBarList[2]
+			// 	});
+			// 	uni.setTabBarItem({
+			// 	  index: 3,
+			// 	  ...tabBarList[3]
+			// 	});
+	  //         }
+	  //       }
+			// }
+			// }
     globalData: {}
+	}
 };
 </script>
 <style>
@@ -38,11 +141,11 @@ button::after {
 }
 
 page {
-    background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
+    background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239));
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     min-height: 100vh;;
 }
-
+@import "/wxcomponents/vant/common/index.wxss";
 </style>

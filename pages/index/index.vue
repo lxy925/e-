@@ -80,6 +80,7 @@
      
     </view>
   </view>
+  
 </template>
 
 <script>
@@ -98,7 +99,7 @@ export default {
         {
           icon: "/static/images/index/index-service.png",
           text: "我要陪诊",
-          path: "/pages/order_details/order_details",
+          path: "/pages/serviceSelection/serviceSelection",
         },
         {
           icon: "/static/images/index/index-help.png",
@@ -124,7 +125,7 @@ export default {
           type: "综合医院",
           phone: "010-69156114",
           address: "北京市东城区帅府园一号",
-          image: "/static/images/hospitals/hospital1.jpg",
+          image: "/static/images/hospital1.jpg",
         },
         {
           id: 2,
@@ -133,7 +134,7 @@ export default {
           type: "综合医院",
           phone: "010-83572211",
           address: "北京市西城区西什库大街8号",
-          image: "/static/images/hospitals/hospital2.jpg",
+          image: "/static/images/hospital1.jpg",
         },
         {
           id: 3,
@@ -142,7 +143,7 @@ export default {
           type: "综合医院",
           phone: "010-65156114",
           address: "北京市朝阳区潘家园南里17号",
-          image: "/static/images/hospitals/hospital3.jpg",
+          image: "/static/images/hospital1.jpg",
         },
         {
           id: 4,
@@ -151,7 +152,7 @@ export default {
           type: "综合医院",
           phone: "010-65156114",
           address: "北京市西城区永安路95号",
-          image: "/static/images/hospitals/hospital4.jpg",
+          image: "/static/images/hospital1.jpg",
         },
       ],
     };
@@ -196,10 +197,11 @@ export default {
         url: path,
       });
     },
+	
     navigateToMore() {
-      uni.navigateTo({
-        url: "/pages/more/more",
-      });
+    uni.navigateTo({
+    	url: '/pages/more/more?from=index'
+    })
     },
     navigateToHospital(id) {
       uni.navigateTo({
@@ -216,9 +218,10 @@ export default {
         const { result } = await uniCloud.callFunction({
           name: 'getBanners'
         })
-        
+        console.log(result)
         if (result.code === 0) {
           this.banners = result.data
+		  console.log(result.data)
         } else {
           uni.showToast({
             title: result.msg || '获取轮播图失败',
@@ -255,7 +258,7 @@ export default {
 
 .page-container {
   min-height: 100vh;
-  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
+  background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239));
   position: relative;
   padding-top: 180rpx;
   display: flex;

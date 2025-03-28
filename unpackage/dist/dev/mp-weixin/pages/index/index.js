@@ -252,6 +252,7 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
 // pages/index/index.js
 var _default = {
   data: function data() {
@@ -266,7 +267,7 @@ var _default = {
       navItems: [{
         icon: "/static/images/index/index-service.png",
         text: "我要陪诊",
-        path: "/pages/order_details/order_details"
+        path: "/pages/serviceSelection/serviceSelection"
       }, {
         icon: "/static/images/index/index-help.png",
         text: "急救方法",
@@ -287,7 +288,7 @@ var _default = {
         type: "综合医院",
         phone: "010-69156114",
         address: "北京市东城区帅府园一号",
-        image: "/static/images/hospitals/hospital1.jpg"
+        image: "/static/images/hospital1.jpg"
       }, {
         id: 2,
         name: "北京大学第一医院",
@@ -295,7 +296,7 @@ var _default = {
         type: "综合医院",
         phone: "010-83572211",
         address: "北京市西城区西什库大街8号",
-        image: "/static/images/hospitals/hospital2.jpg"
+        image: "/static/images/hospital1.jpg"
       }, {
         id: 3,
         name: "中国医学科学院肿瘤医院",
@@ -303,7 +304,7 @@ var _default = {
         type: "综合医院",
         phone: "010-65156114",
         address: "北京市朝阳区潘家园南里17号",
-        image: "/static/images/hospitals/hospital3.jpg"
+        image: "/static/images/hospital1.jpg"
       }, {
         id: 4,
         name: "北京友谊医院",
@@ -311,7 +312,7 @@ var _default = {
         type: "综合医院",
         phone: "010-65156114",
         address: "北京市西城区永安路95号",
-        image: "/static/images/hospitals/hospital4.jpg"
+        image: "/static/images/hospital1.jpg"
       }]
     };
   },
@@ -357,7 +358,7 @@ var _default = {
     },
     navigateToMore: function navigateToMore() {
       uni.navigateTo({
-        url: "/pages/more/more"
+        url: '/pages/more/more?from=index'
       });
     },
     navigateToHospital: function navigateToHospital(id) {
@@ -385,33 +386,35 @@ var _default = {
               case 4:
                 _yield$uniCloud$callF = _context.sent;
                 result = _yield$uniCloud$callF.result;
+                console.log(result);
                 if (result.code === 0) {
                   _this.banners = result.data;
+                  console.log(result.data);
                 } else {
                   uni.showToast({
                     title: result.msg || '获取轮播图失败',
                     icon: 'none'
                   });
                 }
-                _context.next = 12;
+                _context.next = 13;
                 break;
-              case 9:
-                _context.prev = 9;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 uni.showToast({
                   title: '获取轮播图失败',
                   icon: 'none'
                 });
-              case 12:
-                _context.prev = 12;
+              case 13:
+                _context.prev = 13;
                 uni.hideLoading();
-                return _context.finish(12);
-              case 15:
+                return _context.finish(13);
+              case 16:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 9, 12, 15]]);
+        }, _callee, null, [[0, 10, 13, 16]]);
       }))();
     },
     // 处理轮播图点击

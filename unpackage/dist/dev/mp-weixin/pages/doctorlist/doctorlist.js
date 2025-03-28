@@ -127,7 +127,7 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   var m0 = __webpack_require__(/*! ../../static/images/index/value.png */ 78)
-  var m1 = __webpack_require__(/*! ../../static/images/index/order.png */ 79)
+  var m1 = __webpack_require__(/*! ../../static/images/doctor/order.png */ 79)
   _vm.$mp.data = Object.assign(
     {},
     {
@@ -170,14 +170,15 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
+/* WEBPACK VAR INJECTION */(function(uni, uniCloud) {
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-//
-//
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
 //
 //
 //
@@ -239,31 +240,16 @@ exports.default = void 0;
 var _default = {
   data: function data() {
     return {
-      doctors: [{
-        avatar: "/static/images/index/doctor.jpg",
-        name: "张医生",
-        location: "广州市 天河区",
-        value: "4.9",
-        order: "739",
-        specialty: "尽职尽责",
-        specialty2: "陪诊技能"
-      }, {
-        avatar: "/static/images/index/doctor.jpg",
-        name: "李医生",
-        location: "广州市 天河区",
-        value: "4.9",
-        order: "739",
-        specialty: "尽职尽责",
-        specialty2: "陪诊技能"
-      }
-      // 可以添加更多医生数据
-      ]
+      doctors: [],
+      Location: {}
     };
   },
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function onLoad(options) {},
+  onLoad: function onLoad(options) {
+    this.fetchDoctors();
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -293,15 +279,68 @@ var _default = {
    */
   onShareAppMessage: function onShareAppMessage() {},
   methods: {
-    goToDoctorDetailPage: function goToDoctorDetailPage() {
+    fetchDoctors: function fetchDoctors() {
+      var _this = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var cityName, provinceName, areaName, location, res;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                cityName = uni.getStorageSync('cityName');
+                provinceName = uni.getStorageSync('provinceName');
+                areaName = uni.getStorageSync('areaName');
+                _this.Location = {
+                  provinceName: provinceName,
+                  cityName: cityName,
+                  areaName: areaName
+                };
+                location = _this.Location;
+                console.log("地址", _this.Location);
+                if (!location) {
+                  console.error('未找到缓存的位置信息');
+                }
+                _context.next = 10;
+                return uniCloud.callFunction({
+                  name: 'getEscorts',
+                  // 云函数名称
+                  data: {
+                    location: location
+                  }
+                });
+              case 10:
+                res = _context.sent;
+                if (res.result.success) {
+                  console.log('获取陪诊师数据成功:', res.result.data);
+                  _this.doctors = res.result.data.data;
+                } else {
+                  console.error('获取陪诊师数据失败:', res.result.error);
+                }
+                _context.next = 17;
+                break;
+              case 14:
+                _context.prev = 14;
+                _context.t0 = _context["catch"](0);
+                console.error('调用云函数失败:', _context.t0);
+              case 17:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 14]]);
+      }))();
+    },
+    goToDoctorDetailPage: function goToDoctorDetailPage(doctor) {
+      var doctorData = encodeURIComponent(JSON.stringify(doctor));
       uni.navigateTo({
-        url: "/pages/doctordetail/doctordetail"
+        url: "/pages/doctordetail/doctordetail?doctor=".concat(doctorData)
       });
     }
   }
 };
 exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27)["uniCloud"]))
 
 /***/ }),
 

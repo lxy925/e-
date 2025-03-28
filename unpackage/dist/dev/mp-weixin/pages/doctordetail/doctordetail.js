@@ -127,17 +127,11 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   var m0 = __webpack_require__(/*! ../../static/images/index/value.png */ 78)
-  var m1 = __webpack_require__(/*! ../../static/images/index/user.png */ 140)
-  var m2 = __webpack_require__(/*! ../../static/images/index/star (2).png */ 141)
-  var m3 = __webpack_require__(/*! ../../static/images/index/hospital.png */ 142)
   _vm.$mp.data = Object.assign(
     {},
     {
       $root: {
         m0: m0,
-        m1: m1,
-        m2: m2,
-        m3: m3,
       },
     }
   )
@@ -236,32 +230,71 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   data: function data() {
     return {
-      doctor: {
-        avatar: '/static/images/index/doctor.jpg',
-        name: '张医生',
-        location: '广州市 天河区',
-        gender: '女',
-        age: '30岁',
-        value: '4.9',
-        specialty: '尽职尽责',
-        specialty2: '陪诊技能',
-        introduction: '广州市中山大学附属第一医院退休三年，现为社区大队长',
-        work: '全程陪诊',
-        work2: '代理拿药',
-        hospital: '广州市中山大学附属第一医院',
-        room: '外科',
-        room2: '骨科'
-      }
+      doctor: {}
     };
-  }
+  },
   /**
    * 生命周期函数--监听页面加载
    */
-  ,
-  onLoad: function onLoad(options) {},
+  onLoad: function onLoad(options) {
+    if (options.doctor) {
+      this.doctor = JSON.parse(decodeURIComponent(options.doctor));
+    }
+    console.log(this.doctor);
+    console.log(this.doctor.moreInfo.certificate);
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

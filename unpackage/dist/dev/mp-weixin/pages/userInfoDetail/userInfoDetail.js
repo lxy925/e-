@@ -99,6 +99,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "recyclableRender", function() { return recyclableRender; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "components", function() { return components; });
 var components
+try {
+  components = {
+    customNav: function () {
+      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 361))
+    },
+  }
+} catch (e) {
+  if (
+    e.message.indexOf("Cannot find module") !== -1 &&
+    e.message.indexOf(".vue") !== -1
+  ) {
+    console.error(e.message)
+    console.error("1. 排查组件名称拼写是否正确")
+    console.error(
+      "2. 排查组件是否符合 easycom 规范，文档：https://uniapp.dcloud.net.cn/collocation/pages?id=easycom"
+    )
+    console.error(
+      "3. 若组件不符合 easycom 规范，需手动引入，并在 components 中注册该组件"
+    )
+  } else {
+    throw e
+  }
+}
 var render = function () {
   var _vm = this
   var _h = _vm.$createElement
@@ -136,14 +159,23 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
+/* WEBPACK VAR INJECTION */(function(uniCloud, uni) {
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _WXBizDataCrypt = _interopRequireDefault(__webpack_require__(/*! ../userInfoDetail/aes-sample.eae1f364/Node/WXBizDataCrypt */ 177));
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
+var _WXBizDataCrypt = _interopRequireDefault(__webpack_require__(/*! ../../Utils/aes-sample.eae1f364/aes-sample.eae1f364/Node/WXBizDataCrypt */ 140));
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -193,11 +225,12 @@ var _default = {
       session_key: "",
       realName: '',
       ID: '',
+      idNumber: "",
       fromPage: ''
     };
   }
   /**
-     * 生命周期函数--监听页面加载
+  	 * 生命周期函数--监听页面加载
    */
   ,
   onLoad: function onLoad(options) {
@@ -237,38 +270,91 @@ var _default = {
   methods: {
     // 获取头像
     getAvatar: function getAvatar(e) {
+      var _this = this;
       console.log(e);
-      this.avatar = e.detail.avatarUrl;
+      var avatar = e.detail.avatarUrl;
       this.show = true;
+
+      // 生成唯一的文件名
+      var fileName = "".concat(Date.now(), "_").concat(Math.random().toString(36).slice(2), ".jpg");
+
+      // 指定云存储路径
+      var cloudPath = "avatar/".concat(fileName); // 例如：avatarList/1741500000000_abc123.jpg
+      // 上传图片到云存储
+      uniCloud.uploadFile({
+        filePath: avatar,
+        // 本地临时文件路径
+        cloudPath: cloudPath,
+        // 云存储路径
+        onUploadProgress: function onUploadProgress(progressEvent) {
+          // 上传进度回调
+          var percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+          console.log("\u4E0A\u4F20\u8FDB\u5EA6\uFF1A".concat(percentCompleted, "%"));
+        },
+        success: function success(uploadRes) {
+          // 上传成功回调
+          console.log("上传成功：", uploadRes);
+
+          // 获取云存储的文件 ID
+          var fileID = uploadRes.fileID;
+
+          // 更新前端数据
+          _this.avatar = fileID; // 将 fileID 赋值给 this.formData[listName]
+          uni.showToast({
+            title: '上传成功',
+            icon: 'success',
+            duration: 2000
+          });
+        },
+        fail: function fail(err) {
+          // 上传失败回调
+          console.error("上传失败：", err);
+          uni.showToast({
+            title: '上传失败',
+            icon: 'none',
+            duration: 2000
+          });
+        },
+        complete: function complete() {
+          // 上传完成回调
+          console.log("上传完成");
+        }
+      });
     },
     getName: function getName(e) {
       this.nickName = e.detail.value;
     },
+    // 	getIdNumber(e){
+    // 		this.idNumber = e.detail.value;
+    // 	},
+    // getPhone(e){
+    // 	this.phone = e.detail.value;
+    // },
     go: function go() {
-      var _this = this;
+      var _this2 = this;
       uni.login({
         provider: 'weixin',
         success: function success(res) {
           console.log(res);
-          _this.js_code = res.code;
+          _this2.js_code = res.code;
           uni.request({
             url: 'https://api.weixin.qq.com/sns/jscode2session',
             // 请求微信服务器
             method: 'GET',
             data: {
-              appid: 'wx73ff71f0487b4e8a',
+              appid: 'wxf8afb6dce14d487a',
               //你的小程序的APPID
-              secret: '5126ad6f18ba8a6bbdbee0eac4615b17',
+              secret: 'f00ab7cf65338de89b24cb5a52c640a4',
               //你的小程序秘钥secret,  
-              js_code: _this.js_code,
+              js_code: _this2.js_code,
               //uni.login 登录成功后的code
               grant_type: 'authorization_code' //此处为固定值
             },
 
             success: function success(res) {
               console.log('获取信息', res.data);
-              _this.ID = res.data.openid;
-              _this.session_key = res.data.session_key;
+              _this2.ID = res.data.openid;
+              _this2.session_key = res.data.session_key;
             }
           });
         }
@@ -276,41 +362,144 @@ var _default = {
     },
     // 获取手机号
     getPhoneNumber: function getPhoneNumber(res) {
-      // 获取手机号
-      this.phone_encryptedData = res.detail.encryptedData; //用于解密
-      this.phone_iv = res.detail.iv; // 用于解密
-      console.log(this.phone_encryptedData, this.phone_iv);
-      console.log(res, "获取手机号需要的参数");
-      var pc = new _WXBizDataCrypt.default('wx73ff71f0487b4e8a', this.session_key);
-      var data = pc.decryptData(this.phone_encryptedData, this.phone_iv);
-      console.log(data);
-      if (data.phoneNumber != '') {
-        this.phone = data.phoneNumber;
+      console.log(res);
+      if (res.detail.errMsg === "getPhoneNumber:ok") {
+        var _res$detail = res.detail,
+          encryptedData = _res$detail.encryptedData,
+          iv = _res$detail.iv;
+        console.log(encryptedData, iv);
+
+        // 创建解密对象
+        var pc = new _WXBizDataCrypt.default('wxf8afb6dce14d487a', this.session_key);
+        try {
+          // 解密数据
+          var data = pc.decryptData(encryptedData, iv);
+          console.log(data);
+
+          // 检查手机号是否为空
+          if (data.phoneNumber) {
+            this.phone = data.phoneNumber;
+            console.log('解密成功，手机号:', this.phone);
+          } else {
+            console.error('解密后未获取到手机号');
+          }
+        } catch (err) {
+          console.error('解密失败:', err);
+        }
+      } else {
+        console.error('用户拒绝授权获取手机号');
       }
     },
     submitUserInfo: function submitUserInfo() {
-      // 保存用户信息到本地存储
-      var userInfo = {
-        avatarUrl: this.avatar,
-        realName: this.realName,
-        ID: this.ID
-      };
-      // 根据来源页面存储不同的信息
-      if (this.fromPage === 'doctorlogin') {
-        uni.setStorageSync('doctorInfo', userInfo);
-      } else {
-        uni.setStorageSync('userInfo', userInfo);
+      var _this3 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var errors, userInfo, isLoggedIn, _yield$uniCloud$callF, result;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                // 保存用户信息到本地存储
+                errors = _this3.validateFormData();
+                if (errors.length > 0) {
+                  // 如果有错误，显示错误提示
+                  errors.forEach(function (error) {
+                    uni.showToast({
+                      title: error,
+                      icon: 'none',
+                      duration: 2000
+                    });
+                  });
+                }
+                userInfo = {
+                  avatarUrl: _this3.avatar,
+                  nickName: _this3.nickName,
+                  realName: _this3.realName,
+                  user_id: _this3.ID,
+                  phone: _this3.phone,
+                  idNumber: _this3.idNumber,
+                  session_key: _this3.session_key,
+                  type: "普通用户"
+                };
+                console.log(userInfo);
+                // 根据来源页面存储不同的信息
+                uni.setStorageSync('userInfo', userInfo);
+                console.log(uni.getStorageSync('userInfo'));
+                isLoggedIn = true;
+                uni.setStorageSync('isLoggedIn', isLoggedIn);
+                _context.next = 10;
+                return uniCloud.callFunction({
+                  name: 'addUsers',
+                  data: userInfo
+                });
+              case 10:
+                _yield$uniCloud$callF = _context.sent;
+                result = _yield$uniCloud$callF.result;
+                console.log(result);
+                if (result.code === 200) {
+                  uni.showToast({
+                    title: '登录成功',
+                    icon: 'success',
+                    duration: 2000
+                  });
+                  uni.setStorageSync('isLoggedIn', true);
+                } else {
+                  uni.showToast({
+                    title: result.message || '登录失败',
+                    icon: 'none',
+                    duration: 2000
+                  });
+                }
+
+                // 返回上一页
+                uni.navigateBack();
+              case 15:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    validateFormData: function validateFormData() {
+      var errors = [];
+      if (!this.avatar) {
+        errors.push('头像不能为空');
+        return errors;
+      }
+      if (!this.nickName) {
+        errors.push('昵称不能为空');
+        return errors;
+      }
+      if (!this.realName) {
+        errors.push('姓名不能为空');
+        return errors;
+      }
+      if (!this.phone || !/^\d{11}$/.test(this.phone)) {
+        errors.push('手机号码格式不正确');
+        return errors;
       }
 
-      // 返回上一页
-      uni.navigateBack({
-        delta: 1
-      });
+      //    if (!this.formData.qualificationNumber) {
+      //      errors.push('资格证号不能为空');
+      // return errors;
+      //    }
+      if (!this.idNumber || !/^\d{18}$/.test(this.idNumber)) {
+        errors.push('身份证号码格式不正确');
+        return errors;
+      }
+      // if (!this.formData.idCardFrontList) {
+      //       errors.push('身份证正面不能为空');
+      // return errors;
+      //     }
+      //     if (!this.formData.idCardBackList) {
+      //       errors.push('身份证反面不能为空');
+      //     }
+      return errors;
     }
   }
 };
 exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27)["uniCloud"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 

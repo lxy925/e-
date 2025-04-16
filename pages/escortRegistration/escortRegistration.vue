@@ -545,10 +545,11 @@
 						icon: 'success',
 						duration: 2000,
 					});
+					this.userInfo=uni.getStorageSync('userInfo');
 					this.userInfo.type = "陪诊师",
 					uni.setStorageSync('formData', this.formData);// 更新缓存中的 formData
 					uni.setStorageSync('userInfo', this.userInfo); // 更新缓存中的 userInfo,用于转换mine页面
-					uni.setStorageSync('type', "陪诊师"); 
+					// uni.setStorageSync('type', "陪诊师"); 
 					console.log("userInfo", uni.getStorageSync('userInfo'))
 					uni.navigateBack();
 				} else {

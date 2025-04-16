@@ -475,6 +475,8 @@ var _default = {
                 _yield$uniCloud$callF = _context.sent;
                 result = _yield$uniCloud$callF.result;
                 if (result.code == 200) {
+                  console.log(result.data.userInfo);
+                  _this.userInfo = result.data.userInfo;
                   console.log("调取后检查", _this.userInfo);
                   uni.setStorageSync("userInfo", _this.userInfo);
                 } else if (result.code == 401) {
@@ -482,6 +484,7 @@ var _default = {
                     title: '登录状态已过期，请重新登录',
                     icon: "none"
                   });
+                  _this.logout();
                   uni.redirectTo({
                     url: '/pages/userInfoDetail/userInfoDetail'
                   });
@@ -512,36 +515,6 @@ var _default = {
         }, _callee, null, [[3, 12, 15, 18]]);
       }))();
     },
-    // // 登录方法
-    // login() {
-    // 	uni.login({
-    // 		provider: "weixin",
-    // 		success: (res) => {
-    // 			console.log(res);
-    // 			this.js_code = res.code;
-    // 			uni.request({
-    // 				url: "https://api.weixin.qq.com/sns/jscode2session", // 请求微信服务器
-    // 				method: "GET",
-    // 				data: {
-    // 					appid: "wxf8afb6dce14d487a", //你的小程序的APPID
-    // 					secret: "06d3e5f2f7ed1bf8504fe90a1a1e04e5", //你的小程序秘钥secret,
-    // 					js_code: this.js_code, //uni.login 登录成功后的code
-    // 					grant_type: "authorization_code", //此处为固定值
-    // 				},
-    // 				success: (res) => {
-    // 					console.log("获取信息", res.data);
-    // 					this.userInfo.user_id = res.data.openid;
-    // 					this.userInfo.session_key = res.data.session_key;
-    // 					// 获取用户信息
-    // 					console.log("获取后检查", this.userInfo);
-    // 					this.getUser();
-    // 					this.isLoggedIn = true;
-    // 					uni.setStorageSync("isLoggedIn", true);
-    // 				},
-    // 			});
-    // 		},
-    // 	});
-    // },
     // 退出登录
     logout: function logout() {
       uni.removeStorageSync("userInfo");

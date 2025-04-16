@@ -69,7 +69,7 @@ let moreResult;
 				state:"待审核"
 			});
 			//更新escort_relation表（上下级关系）
-			relationResult = await uniCloud.callFunction({
+			let relationResult = await uniCloud.callFunction({
 				name: 'escort_relation',
 				data: {
 					// 传递上级和下级的陪诊师id的数据

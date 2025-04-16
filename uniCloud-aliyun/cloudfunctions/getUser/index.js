@@ -37,7 +37,7 @@ exports.main = async (event, context) => {
       name: 'refresh-token',
       data: { refreshToken }  // 注意这里要传对象
     });
-    
+    console.log(newTokenRes.result.data.token)
     if (newTokenRes.code === 401) {
       return { code: 401, msg: 'refreshToken过期，需重新登录' };
     }
@@ -47,7 +47,7 @@ exports.main = async (event, context) => {
     const newDecoded = jwt.verifyToken(newTokenRes.result.data.token);  // 确保使用正确的字段
 	// console.log(newDecoded)
     const newOpenid = newDecoded.uid;
-    const userInfo = await getUserFromDB(newOpenid, type, newTokenRes.token);
+    const userInfo = await getUserFromDB(newOpenid, type, newTokenRes.result.data.token);
     
     return {
       code: 200,
@@ -83,6 +83,7 @@ async function getUserFromDB(user_id, userType, token) {
   }
   console.log(res.data[0])
   const userInfo=res.data[0];
+  console.log(token)
   userInfo.user_id=token;
   console.log(userInfo)
   // 返回数据时不要修改原始数据

@@ -1,0 +1,33 @@
+{
+  "bsonType": "object",
+  "required": ["type", "content", "timestamp", "userId"],
+  "permission": {
+    "read": true,
+    "create": true,
+    "update": false,
+    "delete": false
+  },
+  "properties": {
+    "type": {
+      "bsonType": "string",
+      "enum": ["patient", "doctor"],
+      "description": "消息类型"
+    },
+    "content": {
+      "bsonType": "string",
+      "description": "消息内容"
+    },
+    "timestamp": {
+      "bsonType": "timestamp",
+      "description": "消息时间戳"
+    },
+    "userId": {
+      "bsonType": "string",
+      "description": "用户ID"
+    },
+    "sessionId": {
+      "bsonType": "string",
+      "description": "会话ID"
+    }
+  }
+}

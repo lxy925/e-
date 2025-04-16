@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 367))
+      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 407))
     },
   }
 } catch (e) {
@@ -126,7 +126,7 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var m0 = __webpack_require__(/*! ../../static/images/index/value.png */ 78)
+  var m0 = __webpack_require__(/*! ../../static/images/index/value.png */ 77)
   _vm.$mp.data = Object.assign(
     {},
     {

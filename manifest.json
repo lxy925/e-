@@ -1,11 +1,8 @@
 {
-<<<<<<< HEAD
-    "name" : "test",
-    "appid" : "__UNI__6C1CAB1",
-=======
+
     "name" : "quickstart-wx-cloud",
     "appid" : "__UNI__E059568",
->>>>>>> lxy
+
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",

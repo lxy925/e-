@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 367))
+      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 407))
     },
   }
 } catch (e) {
@@ -159,12 +159,19 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {
+/* WEBPACK VAR INJECTION */(function(uni, uniCloud) {
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
+//
+//
+//
 //
 //
 //
@@ -273,29 +280,19 @@ var _default = {
     return {
       currentType: 'hospital',
       searchText: '',
-      hospitals: [{
-        id: 1,
-        name: '北京协和医院',
-        level: '三级甲等',
-        type: '综合医院',
-        address: {
-          city: "惠州市",
-          area: "惠城区"
-        },
-        website: "http://www.hzcrmyy.com/",
-        image: '/static/images/hospital1.jpg'
-      }
+      hospitals: [],
+      filteredHospitals: [],
       // 更多医院数据
-      ],
-
       showFilterPanel: false,
       hospitalLevels: ['三级甲等', '三级乙等', '二级甲等', '二级乙等'],
-      hospitalTypes: ['综合医院', '专科医院', '中医医院', '民营医院'],
+      hospitalTypes: ['国营', '股份制'],
       selectedLevel: '',
       selectedType: '',
       selectedGroup: '',
       filterConditions: {
         hospital: {
+          province: '',
+          city: '',
           level: '',
           type: ''
         },
@@ -304,12 +301,12 @@ var _default = {
         }
       },
       locations: {
-        provinces: ['北京', '上海', '广东', '江苏'],
+        provinces: ['北京', '上海', '广东省', '江苏省'],
         cities: {
           '北京': ['北京市'],
           '上海': ['上海市'],
-          '广东': ['广州市', '深圳市', '珠海市'],
-          '江苏': ['南京市', '苏州市', '无锡市']
+          '广东省': ['广州市', '深圳市', '珠海市'],
+          '江苏省': ['南京市', '苏州市', '无锡市']
         },
         districts: {
           '北京市': ['东城区', '西城区', '朝阳区', '海淀区'],
@@ -335,8 +332,15 @@ var _default = {
     switchType: function switchType(type) {
       this.currentType = type;
     },
-    onSearch: function onSearch(e) {
-      console.log('搜索:', this.searchText);
+    onSearch: function onSearch() {
+      var _this = this;
+      if (!this.searchText) {
+        this.filteredHospitals = this.hospitals; // 如果没有搜索关键词，显示所有医院
+      } else {
+        this.filteredHospitals = this.hospitals.filter(function (hospital) {
+          return hospital.name.toLowerCase().includes(_this.searchText.toLowerCase());
+        });
+      }
     },
     showFilter: function showFilter() {
       this.showFilterPanel = true;
@@ -376,10 +380,23 @@ var _default = {
     },
     filterHospitals: function filterHospitals() {
       console.log('筛选条件：', this.filterConditions.hospital);
+      var _this$filterCondition = this.filterConditions.hospital,
+        province = _this$filterCondition.province,
+        city = _this$filterCondition.city,
+        level = _this$filterCondition.level,
+        type = _this$filterCondition.type;
+      this.filteredHospitals = this.hospitals.filter(function (hospital) {
+        var matchesProvince = province ? hospital.address.province === province : true;
+        var matchesCity = city ? hospital.address.city === city : true;
+        var matchesLevel = level ? hospital.level === level : true;
+        var matchesType = type ? hospital.type === type : true;
+        return matchesProvince && matchesCity && matchesLevel && matchesType;
+      });
     },
     selectProvince: function selectProvince(province) {
       if (this.selectedProvince === province) {
         this.selectedProvince = '';
+        //this.filterConditions.hospital.province = province
         this.selectedCity = '';
         this.selectedDistrict = '';
       } else {
@@ -391,22 +408,107 @@ var _default = {
     selectCity: function selectCity(city) {
       if (this.selectedCity === city) {
         this.selectedCity = '';
+        //this.filterConditions.hospital.city = city
         this.selectedDistrict = '';
       } else {
         this.selectedCity = city;
         this.selectedDistrict = '';
       }
     },
-    selectDistrict: function selectDistrict(district) {
-      this.selectedDistrict = this.selectedDistrict === district ? '' : district;
+    //selectDistrict(district) {
+    //	this.selectedDistrict = this.selectedDistrict === district ? '' : district
+    //},
+    // 获取医院列表数据
+    getHospitalList: function getHospitalList() {
+      var _this2 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var res;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                uni.showLoading({
+                  title: '加载中...'
+                });
+                _context.next = 4;
+                return uniCloud.callFunction({
+                  name: 'getHospitals',
+                  data: {
+                    page: 1,
+                    pageSize: 999
+                  }
+                });
+              case 4:
+                res = _context.sent;
+                console.log("获取到的医院列表数据：", res); // 调试信息
+                if (res.result.code === 0) {
+                  _this2.hospitals = res.result.data.list;
+                  _this2.filteredHospitals = (0, _toConsumableArray2.default)(_this2.hospitals);
+                } else {
+                  uni.showToast({
+                    title: "\u83B7\u53D6\u6570\u636E\u5931\u8D25\uFF1A".concat(res.result.msg),
+                    icon: 'none'
+                  });
+                }
+                _context.next = 13;
+                break;
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](0);
+                uni.showToast({
+                  title: '获取医院列表失败',
+                  icon: 'none'
+                });
+                console.error("获取医院列表失败：", _context.t0);
+              case 13:
+                _context.prev = 13;
+                uni.hideLoading();
+                return _context.finish(13);
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 9, 13, 16]]);
+      }))();
     },
     // 处理医院列表点击事件
     handleHospitalTap: function handleHospitalTap(hospital) {
       if (this.fromPage === 'index') {
         // 如果从 index 页面进入，跳转到医院官网
-        uni.navigateTo({
-          url: hospital.website
-        });
+        if (!hospital.website || hospital.website === "") {
+          uni.showToast({
+            title: '暂无医院官网信息',
+            icon: 'none',
+            duration: 2000
+          });
+          return;
+        }
+        try {
+          var url = hospital.website;
+          if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'http://' + url;
+          }
+
+          // 使用微信小程序的API打开网页
+          uni.navigateTo({
+            url: "/pages/web-view/web-view?url=".concat(encodeURIComponent(url)),
+            fail: function fail(err) {
+              console.error('跳转失败:', err);
+              uni.showToast({
+                title: '打开网页失败',
+                icon: 'none'
+              });
+            }
+          });
+        } catch (error) {
+          console.error('打开网页错误:', error);
+          uni.showToast({
+            title: '打开网页失败',
+            icon: 'none'
+          });
+        }
       } else {
         // 如果从其他页面进入，返回数据到上一页
         uni.navigateBack({
@@ -421,10 +523,11 @@ var _default = {
   onLoad: function onLoad(options) {
     // 获取页面来源信息
     this.fromPage = options.from || null;
+    this.getHospitalList(); // 页面加载时获取数据
   }
 };
 exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27)["uniCloud"]))
 
 /***/ }),
 

@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return Promise.all(/*! import() | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 367))
+      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 407))
     },
   }
 } catch (e) {
@@ -246,17 +246,14 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 // pages/index/index.js
 var _default = {
   data: function data() {
     return {
+      pageTitle: '首页',
+      scrollTop: 0,
+      navHeight: 0,
+      // 添加导航栏高度存储
       banners: [],
       indicatorDots: true,
       autoplay: true,
@@ -273,7 +270,7 @@ var _default = {
         text: "急救方法",
         path: "/pages/help/help"
       }, {
-        icon: "/static/images/index/index-prevent.png",
+        icon: "/static/images/index/index-prevant.png",
         text: "重疾防治",
         path: "/pages/prevent/prevent"
       }, {
@@ -320,6 +317,9 @@ var _default = {
    * 生命周期函数--监听页面加载
    */
   onLoad: function onLoad(options) {
+    // 获取导航栏高度
+    var systemInfo = uni.getSystemInfoSync();
+    this.navHeight = systemInfo.statusBarHeight + 180;
     this.getBanners();
   },
   /**
@@ -351,6 +351,11 @@ var _default = {
    */
   onShareAppMessage: function onShareAppMessage() {},
   methods: {
+    //监视页面滚动情况
+    handleScroll: function handleScroll(e) {
+      console.log("scrollTop大小", e.detail.scrollTop);
+      this.scrollTop = e.detail.scrollTop;
+    },
     handleNavClick: function handleNavClick(path) {
       uni.navigateTo({
         url: path

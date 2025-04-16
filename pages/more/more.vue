@@ -275,41 +275,52 @@
 			    },
 			// 处理医院列表点击事件
 			handleHospitalTap(hospital) {
-			    if (!hospital.website || hospital.website === "") {
-			        uni.showToast({
-			            title: '暂无医院官网信息',
-			            icon: 'none',
-			            duration: 2000
-			        });
-			        return;
-			    }
+							if (this.fromPage === 'index') {
+								// 如果从 index 页面进入，跳转到医院官网
+								if (!hospital.website || hospital.website === "") {
+									uni.showToast({
+										title: '暂无医院官网信息',
+										icon: 'none',
+										duration: 2000
+									});
+									return;
+								}
+								try {
+									let url = hospital.website;
+									if (!url.startsWith('http://') && !url.startsWith('https://')) {
+										url = 'http://' + url;
+									}
 			
-			    try {
-			        let url = hospital.website;
-			        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-			            url = 'http://' + url;
-			        }
-			
-			        // 使用微信小程序的API打开网页
-			        uni.navigateTo({
-			            url: `/pages/web-view/web-view?url=${encodeURIComponent(url)}`,
-			            fail: (err) => {
-			                console.error('跳转失败:', err);
-			                uni.showToast({
-			                    title: '打开网页失败',
-			                    icon: 'none'
-			                });
-			            }
-			        });
-			    } catch (error) {
-			        console.error('打开网页错误:', error);
-			        uni.showToast({
-			            title: '打开网页失败',
-			            icon: 'none'
-			        });
-			    }
+									// 使用微信小程序的API打开网页
+									uni.navigateTo({
+										url: `/pages/web-view/web-view?url=${encodeURIComponent(url)}`,
+										fail: (err) => {
+											console.error('跳转失败:', err);
+											uni.showToast({
+												title: '打开网页失败',
+												icon: 'none'
+											});
+										}
+									});
+								} catch (error) {
+									console.error('打开网页错误:', error);
+									uni.showToast({
+										title: '打开网页失败',
+										icon: 'none'
+									});
+								}
+							} else {
+								// 如果从其他页面进入，返回数据到上一页
+								uni.navigateBack({
+									delta: 1,
+									success: () => {
+										uni.$emit('select-hospital', hospital) // 发送事件到上一页
+									}
+								})
+							}
 			}
-		},
+						},
+	
 		onLoad(options) {
 			// 获取页面来源信息
 			this.fromPage = options.from || null

@@ -373,14 +373,101 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* pages/mine/mine.wxss */
 .page {
 	min-height: 100vh;
-	background: linear-gradient(to bottom,
+	/* 	background: linear-gradient(to bottom,
 			#0bd6c8,
 			#99efe9,
 			#ddf5f4,
-			rgb(226, 226, 226));
+			rgb(226, 226, 226)); */
 	padding-top: 50rpx;
 	margin-top: -1px;
 	/* 消除可能的间隙 */
@@ -389,37 +476,45 @@
 .header {
 	display: flex;
 	align-items: center;
+	/* background-color: #a5d63f; */
+	width: 100%;
+	margin-top: 50rpx;
 }
-.header ._img {
+.headerimg {
 	width: 180rpx;
 	height: 180rpx;
 	border-radius: 50%;
-	margin-left: 50rpx;
-	margin-top: 50rpx;
-}
-.user {
-	display: flex;
-	flex-direction: column;
-	justify-content: baseline;
+	/* background-color: #18d681; */
 }
 .username {
 	font-size: 25px;
 	font-weight: bold;
 	margin-left: 50rpx;
-	margin-top: 10rpx;
+	margin-top: -50rpx;
+	/* background-color: #ddf5f4; */
 }
 .user-info {
 	font-size: 13px;
 	font-weight: bold;
 	margin-left: 30rpx;
-	margin-top: 10rpx;
-	background-color: #a5d63f;
+	/* margin-top: 10rpx; */
+	margin-top: -50rpx;
+	background-color: #1c9bd6;
 	padding: 10rpx;
 	height: auto;
 	border-radius: 20rpx;
 }
+.sao {
+	/* background-color: aqua; */
+	margin-left: 150rpx;
+	margin-top: -50rpx;
+	border-radius: 0;
+	height: 50rpx;
+	width: 50rpx;
+	/* background-color: aqua; */
+}
 .state-box {
-	margin-top: 150rpx;
+	margin-top: 100rpx;
 	margin-left: -180rpx;
 	font-size: 15px;
 	font-weight: bold;
@@ -465,8 +560,8 @@
 	background-color: #fff;
 	border-radius: 15rpx;
 	padding: 20rpx;
-	margin-left: 50rpx;
-	margin-right: 50rpx;
+	/* margin-left: 50rpx;
+	margin-right: 50rpx; */
 	color: #333;
 	/* width: 100%; */
 }
@@ -570,9 +665,8 @@
 	margin-top: 40rpx;
 	background-color: #fff;
 	border-radius: 15rpx;
-	padding: 20rpx;
-	margin-left: 50rpx;
-	margin-right: 50rpx;
+	padding: 20 0rpx;
+	width: 100%;
 }
 .order-title {
 	font-size: 32rpx;
@@ -642,11 +736,94 @@
 .logout-box button {
 	width: 400rpx;
 	height: 80rpx;
-	background-color: #54c69a;
+	background-color: #1fc7d6;
 	color: #fff;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	padding-left: 50rpx;
+}
+/* 新增陪诊师账户模块样式 */
+.account-box {
+	background-color: #fff;
+	border-radius: 15rpx;
+	padding: 0rpx;
+	margin: 20rpx 0rpx;
+	box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+.account {
+	background-color: #8ce5ef;
+	border-radius: 15rpx;
+	padding: 20rpx;
+}
+.account-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.account-title {
+	font-size: 32rpx;
+	font-weight: bold;
+	color: #333;
+}
+.account-info {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20rpx;
+}
+.account-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.account-label {
+	font-size: 13px;
+	color: #ffffff;
+}
+.account-value {
+	font-size: 25px;
+	font-weight: bold;
+	color: #ffffff;
+	margin-top: 10rpx;
+	margin-bottom: 20rpx;
+}
+.time-options {
+	display: flex;
+	justify-content: space-around;
+	margin: 20px 0;
+}
+.time-option {
+	padding: 8rpx 25rpx;
+	border: 1px solid #1fc7d6;
+
+	border-radius: 30rpx;
+	color: #1fc7d6;
+	cursor: pointer;
+}
+.time-option:hover {
+	background-color: #1fc7d6;
+	color: white;
+}
+.data-display {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+.data-item {
+	margin: 15px 0;
+	margin-top: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	font-size: 25rpx;
+	/* background-color: #a5d63f; */
+	width: 200rpx;
+}
+.data-item-item {
+	margin-bottom: 20rpx;
+	font-weight: bold;
+	font-size: 30rpx;
 }
 

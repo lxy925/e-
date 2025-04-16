@@ -1,4 +1,6 @@
 'use strict';
+// const jwt = require('../common/jwt.js');
+const crypto = require('crypto');
 const db = uniCloud.database()
 
 exports.main = async (event, context) => {
@@ -29,7 +31,16 @@ exports.main = async (event, context) => {
       'moreInfo.rating': -1 // 按照 rating 从大到小排序
     })
     .end()
-    
+	//给数据加密
+    res.data.forEach(item => {
+	
+      item.user_id = encryptData(item.user_id);
+	item.moreInfo.user_id= encryptData(item.moreInfo.user_id);
+	  item.card_id= encryptData(item.card_id);
+	  item.phone= encryptData(item.phone);
+	  
+    });
+    // console.log(userInfo)
     console.log('查询结果：', res)
     
     return {
@@ -43,4 +54,10 @@ exports.main = async (event, context) => {
       msg: e.message || '获取陪诊师集合失败'
     }
   }
+  
+  // 数据加密
+  function encryptData(text) {
+    return crypto.createHash('sha256').update(text).digest('hex');
+  }
+  
 }

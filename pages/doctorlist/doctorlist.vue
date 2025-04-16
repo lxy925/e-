@@ -27,12 +27,12 @@
               />
             {{ doctor.moreInfo.order }}
           </view>
-          <view class="specialty-container">
+         <!-- <view class="specialty-container">
               <text class="doctor-specialty1" v-if="doctor.moreInfo.language">{{ doctor.moreInfo.language }}</text>
             <text class="doctor-specialty2" v-if="doctor.moreInfo.provide_transport">
               可接送
             </text>
-          </view>
+          </view> -->
           <view class="doctor-tags">
            
             
@@ -287,10 +287,10 @@ padding-top: 200rpx;
 
 .doctor-availability,
 .doctor-certification {
-  font-size: 20rpx;
-  padding: 4rpx 8rpx;
-  border-radius: 10rpx;
-  color: #fff;
+ font-size: 22rpx;
+ line-height: 1.4;
+ border-radius: 15rpx;
+ padding: 4rpx 10rpx;
 }
 .doctor-gender {
  font-size: 20rpx;
@@ -302,20 +302,27 @@ padding-top: 200rpx;
 
 
 .doctor-availability.available {
-  background-color: #2ecc71;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
 }
 
 .doctor-availability.unavailable {
-  background-color: #e74c3c;
+  /* background-color:#95a5a6; */
+  color: #95a5a6;
+   border: 1px solid #95a5a6;
 }
 
 .doctor-certification.certified {
-  background-color: #f1c40f;
+  color: #3498db;
+  border: 1px solid #3498db;
+  
 }
 
 .doctor-certification.uncertified {
-  background-color: #95a5a6;
+ color: #95a5a6;
+  border: 1px solid #95a5a6;
 }
+
 
 .doctor-need {
   position: absolute;

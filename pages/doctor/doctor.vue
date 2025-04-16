@@ -1,9 +1,9 @@
 <template>
   <view class="page">
     <!-- pages/doctor/doctor.wxml -->
-    <view class="custom-nav">
-        <custom-nav title="e陪无忧" :isHomePage="true"></custom-nav>
-    </view>
+	<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
+    <scroll-view scroll-y class="content-scroll" @scroll="handleScroll" :scroll-top="scrollTop">
+	<view class="content" style="padding: 0rpx 25rpx;">
     <view class="first">
       <swiper class="swiper" circular autoplay interval="3000" duration="500">
         <swiper-item v-for="(banner, index) in banners" :key="index">
@@ -41,7 +41,7 @@
     <view class="next">
       <img
         class="next-image"
-        src="../../static/images/index/curse.jpg"
+        src=""
         alt=""
       />
       <view class="next-text">
@@ -77,12 +77,12 @@
               />
             {{ doctor.moreInfo.order }}
           </view>
-          <view class="specialty-container">
+        <!--  <view class="specialty-container">
             <text class="doctor-specialty1" v-if="doctor.moreInfo.language">{{ doctor.moreInfo.language }}</text>
             <text class="doctor-specialty2" v-if="doctor.moreInfo.provide_transport">
               可接送
             </text>
-          </view>
+          </view> -->
           <view class="doctor-tags">
           
             <text :class="['doctor-certification', doctor.is_certified  ? 'certified' : 'uncertified']">
@@ -116,6 +116,8 @@
                 <view class="flow-arrow" v-if="index !== processSteps.length - 1">→</view>
             </view>
         </view> -->
+		</view>
+		</scroll-view>
   </view>
 </template>
 
@@ -132,40 +134,19 @@ export default {
       //     { title: '考试认证', desc: '参加资格考试' }
       // ],
       banners: [],
-      doctors: [
-       
-      ],
+      doctors: [],
+	  pageTitle:"陪诊师学习",
+	  scrollTop: 0,
+	navHeight: 0, // 存储导航栏高度
     };
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    // 先检查权限
-    // uni.getSetting({
-    //     success: (res) => {
-    //         if (!res.authSetting['scope.userLocation']) {
-    //             // 如果没有权限，先获取权限
-    //             uni.authorize({
-    //                 scope: 'scope.userLocation',
-    //                 success: () => {
-    //                     this.getLocationInfo();
-    //                 },
-    //                 fail: (err) => {
-    //                     console.error('授权失败：', err);
-    //                     // 用户拒绝授权
-    //                     uni.showToast({
-    //                         title: '需要位置权限才能获取您的位置信息',
-    //                         icon: 'none'
-    //                     });
-    //                 }
-    //             });
-    //         } else {
-    //             // 已有权限，直接获取位置
-    //             this.getLocationInfo();
-    //         }
-    //     }
-    // });
+  // 获取导航栏高度（需与 custom-nav 组件一致）
+      const systemInfo = uni.getSystemInfoSync();
+      this.navHeight = systemInfo.statusBarHeight + 44;
     this.getBanners();
     this.fetchDoctors();
   },
@@ -205,6 +186,11 @@ export default {
    */
   onShareAppMessage() {},
   methods: {
+	  //监视页面滚动情况
+	  handleScroll(e) {
+	  	this.scrollTop = e.detail.scrollTop
+	  },
+	  
     async fetchDoctors() {
       try {
        const cityName = uni.getStorageSync('cityName');
@@ -277,75 +263,25 @@ export default {
 /* pages/doctor/doctor.wxss */
 
 .page {
-  height: min-content;
-  padding: 0 50rpx;
-  padding-top: 200rpx;
+  height: 100vh;
+  padding: 0 rpx;
+  padding-top: 180rpx;
+  /* background-color: #2ecc71; */
   /* height: min-content; */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239));
-}
-/* .custom-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 44px;
-    padding-top: var(--status-bar-height);
-    display: flex;
-    align-items: center;
-    padding-left: 16px;
-    padding-right: 16px;
-    z-index: 999;
-} */
-
-/* .location {
-    display: flex;
-    align-items: center;
-    color: #ffffff;
-    font-size: 14px;
-    margin-right: 10px;
+  /* background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239)); */
 }
 
-.location-text {
-    margin-right: 4px;
-}
-.location-icon img{
-    width: 30px;
-    height: 30px;
-}
 
-.search-box {
-    flex: 1;
-    position: relative;
-    height: 32px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-}
-
-.search-box input {
-    flex: 1;
-    height: 100%;
-    font-size: 14px;
-    padding-right: 30px;
-    margin-left: 10px;
-}
-
-.search-icon {
-    width: 20px;
-    height: 20px;
-
-}
-
-.placeholder-style {
-    color: #999;
-    font-size: 14px;
-    margin-left: 10px;
-} */
+	.content-scroll {
+		height: 100vh;
+		width: 100%;
+		padding-top: var(--status-bar-height);
+		padding: 0rpx;
+		/* background-color: antiquewhite; */
+	}
 .first {
   margin-top: 0px;
   width: 100%;
@@ -624,10 +560,10 @@ export default {
 
 .doctor-availability,
 .doctor-certification {
-  font-size: 20rpx;
-  padding: 4rpx 8rpx;
-  border-radius: 10rpx;
-  color: #fff;
+ font-size: 22rpx;
+ line-height: 1.4;
+ border-radius: 15rpx;
+ padding: 4rpx 10rpx;
 }
 
 .doctor-gender {
@@ -639,19 +575,25 @@ export default {
 }
 
 .doctor-availability.available {
-  background-color: #2ecc71;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
 }
 
 .doctor-availability.unavailable {
-  background-color: #e74c3c;
+  /* background-color:#95a5a6; */
+  color: #95a5a6;
+   border: 1px solid #95a5a6;
 }
 
 .doctor-certification.certified {
-  background-color: #f1c40f;
+  color: #3498db;
+  border: 1px solid #3498db;
+  
 }
 
 .doctor-certification.uncertified {
-  background-color: #95a5a6;
+ color: #95a5a6;
+  border: 1px solid #95a5a6;
 }
 
 .doctor-need {

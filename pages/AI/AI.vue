@@ -1,18 +1,14 @@
 <template>
   <view class="container">
-<<<<<<< HEAD:pages/index/index.uvue
-    <view class="chat-header">
-          <text class="doctor-name">陪诊咨询</text>
-          <text class="doctor-dept">AI助手智能回答</text>
-        </view>
-=======
+
+
+
     <custom-nav title="陪诊咨询" :isHomePage="false"></custom-nav>
     <!-- <view class="chat-header">
       <text class="doctor-name">陪诊咨询</text>
       <text class="doctor-dept">AI助手智能回答</text>
     </view> -->
->>>>>>> lxy:pages/AI/AI.vue
-    
+
     <scroll-view class="chat-content" scroll-y>
       <view v-for="(item, index) in messageList" :key="index">
         <!-- 时间显示 -->
@@ -108,6 +104,7 @@ export default {
           method: 'GET',
           timeout: 5000
         });
+		console.log('服务器健康检查成功');
         return res.statusCode === 200;
       } catch (error) {
         console.error('服务器健康检查失败:', error);
@@ -124,6 +121,7 @@ export default {
       try {
         // 先检查服务器健康状态
         const isHealthy = await this.checkServerHealth();
+		console.log(isHealthy);
         if (!isHealthy) {
           throw new Error('服务器未就绪');
         }
@@ -394,7 +392,7 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding-top: 200rpx;
+  padding-top: 150rpx;
 }
 
 .chat-header {

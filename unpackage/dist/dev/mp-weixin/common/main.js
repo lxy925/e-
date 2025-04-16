@@ -22,8 +22,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 // @ts-ignore
 wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 var CustomNav = function CustomNav() {
-  Promise.all(/*! require.ensure | components/custom-nav/custom-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/custom-nav/custom-nav")]).then((function () {
-    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 367));
+  __webpack_require__.e(/*! require.ensure | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then((function () {
+    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 407));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 _vue.default.use(_index2.default);
@@ -129,99 +129,7 @@ var _default = {
     this.globalData = {};
   },
   onShow: function onShow() {},
-  methods: {
-    //     updateTabBar() {
-    //       // 获取缓存的 userInfo
-    //       const userInfo = uni.getStorageSync('userInfo');
-    // console.log("userInfo",userInfo)
-    //       if (userInfo) {
-    //         const type = userInfo.type;
-
-    //         // 根据 type 动态设置 tabBar
-    //         let tabBarList = [];
-    //         if (type === '陪诊师') {
-    //           tabBarList = [
-    //            {
-    //            	"pagePath": "pages/index/index",
-    //            	"text": "首页",
-    //            	"iconPath": "static/images/icons/home.png",
-    //            	"selectedIconPath": "static/images/icons/home-active.png"
-    //            },
-    //            {
-    //            	"pagePath": "pages/doctor/doctor",
-    //            	"text": "陪诊师",
-    //            	"iconPath": "static/images/icons/doctor.png",
-    //            	"selectedIconPath": "static/images/icons/doctor-active.png"
-    //            },
-    //            {
-    //            	"pagePath": "pages/health/health",
-    //            	"text": "健康管理",
-    //            	"iconPath": "static/images/icons/health.png",
-    //            	"selectedIconPath": "static/images/icons/health-active.png"
-    //            },
-    //            {
-    //            	"pagePath": "pages/doctorlogin/doctorlogin",
-    //            	"text": "我的",
-    //            	"iconPath": "static/images/icons/mine.png",
-    //            	"selectedIconPath": "static/images/icons/mine-active.png"
-    //            }
-    //           ];
-    //         } else {
-    //           tabBarList = [
-    //            {
-    //            	"pagePath": "pages/index/index",
-    //            	"text": "首页",
-    //            	"iconPath": "static/images/icons/home.png",
-    //            	"selectedIconPath": "static/images/icons/home-active.png"
-    //            },
-    //            {
-    //            	"pagePath": "pages/doctor/doctor",
-    //            	"text": "陪诊师",
-    //            	"iconPath": "static/images/icons/doctor.png",
-    //            	"selectedIconPath": "static/images/icons/doctor-active.png"
-    //            },
-    //            {
-    //            	"pagePath": "pages/health/health",
-    //            	"text": "健康管理",
-    //            	"iconPath": "static/images/icons/health.png",
-    //            	"selectedIconPath": "static/images/icons/health-active.png"
-    //            },
-    //            {
-    //            	"pagePath": "pages/mine/mine",
-    //            	"text": "我的",
-    //            	"iconPath": "static/images/icons/mine.png",
-    //            	"selectedIconPath": "static/images/icons/mine-active.png"
-    //            }
-    //           ];
-    //         }
-
-    //         // 更新 tabBar
-    //         if (tabBarList.length > 0) {
-    //           uni.setTabBarItem({
-    //             index: 0,
-    //             ...tabBarList[0],
-    // 				success: () => {
-    // 					console.log('tabBar 更新成功');
-    // 				},
-    //           });
-    //           uni.setTabBarItem({
-    //             index: 1,
-    //             ...tabBarList[1]
-    //           });
-    // 	uni.setTabBarItem({
-    // 	  index: 2,
-    // 	  ...tabBarList[2]
-    // 	});
-    // 	uni.setTabBarItem({
-    // 	  index: 3,
-    // 	  ...tabBarList[3]
-    // 	});
-    //         }
-    //       }
-    // }
-    // }
-    globalData: {}
-  }
+  methods: {}
 };
 exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))

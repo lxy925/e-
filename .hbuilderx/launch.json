@@ -6,9 +6,7 @@
                 "launchtype" : "local"
             },
             "mp-weixin" : {
-
                 "launchtype" : "local"
-
             },
             "provider" : "aliyun",
             "type" : "uniCloud"

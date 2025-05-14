@@ -6,13 +6,13 @@ exports.main = async (event, context) => {
 		idNumber,
 		avatarUrl,
 		realName,
-		ID,
+		user_id,
 		nickName
 	} = event;
 	console.log("传入的参数phone:", phone)
 	try {
 		const result = await db.collection('users').add({
-			user_id: ID,
+			user_id: user_id,
 			name: realName,
 			nickName: nickName,
 			type: "普通用户",

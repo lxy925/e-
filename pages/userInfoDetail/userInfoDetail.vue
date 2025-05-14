@@ -24,12 +24,12 @@
 				<image src="../../static/images/mine/name.png" alt=""></image>
 
 				<view class="user-info-item-title">身份证号码</view>
-				<input type="text" class="username" placeholder="输入你的身份证号码" v-model="idNumber" />
+				<input type="text" class="username" placeholder="输入你的身份证号码" v-model="idCard" />
 			</view>
 			<view class="user-info-item">
 				<image src="../../static/images/mine/phone.png" alt=""></image>
 				<view class="user-info-item-title">手机号</view>
-				<input type="text" class="username" placeholder="请输入你的手机号" v-model="phone" />
+				<input type="text" class="username" placeholder="请输入你的手机号" v-model="phoneNumber" />
 				<button class="get-code" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">获取</button>
 			</view>
 
@@ -43,22 +43,20 @@
 
 
 <script>
-	import WXBizDataCrypt from "../../Utils/aes-sample.eae1f364/aes-sample.eae1f364/Node/WXBizDataCrypt";
+	import WXBizDataCrypt from '../../Utils/WXBizDataCrypt.js'
+	//import jwt from '../../uniCloud/cloudfunctions/commom/jwt.js'
 	export default {
 		data() {
 			return {
-
+				token: uni.getStorageSync('token'),
+				nickName: '',
+				realName: '',
+				idCard: '',
+				phoneNumber: '',
 				avatar: '',
 				show: false,
-				nickName: '',
-				phone: "",
-				phone_iv: "",
-				js_code: "",
-				session_key: "",
-				realName: '',
-				ID: '',
-				idNumber: "",
-				fromPage: '',
+				code: '', // 微信登录code
+				fromPage: ''
 			};
 		}
 		/**
@@ -68,7 +66,8 @@
 		,
 		onLoad(options) {
 			// 获取来源页面参数
-			this.fromPage = options.from || 'mine'
+			this.fromPage = options.from || 'mine';
+			this.userInfo=uni.getStorageSync('userInfoForm');
 
 		},
 		/**
@@ -79,7 +78,7 @@
 		 * 生命周期函数--监听页面显示
 		 */
 		onShow() {
-			this.go();
+			// this.go();
 		},
 		/**
 		 * 生命周期函数--监听页面隐藏
@@ -105,77 +104,156 @@
 			// 获取头像
 			getAvatar(e) {
 				console.log(e);
-				this.avatar = e.detail.avatarUrl;
+				const avatar = e.detail.avatarUrl;
 				this.show = true;
 
+				// 生成唯一的文件名
+				const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
+
+				// 指定云存储路径
+				const cloudPath = `avatar/${fileName}`; // 例如：avatarList/1741500000000_abc123.jpg
+				// 上传图片到云存储
+				uniCloud.uploadFile({
+					filePath: avatar, // 本地临时文件路径
+					cloudPath, // 云存储路径
+					onUploadProgress: (progressEvent) => {
+						// 上传进度回调
+						const percentCompleted = Math.round(
+							(progressEvent.loaded * 100) / progressEvent.total
+						);
+						console.log(`上传进度：${percentCompleted}%`);
+					},
+					success: (uploadRes) => {
+						// 上传成功回调
+						console.log("上传成功：", uploadRes);
+
+						// 获取云存储的文件 ID
+						const fileID = uploadRes.fileID;
+
+						// 更新前端数据
+						this.avatar = fileID; // 将 fileID 赋值给 this.formData[listName]
+						uni.showToast({
+							title: '上传成功',
+							icon: 'success',
+							duration: 2000,
+						});
+					},
+					fail: (err) => {
+						// 上传失败回调
+						console.error("上传失败：", err);
+						uni.showToast({
+							title: '上传失败',
+							icon: 'none',
+							duration: 2000,
+						});
+					},
+					complete: () => {
+						// 上传完成回调
+						console.log("上传完成");
+					},
+				});
 			},
 			getName(e) {
 				this.nickName = e.detail.value;
 			},
-			// 	getIdNumber(e){
-			// 		this.idNumber = e.detail.value;
-			// 	},
-			// getPhone(e){
-			// 	this.phone = e.detail.value;
+			//获取电话号码
+			async getPhoneNumber(e) {
+			  if (e.detail.errMsg !== 'getPhoneNumber:ok') return;
+			
+			  try {
+			    // 1. 先获取code（await确保完成）
+			    const code = await new Promise((resolve, reject) => {
+			      uni.login({
+			        provider: 'weixin',
+			        success: (res) => resolve(res.code),
+			        fail: reject
+			      });
+			    });
+			    // console.log("获取的code:", code);
+				// this.code=code;
+			    // 2. 再用code调用云函数
+			    const { result } = await uniCloud.callFunction({
+			      name: 'user-login',
+			      data: {
+			        code: code, // 使用已获取的code
+			        encryptedData: e.detail.encryptedData,
+			        iv: e.detail.iv
+			      }
+			    });
+			
+			    // 3. 处理结果
+			    if (result.code==200) {
+					// console.log(result)
+			      this.phoneNumber = result.data;
+				  // console.log( this.phoneNumber)
+			    } else {
+			      throw new Error('未获取到手机号');
+			    }
+			  } catch (err) {
+			    console.error('流程错误:', err);
+			    uni.showToast({ title: '获取手机号失败', icon: 'none' });
+			  }
+			},
+
+
+
+			// go() {
+			// 	uni.login({
+			// 		provider: 'weixin',
+			// 		success: res => {
+			// 			console.log(res)
+			// 			this.js_code = res.code
+			// 			uni.request({
+			// 				url: 'https://api.weixin.qq.com/sns/jscode2session', // 请求微信服务器
+			// 				method: 'GET',
+			// 				data: {
+			// 					appid: 'wxf8afb6dce14d487a', //你的小程序的APPID
+			// 					secret: '06d3e5f2f7ed1bf8504fe90a1a1e04e5', //你的小程序秘钥secret,  
+			// 					js_code: this.js_code, //uni.login 登录成功后的code
+			// 					grant_type: 'authorization_code' //此处为固定值
+			// 				},
+			// 				success: (res) => {
+			// 					console.log('获取信息', res.data);
+			// 					this.ID = res.data.openid
+			// 					this.session_key = res.data.session_key
+
+			// 				}
+			// 			});
+			// 		}
+			// 	});
 			// },
-
-			go() {
-				uni.login({
-					provider: 'weixin',
-					success: res => {
-						console.log(res)
-						this.js_code = res.code
-						uni.request({
-							url: 'https://api.weixin.qq.com/sns/jscode2session', // 请求微信服务器
-							method: 'GET',
-							data: {
-								appid: 'wxf8afb6dce14d487a', //你的小程序的APPID
-								secret: 'f00ab7cf65338de89b24cb5a52c640a4', //你的小程序秘钥secret,  
-								js_code: this.js_code, //uni.login 登录成功后的code
-								grant_type: 'authorization_code' //此处为固定值
-							},
-							success: (res) => {
-								console.log('获取信息', res.data);
-								this.ID = res.data.openid
-								this.session_key = res.data.session_key
-
-							}
-						});
-					}
-				});
-			},
 			// 获取手机号
-			getPhoneNumber(res) {
-				console.log(res)
-				if (res.detail.errMsg === "getPhoneNumber:ok") {
-					const {
-						encryptedData,
-						iv
-					} = res.detail;
-					console.log(encryptedData, iv);
+			// getPhoneNumber(res) {
+			// 	console.log(res)
+			// 	if (res.detail.errMsg === "getPhoneNumber:ok") {
+			// 		const {
+			// 			encryptedData,
+			// 			iv
+			// 		} = res.detail;
+			// 		console.log(encryptedData, iv);
 
-					// 创建解密对象
-					const pc = new WXBizDataCrypt('wxf8afb6dce14d487a', this.session_key);
+			// 		// 创建解密对象
+			// 		const pc = new WXBizDataCrypt('wxf8afb6dce14d487a', this.session_key);
 
-					try {
-						// 解密数据
-						const data = pc.decryptData(encryptedData, iv);
-						console.log(data);
+			// 		try {
+			// 			// 解密数据
+			// 			const data = pc.decryptData(encryptedData, iv);
+			// 			console.log(data);
 
-						// 检查手机号是否为空
-						if (data.phoneNumber) {
-							this.phone = data.phoneNumber;
-							console.log('解密成功，手机号:', this.phone);
-						} else {
-							console.error('解密后未获取到手机号');
-						}
-					} catch (err) {
-						console.error('解密失败:', err);
-					}
-				} else {
-					console.error('用户拒绝授权获取手机号');
-				}
-			},
+			// 			// 检查手机号是否为空
+			// 			if (data.phoneNumber) {
+			// 				this.phone = data.phoneNumber;
+			// 				console.log('解密成功，手机号:', this.phone);
+			// 			} else {
+			// 				console.error('解密后未获取到手机号');
+			// 			}
+			// 		} catch (err) {
+			// 			console.error('解密失败:', err);
+			// 		}
+			// 	} else {
+			// 		console.error('用户拒绝授权获取手机号');
+			// 	}
+			// },
 
 			async submitUserInfo() {
 				// 保存用户信息到本地存储
@@ -191,44 +269,68 @@
 						});
 					});
 				}
-				const userInfo = {
-					avatarUrl: this.avatar,
-					nickName: this.nickName,
-					realName: this.realName,
-					ID: this.ID,
-					phone: this.phone,
-					idNumber: this.idNumber,
-					type:"普通用户"
-				}
-				console.log(userInfo)
-				// 根据来源页面存储不同的信息
-				uni.setStorageSync('userInfo', userInfo);
-				console.log(uni.getStorageSync('userInfo'))
 
 
-				const {result} = await uniCloud.callFunction({
-				        name: 'addUsers',
-				        data: userInfo,
-				      });
+  // 1. 先获取code（await确保完成）
+			    const code = await new Promise((resolve, reject) => {
+			      uni.login({
+			        provider: 'weixin',
+			        success: (res) => resolve(res.code),
+			        fail: reject
+			      });
+			    });
+				const {
+					result
+				} = await uniCloud.callFunction({
+					name: 'user-login',
+					data: {
+						code: code,
+						nickName: this.nickName,
+						realName: this.realName,
+						idCard: this.idCard,
+						phoneNumber: this.phoneNumber,
+						avatar: this.avatar
+					}
+				});
 				console.log(result)
-				      if (result.code === 200) {
-				        uni.showToast({
-				          title: '登录成功',
-				          icon: 'success',
-				          duration: 2000,
-				        });
-				      } else {
-				        uni.showToast({
-				          title: result.message || '登录失败',
-				          icon: 'none',
-				          duration: 2000,
-				        });
-				      }
+				if (result.code === 0) {
+					uni.showToast({
+						title: '登录成功',
+						icon: 'success',
+						duration: 2000,
+					});
+
+					const userInfo = {
+
+						avatar: this.avatar,
+						nickName: this.nickName,
+						realName: this.realName,
+						user_id: result.data.token,
+						phone: this.phoneNumber,
+						idNumber: this.idCard,
+						type: "普通用户"
+					}
+					console.log(userInfo)
+					// 根据来源页面存储不同的信息
+					uni.setStorageSync('userInfo', userInfo);
+					//缓存token
+					uni.setStorageSync('token', result.data.token);
+					  uni.setStorageSync('refreshToken', result.data.refreshToken)
+					console.log(uni.getStorageSync('userInfo'))
+					// const isLoggedIn = true;
+					// uni.setStorageSync('isLoggedIn', isLoggedIn);
+					uni.setStorageSync('userInfoForm', userInfo);
+					// uni.setStorageSync('isLoggedIn', true);
+				} else {
+					uni.showToast({
+						title: result.message || '登录失败',
+						icon: 'none',
+						duration: 2000,
+					});
+				}
 
 				// 返回上一页
-				uni.navigateBack({
-					delta: 1
-				});
+				uni.navigateBack();
 			},
 			validateFormData() {
 				const errors = [];
@@ -247,7 +349,7 @@
 				}
 
 
-				if (!this.phone || !/^\d{11}$/.test(this.phone)) {
+				if (!this.phoneNumber || !/^\d{11}$/.test(this.phoneNumber)) {
 					errors.push('手机号码格式不正确');
 					return errors;
 				}
@@ -256,7 +358,7 @@
 				//      errors.push('资格证号不能为空');
 				// return errors;
 				//    }
-				if (!this.idNumber || !/^\d{18}$/.test(this.idNumber)) {
+				if (!this.idCard || !/^\d{18}$/.test(this.idCard)) {
 					errors.push('身份证号码格式不正确');
 					return errors;
 				}
@@ -276,7 +378,7 @@
 <style>
 	.page {
 		min-height: 100vh;
-		background: linear-gradient(to bottom, #54c69a, #fffcf9);
+		background: linear-gradient(to bottom, #15cbbc, #fffcf9);
 		padding: 50rpx;
 		padding-top: 100rpx;
 

@@ -1,3 +1,4 @@
+//AI聊天
 {
   "bsonType": "object",
   "required": ["type", "content", "timestamp", "userId"],

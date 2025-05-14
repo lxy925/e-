@@ -1,0 +1,7 @@
+{
+  "name": "refresh-token",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

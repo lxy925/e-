@@ -9,11 +9,14 @@
 	"author": "",
 	"dependencies": {
 		"@dcloudio/vue-cli-plugin-uni": "^2.0.2-4040520250103001",
-		"@vant/area-data": "^2.0.0",
-		"@vant/weapp": "^1.11.7",
+		"axios": "^1.8.3",
+		"crypto-browserify": "^3.12.1",
+		"jsonwebtoken": "^9.0.2",
 		"pinia": "^3.0.1",
-		"vant": "^4.9.16",
-		"vue-loader": "^17.4.2"
+		"qrcode": "^1.5.4",
+		"vue-loader": "^17.4.2",
+		"vuex": "^4.1.0",
+		"wx-server-sdk": "^3.0.1"
 	},
 	"license": "ISC"
 }

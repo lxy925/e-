@@ -11,7 +11,11 @@
           <image :src="doctor.avatarUrl" mode="aspectFill"></image>
         </view>
         <view class="doctor-info">
-          <view class="doctor-name">{{ doctor.name }}</view>
+			<view class="doctor-first">
+				<view class="doctor-name">{{ doctor.name }}</view>
+				 <view class="doctor-gender">{{ doctor.gender }}</view>
+			</view>
+          
           <view class="doctor-location">{{doctor.address.cityName}}&nbsp;{{doctor.address.areaName}}</view>
           <view class="doctor-department">
             <img class="value-icon" src="../../static/images/index/value.png" alt="" />
@@ -23,14 +27,14 @@
               />
             {{ doctor.moreInfo.order }}
           </view>
-          <view class="specialty-container">
+         <!-- <view class="specialty-container">
               <text class="doctor-specialty1" v-if="doctor.moreInfo.language">{{ doctor.moreInfo.language }}</text>
             <text class="doctor-specialty2" v-if="doctor.moreInfo.provide_transport">
               可接送
             </text>
-          </view>
+          </view> -->
           <view class="doctor-tags">
-            <text :class="['doctor-gender', (doctor.gender=='男')? 'male' : 'female']">{{ doctor.gender }}</text>
+           
             
             <text :class="['doctor-certification', doctor.is_certified  ? 'certified' : 'uncertified']">
               {{ doctor.is_certified ? '已认证' : '未认证' }}
@@ -215,7 +219,12 @@ padding-top: 200rpx;
   color: #333;
   margin-bottom: 5rpx;
 }
-
+	
+.doctor-first{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
 .doctor-location {
   font-size: 22rpx;
   color: #666;
@@ -275,36 +284,45 @@ padding-top: 200rpx;
   margin-top: 10rpx;
 }
 
-.doctor-gender,
+
 .doctor-availability,
 .doctor-certification {
-  font-size: 20rpx;
-  padding: 4rpx 8rpx;
-  border-radius: 10rpx;
-  color: #fff;
+ font-size: 22rpx;
+ line-height: 1.4;
+ border-radius: 15rpx;
+ padding: 4rpx 10rpx;
 }
-.doctor-gender.female {
-  background-color: #ed32be;
-}
-.doctor-gender.male {
-  background-color: #3498db;
+.doctor-gender {
+ font-size: 20rpx;
+ padding: 4rpx 8rpx;
+ color: #3498db;
+ margin-left: 20rpx;
+/* background-color: #2ecc71; */
 }
 
+
 .doctor-availability.available {
-  background-color: #2ecc71;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
 }
 
 .doctor-availability.unavailable {
-  background-color: #e74c3c;
+  /* background-color:#95a5a6; */
+  color: #95a5a6;
+   border: 1px solid #95a5a6;
 }
 
 .doctor-certification.certified {
-  background-color: #f1c40f;
+  color: #3498db;
+  border: 1px solid #3498db;
+  
 }
 
 .doctor-certification.uncertified {
-  background-color: #95a5a6;
+ color: #95a5a6;
+  border: 1px solid #95a5a6;
 }
+
 
 .doctor-need {
   position: absolute;

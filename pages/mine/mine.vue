@@ -1,16 +1,12 @@
 <template>
 	<view class="page">
-		<custom-nav title="e陪无忧" :isHomePage="true"></custom-nav>
 		<view class="header" @click="handleHeaderClick">
-			
 			<img :src="userInfo.moreInfo.avatarUrl || '../../static/images/mine/avatar.png'" v-if="userInfo.type=='陪诊师'" alt="">
 			<img :src="userInfo.avatar || '../../static/images/mine/avatar.png'" v-else alt="">
 			<text class="username">{{userInfo.nickName || '登录'}}</text>
 			<text class="user-info" v-if="userInfo.type=='陪诊师'">
 				{{ userInfo.moreInfo.is_certified ? '已认证' : '未认证' }}</text>
 			<view class="state-box" v-if="userInfo.type=='陪诊师'">
-
-
 				<text class="state">接单状态:</text>
 				<switch class="switch" :checked="userInfo.moreInfo.is_bookable" @change="onSwitchChange"
 					color="#ff94da" />
@@ -31,7 +27,6 @@
 			</view>
 		</view>
 		<view class="info-box" v-else>
-
 			<view class="money">
 				<text class="money-num"> 1</text>
 				<view class="money-box">
@@ -61,7 +56,6 @@
 				</view>
 			</view>
 			<view class="order-item" v-else>
-
 				<view class="box" style="margin-left: 0;">
 					<image src="../../static/images/mine/pay.png" alt=""></image>
 					<text class="box-title">待付款</text>
@@ -83,7 +77,6 @@
 		<view class="order-box">
 			<text class="order-title"> {{ userInfo.type=='陪诊师' ? '订单管理' : '我的工具' }}</text>
 			<view class="order-item" v-if="userInfo.type=='陪诊师'">
-
 				<view class="boxed" @click="doctorRegister">
 					<image src="../../static/images/mine/patient.png" alt=""></image>
 					<text class="box-title">个人信息管理</text>
@@ -100,10 +93,6 @@
 					<image src="../../static/images/mine/setting.png" alt=""></image>
 					<text class="box-title">设置中心</text>
 				</view>
-				<!-- <view class="boxed">
-			<image src="../../static/images/mine/location.png" alt=""></image>
-			<text class="box-title">地址设置</text>
-		</view> -->
 			</view>
 			<view class="order-item" v-else>
 				<view class="box" id="box1" style="margin-left: 0;">
@@ -139,16 +128,10 @@
 	</view>
 </template>
 
-
-
-
-// pages/mine/mine.js
 <script>
 	export default {
 		data() {
 			return {
-				isLoggedIn: false, // 是否登录过
-				
 				userInfo: {
 					session_key: '',
 					avatar: '',
@@ -160,6 +143,10 @@
 					type: '',
 					moreInfo: {},
 				},
+				settledAmount: 0.00,
+				pendingAmount: 0.00,
+				salesAmount: 0.00,
+				orderCount: 0,
 			};
 		},
 		onLoad() {
@@ -169,44 +156,135 @@
 			this.initUserInfo();
 		},
 		methods: {
-			// 初始化用户信息
+			handleScroll(e) {
+				this.scrollTop = e.detail.scrollTop
+			},
+			showQRCode() {
+				const data = this.userInfo.user_id;
+				const query = Object.keys(data)
+					.map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+					.join('&');
+				uni.navigateTo({
+					url: `/pages/RQcode/RQcode?${query}`,
+				});
+			},
 			initUserInfo() {
-				const userInfo = uni.getStorageSync('userInfo');
-				this.userInfo.type=uni.getStorageSync('type');
-				console.log("返回后的值：",userInfo)
-				
+				const userInfo = uni.getStorageSync("userInfo");
+				console.log("初始化后的值：", userInfo);
+
 				if (userInfo) {
 					this.userInfo = userInfo;
-					this.isLoggedIn = true;
-					this.checkSession(); // 检查 session_key 是否过期
-					this.getUser()
+					this.getUser();
 				}
 			},
-
-			// 获取用户信息
 			async getUser() {
-				console.log("调取前检查",this.userInfo)
-				
+				console.log("调取前检查", this.userInfo);
+				const refreshToken=uni.getStorageSync("refreshToken");
+				const userInfo=this.userInfo;
 				try {
 					uni.showLoading({
-						title: '加载中'
+						title: "加载中",
 					});
 					const {
 						result
 					} = await uniCloud.callFunction({
-						name: 'getUser',
-						data: this.userInfo,
+						name: "getUser",
+						data: {
+							userInfo,
+							refreshToken
+						}
+					});
+					
+					if (result.code == 200) {
+						console.log(result.data.userInfo);
+						this.userInfo=result.data.userInfo;
+						console.log("调取后检查", this.userInfo);
+						uni.setStorageSync("userInfo", this.userInfo);
+					} else if(result.code == 401){
+						uni.showToast({
+							title: '登录状态已过期，请重新登录' ,
+							icon: "none",
+						});
+						this.logout();
+						 uni.redirectTo({ url: '/pages/userInfoDetail/userInfoDetail' })
+					}else {
+						uni.showToast({
+							title: result.msg || "获取用户数据失败",
+							icon: "none",
+						});
+					}
+				} catch (e) {
+					uni.showToast({
+						title: "获取用户数据失败",
+						icon: "none",
+					});
+				} finally {
+					uni.hideLoading();
+				}
+			},
+			logout() {
+				uni.removeStorageSync("userInfo");
+				uni.removeStorageSync("token");
+				uni.removeStorageSync("refreshToken");
+				this.userInfo = {
+					user_id: '',
+					nickName: '',
+					realName: '',
+					idCard: '',
+					phoneNumber: '',
+					avatar: '',
+					type:'',
+					moreInfo: {}
+				};
+				
+				uni.showToast({
+					title: "退出登录成功",
+					icon: "success",
+					duration: 2000,
+				});
+			},
+			handleHeaderClick() {
+				if (this.userInfo.user_id) {
+					console.log("已登录");
+					return;
+				} else {
+					console.log("登录");
+					uni.navigateTo({
+						url: "/pages/userInfoDetail/userInfoDetail",
+					});
+				} 
+			},
+			doctorRegister() {
+					uni.navigateTo({
+						url: "/pages/escortRegistration/escortRegistration",
+					});
+				
+			},
+			async onSwitchChange() {
+				console.log("改变之前的值", this.userInfo.moreInfo.is_bookable);
+				try {
+					const {
+						result
+					} = await uniCloud.callFunction({
+						name: "updateEscort",
+						data: {
+							user_id: this.userInfo.user_id,
+							is_bookable: !this.userInfo.moreInfo.is_bookable,
+						},
 					});
 
-					if (result.code != 0) {
-						console.log("调取后",result)
-						this.userInfo = result.data[0];
-						console.log("调取后检查",this.userInfo)
-						uni.setStorageSync('userInfo', this.userInfo);
+					if (result.code === 200) {
+						uni.showToast({
+							title: "修改成功",
+							icon: "success",
+						});
+
+						this.getUser();
+						console.log("改变之后的值", this.userInfo.moreInfo.is_bookable);
 					} else {
 						uni.showToast({
-							title: result.msg || '获取用户数据失败',
-							icon: 'none'
+							title: result.message || "修改失败",
+							icon: "none",
 						});
 					}
 				} catch (e) {
@@ -218,224 +296,58 @@
 					uni.hideLoading();
 				}
 			},
-
-			// 登录方法
-			 login() {
-					uni.login({
-							provider: 'weixin',
-							success: res => {
-								console.log(res)
-								this.js_code = res.code
-								uni.request({
-									url: 'https://api.weixin.qq.com/sns/jscode2session', // 请求微信服务器
-									method: 'GET',
-									data: {
-										appid: 'wxf8afb6dce14d487a', //你的小程序的APPID
-										secret: '06d3e5f2f7ed1bf8504fe90a1a1e04e5', //你的小程序秘钥secret,  
-										js_code: this.js_code, //uni.login 登录成功后的code
-										grant_type: 'authorization_code' //此处为固定值
-									},
-									success: (res) => {
-										console.log('获取信息', res.data);
-										this.userInfo.user_id = res.data.openid
-										this.userInfo.session_key = res.data.session_key
-										 // 获取用户信息
-										 console.log("获取后检查",this.userInfo)
-										  this.getUser()
-										
-										this.isLoggedIn = true;
-										uni.setStorageSync('isLoggedIn', true);
-									},
-									
-								});
-}
-							})
-							
-							},
-
-							// 退出登录
-							logout() {
-								uni.removeStorageSync('userInfo');
-								uni.removeStorageSync('isLoggedIn');
-								this.userInfo = {
-									session_key: '',
-									avatar: '',
-									nickName: '',
-									is_certified: '',
-									user_id: '',
-									phone: '',
-									idNumber: '',
-									type: '',
-									moreInfo: {},
-								};
-								console.log("头像？",this.userInfo.moreInfo.avatarUrl)
-								this.isLoggedIn = true;
-								uni.showToast({
-									title: '退出登录成功',
-									icon: 'success',
-									duration: 2000
-								});
-							},
-
-							// 检查 session_key 是否过期
-							checkSession() {
-								wx.checkSession({
-									success: () => {
-										console.log('session_key 有效');
-									},
-									fail: () => {
-										console.log('session_key 已过期');
-										wx.showModal({
-											title: '提示',
-											content: '登录状态已过期，请重新登录',
-											success: (res) => {
-												if (res.confirm) {
-													this.login(); // 重新登录
-												}
-											},
-										});
-									},
-								});
-							},
-
-							// 处理头部点击事件
-							handleHeaderClick() {
-								if (this.userInfo.user_id) {
-									console.log('已登录');
-									return;
-								} else if (this.isLoggedIn) {
-									console.log('重新登录');
-									this.login();
-								} else {
-									console.log('首次登录');
-									uni.navigateTo({
-										url:'/pages/userInfoDetail/userInfoDetail'
-									})
-								}
-							},
-	
-doctorRegister(){
-	if (this.userInfo.user_id) {
-		console.log('已登录');
-		uni.navigateTo({
-			url:'/pages/escortRegistration/escortRegistration'
-		})
-	} else if (this.isLoggedIn) {
-		console.log('重新登录');
-		this.login();
-		uni.navigateTo({
-			url:'/pages/escortRegistration/escortRegistration'
-		})
-	} else {
-		console.log('首次登录');
-		
-		// uni.navigateTo({
-		// 	url:'/pages/userInfoDetail/userInfoDetail'
-		// })
-		uni.navigateTo({
-			url:'/pages/escortRegistration/escortRegistration'
-		})
-	}
-},
-							// 切换陪诊状态
-							async onSwitchChange() {
-								console.log("改变之前的值",this.userInfo.moreInfo.is_bookable)
-								try {
-									const {
-										result
-									} = await uniCloud.callFunction({
-										name: 'updateEscort',
-										data: {
-											user_id: this.userInfo.user_id,
-											is_bookable: !this.userInfo.moreInfo.is_bookable,
-										},
-									});
-
-									if (result.code === 200) {
-										uni.showToast({
-											title: '修改成功',
-											icon: 'success'
-										});
-										
-										this.getUser()
-										console.log("改变之后的值",this.userInfo.moreInfo.is_bookable)
-									} else {
-										uni.showToast({
-											title: result.message || '修改失败',
-											icon: 'none'
-										});
-									}
-								} catch (e) {
-									uni.showToast({
-										title: '修改失败',
-										icon: 'none'
-									});
-								}
-							},
-							goToChat() {
-								console.log('点击聊天按钮，当前用户信息：', this.userInfo);
-								if (this.userInfo._id) {
-									const db = uniCloud.database();
-									
-									// 查询订单
-									const orderCollection = db.collection('order');
-									const query = {
-										order_status: '已确认',
-										$or: [
-											{ user_id: this.userInfo._id },
-											{ escort_id: this.userInfo._id }
-										]
-									};
-									
-									console.log('查询订单条件：', query);
-									orderCollection.where(query).get().then(res => {
-										console.log('订单查询结果：', res);
-										if (res.result.data && res.result.data.length > 0) {
-											// 获取最新的订单
-											const latestOrder = res.result.data[0];
-											console.log('当前订单信息：', latestOrder);
-											
-											// 在跳转前保存必要的用户信息
-											uni.setStorageSync('currentUserInfo', {
-												_id: this.userInfo._id,
-												type: this.userInfo.type,
-												nickName: this.userInfo.nickName,
-												avatar: this.userInfo.avatar,
-												order_id: latestOrder._id
-											});
-											
-											uni.navigateTo({
-												url: '/pages/consult/consult',
-												fail: (err) => {
-													console.error('页面跳转失败：', err);
-													uni.showToast({
-														title: '页面跳转失败',
-														icon: 'none'
-													});
-												}
-											});
-										} else {
-											uni.showToast({
-												title: '您还没有订单，暂无聊天对象',
-												icon: 'none'
-											});
-										}
-									}).catch(err => {
-										console.error('检查订单失败:', err);
-										uni.showToast({
-											title: '系统错误',
-											icon: 'none'
-										});
-									});
-								} else {
-									uni.showToast({
-										title: '请先登录',
-										icon: 'none'
-									});
-								}
-							},
-						},
+			toAccount() {
+				uni.navigateTo({
+					url: '/pages/account/account'
+				})
+			},
+			goToChat() {
+				this.userInfo._id="680b88da7ae70877b527c910";
+				this.userInfo.user_id="67e4132889bd274d19a9af10";
+				this.userInfo.avatar="https://mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18.cdn.bspapp.com/cloudstorage/f697dc5e-07a8-4bdd-8eaf-16a1de754834.jpg";
+				this.userInfo.nickName="kiwi";
+				this.userInfo.realName="薛欣琪";
+				this.userInfo.idNumber="371521200508016127";
+				this.userInfo.phone="15218782112";
+				this.userInfo.type="普通用户";
+				
+				console.log('当前用户信息', this.userInfo);
+				if (this.userInfo._id) {
+					const currentUserInfo = {
+						_id: this.userInfo._id,
+						user_id: this.userInfo.user_id,
+						type: this.userInfo.type,
+						nickName: this.userInfo.nickName,
+						realName: this.userInfo.realName,
+						avatar: this.userInfo.avatar,
+						phone: this.userInfo.phone
 					};
+					console.log('准备存储的用户信息：', currentUserInfo);
+					uni.setStorageSync('currentUserInfo', currentUserInfo);
+					
+					uni.navigateTo({
+						url: '/pages/chatList/chatList',
+						fail: (err) => {
+							console.error('页面跳转失败:', err);
+							uni.showToast({
+								title: '页面跳转失败',
+								icon: 'none'
+							});
+						}
+					});
+				} else {
+					uni.showToast({
+						title: '请先登录',
+						icon: 'none'
+					});
+					return;
+				}
+			},
+			goBack() {
+				uni.navigateBack();
+			}
+		}			
+	};
 </script>
 
 <style>
@@ -448,9 +360,6 @@ doctorRegister(){
 				#ddf5f4,
 				rgb(226, 226, 226));
 		padding-top: 50rpx;
-		margin-top: -1px;
-		/* 消除可能的间隙 */
-		padding-top: 150rpx;
 	}
 
 	.header {
@@ -466,10 +375,10 @@ doctorRegister(){
 		margin-top: 50rpx;
 	}
 
-	.user {
-		display: flex;
-		flex-direction: column;
-		justify-content: baseline;
+	.headerimg {
+		width: 180rpx;
+		height: 180rpx;
+		border-radius: 50%;
 	}
 
 	.username {
@@ -477,7 +386,7 @@ doctorRegister(){
 		font-weight: bold;
 		margin-left: 50rpx;
 		margin-top: 10rpx;
-
+		margin-top: -50rpx;
 	}
 
 	.user-info {
@@ -486,23 +395,31 @@ doctorRegister(){
 		margin-left: 30rpx;
 		margin-top: 10rpx;
 		background-color: #a5d63f;
+		margin-top: -50rpx;
+		background-color: #1c9bd6;
 		padding: 10rpx;
 		height: auto;
 		border-radius: 20rpx;
 	}
 
+	.sao {
+		margin-left: 150rpx;
+		margin-top: -50rpx;
+		border-radius: 0;
+		height: 50rpx;
+		width: 50rpx;
+	}
+
 	.state-box {
-		margin-top: 150rpx;
+		margin-top: 100rpx;
 		margin-left: -180rpx;
 		font-size: 15px;
 		font-weight: bold;
-
 	}
 
 	.state {
 		margin-right: 15rpx;
 	}
-
 
 	.down {
 		display: flex;
@@ -535,7 +452,6 @@ doctorRegister(){
 	.header-title {
 		font-size: 13px;
 		font-weight: bold;
-		/* color: #fff; */
 		margin-top: 0;
 	}
 
@@ -549,7 +465,6 @@ doctorRegister(){
 		margin-left: 50rpx;
 		margin-right: 50rpx;
 		color: #333;
-		/* width: 100%; */
 	}
 
 	.money {
@@ -626,16 +541,12 @@ doctorRegister(){
 		padding: 30rpx;
 		justify-content: center;
 		height: 120rpx;
-
 	}
 
 	.data-box {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		/* margin-left: 50rpx;
-		margin-right: 50rpx;
-		margin-top: 20rpx; */
 		margin-top: 20rpx;
 		width: 250rpx;
 		gap: 10rpx;
@@ -669,6 +580,8 @@ doctorRegister(){
 		padding: 20rpx;
 		margin-left: 50rpx;
 		margin-right: 50rpx;
+		padding: 20 0rpx;
+		width: 100%;
 	}
 
 	.order-title {
@@ -681,9 +594,7 @@ doctorRegister(){
 	.order-item {
 		margin-top: 20rpx;
 		display: flex;
-
 		flex-wrap: wrap;
-		/* justify-content: space-a; */
 	}
 
 	.boxed {
@@ -715,7 +626,6 @@ doctorRegister(){
 		justify-content: center;
 		width: 25%;
 		margin-bottom: 20rpx;
-
 	}
 
 	.box image {
@@ -741,11 +651,8 @@ doctorRegister(){
 		width: 50rpx;
 		height: 50rpx;
 		position: absolute;
-		/* 使用绝对定位 */
 		left: calc(50% - 120rpx);
-		/* 调整图标位置 */
 		z-index: 1;
-
 	}
 
 	.logout-box button {
@@ -757,5 +664,153 @@ doctorRegister(){
 		justify-content: center;
 		align-items: center;
 		padding-left: 50rpx;
+	}
+
+	.box image {
+		width: 75rpx;
+		height: 75rpx;
+		margin-bottom: 10rpx;
+	}
+
+	.box-title {
+		font-size: 13px;
+		font-weight: bold;
+		margin-top: 10rpx;
+	}
+
+	.logout-box {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 40rpx;
+	}
+
+	.logout-box image {
+		width: 50rpx;
+		height: 50rpx;
+		position: absolute;
+		left: calc(50% - 120rpx);
+		z-index: 1;
+	}
+
+	.logout-box button {
+		width: 400rpx;
+		height: 80rpx;
+		background-color: #1fc7d6;
+		color: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-left: 50rpx;
+	}
+
+	.account-box {
+		background-color: #fff;
+		border-radius: 15rpx;
+		padding: 0rpx;
+		margin: 20rpx 0rpx;
+		box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+	}
+
+	.account {
+		background-color: #8ce5ef;
+		border-radius: 15rpx;
+		padding: 20rpx;
+	}
+
+	.account-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.account-title {
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #333;
+	}
+
+	.account-info {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 20rpx;
+	}
+
+	.account-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.account-label {
+		font-size: 13px;
+		color: #ffffff;
+	}
+
+	.account-value {
+		font-size: 25px;
+		font-weight: bold;
+		color: #ffffff;
+		margin-top: 10rpx;
+		margin-bottom: 20rpx;
+	}
+
+	.time-options {
+		display: flex;
+		justify-content: space-around;
+		margin: 20px 0;
+	}
+
+	.time-option {
+		padding: 8rpx 25rpx;
+		border: 1px solid #1fc7d6;
+		border-radius: 30rpx;
+		color: #1fc7d6;
+		cursor: pointer;
+	}
+
+	.time-option:hover {
+		background-color: #1fc7d6;
+		color: white;
+	}
+
+	.data-display {
+		margin-top: 20px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.data-item {
+		margin: 15px 0;
+		margin-top: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		font-size: 25rpx;
+		width: 200rpx;
+	}
+
+	.data-item-item {
+		margin-bottom: 20rpx;
+		font-weight: bold;
+		font-size: 30rpx;
+	}
+
+	.back-btn {
+		position: absolute;
+		top: 20rpx;
+		left: 20rpx;
+		width: 80rpx;
+		height: 80rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.back-icon {
+		width: 40rpx;
+		height: 40rpx;
 	}
 </style>

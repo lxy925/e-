@@ -1,7 +1,10 @@
 
 .container {
-    padding: 0 20rpx;
+    padding: 50rpx 20rpx;
   padding-top: 200rpx;
+  height: -webkit-min-content;
+  height: min-content;
+  background: linear-gradient(to bottom, #0bd6c8, #99efe9, #ddf5f4, rgb(226, 226, 226));
 }
 .doctor-card {
   display: flex;
@@ -103,7 +106,7 @@
   padding: 20rpx;
   border-radius: 50rpx;
   width: 95%;
-  height: 250rpx;
+  height: auto;
 }
 .introduction-icon {
   width: 40rpx;
@@ -113,7 +116,9 @@
   margin-left: 30rpx;
 }
 .introduction-title {
-  font-size: 35rpx;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 .introduction-content {
   font-size: 30rpx;
@@ -144,7 +149,7 @@
   padding: 20rpx;
   border-radius: 50rpx;
   width: 95%;
-  height: 230rpx;
+  height: auto;
 }
 .tech-icon {
   width: 40rpx;
@@ -155,7 +160,9 @@
   margin-left: 30rpx;
 }
 .tech-title {
-  font-size: 35rpx;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 .tech-container {
   font-size: 35rpx;
@@ -175,7 +182,7 @@
   padding: 20rpx;
   border-radius: 50rpx;
   width: 95%;
-  height: 280rpx;
+  height: auto;
 }
 .appointment-icon {
   width: 40rpx;
@@ -186,7 +193,9 @@
   margin-left: 30rpx;
 }
 .appointment-title {
-  font-size: 35rpx;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 .appointment-title2 {
   font-size: 35rpx;
@@ -239,5 +248,48 @@
 .review-text {
   font-size: 30rpx;
   color: #333;
+}
+.familiar-hospitals{
+  margin-top: 30rpx;
+  background-color: #ffffff;
+  padding: 20rpx;
+  border-radius: 50rpx;
+  width: 95%;
+  height: auto;
+}
+.familiar-departments{
+	margin-top: 30rpx;
+	background-color: #ffffff;
+	padding: 20rpx;
+	border-radius: 50rpx;
+	width: 95%;
+	height: auto;
+}
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.hospital-list {
+	margin-top:20rpx ;
+  margin-bottom: 20px;
+}
+.hospital-item {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+.department-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top:20rpx ;
+}
+.department-tag {
+  background-color: #007AFF;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  margin: 5px;
 }
 

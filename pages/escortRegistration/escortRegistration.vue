@@ -40,10 +40,10 @@
 			</view>
 
 			<!-- 手机号 -->
-			<view class="custom-field">
+			<!-- <view class="custom-field">
 				<text class="label">手机号</text>
 				<input v-model="formData.phone" placeholder="请输入手机号" type="tel" class="input" />
-			</view>
+			</view> -->
 
 			<!-- 所在城市 -->
 			<view class="custom-field" @click="showCityPicker = true">
@@ -74,15 +74,15 @@
 				</picker-view>
 			</view>
 			<!-- 身份证号码 -->
-			<view class="custom-field">
+			<!-- <view class="custom-field">
 				<text class="label">身份证号码</text>
 				<input v-model="formData.idNumber" placeholder="请输入身份证号码" type="idcard" class="input" />
-			</view>
+			</view> -->
 			<!-- 资格证号 -->
-			<view class="custom-field">
+		<!-- 	<view class="custom-field">
 				<text class="label">资格证号 (选填)</text>
 				<input v-model="formData.qualificationNumber" placeholder="请输入资格证号" class="input" />
-			</view>
+			</view> -->
 
 			<!-- 证书上传 -->
 			<view class="custom-field custom-field1">
@@ -121,12 +121,12 @@
 				<text class="label">是否提供接送</text>
 				<view class="input">
 					<radio-group class="provide-transport" @change="onProvideTransportChange">
-						<label class="radio">
-							<radio value=true :checked="formData.provide_transport === true" />是
-						</label>
-						<label class="radio">
-							<radio value=false :checked="formData.provide_transport === false" />否
-						</label>
+					    <label class="radio">
+					        <radio value="true" :checked="formData.provide_transport === true" />是
+					    </label>
+					    <label class="radio">
+					        <radio value="false" :checked="formData.provide_transport === false" />否
+					    </label>
 					</radio-group>
 				</view>
 			</view>
@@ -194,21 +194,23 @@
 					name: "",
 					age: "",
 					gender: "",
-					phone: "",
+					// phone: "",
 					city: {
 						provinceName: "",
 						cityName: "",
 						areaName: "",
 					},
+					type: "",
 					qualificationNumber: "",
-					idNumber: "",
+					// idNumber: "",
 					avatarList: "",
 					certificateList: "",
 					self_introduction: "", // 自我介绍
 					language: "", // 语言能力
-					provide_transport: "", // 是否提供接送
+					provide_transport:false, // 是否提供接送
 					familiar_hospitals: "", // 熟悉的医院
 					familiar_departments: [], // 熟悉的科室（改为数组存储）
+					parentId:"1"//上级陪诊师
 				},
 				selectedHospital: null, // 用于存储选中的医院信息
 				selectedHospitalList: [],
@@ -231,18 +233,28 @@
 					"皮肤科", "眼科", "耳鼻喉科", "口腔科", "中医科", "康复科", "急诊科",
 					"麻醉科", "感染科", "精神科", "老年医学科", "全科医学科", "其他"
 				], // 完整的科室列表
-				userInfo:{}
+				userInfo: {}
 			};
 		},
 		onLoad(options) {
-			this.userInfo = uni.getStorageSync('userInfo');
-			console.log(this.userInfo)
-			if (this.userInfo) {
-				this.formData.user_id = this.userInfo.ID,
-					this.formData.name = this.userInfo.realName,
-					this.formData.phone = this.userInfo.phone,
-					this.formData.idNumber = this.userInfo.idNumber
-			} else {
+		
+			//如果填过陪诊师信息则调用填充
+			 const formData= uni.getStorageSync('formData');
+			if(formData){
+				this.formData=formData;
+				this.selectedAddress = `${this.formData.city.provinceName} ${this.formData.city.cityName} ${this.formData.city.areaName}`;
+				console.log(this.formData)
+			}
+			// 若扫码入驻的则解析 scene 参数（陪诊师的 user_id）
+			    const scene = decodeURIComponent(options.scene);
+			    this.formData. parentId= scene; // 保存上级陪诊师的 user_id
+		
+		//检查是否登陆过
+		const userInfo =uni.getStorageSync('userInfo');
+		
+			if (userInfo==null) {
+				
+			
 				uni.showToast({
 					title: '请先登录',
 					icon: 'none',
@@ -251,7 +263,10 @@
 				uni.navigateTo({
 					url: '/pages/userInfoDetail/userInfoDetail?from=mine'
 				});
-			}
+		}else{
+			this.formData.user_id=userInfo.user_id;
+			console.log(this.formData.user_id)
+		}
 			if (options.familiarHospitals) {
 				try {
 					// 确保传入的是数组
@@ -267,13 +282,13 @@
 			}
 
 			uni.$on('select-hospital', (hospital) => {
-								// 确保 formData.familiar_hospitals 是数组
-								if (!Array.isArray(this.formData.familiar_hospitals)) {
-									this.formData.familiar_hospitals = [];
-								}
-								this.formData.familiar_hospitals.push(hospital.name);
-								console.log('选中的医院信息：', hospital.name);
-							});
+				// 确保 formData.familiar_hospitals 是数组
+				if (!Array.isArray(this.formData.familiar_hospitals)) {
+					this.formData.familiar_hospitals = [];
+				}
+				this.formData.familiar_hospitals.push(hospital.name);
+				console.log('选中的医院信息：', hospital.name);
+			});
 
 		},
 		onUnload() {
@@ -316,66 +331,88 @@
 				this.agreeTerms = !this.agreeTerms;
 				console.log('Checkbox changed:', this.agreeTerms);
 			},
+				
 			chooseMedia(listName) {
-				uni.chooseMedia({
-					count: 1,
-					mediaType: ['image'],
-					sourceType: ['album', 'camera'],
-					success: (res) => {
-						const filePath = res.tempFiles[0].tempFilePath;
-
-						this.formData[listName] = filePath;
-						console.log(this.formData[listName])
-
-						// this.uploadImage(filePath, listName);
-					},
-					fail: (err) => {
-						console.error('选择图片失败:', err);
-						uni.showToast({
-							title: '选择图片失败',
-							icon: 'none',
-							duration: 2000,
-						});
-					},
-				});
+			  // 选择图片
+			  uni.chooseImage({
+			    count: 1, // 选择一张图片
+			    success: (res) => { // 使用箭头函数确保 this 指向正确
+			      console.log("选择图片后的结果：", res);
+			
+			      if (res.tempFilePaths.length > 0) {
+			        const filePath = res.tempFilePaths[0]; // 获取临时文件路径
+			        console.log("临时文件路径：", filePath);
+			console.log("文件类型：", listName);
+			        // 生成唯一的文件名
+			        const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
+			
+			        // 指定云存储路径
+			        const cloudPath = `${listName}/${fileName}`; // 例如：avatarList/1741500000000_abc123.jpg
+			
+			        // 上传图片到云存储
+			        uniCloud.uploadFile({
+			          filePath, // 本地临时文件路径
+			          cloudPath, // 云存储路径
+			          onUploadProgress: (progressEvent) => {
+			            // 上传进度回调
+			            const percentCompleted = Math.round(
+			              (progressEvent.loaded * 100) / progressEvent.total
+			            );
+			            console.log(`上传进度：${percentCompleted}%`);
+			          },
+			          success: (uploadRes) => {
+			            // 上传成功回调
+			            console.log("上传成功：", uploadRes);
+			
+			            // 获取云存储的文件 ID
+			            const fileID = uploadRes.fileID;
+			
+			            // 更新前端数据
+			            this.formData[listName] = fileID; // 将 fileID 赋值给 this.formData[listName]
+			            uni.showToast({
+			              title: '上传成功',
+			              icon: 'success',
+			              duration: 2000,
+			            });
+			          },
+			          fail: (err) => {
+			            // 上传失败回调
+			            console.error("上传失败：", err);
+			            uni.showToast({
+			              title: '上传失败',
+			              icon: 'none',
+			              duration: 2000,
+			            });
+			          },
+			          complete: () => {
+			            // 上传完成回调
+			            console.log("上传完成");
+			          },
+			        });
+			      } else {
+			        console.error("未选择文件或文件选择失败");
+			        uni.showToast({
+			          title: '未选择文件',
+			          icon: 'none',
+			          duration: 2000,
+			        });
+			      }
+			    },
+			    fail: (err) => {
+			      // 选择图片失败回调
+			      console.error("选择图片失败：", err);
+			      uni.showToast({
+			        title: '选择图片失败',
+			        icon: 'none',
+			        duration: 2000,
+			      });
+			    },
+			  });
 			},
+			
 
 
-			// async uploadImage() {
-			// 	if (!(this.avatarList && this.certificateList && this.idCardFrontList && this.idCardBackList)) {
-			// 		uni.showToast({
-			// 			title: '请先选择图片',
-			// 			icon: 'none',
-			// 			duration: 2000,
-			// 		});
-			// 		return;
-			// 	}
-
-			// 	const uploadTask = uniCloud.uploadFile({
-			// 		filePath: this.imagePath,
-			// 		cloudPath: `escorts/${Date.now()}-${Math.random().toString(36).substr(2, 6)}.png`, // 云端路径
-			// 		onUploadProgress: (progress) => {
-			// 			console.log('上传进度:', progress);
-			// 		},
-			// 	});
-
-			// 	try {
-			// 		const result = await uploadTask;
-			// 		this.formData.avatarUrl = result.fileID; // 获取上传后的文件 ID
-			// 		uni.showToast({
-			// 			title: '上传成功',
-			// 			icon: 'success',
-			// 			duration: 2000,
-			// 		});
-			// 	} catch (err) {
-			// 		console.error('上传失败:', err);
-			// 		uni.showToast({
-			// 			title: '上传失败',
-			// 			icon: 'none',
-			// 			duration: 2000,
-			// 		});
-			// 	}
-			// },
+		
 			onCityChange(event) {
 				const [provinceIndex, cityIndex, areaIndex] = event.detail.value;
 
@@ -445,26 +482,26 @@
 					errors.push('性别不能为空');
 					return errors;
 				}
-				if (!this.formData.phone || !/^\d{11}$/.test(this.formData.phone)) {
-					errors.push('手机号码格式不正确');
-					return errors;
-				}
+				// if (!this.formData.phone || !/^\d{11}$/.test(this.formData.phone)) {
+				// 	errors.push('手机号码格式不正确');
+				// 	return errors;
+				// }
 				if (!this.formData.city.areaName) {
 					errors.push('所在地区不能为空');
 					return errors;
 				}
-				if (!this.formData.qualificationNumber) {
-					errors.push('资格证号不能为空');
-					return errors;
-				}
+				// if (!this.formData.qualificationNumber) {
+				// 	errors.push('资格证号不能为空');
+				// 	return errors;
+				// }
 				if (!this.formData.certificateList) {
 					errors.push('证书不能为空');
 					return errors;
 				}
-				if (!this.formData.idNumber || !/^\d{18}$/.test(this.formData.idNumber)) {
-					errors.push('身份证号码格式不正确');
-					return errors;
-				}
+				// if (!this.formData.idNumber || !/^\d{18}$/.test(this.formData.idNumber)) {
+				// 	errors.push('身份证号码格式不正确');
+				// 	return errors;
+				// }
 
 
 				//     if (!this.formData.idCardBackList) {
@@ -492,6 +529,8 @@
 				// 	});
 				// 	return;
 				// }
+
+
 				console.log("提交的表单数据：", this.formData);
 				const {
 					result
@@ -502,20 +541,20 @@
 
 				if (result.code === 200) {
 					uni.showToast({
-						title: '注册成功',
+						title: '保存成功',
 						icon: 'success',
 						duration: 2000,
 					});
-					this.userInfo.type="陪诊师",
-					
-					uni.setStorageSync('userInfo', this.userInfo); // 更新缓存中的 userInfo
-					console.log("userInfo",uni.getStorageSync('userInfo'))
-					uni.navigateBack({
-						delta: 1
-					});
+					this.userInfo=uni.getStorageSync('userInfo');
+					this.userInfo.type = "陪诊师",
+					uni.setStorageSync('formData', this.formData);// 更新缓存中的 formData
+					uni.setStorageSync('userInfo', this.userInfo); // 更新缓存中的 userInfo,用于转换mine页面
+					// uni.setStorageSync('type', "陪诊师"); 
+					console.log("userInfo", uni.getStorageSync('userInfo'))
+					uni.navigateBack();
 				} else {
 					uni.showToast({
-						title: result.message || '注册失败',
+						title: result.message || '保存失败',
 						icon: 'none',
 						duration: 2000,
 					});
@@ -542,7 +581,10 @@
 				}
 			},
 			onProvideTransportChange(event) {
-				this.formData.provide_transport = event.detail.value;
+				 const value = event.detail.value;
+				            // 将字符串转换为布尔值
+				this.formData.provide_transport = value === 'true';
+				// this.formData.provide_transport = event.detail.value;
 			},
 			onDepartmentChange(event) {
 				this.formData.familiar_departments = this.departments[event.detail.value];
@@ -650,8 +692,8 @@
 	}
 
 	.avatar {
-		width: 100rpx;
-		height: 100rpx;
+		width: 150rpx;
+		height: 140rpx;
 		border-radius: 50%;
 		background-color: #ccc;
 	}
@@ -676,7 +718,7 @@
 		margin-top: 60rpx;
 		width: 500rpx;
 		border-radius: 20rpx;
-		background-color:  #0bd6c8;
+		background-color: #0bd6c8;
 		color: white;
 		text-align: center;
 		padding: 20rpx 0;
@@ -767,7 +809,7 @@
 		display: flex;
 		justify-content: space-between;
 		width: 40%;
-		
+
 	}
 
 	.hospital-item text {

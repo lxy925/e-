@@ -85,6 +85,7 @@
 </template>
 
 <script>
+	//import jwt from '../common/jwt'
 	export default {
 		data() {
 			return {

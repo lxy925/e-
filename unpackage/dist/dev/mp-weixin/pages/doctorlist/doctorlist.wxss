@@ -71,6 +71,11 @@ padding-top: 200rpx;
   color: #333;
   margin-bottom: 5rpx;
 }
+.doctor-first{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
 .doctor-location {
   font-size: 22rpx;
   color: #666;
@@ -121,31 +126,36 @@ padding-top: 200rpx;
   gap: 10rpx;
   margin-top: 10rpx;
 }
-.doctor-gender,
 .doctor-availability,
 .doctor-certification {
-  font-size: 20rpx;
-  padding: 4rpx 8rpx;
-  border-radius: 10rpx;
-  color: #fff;
+ font-size: 22rpx;
+ line-height: 1.4;
+ border-radius: 15rpx;
+ padding: 4rpx 10rpx;
 }
-.doctor-gender.female {
-  background-color: #ed32be;
-}
-.doctor-gender.male {
-  background-color: #3498db;
+.doctor-gender {
+ font-size: 20rpx;
+ padding: 4rpx 8rpx;
+ color: #3498db;
+ margin-left: 20rpx;
+/* background-color: #2ecc71; */
 }
 .doctor-availability.available {
-  background-color: #2ecc71;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
 }
 .doctor-availability.unavailable {
-  background-color: #e74c3c;
+  /* background-color:#95a5a6; */
+  color: #95a5a6;
+   border: 1px solid #95a5a6;
 }
 .doctor-certification.certified {
-  background-color: #f1c40f;
+  color: #3498db;
+  border: 1px solid #3498db;
 }
 .doctor-certification.uncertified {
-  background-color: #95a5a6;
+ color: #95a5a6;
+  border: 1px solid #95a5a6;
 }
 .doctor-need {
   position: absolute;

@@ -1,78 +1,75 @@
 <template>
-	<view class="page-container">
+	<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+	      paddingTop: navHeight + 'px',
+	      height: 'calc(100vh - ' + navHeight + 'px)'
+	    }" :scroll-top="scrollTop":show-scrollbar="false">
 		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
-		    <scroll-view 
-		      scroll-y 
-		      class="content-scroll" 
-		      @scroll="handleScroll" 
-		      :scroll-top="scrollTop"
-		      
-		    >
-			<view class="content" style="padding: 0rpx 25rpx;">
-				<view class="textTop"> 祝您有一个健康的一天 </view>
-				<view class="uni-margin-wrap">
-					<swiper class="swiper" circular :indicator-dots="true" :autoplay="true" :interval="3000"
-						:duration="500">
-						<swiper-item v-for="banner in banners" :key="banner._id" @tap="handleBannerClick(banner)">
-							<image :src="banner.image" mode="aspectFill" style="width: 100%;"></image>
-						</swiper-item>
-					</swiper>
 
-					<!-- 新增的图标导航栏 -->
-					<view class="icon-nav">
-						<view class="icon-item" v-for="(item, index) in navItems" :key="index"
-							@tap="handleNavClick(item.path)">
-							<image :src="item.icon" mode="aspectFit" class="nav-icon"></image>
-							<text class="nav-text">{{ item.text }}</text>
-						</view>
+		<view class="content" >
+			<view class="textTop"> 祝您有一个健康的一天 </view>
+			<view class="uni-margin-wrap">
+				<swiper class="swiper" circular :indicator-dots="true" :autoplay="true" :interval="3000"
+					:duration="500">
+					<swiper-item v-for="banner in banners" :key="banner._id" @tap="handleBannerClick(banner)">
+						<image :src="banner.image" mode="aspectFill" style="width: 100%;"></image>
+					</swiper-item>
+				</swiper>
+
+				<!-- 新增的图标导航栏 -->
+				<view class="icon-nav">
+					<view class="icon-item" v-for="(item, index) in navItems" :key="index"
+						@tap="handleNavClick(item.path)">
+						<image :src="item.icon" mode="aspectFit" class="nav-icon"></image>
+						<text class="nav-text">{{ item.text }}</text>
 					</view>
-
 				</view>
 
-				<!-- 热门医院推荐 -->
-				<view class="hospital-section">
+			</view>
 
-					<view class="section-header">
-						<text class="section-title">热门医院推荐</text>
-						<view class="more-link" @tap="navigateToMore">
-							更多<text class="arrow">></text>
-						</view>
+			<!-- 热门医院推荐 -->
+			<view class="hospital-section">
+
+				<view class="section-header">
+					<text class="section-title">热门医院推荐</text>
+					<view class="more-link" @tap="navigateToMore">
+						更多<text class="arrow">></text>
 					</view>
+				</view>
 
-					<view class="hospital-list">
-						<!-- <scroll-view> -->
-						<view class="hospital-item" v-for="hospital in hospitals" :key="hospital.id"
-							@tap="navigateToHospital(hospital.id)">
-							<image :src="hospital.image" mode="aspectFill" class="hospital-image"></image>
-							<view class="hospital-info">
-								<view class="hospital-header">
-									<text class="hospital-name">{{ hospital.name }}</text>
-									<text class="hospital-level">{{ hospital.level }}</text>
+				<view class="hospital-list">
+					<!-- <scroll-view> -->
+					<view class="hospital-item" v-for="hospital in hospitals" :key="hospital.id"
+						@tap="navigateToHospital(hospital.id)">
+						<image :src="hospital.image" mode="aspectFill" class="hospital-image"></image>
+						<view class="hospital-info">
+							<view class="hospital-header">
+								<text class="hospital-name">{{ hospital.name }}</text>
+								<text class="hospital-level">{{ hospital.level }}</text>
+							</view>
+							<view class="hospital-detail">
+								<view class="detail-item">
+									<text class="label">类型：</text>
+									<text class="value">{{ hospital.type }}</text>
 								</view>
-								<view class="hospital-detail">
-									<view class="detail-item">
-										<text class="label">类型：</text>
-										<text class="value">{{ hospital.type }}</text>
-									</view>
-									<view class="detail-item">
-										<text class="label">电话：</text>
-										<text class="value">{{ hospital.phone }}</text>
-									</view>
-									<view class="detail-item address">
-										<text class="label">地址：</text>
-										<text class="value">{{ hospital.address }}</text>
-									</view>
+								<view class="detail-item">
+									<text class="label">电话：</text>
+									<text class="value">{{ hospital.phone }}</text>
+								</view>
+								<view class="detail-item address">
+									<text class="label">地址：</text>
+									<text class="value">{{ hospital.address }}</text>
 								</view>
 							</view>
-
 						</view>
-						<!-- </scroll-view> -->
-					</view>
 
+					</view>
+					<!-- </scroll-view> -->
 				</view>
+
 			</view>
-		</scroll-view>
-	</view>
+		</view>
+
+	</scroll-view>
 
 </template>
 
@@ -83,8 +80,7 @@
 			return {
 				pageTitle: '首页',
 				scrollTop: 0,
-			
-				navHeight: 0 ,// 添加导航栏高度存储
+				navHeight: 0, // 添加导航栏高度存储
 				banners: [],
 				indicatorDots: true,
 				autoplay: true,
@@ -157,8 +153,8 @@
 		 */
 		onLoad(options) {
 			// 获取导航栏高度
-			    const systemInfo = uni.getSystemInfoSync();
-			    this.navHeight = systemInfo.statusBarHeight + 180;
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
 			this.getBanners()
 		},
 		/**
@@ -192,8 +188,9 @@
 		methods: {
 			//监视页面滚动情况
 			handleScroll(e) {
-				console.log("scrollTop大小",e.detail.scrollTop)
-				this.scrollTop = e.detail.scrollTop
+				// 直接赋值scrollTop（不需要节流，因为custom-nav内部已经做了立即切换的处理）
+				this.scrollTop = e.detail.scrollTop;
+				
 			},
 
 			handleNavClick(path) {
@@ -263,23 +260,28 @@
 <style>
 	.page-container {
 		min-height: 100vh;
-		/* background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239)); */
 		position: relative;
-		padding: 0;
-		padding-top:180rpx ;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-self: center;
-		flex: 1;
-		
+		padding: 0 rpx;
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box; /* 关键：让 width 包含 padding */	
+			-webkit-overflow-scrolling: touch; /* 平滑滚动 */
+			scrollbar-width: none; /* Firefox */
 	}
+.page-container ::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+  width: 0 !important; /* 微信小程序可能需要 */
+  height: 0 !important;
+}
 
-	.content-scroll {
-	  width: 100%;
-	  /* height 由动态计算替代 */
-	  padding: 0;
-	  -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
+	.content {
+		width: 100%;
+		  max-width: 100%; /* 限制最大宽度（可选） */
+		  margin: 0 ; /* 水平居中 */
+		  padding:0;
+		  box-sizing: border-box;
 	}
 
 	.textTop {
@@ -322,7 +324,7 @@
 		border-radius: 20rpx;
 		margin: 0rpx;
 		margin-top: 45rpx;
-		
+
 		width: 100%;
 		padding: 30rpx 0rpx;
 		display: flex;

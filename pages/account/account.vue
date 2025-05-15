@@ -1,23 +1,26 @@
 <template>
-	<view class="page">
-		<custom-nav title="我的账户" :isHomePage="false"></custom-nav>
-
-		<view class="account" @click="toAccount">
+	<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{
+	      paddingTop: navHeight + 'px',
+	      height: 'calc(100vh - ' + navHeight + 'px)'
+	    }" :scroll-top="scrollTop":show-scrollbar="false">
+		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" />
+<view class="content" >
+		<view class="account" @click="toApply">
 			<view class="account-header">
 				<text class="account-title">我的账户</text>
 				<button>我要提现</button>
 			</view>
 			<view class="account-info">
 				<view class="account-item">
-					<text class="account-value">193.07</text>
+					<text class="account-value">{{(accountInfo.withdrawable_amount / 100).toFixed(2)}}</text>
 					<text class="account-label">可提取金额</text>
 				</view>
 				<view class="account-item">
-					<text class="account-value">17.05</text>
+					<text class="account-value">{{(accountInfo.pending_amount / 100).toFixed(2)}}</text>
 					<text class="account-label">待结算金额</text>
 				</view>
 				<view class="account-item">
-					<text class="account-value">193.07</text>
+					<text class="account-value">{{(accountInfo.balance / 100).toFixed(2)}}</text>
 					<text class="account-label">累计已结算金额</text>
 				</view>
 			</view>
@@ -40,13 +43,17 @@
 				</view>
 			</view>
 		</view>
-	</view>
+		</view>
+	</scroll-view>
 </template>
 
 <script>
 	export default {
 		data() {
 			return {
+				pageTitle: '我的账户',
+				scrollTop: 0,
+				navHeight: 0, // 添加导航栏高度存储
 				isShow: false,
 				listData: [{
 					"list-label": "交易提现",
@@ -61,8 +68,19 @@
 					"list-money": "+200",
 					"list-state": "提现中"
 				}],
-				icon: '../../static/images/mine/down.png'
+				icon: '../../static/images/mine/down.png',
+				accountInfo:''
 			}
+		},
+		onLoad(options) {
+			// 获取导航栏高度
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
+			if (options.accountInfo) {
+			  this.accountInfo = JSON.parse(decodeURIComponent(options.accountInfo));
+			  console.log(this.accountInfo)
+			}
+			
 		},
 		methods: {
 			toggleList() {
@@ -71,28 +89,50 @@
 					? '../../static/images/mine/up.png'
 					: '../../static/images/mine/down.png';
 			},
-			toAccount() {
+		
+			toApply() {
+				const accountInfo = encodeURIComponent(JSON.stringify(this.accountInfo));
 				uni.navigateTo({
-					url: `/pages/getMoney/getMoney`
-					
+				  url: `/pages/getMoney/getMoney?accountInfo=${accountInfo}`
 				});
+				
 			}
 		}
 	}
 </script>
 
 <style>
-	.page {
-		padding-top: 150rpx;
-		background-color: #f5f5f5;
-		min-height: 100vh;
+	.page-container {
+			min-height: 100vh;
+			position: relative;
+			padding: 0 rpx;
+			padding-left: 25rpx;
+			padding-right: 25rpx;
+			margin: 0;
+			width: 100%;
+			box-sizing: border-box; /* 关键：让 width 包含 padding */	
+				-webkit-overflow-scrolling: touch; /* 平滑滚动 */
+				scrollbar-width: none; /* Firefox */
+		}
+	.page-container ::-webkit-scrollbar {
+	  display: none; /* Chrome/Safari */
+	  width: 0 !important; /* 微信小程序可能需要 */
+	  height: 0 !important;
 	}
+	
+		.content {
+			width: 100%;
+			  max-width: 100%; /* 限制最大宽度（可选） */
+			  margin: 0 ; /* 水平居中 */
+			  padding:0;
+			  box-sizing: border-box;
+		}
 
 	.account {
 		background-color: #8ce5ef;
 		border-radius: 15rpx;
 		padding: 20rpx;
-		margin: 25rpx;
+		
 		margin-top: 50rpx;
 	}
 
@@ -150,7 +190,7 @@
 
 	.list {
 		background-color: #ffffff;
-		margin: 25rpx;
+		
 		margin-top: 50rpx;
 		padding: 25rpx 30rpx;
 		border-radius: 15rpx;

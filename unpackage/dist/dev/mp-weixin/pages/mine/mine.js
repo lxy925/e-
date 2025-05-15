@@ -130,11 +130,26 @@ var render = function () {
     _vm.userInfo.type == "陪诊师"
       ? __webpack_require__(/*! ../../static/images/mine/sao.png */ 87)
       : null
+  var g0 =
+    _vm.userInfo.type == "陪诊师"
+      ? (_vm.userInfo.accountInfo.withdrawable_amount / 100).toFixed(2)
+      : null
+  var g1 =
+    _vm.userInfo.type == "陪诊师"
+      ? (_vm.userInfo.accountInfo.pending_amount / 100).toFixed(2)
+      : null
+  var g2 =
+    _vm.userInfo.type == "陪诊师"
+      ? (_vm.userInfo.accountInfo.balance / 100).toFixed(2)
+      : null
   _vm.$mp.data = Object.assign(
     {},
     {
       $root: {
         m0: m0,
+        g0: g0,
+        g1: g1,
+        g2: g2,
       },
     }
   )
@@ -387,9 +402,14 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
+//
+//
 var _default = {
   data: function data() {
     return {
+      navHeight: 0,
+      // 添加导航栏高度存储
       pageTitle: '个人中心',
       scrollTop: 0,
       lastScrollTop: 0,
@@ -412,6 +432,9 @@ var _default = {
     };
   },
   onLoad: function onLoad() {
+    // 获取导航栏高度
+    var systemInfo = uni.getSystemInfoSync();
+    this.navHeight = systemInfo.statusBarHeight + 44;
     this.initUserInfo();
   },
   onShow: function onShow() {
@@ -436,14 +459,9 @@ var _default = {
     // 初始化用户信息
     initUserInfo: function initUserInfo() {
       var userInfo = uni.getStorageSync("userInfo");
-      // this.userInfo.type = uni.getStorageSync("type");
-      //实时更新access_token的值
-      // this.user_id= uni.getStorageSync("access_token");
       console.log("初始化后的值：", userInfo);
       if (userInfo) {
         this.userInfo = userInfo;
-        // this.isLoggedIn = true;
-        // this.checkSession(); // 检查 session_key 是否过期
         this.getUser();
       }
     },
@@ -451,34 +469,33 @@ var _default = {
     getUser: function getUser() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var refreshToken, userInfo, _yield$uniCloud$callF, result;
+        var userInfo, _yield$uniCloud$callF, result;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 console.log("调取前检查", _this.userInfo);
-                refreshToken = uni.getStorageSync("refreshToken");
                 userInfo = _this.userInfo;
-                _context.prev = 3;
+                _context.prev = 2;
                 uni.showLoading({
                   title: "加载中"
                 });
-                _context.next = 7;
+                _context.next = 6;
                 return uniCloud.callFunction({
                   name: "getUser",
                   data: {
-                    userInfo: userInfo,
-                    refreshToken: refreshToken
+                    userInfo: userInfo
                   }
                 });
-              case 7:
+              case 6:
                 _yield$uniCloud$callF = _context.sent;
                 result = _yield$uniCloud$callF.result;
                 if (result.code == 200) {
-                  console.log(result.data.userInfo);
-                  _this.userInfo = result.data.userInfo;
+                  console.log(result.data);
+                  _this.userInfo = result.data;
                   console.log("调取后检查", _this.userInfo);
                   uni.setStorageSync("userInfo", _this.userInfo);
+                  console.log(_this.userInfo.type);
                 } else if (result.code == 401) {
                   uni.showToast({
                     title: '登录状态已过期，请重新登录',
@@ -494,33 +511,30 @@ var _default = {
                     icon: "none"
                   });
                 }
-                _context.next = 15;
+                _context.next = 14;
                 break;
-              case 12:
-                _context.prev = 12;
-                _context.t0 = _context["catch"](3);
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](2);
                 uni.showToast({
                   title: "获取用户数据失败",
                   icon: "none"
                 });
-              case 15:
-                _context.prev = 15;
+              case 14:
+                _context.prev = 14;
                 uni.hideLoading();
-                return _context.finish(15);
-              case 18:
+                return _context.finish(14);
+              case 17:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[3, 12, 15, 18]]);
+        }, _callee, null, [[2, 11, 14, 17]]);
       }))();
     },
     // 退出登录
     logout: function logout() {
       uni.removeStorageSync("userInfo");
-      // uni.removeStorageSync("isLoggedIn");
-      uni.removeStorageSync("token");
-      uni.removeStorageSync("refreshToken");
       this.userInfo = {
         user_id: '',
         nickName: '',
@@ -629,8 +643,9 @@ var _default = {
       }))();
     },
     toAccount: function toAccount() {
+      var accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));
       uni.navigateTo({
-        url: '/pages/account/account'
+        url: "/pages/account/account?accountInfo=".concat(accountInfo)
       });
     }
   }

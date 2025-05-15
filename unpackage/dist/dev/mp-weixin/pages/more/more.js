@@ -275,9 +275,16 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
+//
+//
+//
+//
 var _default = {
   data: function data() {
     return {
+      navHeight: 0,
+      // 添加导航栏高度存储
       currentType: 'hospital',
       searchText: '',
       hospitals: [],
@@ -518,9 +525,18 @@ var _default = {
           }
         });
       }
+    },
+    //监视页面滚动情况
+    handleScroll: function handleScroll(e) {
+      // 直接赋值scrollTop（不需要节流，因为custom-nav内部已经做了立即切换的处理）
+      this.scrollTop = e.detail.scrollTop;
+      console.log("scrollTop");
     }
   },
   onLoad: function onLoad(options) {
+    // 获取导航栏高度
+    var systemInfo = uni.getSystemInfoSync();
+    this.navHeight = systemInfo.statusBarHeight + 44;
     // 获取页面来源信息
     this.fromPage = options.from || null;
     this.getHospitalList(); // 页面加载时获取数据

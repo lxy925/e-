@@ -168,8 +168,8 @@
 			        fail: reject
 			      });
 			    });
-			    // console.log("获取的code:", code);
-				// this.code=code;
+			    console.log("获取的code:", code);
+				
 			    // 2. 再用code调用云函数
 			    const { result } = await uniCloud.callFunction({
 			      name: 'user-login',
@@ -196,63 +196,7 @@
 
 
 
-			// go() {
-			// 	uni.login({
-			// 		provider: 'weixin',
-			// 		success: res => {
-			// 			console.log(res)
-			// 			this.js_code = res.code
-			// 			uni.request({
-			// 				url: 'https://api.weixin.qq.com/sns/jscode2session', // 请求微信服务器
-			// 				method: 'GET',
-			// 				data: {
-			// 					appid: 'wxf8afb6dce14d487a', //你的小程序的APPID
-			// 					secret: '06d3e5f2f7ed1bf8504fe90a1a1e04e5', //你的小程序秘钥secret,  
-			// 					js_code: this.js_code, //uni.login 登录成功后的code
-			// 					grant_type: 'authorization_code' //此处为固定值
-			// 				},
-			// 				success: (res) => {
-			// 					console.log('获取信息', res.data);
-			// 					this.ID = res.data.openid
-			// 					this.session_key = res.data.session_key
-
-			// 				}
-			// 			});
-			// 		}
-			// 	});
-			// },
-			// 获取手机号
-			// getPhoneNumber(res) {
-			// 	console.log(res)
-			// 	if (res.detail.errMsg === "getPhoneNumber:ok") {
-			// 		const {
-			// 			encryptedData,
-			// 			iv
-			// 		} = res.detail;
-			// 		console.log(encryptedData, iv);
-
-			// 		// 创建解密对象
-			// 		const pc = new WXBizDataCrypt('wxf8afb6dce14d487a', this.session_key);
-
-			// 		try {
-			// 			// 解密数据
-			// 			const data = pc.decryptData(encryptedData, iv);
-			// 			console.log(data);
-
-			// 			// 检查手机号是否为空
-			// 			if (data.phoneNumber) {
-			// 				this.phone = data.phoneNumber;
-			// 				console.log('解密成功，手机号:', this.phone);
-			// 			} else {
-			// 				console.error('解密后未获取到手机号');
-			// 			}
-			// 		} catch (err) {
-			// 			console.error('解密失败:', err);
-			// 		}
-			// 	} else {
-			// 		console.error('用户拒绝授权获取手机号');
-			// 	}
-			// },
+			
 
 			async submitUserInfo() {
 				// 保存用户信息到本地存储
@@ -291,7 +235,7 @@
 						avatar: this.avatar
 					}
 				});
-				console.log(result)
+				console.log(result.data.userInfo)
 				if (result.code === 0) {
 					uni.showToast({
 						title: '登录成功',
@@ -299,27 +243,17 @@
 						duration: 2000,
 					});
 
-					const userInfo = {
-
-						avatar: this.avatar,
-						nickName: this.nickName,
-						realName: this.realName,
-						user_id: result.data.token,
-						phone: this.phoneNumber,
-						idNumber: this.idCard,
-						type: "普通用户"
-					}
-					console.log(userInfo)
-					// 根据来源页面存储不同的信息
-					uni.setStorageSync('userInfo', userInfo);
+					
+				//为初始化用户数据做准备
+					uni.setStorageSync('userInfo', result.data.userInfo);
 					//缓存token
-					uni.setStorageSync('token', result.data.token);
-					  uni.setStorageSync('refreshToken', result.data.refreshToken)
+					// uni.setStorageSync('token', result.data.token);
+					  // uni.setStorageSync('refreshToken', result.data.refreshToken)
 					console.log(uni.getStorageSync('userInfo'))
 					// const isLoggedIn = true;
 					// uni.setStorageSync('isLoggedIn', isLoggedIn);
-					uni.setStorageSync('userInfoForm', userInfo);
-					// uni.setStorageSync('isLoggedIn', true);
+					uni.setStorageSync('userInfoForm', result.data.userInfo);
+					
 				} else {
 					uni.showToast({
 						title: result.message || '登录失败',

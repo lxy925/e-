@@ -352,7 +352,10 @@ var _default = {
                 });
               case 5:
                 code = _context.sent;
-                _context.next = 8;
+                console.log("获取的code:", code);
+
+                // 2. 再用code调用云函数
+                _context.next = 9;
                 return uniCloud.callFunction({
                   name: 'user-login',
                   data: {
@@ -362,96 +365,43 @@ var _default = {
                     iv: e.detail.iv
                   }
                 });
-              case 8:
+              case 9:
                 _yield$uniCloud$callF = _context.sent;
                 result = _yield$uniCloud$callF.result;
                 if (!(result.code == 200)) {
-                  _context.next = 14;
+                  _context.next = 15;
                   break;
                 }
                 // console.log(result)
                 _this2.phoneNumber = result.data;
                 // console.log( this.phoneNumber)
-                _context.next = 15;
+                _context.next = 16;
                 break;
-              case 14:
-                throw new Error('未获取到手机号');
               case 15:
-                _context.next = 21;
+                throw new Error('未获取到手机号');
+              case 16:
+                _context.next = 22;
                 break;
-              case 17:
-                _context.prev = 17;
+              case 18:
+                _context.prev = 18;
                 _context.t0 = _context["catch"](2);
                 console.error('流程错误:', _context.t0);
                 uni.showToast({
                   title: '获取手机号失败',
                   icon: 'none'
                 });
-              case 21:
+              case 22:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[2, 17]]);
+        }, _callee, null, [[2, 18]]);
       }))();
     },
-    // go() {
-    // 	uni.login({
-    // 		provider: 'weixin',
-    // 		success: res => {
-    // 			console.log(res)
-    // 			this.js_code = res.code
-    // 			uni.request({
-    // 				url: 'https://api.weixin.qq.com/sns/jscode2session', // 请求微信服务器
-    // 				method: 'GET',
-    // 				data: {
-    // 					appid: 'wxf8afb6dce14d487a', //你的小程序的APPID
-    // 					secret: '06d3e5f2f7ed1bf8504fe90a1a1e04e5', //你的小程序秘钥secret,  
-    // 					js_code: this.js_code, //uni.login 登录成功后的code
-    // 					grant_type: 'authorization_code' //此处为固定值
-    // 				},
-    // 				success: (res) => {
-    // 					console.log('获取信息', res.data);
-    // 					this.ID = res.data.openid
-    // 					this.session_key = res.data.session_key
-    // 				}
-    // 			});
-    // 		}
-    // 	});
-    // },
-    // 获取手机号
-    // getPhoneNumber(res) {
-    // 	console.log(res)
-    // 	if (res.detail.errMsg === "getPhoneNumber:ok") {
-    // 		const {
-    // 			encryptedData,
-    // 			iv
-    // 		} = res.detail;
-    // 		console.log(encryptedData, iv);
-    // 		// 创建解密对象
-    // 		const pc = new WXBizDataCrypt('wxf8afb6dce14d487a', this.session_key);
-    // 		try {
-    // 			// 解密数据
-    // 			const data = pc.decryptData(encryptedData, iv);
-    // 			console.log(data);
-    // 			// 检查手机号是否为空
-    // 			if (data.phoneNumber) {
-    // 				this.phone = data.phoneNumber;
-    // 				console.log('解密成功，手机号:', this.phone);
-    // 			} else {
-    // 				console.error('解密后未获取到手机号');
-    // 			}
-    // 		} catch (err) {
-    // 			console.error('解密失败:', err);
-    // 		}
-    // 	} else {
-    // 		console.error('用户拒绝授权获取手机号');
-    // 	}
-    // },
     submitUserInfo: function submitUserInfo() {
       var _this3 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-        var errors, code, _yield$uniCloud$callF2, result, userInfo;
+        var errors, code, _yield$uniCloud$callF2, result;
         return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -497,33 +447,23 @@ var _default = {
               case 7:
                 _yield$uniCloud$callF2 = _context2.sent;
                 result = _yield$uniCloud$callF2.result;
-                console.log(result);
+                console.log(result.data.userInfo);
                 if (result.code === 0) {
                   uni.showToast({
                     title: '登录成功',
                     icon: 'success',
                     duration: 2000
                   });
-                  userInfo = {
-                    avatar: _this3.avatar,
-                    nickName: _this3.nickName,
-                    realName: _this3.realName,
-                    user_id: result.data.token,
-                    phone: _this3.phoneNumber,
-                    idNumber: _this3.idCard,
-                    type: "普通用户"
-                  };
-                  console.log(userInfo);
-                  // 根据来源页面存储不同的信息
-                  uni.setStorageSync('userInfo', userInfo);
+
+                  //为初始化用户数据做准备
+                  uni.setStorageSync('userInfo', result.data.userInfo);
                   //缓存token
-                  uni.setStorageSync('token', result.data.token);
-                  uni.setStorageSync('refreshToken', result.data.refreshToken);
+                  // uni.setStorageSync('token', result.data.token);
+                  // uni.setStorageSync('refreshToken', result.data.refreshToken)
                   console.log(uni.getStorageSync('userInfo'));
                   // const isLoggedIn = true;
                   // uni.setStorageSync('isLoggedIn', isLoggedIn);
-                  uni.setStorageSync('userInfoForm', userInfo);
-                  // uni.setStorageSync('isLoggedIn', true);
+                  uni.setStorageSync('userInfoForm', result.data.userInfo);
                 } else {
                   uni.showToast({
                     title: result.message || '登录失败',

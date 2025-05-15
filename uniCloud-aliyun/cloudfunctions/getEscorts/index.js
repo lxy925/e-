@@ -10,6 +10,7 @@ exports.main = async (event, context) => {
     console.log('开始获取陪诊师数据')
     
     const res = await db.collection('escorts')
+	
     .aggregate()
     .match({
         address: {
@@ -32,12 +33,13 @@ exports.main = async (event, context) => {
     })
     .end()
 	//给数据加密
+	console.log(res.data)
     res.data.forEach(item => {
 	
       item.user_id = encryptData(item.user_id);
 	item.moreInfo.user_id= encryptData(item.moreInfo.user_id);
-	  item.card_id= encryptData(item.card_id);
-	  item.phone= encryptData(item.phone);
+	  // item.card_id= encryptData(item.card_id);
+	//   item.phone= encryptData(item.phone);
 	  
     });
     // console.log(userInfo)

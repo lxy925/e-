@@ -1,8 +1,11 @@
 <template>
-	<view class="page">
+	<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{
+	      paddingTop: navHeight + 'px',
+	      height: 'calc(100vh - ' + navHeight + 'px)'
+	    }" :scroll-top="scrollTop">
 		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
-		<scroll-view scroll-y class="content-scroll" @scroll="handleScroll" :scroll-top="scrollTop">
-			<view class="content" style="padding: 0rpx 25rpx;">
+		
+			<view class="content" >
 				<view class="header" @click="handleHeaderClick">
 					<img class="headerimg" :src="
           userInfo.moreInfo.avatarUrl || '../../static/images/mine/avatar.png'
@@ -43,15 +46,15 @@
 						</view>
 						<view class="account-info">
 							<view class="account-item">
-								<text class="account-value">193.07</text>
+								<text class="account-value">{{(userInfo.accountInfo.withdrawable_amount / 100).toFixed(2)}}</text>
 								<text class="account-label">可提取金额</text>
 							</view>
 							<view class="account-item">
-								<text class="account-value">17.05</text>
+								<text class="account-value">{{(userInfo.accountInfo.pending_amount / 100).toFixed(2)}}</text>
 								<text class="account-label">待结算金额</text>
 							</view>
 							<view class="account-item">
-								<text class="account-value">193.07</text>
+								<text class="account-value">{{(userInfo.accountInfo.balance / 100).toFixed(2)}}</text>
 								<text class="account-label">累计已结算金额</text>
 							</view>
 						</view>
@@ -78,7 +81,7 @@
 						</view>
 						<view class="data-item">
 							<text class="data-item-item">{{ pendingAmount }}</text>
-							<text>待结算金额</text>
+							<text>已提现金额</text>
 
 						</view>
 						<view class="data-item">
@@ -200,8 +203,8 @@
 					</button>
 				</view>
 			</view>
-		</scroll-view>
-	</view>
+		
+	</scroll-view>
 </template>
 
 // pages/mine/mine.js
@@ -209,7 +212,7 @@
 	export default {
 		data() {
 			return {
-				
+				navHeight: 0, // 添加导航栏高度存储
 				pageTitle: '个人中心',
 				scrollTop: 0,
 				lastScrollTop: 0,
@@ -233,7 +236,11 @@
 			};
 		},
 		onLoad() {
+			// 获取导航栏高度
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
 			this.initUserInfo();
+			
 		},
 		onShow() {
 			this.initUserInfo();
@@ -257,15 +264,12 @@
 			// 初始化用户信息
 			initUserInfo() {
 				const userInfo = uni.getStorageSync("userInfo");
-				// this.userInfo.type = uni.getStorageSync("type");
-				//实时更新access_token的值
-				// this.user_id= uni.getStorageSync("access_token");
+				
 				console.log("初始化后的值：", userInfo);
 
 				if (userInfo) {
 					this.userInfo = userInfo;
-					// this.isLoggedIn = true;
-					// this.checkSession(); // 检查 session_key 是否过期
+					
 					this.getUser();
 				}
 			},
@@ -273,7 +277,7 @@
 			// 获取用户信息
 			async getUser() {
 				console.log("调取前检查", this.userInfo);
-				const refreshToken=uni.getStorageSync("refreshToken");
+				
 				const userInfo=this.userInfo;
 				try {
 					uni.showLoading({
@@ -285,15 +289,16 @@
 						name: "getUser",
 						data: {
 							userInfo,
-							refreshToken
+							
 						}
 					});
 					
 					if (result.code == 200) {
-						console.log(result.data.userInfo);
-						this.userInfo=result.data.userInfo;
+						console.log(result.data);
+						this.userInfo=result.data;
 						console.log("调取后检查", this.userInfo);
 						uni.setStorageSync("userInfo", this.userInfo);
+						console.log(this.userInfo.type)
 					} else if(result.code == 401){
 						uni.showToast({
 							title: '登录状态已过期，请重新登录' ,
@@ -322,9 +327,9 @@
 			// 退出登录
 			logout() {
 				uni.removeStorageSync("userInfo");
-				// uni.removeStorageSync("isLoggedIn");
-				uni.removeStorageSync("token");
-				uni.removeStorageSync("refreshToken");
+				
+				
+				
 				this.userInfo = {
 					user_id: '',
 					nickName: '',
@@ -421,9 +426,12 @@
 				}
 			},
 			toAccount() {
+				const accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));
+				
 				uni.navigateTo({
-					url: '/pages/account/account'
-				})
+				  url: `/pages/account/account?accountInfo=${accountInfo}`
+				});
+				
 			}
 		},
 
@@ -433,17 +441,23 @@
 
 <style>
 	/* pages/mine/mine.wxss */
-	.page {
+	.page-container {
 		min-height: 100vh;
-		/* 	background: linear-gradient(to bottom,
-				#0bd6c8,
-				#99efe9,
-				#ddf5f4,
-				rgb(226, 226, 226)); */
-		padding-top: 50rpx;
-		margin-top: -1px;
-		/* 消除可能的间隙 */
-		padding-top: 150rpx;
+		position: relative;
+		padding: 0 rpx;
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box; /* 关键：让 width 包含 padding */		
+	}
+	
+	.content {
+		width: 100%;
+		  max-width: 100%; /* 限制最大宽度（可选） */
+		  margin: 0 ; /* 水平居中 */
+		  padding:0;
+		  box-sizing: border-box;
 	}
 
 	.header {
@@ -790,7 +804,7 @@
 
 	.account-info {
 		display: flex;
-		justify-content: space-between;
+		gap: 50rpx;
 		margin-top: 20rpx;
 	}
 
@@ -798,6 +812,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		width: 250rpx;
+		/* background-color: aqua; */
 	}
 
 	.account-label {

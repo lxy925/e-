@@ -17,5 +17,9 @@
 		"vuex": "^4.1.0",
 		"wx-server-sdk": "^3.0.1"
 	},
-	"license": "ISC"
+	"license": "ISC",
+	"devDependencies": {
+		"@dcloudio/vite-plugin-uni": "^3.0.0-alpha-3000020210521001",
+		"vite": "^2.9.18"
+	}
 }

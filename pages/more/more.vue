@@ -1,6 +1,10 @@
 <template>
-	<view class="more-container">
-		<custom-nav title="e陪无忧"></custom-nav>
+	<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{
+	      paddingTop: navHeight + 'px',
+	      height: 'calc(100vh - ' + navHeight + 'px)'
+	    }" :scroll-top="scrollTop">
+		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
+		<view class="content" >
 		<!-- 顶部搜索和切换区域 -->
 		<view class="header">
 			<view class="search-box">
@@ -101,13 +105,15 @@
 		    </view>
 		  </view>
 		</view>
-	</view>
+		</view>
+	</scroll-view>
 </template>
 
 <script>
 	export default {
 		data() {
 			return {
+				navHeight: 0, // 添加导航栏高度存储
 				currentType: 'hospital',
 				searchText: '',
 				hospitals: [],
@@ -318,10 +324,19 @@
 									}
 								})
 							}
-			}
+			},
+			//监视页面滚动情况
+			handleScroll(e) {
+				// 直接赋值scrollTop（不需要节流，因为custom-nav内部已经做了立即切换的处理）
+				this.scrollTop = e.detail.scrollTop;
+				console.log("scrollTop")
+			},
 						},
 	
 		onLoad(options) {
+			// 获取导航栏高度
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
 			// 获取页面来源信息
 			this.fromPage = options.from || null
 			this.getHospitalList() // 页面加载时获取数据

@@ -1,0 +1,107 @@
+{
+	"id": "vk-uni-pay",
+	"displayName": "【开箱即用】vk-uni-pay 万能支付插件，支持转账到支付宝和微信，兼容任何开发框架。",
+	"version": "1.16.1",
+	"description": "支持微信支付、支付宝支付、iOS内购、微信虚拟支付、抖音支付、华为支付，支持H5、PC、小程序、APP，微信公众号、多商户支付、个人支付、商家转账，为你支付业务扫平障碍。无第三方npm依赖。",
+	"keywords": [
+        "vk-uni-pay",
+        "多商户支付、服务商支付、个人支付",
+        "微信虚拟支付",
+        "抖音支付",
+        "支持微信商家转账最新版接口"
+    ],
+	"repository": "",
+	"engines": {
+		"HBuilderX": "^3.1.0"
+	},
+	"dcloudext": {
+		"sale": {
+			"regular": {
+				"price": "8.89"
+			},
+			"sourcecode": {
+				"price": "99.00"
+			}
+		},
+		"contact": {
+			"qq": "370725567"
+		},
+		"declaration": {
+			"ads": "无",
+			"data": "插件不采集任何数据",
+			"permissions": "无"
+		},
+		"npmurl": "https://vkdoc.fsq.pub/vk-uni-pay/",
+		"type": "unicloud-template-page"
+	},
+	"uni_modules": {
+		"dependencies": ["uni-config-center"],
+		"encrypt": [
+			"uniCloud/cloudfunctions/common/vk-uni-pay/dao/index.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/dao/payConfig.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/dao/payOrders.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/dao/uniIdUsers.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/index.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/libs/certutil.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/libs/common.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/libs/crypto.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/libs/index.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/libs/qrcode.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/libs/uniIdToken.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/libs/uniPay.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/openapi/alipay/index.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/openapi/alipay/util.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/openapi/index.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/openapi/wxpay/wxpayV2.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/openapi/wxpay/wxpayV3.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/openapi/vkspay/index.js",
+			"uniCloud/cloudfunctions/common/vk-uni-pay/openapi/vkspay/util.js"
+		],
+		"platforms": {
+			"cloud": {
+				"tcb": "y",
+				"aliyun": "y",
+				"alipay": "y"
+			},
+			"client": {
+				"App": {
+                    "app-vue": "y",
+                    "app-nvue": "y",
+                    "app-uvue": "n",
+                    "app-harmony": "y"
+                },
+				"H5-mobile": {
+					"Safari": "y",
+					"Android Browser": "y",
+					"微信浏览器(Android)": "y",
+					"QQ浏览器(Android)": "y"
+				},
+				"H5-pc": {
+					"Chrome": "y",
+					"IE": "n",
+					"Edge": "y",
+					"Firefox": "y",
+					"Safari": "y"
+				},
+				"小程序": {
+					"微信": "y",
+					"阿里": "y",
+					"百度": "y",
+					"字节跳动": "y",
+					"QQ": "y"
+				},
+				"快应用": {
+					"华为": "y",
+					"联盟": "y"
+				},
+				"Vue": {
+					"vue2": "y",
+					"vue3": "y"
+				}
+			}
+        },
+        "extends": {
+            "sn": "DrD1vbUKE6egKTRinuCw0KL+TcO4m92uP8Xhf5icoPeyT7jxyGKycyF6EFJ2NCJ/9rmC+WiVWS6zLD3igQBishWMtIBZVtB5LqEAqtvRy8w+FxedUg0eWVG3GPANd7PKKv6rfe8tURKMCpkdtG6Y7goLUt0CU0GBkWJEV5tlnJrfRnBi0/JE1qaA+/uvJyElidIV3mrUgXr90mzvU7G3shVxWg1AlogKVLb5eFnsa+8Lf2rWFp55kX9mzN6vTfaLIL4OnsSdvcoyPG2eY0QCxtOcXvg2k8N9PD/6g64X8W5CQm9X/mtatWpwqGgk6X+P"
+        }
+	}
+}

@@ -49,7 +49,9 @@ let moreResult;
 				is_certified:false,
 				is_bookable:false,
 				parentId:parentId,
-				state:"待审核"
+				state:"待审核",
+				
+				update_time: Date.now()
 			})
 		}else{
 			//用户未入驻过
@@ -66,7 +68,9 @@ let moreResult;
 				is_certified:false,
 				is_bookable:false,
 				parentId:parentId,
-				state:"待审核"
+				state:"待审核",
+				create_time:Date.now(),
+				update_time: Date.now()
 			});
 			//更新escort_relation表（上下级关系）
 			let relationResult = await uniCloud.callFunction({
@@ -77,6 +81,15 @@ let moreResult;
 					subordinateId:user_id
 				}
 			});
+			 //初始化账户表
+				let accountResult = await db.collection('escorts').add({
+					user_id,
+					balance:0,
+					withdrawable_amount:0,
+					pending_amount:0,
+					create_time:Date.now(),
+					update_time: Date.now()
+				})
 		}
 		// 调用 addEscortMore 云函数
 		
@@ -89,28 +102,27 @@ let moreResult;
 					type:type,
 					rating: 0,
 					order: 0,
-
 					certificate: certificateList,
-
-
 					provide_transport: provide_transport,
 					self_introduction: self_introduction,
 					familiar_hospitals: familiar_hospitals,
-					familiar_departments: familiar_departments
+					familiar_departments: familiar_departments,
+					create_time:Date.now(),
+					update_time: Date.now()
 				},
 			}
 		});
 		console.log('Insert result:', moreResult);
-		const updateResult = await uniCloud.callFunction({
-			name: 'updateUser',
-			data: {
-				// 传递需要存储到 escorts_more 表的数据
-
-				user_id: user_id,
-				type: "陪诊师"
-
-			}
+		
+		// 更新表 users 中 user_id 相同的记录的 type 字段
+		const updateResult = await db.collection('users').where({
+		    user_id: user_id
+		}).update({
+		   
+		        type: type
+		    
 		});
+		
 		console.log('updateResult:', updateResult);
 		return {
 			code: 200,

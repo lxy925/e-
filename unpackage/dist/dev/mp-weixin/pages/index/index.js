@@ -243,9 +243,6 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
-//
-//
-//
 // pages/index/index.js
 var _default = {
   data: function data() {
@@ -319,7 +316,7 @@ var _default = {
   onLoad: function onLoad(options) {
     // 获取导航栏高度
     var systemInfo = uni.getSystemInfoSync();
-    this.navHeight = systemInfo.statusBarHeight + 180;
+    this.navHeight = systemInfo.statusBarHeight + 44;
     this.getBanners();
   },
   /**
@@ -353,7 +350,7 @@ var _default = {
   methods: {
     //监视页面滚动情况
     handleScroll: function handleScroll(e) {
-      console.log("scrollTop大小", e.detail.scrollTop);
+      // 直接赋值scrollTop（不需要节流，因为custom-nav内部已经做了立即切换的处理）
       this.scrollTop = e.detail.scrollTop;
     },
     handleNavClick: function handleNavClick(path) {

@@ -1,4 +1,4 @@
-const jwt = require('../common/jwt');
+const jwt = require('./jwt');
 const db = uniCloud.database();
 
 exports.main = async (event, context) => {

@@ -1,0 +1,17 @@
+// uniCloud/cloudfunctions/cleanupTempSchedules/package.json
+{
+  "name": "cleanupTempSchedules",
+  "version": "1.0.0",
+  "description": "每周自动清理临时排班表",
+  "cloudfunction-config": {
+    "memorySize": 256,
+    "timeout": 5,
+    "triggers": [
+      {
+        "name": "weeklyCleanup",
+        "type": "timer",
+         "config": "0 0 16 * * 0" // UTC 周日 16:00 → 北京时间周一 00:00
+      }
+    ]
+  }
+}

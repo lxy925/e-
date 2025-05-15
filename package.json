@@ -4,9 +4,13 @@
 	"description": "",
 	"main": "main.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "webpack"
 	},
 	"author": "",
-	"dependencies": {},
+	"dependencies": {
+		"@midwayjs/core": "^3.20.4",
+		"@midwayjs/decorator": "^3.20.4"
+	},
 	"license": "ISC"
 }

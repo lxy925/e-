@@ -17,7 +17,8 @@
     "pages/userInfoDetail/userInfoDetail",
     "pages/doctorlogin/doctorlogin",
     "pages/study/study",
-    "pages/showerror/showerror"
+    "pages/showerror/showerror",
+    "pages/time/time"
   ],
   "subPackages": [],
   "window": {

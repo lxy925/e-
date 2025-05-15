@@ -63,7 +63,7 @@
           <image src="../../static/images/mine/location.png" alt=""></image>
           <text class="box-title">地址管理</text>
         </view>
-        	<view class="boxed">
+        	<view class="boxed"  @click="turnPageToTime">
           <image src="../../static/images/mine/patient.png" alt=""></image>
           <text class="box-title">个人信息管理</text>
         </view>
@@ -143,6 +143,11 @@
                    url: '/pages/userInfoDetail/userInfoDetail?from=doctorlogin'
             });
         },
+		turnPageToTime() {
+			uni.navigateTo({
+				url: '/pages/time/time'
+			})
+		},
 		logout() {
         // 清除本地存储的用户信息
         uni.removeStorageSync('userInfo');

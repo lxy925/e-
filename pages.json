@@ -10,7 +10,8 @@
     {
       "path": "pages/health/health",
       "style": {
-        "usingComponents": {},
+        "usingComponents": {
+        },
         "navigationBarTitleText": "健康管理"
       }
     },
@@ -111,7 +112,14 @@
    			{
    				"navigationBarTitleText" : "错题集"
    			}
-   		}
+   		},
+       {
+        "path" : "pages/time/time",
+        "style" : 
+        {
+          "navigationBarTitleText" : "时间管理表"
+        }
+      }
   ],
   "sitemapLocation": "sitemap.json",
   "style": "v2",

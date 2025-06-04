@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const jwt = require('../common/jwt');
+=======
+const jwt = require('./jwt');
+>>>>>>> origin/lxy
 const db = uniCloud.database();
 
 exports.main = async (event, context) => {
@@ -11,10 +15,17 @@ exports.main = async (event, context) => {
   try {
     // 1. 验证refreshToken
     const decoded = jwt.verifyRefreshToken(refreshToken);
+<<<<<<< HEAD
     
     // 2. 检查refreshToken是否有效
     const record = await db.collection('user_tokens').where({
       userId: decoded.uid,
+=======
+    // console.log(decoded)
+    // 2. 检查refreshToken是否有效
+    const record = await db.collection('user_tokens').where({
+      userId: decoded.userId,
+>>>>>>> origin/lxy
       token: refreshToken,
       type: 'refresh_token'
     }).get();
@@ -25,7 +36,11 @@ exports.main = async (event, context) => {
     
     // 3. 生成新token
     const newToken = jwt.generateToken({
+<<<<<<< HEAD
       uid: decoded.uid,
+=======
+      uid: decoded.userId,
+>>>>>>> origin/lxy
       role: decoded.role
     });
     

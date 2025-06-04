@@ -23,7 +23,8 @@ const type=moreData.type;
 			provide_transport: moreData.provide_transport,
 			self_introduction: moreData.self_introduction,
 			familiar_hospitals: moreData.familiar_hospitals,
-			familiar_departments: moreData.familiar_departments
+			familiar_departments: moreData.familiar_departments,
+			update_time: new Timestamp()
 		})
 	}else{
 		result = await db.collection('escorts_more').add(moreData);

@@ -1,7 +1,11 @@
 {
 	"id": "uni-popup",
 	"displayName": "uni-popup 弹出层",
+<<<<<<< HEAD
 	"version": "1.9.7",
+=======
+	"version": "1.9.8",
+>>>>>>> origin/lxy
 	"description": " Popup 组件，提供常用的弹层",
 	"keywords": [
         "uni-ui",

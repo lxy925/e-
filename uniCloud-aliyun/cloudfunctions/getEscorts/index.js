@@ -1,5 +1,10 @@
 'use strict';
+<<<<<<< HEAD
 const jwt = require('../common/jwt.js');
+=======
+// const jwt = require('../common/jwt.js');
+const crypto = require('crypto');
+>>>>>>> origin/lxy
 const db = uniCloud.database()
 
 exports.main = async (event, context) => {
@@ -9,6 +14,7 @@ exports.main = async (event, context) => {
     console.log('开始获取陪诊师数据')
     
     const res = await db.collection('escorts')
+	
     .aggregate()
     .match({
         address: {
@@ -30,9 +36,21 @@ exports.main = async (event, context) => {
       'moreInfo.rating': -1 // 按照 rating 从大到小排序
     })
     .end()
+<<<<<<< HEAD
 	
     res.data.forEach(item => {
       item.user_id = generateToken(user_id);
+=======
+	//给数据加密
+	console.log(res.data)
+    res.data.forEach(item => {
+	
+      item.user_id = encryptData(item.user_id);
+	item.moreInfo.user_id= encryptData(item.moreInfo.user_id);
+	  // item.card_id= encryptData(item.card_id);
+	//   item.phone= encryptData(item.phone);
+	  
+>>>>>>> origin/lxy
     });
     // console.log(userInfo)
     console.log('查询结果：', res)
@@ -48,4 +66,10 @@ exports.main = async (event, context) => {
       msg: e.message || '获取陪诊师集合失败'
     }
   }
+  
+  // 数据加密
+  function encryptData(text) {
+    return crypto.createHash('sha256').update(text).digest('hex');
+  }
+  
 }

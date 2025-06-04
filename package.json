@@ -4,24 +4,22 @@
 	"description": "",
 	"main": "main.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev:h5": "uni build -p h5 --watch",
-		"dev:mp-weixin": "uni build -p mp-weixin --watch",
-		"dev:app-android": "uni build -p app --watch --platform android",
-		"dev:app-ios": "uni build -p app --watch --platform ios"
+		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "",
 	"dependencies": {
 		"@dcloudio/vue-cli-plugin-uni": "^2.0.2-4040520250103001",
-		"@vant/area-data": "^2.0.0",
-		"@vant/weapp": "^1.11.7",
-		"axios": "^1.9.0",
-		"crypto-js": "^4.2.0",
+		"axios": "^1.8.3",
+		"jsonwebtoken": "^9.0.2",
 		"pinia": "^3.0.1",
-		"uview-ui": "^2.0.34",
-		"vant": "^4.9.16",
+		"qrcode": "^1.5.4",
 		"vue-loader": "^17.4.2",
+		"vuex": "^4.1.0",
 		"wx-server-sdk": "^3.0.1"
 	},
-	"license": "ISC"
+	"license": "ISC",
+	"devDependencies": {
+		"@dcloudio/vite-plugin-uni": "^3.0.0-alpha-3000020210521001",
+		"vite": "^2.9.18"
+	}
 }

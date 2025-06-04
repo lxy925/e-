@@ -1,6 +1,8 @@
 {
-  "name": "getUser",
-  "dependencies": {},
+  "name": "user-login",
+  "dependencies": {
+      "jsonwebtoken": "^8.5.1"
+    },
   "extensions": {
     "uni-cloud-jql": {}
   }

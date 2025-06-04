@@ -1,5 +1,5 @@
 {
-    "name" : "quickstart-wx-cloud",
+    "name" : "epwy",
     "appid" : "__UNI__E059568",
     "description" : "",
     "versionName" : "1.0.0",
@@ -44,7 +44,10 @@
     "mp-weixin" : {
         "appid" : "wxf8afb6dce14d487a",
         "setting" : {
-            "urlCheck" : false
+            "urlCheck" : false,
+            "es6" : true,
+            "postcss" : true,
+            "minified" : true
         },
         "usingComponents" : true,
         "requiredPrivateInfos" : [ "getLocation", "chooseLocation" ],

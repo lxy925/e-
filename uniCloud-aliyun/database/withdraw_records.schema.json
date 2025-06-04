@@ -1,0 +1,124 @@
+{
+  "bsonType": "object",
+  "required": [
+    "_id",
+    "user_id",
+    "amount",
+    "status",
+    "create_time"
+  ],
+  "permission": {
+    "read": true,
+    "create": true,
+    "update": true,
+    "delete": false
+  },
+  "properties": {
+    "_id": {
+      "description": "主键，系统自动生成",
+      "bsonType": "objectId"
+    },
+    "user_id": {
+      "description": "用户ID（陪诊师ID）",
+      "bsonType": "string",
+      "foreignKey": "users._id",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "amount": {
+      "description": "提现金额（元）",
+      "bsonType": "double",
+      "minimum": 1,
+      "maximum": 5000,
+      "default": 0
+    },
+    "status": {
+      "description": "提现状态",
+      "bsonType": "string",
+      "default": "处理中"
+    },
+    "out_bill_no": {
+      "description": "商户订单号，商户系统内部查询、退款、业务逻辑",
+      "bsonType": "string",
+      "minLength": 0,
+      "maxLength": 32
+    },
+    "transfer_bill_no": {
+      "description": "微信转账单号，微信支付接口、回调通知、查单接口均依赖",
+      "bsonType": "string",
+      "minLength": 0,
+      "maxLength": 32
+    },
+    "options": {
+      "description": "微信支付确认信息",
+      "bsonType": "object"
+    },
+    "year": {
+      "description": "提现年份，用于快速统计",
+      "bsonType": "number",
+      "default": 0
+    },
+    "month": {
+      "description": "提现月份(1-12)，用于快速统计",
+      "bsonType": "number",
+      "minimum": 1,
+      "maximum": 12,
+      "default": 0
+    },
+    "week": {
+      "description": "提现周数(1-53)，用于快速统计",
+      "bsonType": "number",
+      "minimum": 1,
+      "maximum": 53,
+      "default": 0
+    },
+    "day": {
+      "description": "提现日期(1-31)，用于快速统计",
+      "bsonType": "number",
+      "minimum": 1,
+      "maximum": 31,
+      "default": 0
+    },
+    "create_time": {
+      "description": "创建时间",
+      "bsonType": "number"
+    },
+    "update_time": {
+      "description": "更新时间",
+      "bsonType": "number"
+    },
+    "error_msg": {
+      "description": "错误信息",
+      "bsonType": "string",
+      "minLength": 0,
+      "maxLength": 255
+    }
+  },
+  "indexes": [
+    {
+      "name": "user_id_index",
+      "key": {
+        "user_id": 1
+      }
+    },
+    {
+      "name": "status_index",
+      "key": {
+        "status": 1
+      }
+    },
+    {
+      "name": "create_time_index",
+      "key": {
+        "create_time": -1
+      }
+    },
+    {
+      "name": "composite_index",
+      "key": {
+        "user_id": 1,
+        "status": 1
+      }
+    }
+  ]
+}

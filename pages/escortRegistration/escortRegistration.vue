@@ -40,10 +40,10 @@
 			</view>
 
 			<!-- 手机号 -->
-			<view class="custom-field">
+			<!-- <view class="custom-field">
 				<text class="label">手机号</text>
 				<input v-model="formData.phone" placeholder="请输入手机号" type="tel" class="input" />
-			</view>
+			</view> -->
 
 			<!-- 所在城市 -->
 			<view class="custom-field" @click="showCityPicker = true">
@@ -74,15 +74,15 @@
 				</picker-view>
 			</view>
 			<!-- 身份证号码 -->
-			<view class="custom-field">
+			<!-- <view class="custom-field">
 				<text class="label">身份证号码</text>
 				<input v-model="formData.idNumber" placeholder="请输入身份证号码" type="idcard" class="input" />
-			</view>
+			</view> -->
 			<!-- 资格证号 -->
-			<view class="custom-field">
+		<!-- 	<view class="custom-field">
 				<text class="label">资格证号 (选填)</text>
 				<input v-model="formData.qualificationNumber" placeholder="请输入资格证号" class="input" />
-			</view>
+			</view> -->
 
 			<!-- 证书上传 -->
 			<view class="custom-field custom-field1">
@@ -184,7 +184,7 @@
 	import {
 		ref
 	} from 'vue';
-	import citys from '../../Utils/citys.js'; // 引入外部文件
+	import citys from '../../utils/citys.js'; // 引入外部文件
 
 	export default {
 		data() {
@@ -194,15 +194,15 @@
 					name: "",
 					age: "",
 					gender: "",
-					phone: "",
+					// phone: "",
 					city: {
 						provinceName: "",
 						cityName: "",
 						areaName: "",
 					},
-					type: "",
+					// type:"",
 					qualificationNumber: "",
-					idNumber: "",
+					// idNumber: "",
 					avatarList: "",
 					certificateList: "",
 					self_introduction: "", // 自我介绍
@@ -210,6 +210,7 @@
 					provide_transport:false, // 是否提供接送
 					familiar_hospitals: "", // 熟悉的医院
 					familiar_departments: [], // 熟悉的科室（改为数组存储）
+					parentId:"1"//上级陪诊师
 				},
 				selectedHospital: null, // 用于存储选中的医院信息
 				selectedHospitalList: [],
@@ -236,42 +237,43 @@
 			};
 		},
 		onLoad(options) {
-		
+			
+			//检查是否登陆过
+			// const userInfo =uni.getStorageSync('userInfo');
+			this.userInfo=uni.getStorageSync('userInfo');
+			const userInfo=this.userInfo
+				if (userInfo==null) {
+					
+				
+					uni.showToast({
+						title: '请先登录',
+						icon: 'none',
+						duration: 2000,
+					});
+					uni.navigateTo({
+						url: '/pages/userInfoDetail/userInfoDetail?from=mine'
+					});
+			}else{
+				console.log("登录后的用户userInfo",userInfo)
+				this.formData.user_id=userInfo.user_id;
+				// this.formData.type=userInfo.type;
+				this.formData.name=userInfo.name;
+				
+				
+			}
+			
 			//如果填过陪诊师信息则调用填充
 			 const formData= uni.getStorageSync('formData');
 			if(formData){
 				this.formData=formData;
 				this.selectedAddress = `${this.formData.city.provinceName} ${this.formData.city.cityName} ${this.formData.city.areaName}`;
-				console.log(this.formData)
+				console.log("缓存过的表格值",this.formData)
 			}
-			
+			// 若扫码入驻的则解析 scene 参数（陪诊师的 user_id）
+			    const scene = decodeURIComponent(options.scene);
+			    this.formData. parentId= scene; // 保存上级陪诊师的 user_id
 		
-		//检查是否登陆过
-		const isLoggedIn =uni.getStorageSync('isLoggedIn');
-		
-			if (isLoggedIn) {
-				//登录过调用登录的基本信息
-				const userInfo = uni.getStorageSync('userInfo');
-				this.userInfo=userInfo
-				console.log(this.userInfo)
-				this.formData.user_id = userInfo.user_id,
-					this.formData.name = userInfo.name,
-					this.formData.phone = userInfo.phone,
-					this.formData.idNumber = userInfo.idNumber,
-					this.formData.type = userInfo.type
-					
-					
-					
-			} else {
-				uni.showToast({
-					title: '请先登录',
-					icon: 'none',
-					duration: 2000,
-				});
-				uni.navigateTo({
-					url: '/pages/userInfoDetail/userInfoDetail?from=mine'
-				});
-			}
+	
 			if (options.familiarHospitals) {
 				try {
 					// 确保传入的是数组
@@ -358,6 +360,7 @@
 			        uniCloud.uploadFile({
 			          filePath, // 本地临时文件路径
 			          cloudPath, // 云存储路径
+					  cloudPathAsRealPath: true,
 			          onUploadProgress: (progressEvent) => {
 			            // 上传进度回调
 			            const percentCompleted = Math.round(
@@ -414,82 +417,7 @@
 			    },
 			  });
 			},
-			// async chooseMedia(listName) {
-			//     try {
-			//       // 选择图片
-			//       const res = await uni.chooseMedia({
-			//         count: 1,
-			//         mediaType: ['image'],
-			//         sourceType: ['album', 'camera'],
-			//       });
-			// 	  console.log("选择图片后的结果：",res[1].tempFiles[0].tempFilePath)
-				  
-			//       const tempFilePath = res[1].tempFiles[0].tempFilePath;
 			
-			//       // 生成唯一的文件名
-			//       const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
-			// 		console.log("图片文件类型",listName)
-			//       // 调用云函数上传图片
-			//       const uploadRes = await uniCloud.callFunction({
-			//         name: 'uploadImage', // 云函数名称
-			//         data: {
-			//           filePath: tempFilePath, // 本地临时文件路径
-			//           fileName, // 文件名
-			// 		  listName:listName//图片文件类型
-			//         },
-			//       });
-			
-			//       if (uploadRes.result.code === 200) {
-			//         // 获取云存储的文件 ID
-			//         const fileID = uploadRes.result.data.fileID;
-			
-			//         // 将 fileID 存储到云数据库
-			//         // const dbRes = await uniCloud.database().collection('your-collection').add({
-			//         //   [listName]: fileID, // 存储 fileID
-			//         // });
-			
-			//         // 更新前端数据
-			//         this.formData[listName] = fileID;
-			//         uni.showToast({
-			//           title: '上传成功',
-			//           icon: 'success',
-			//           duration: 2000,
-			//         });
-			//       } else {
-			//         throw new Error(uploadRes.result.message);
-			//       }
-			//     } catch (err) {
-			//       console.error('上传失败:', err);
-			//       uni.showToast({
-			//         title: '上传失败',
-			//         icon: 'none',
-			//         duration: 2000,
-			//       });
-			//     }
-			//   },
-			// chooseMedia(listName) {
-			// 	uni.chooseMedia({
-			// 		count: 1,
-			// 		mediaType: ['image'],
-			// 		sourceType: ['album', 'camera'],
-			// 		success: (res) => {
-			// 			const filePath = res.tempFiles[0].tempFilePath;
-
-			// 			this.formData[listName] = filePath;
-			// 			console.log(this.formData[listName])
-
-			// 			// this.uploadImage(filePath, listName);
-			// 		},
-			// 		fail: (err) => {
-			// 			console.error('选择图片失败:', err);
-			// 			uni.showToast({
-			// 				title: '选择图片失败',
-			// 				icon: 'none',
-			// 				duration: 2000,
-			// 			});
-			// 		},
-			// 	});
-			// },
 
 
 		
@@ -562,31 +490,23 @@
 					errors.push('性别不能为空');
 					return errors;
 				}
-				if (!this.formData.phone || !/^\d{11}$/.test(this.formData.phone)) {
-					errors.push('手机号码格式不正确');
-					return errors;
-				}
+				// if (!this.formData.phone || !/^\d{11}$/.test(this.formData.phone)) {
+				// 	errors.push('手机号码格式不正确');
+				// 	return errors;
+				// }
 				if (!this.formData.city.areaName) {
 					errors.push('所在地区不能为空');
 					return errors;
 				}
-				if (!this.formData.qualificationNumber) {
-					errors.push('资格证号不能为空');
-					return errors;
-				}
+				// if (!this.formData.qualificationNumber) {
+				// 	errors.push('资格证号不能为空');
+				// 	return errors;
+				// }
 				if (!this.formData.certificateList) {
 					errors.push('证书不能为空');
 					return errors;
 				}
-				if (!this.formData.idNumber || !/^\d{18}$/.test(this.formData.idNumber)) {
-					errors.push('身份证号码格式不正确');
-					return errors;
-				}
-
-
-				//     if (!this.formData.idCardBackList) {
-				//       errors.push('身份证反面不能为空');
-				//     }
+			
 				return errors;
 			},
 			async submitForm() {
@@ -621,14 +541,15 @@
 
 				if (result.code === 200) {
 					uni.showToast({
-						title: '保存成功',
+						title: '提交成功',
 						icon: 'success',
 						duration: 2000,
 					});
-					this.userInfo.type = "陪诊师",
+					
+					// this.userInfo.type = "陪诊师",
 					uni.setStorageSync('formData', this.formData);// 更新缓存中的 formData
 					uni.setStorageSync('userInfo', this.userInfo); // 更新缓存中的 userInfo,用于转换mine页面
-					uni.setStorageSync('type', "陪诊师"); 
+					// uni.setStorageSync('type', "陪诊师"); 
 					console.log("userInfo", uni.getStorageSync('userInfo'))
 					uni.navigateBack();
 				} else {

@@ -104,10 +104,13 @@ module.exports = {
 	
 		if (!clientInfo) clientInfo = this.getClientInfo();
 		if (!cloudInfo) cloudInfo = this.getCloudInfo();
+<<<<<<< HEAD
  // 校验openid是否必填
   if (provider === "wxpay" && (!openid || typeof openid !== "string")) {
     throw { errCode: ERROR[51013], errMsg: "openid is required for wxpay" };
   }
+=======
+>>>>>>> origin/lxy
 
 		// 获取当前登录的user_id
 		let user_id = this.getUserId();

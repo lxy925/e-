@@ -24,11 +24,12 @@
     "pages/patientManagement/patientManagement",
     "pages/order_detail/order_detail",
     "pages/wx_pay/wx_pay",
+    "pages/setting/setting",
+    "pages/about/about",
+    "pages/account/account",
+    "pages/getMoney/getMoney",
     "uni_modules/uni-pay/pages/success/success",
-    "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview",
-    "uni_modules/uni-pay/pages/pay-desk/pay-desk",
-    "pages/order_test/order_test",
-    "pages/orderDetail/orderDetail"
+    "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview"
   ],
   "subPackages": [],
   "window": {
@@ -41,7 +42,7 @@
   },
   "tabBar": {
     "color": "#A2A9B0",
-    "selectedColor": "#15cbbc",
+    "selectedColor": "#1fc7d6",
     "backgroundColor": "#ffffff",
     "list": [
       {
@@ -81,15 +82,6 @@
   },
   "plugins": {},
   "usingComponents": {
-    "van-field": "/wxcomponents/vant/field/index",
-    "van-button": "/wxcomponents/vant/button/index",
-    "van-radio-group": "/wxcomponents/vant/radio-group/index",
-    "van-radio": "/wxcomponents/vant/radio/index",
-    "van-action-sheet": "/wxcomponents/vant/action-sheet/index",
-    "van-area": "/wxcomponents/vant/area/index",
-    "van-uploader": "/wxcomponents/vant/uploader/index",
-    "van-checkbox": "/wxcomponents/vant/checkbox/index",
-    "van-row": "/wxcomponents/vant/row/index",
     "custom-nav": "/components/custom-nav/custom-nav"
   }
 }

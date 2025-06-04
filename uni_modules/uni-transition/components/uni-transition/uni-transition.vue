@@ -174,7 +174,14 @@ export default {
 				this.timer = setTimeout(() => {
 					this.animation = createAnimation(this.config, this)
 					this.tranfromInit(false).step()
+<<<<<<< HEAD
 					this.animation.run()
+=======
+					this.animation.run(() => {
+						this.transform = ''
+						this.opacity = opacity || 1
+					})
+>>>>>>> origin/lxy
 					this.$emit('change', {
 						detail: this.isShow
 					})

@@ -46,8 +46,49 @@
 					</view>
 				</view>
 			</view>
+<<<<<<< HEAD
 		</view>
 	</view>
+=======
+          
+          <view class="doctor-location">{{doctor.address.cityName}}&nbsp;{{doctor.address.areaName}}</view>
+          <view class="doctor-department">
+            <img class="value-icon" src="../../static/images/index/value.png" alt="" />
+            {{ doctor.moreInfo.rating }} &nbsp; | &nbsp;
+            <img
+                class="order-icon"
+                src="../../static/images/doctor/order.png"
+                alt=""
+              />
+            {{ doctor.moreInfo.order }}
+          </view>
+         <!-- <view class="specialty-container">
+              <text class="doctor-specialty1" v-if="doctor.moreInfo.language">{{ doctor.moreInfo.language }}</text>
+            <text class="doctor-specialty2" v-if="doctor.moreInfo.provide_transport">
+              可接送
+            </text>
+          </view> -->
+          <view class="doctor-tags">
+           
+            
+            <text :class="['doctor-certification', doctor.is_certified  ? 'certified' : 'uncertified']">
+              {{ doctor.is_certified ? '已认证' : '未认证' }}
+            </text>
+            <text :class="['doctor-availability', doctor.is_bookable? 'available' : 'unavailable']">
+              {{ doctor.is_bookable ? '可预约' : '不可预约' }}
+            </text>
+          </view>
+        </view>
+        <view class="doctor-need">
+          <view class="doctor-need-item">
+            <view class="doctor-need-item-text">最近咨询</view>
+            <image src="../../static/images/index/star.png" alt=""></image>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+>>>>>>> origin/lxy
 </template>
 
 <script>
@@ -270,6 +311,7 @@
 		margin-top: 10rpx;
 	}
 
+<<<<<<< HEAD
 	.doctor-availability,
 	.doctor-certification {
 		font-size: 20rpx;
@@ -277,6 +319,22 @@
 		border-radius: 10rpx;
 		color: #fff;
 	}
+=======
+.doctor-availability,
+.doctor-certification {
+ font-size: 22rpx;
+ line-height: 1.4;
+ border-radius: 15rpx;
+ padding: 4rpx 10rpx;
+}
+.doctor-gender {
+ font-size: 20rpx;
+ padding: 4rpx 8rpx;
+ color: #3498db;
+ margin-left: 20rpx;
+/* background-color: #2ecc71; */
+}
+>>>>>>> origin/lxy
 
 	.doctor-gender {
 		font-size: 20rpx;
@@ -286,6 +344,7 @@
 		/* background-color: #2ecc71; */
 	}
 
+<<<<<<< HEAD
 	.doctor-availability.available {
 		background-color: #2ecc71;
 	}
@@ -307,6 +366,36 @@
 		right: 10rpx;
 		top: 10rpx;
 	}
+=======
+.doctor-availability.available {
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+}
+
+.doctor-availability.unavailable {
+  /* background-color:#95a5a6; */
+  color: #95a5a6;
+   border: 1px solid #95a5a6;
+}
+
+.doctor-certification.certified {
+  color: #3498db;
+  border: 1px solid #3498db;
+  
+}
+
+.doctor-certification.uncertified {
+ color: #95a5a6;
+  border: 1px solid #95a5a6;
+}
+
+
+.doctor-need {
+  position: absolute;
+  right: 10rpx;
+  top: 10rpx;
+}
+>>>>>>> origin/lxy
 
 	.doctor-need-item {
 		align-items: center;

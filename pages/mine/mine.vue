@@ -240,11 +240,16 @@
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
 			this.initUserInfo();
-			this.selectTime('today');
+			if(this.userInfo!=''&&this.userInfo.type=="陪诊师"){
+				this.selectTime('today');
+			}
+			
 		},
 		onShow() {
 			this.initUserInfo();
-			this.selectTime('today');
+			if(this.userInfo!=''&&this.userInfo.type=="陪诊师"){
+				this.selectTime('today');
+			}
 		},
 		methods: {
 			handleScroll(e) {

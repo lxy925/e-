@@ -11,7 +11,6 @@
     "minified": false,
     "newFeature": true,
     "bigPackageSizeSupport": true,
-    "ignoreUploadUnusedFiles": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -19,27 +18,10 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.7.7",
+  "libVersion": "3.8.5",
   "appid": "wxf8afb6dce14d487a",
   "projectname": "quickstart-wx-cloud",
-  "condition": {
-    "search": {
-      "current": -1,
-      "list": []
-    },
-    "conversation": {
-      "current": -1,
-      "list": []
-    },
-    "game": {
-      "current": -1,
-      "list": []
-    },
-    "miniprogram": {
-      "current": -1,
-      "list": []
-    }
-  },
+  "condition": {},
   "cloudfunctionRoot": "cloudfunctions/",
   "editorSetting": {
     "tabIndent": "insertSpaces",

@@ -1,54 +1,93 @@
 'use strict';
+
+const jwt = require('../common/jwt.js');
 const db = uniCloud.database();
 
 exports.main = async (event, context) => {
-    console.log("event的值：", event);
-    const user_id = event.user_id;
-    const type = event.type;
-    console.log("当前类型", type);
+  console.log("event:", event);
+  const { user_id, type } = event.userInfo;
+  const refreshToken = event.refreshToken;
 
-    try {
-        let res; // 提前声明 res，确保其在整个 try 块中可用
+  if (!user_id) {
+    return { code: 401, msg: '未提供Token' };
+  }
 
-        if (type === "陪诊师") {
-            const servicesCollection = db.collection('users');
-            res = await servicesCollection
-                .aggregate()
-                .match({
-                    user_id: user_id
-                })
-                .lookup({
-                    from: 'escorts', // 关联的表名
-                    localField: 'user_id', // users 表中的字段
-                    foreignField: 'user_id', // escorts 表中的字段
-                    as: 'moreInfo' // 输出的字段名
-                })
-                .unwind('$moreInfo') // 展开 moreInfo 数组
-                .end();
-        } else {
-            const servicesCollection = db.collection('users');
-            res = await servicesCollection.where({
-                user_id: user_id
-            }).get();
-        }
-
-        // 检查 res 是否存在
-        if (!res || !res.data || res.data.length === 0) {
-            return {
-                success: false,
-                error: '未找到匹配的用户数据'
-            };
-        }
-
-        return {
-            success: true,
-            data: res.data
-        };
-    } catch (err) {
-        console.error("查询失败：", err);
-        return {
-            success: false,
-            error: err.message || '查询失败'
-        };
+  try {
+    // 1. 验证主token
+    let decoded = jwt.verifyToken(user_id);
+    let openid = decoded.userId;
+    console.log(openid, type);
+    
+    if (!openid) {
+      return { code: 403, msg: 'Token无效' };
     }
+
+    // 2. 获取用户数据
+    let userInfo = await getUserFromDB(openid, type, user_id);
+    return { 
+      code: 200,
+      data: userInfo 
+    };
+
+  } catch (err) {
+    console.error('需要更新token:', err);
+    
+    // 3. 使用refreshToken获取新token
+    const newTokenRes = await uniCloud.callFunction({
+      name: 'refresh-token',
+      data: { refreshToken }  // 注意这里要传对象
+    });
+    
+    if (newTokenRes.code === 401) {
+      return { code: 401, msg: 'refreshToken过期，需重新登录' };
+    }
+    
+    // 4. 验证新token并获取用户数据
+	// console.log("生成的refreshToken",newTokenRes.result.data.token)
+    const newDecoded = jwt.verifyToken(newTokenRes.result.data.token);  // 确保使用正确的字段
+	// console.log(newDecoded)
+    const newOpenid = newDecoded.uid;
+    const userInfo = await getUserFromDB(newOpenid, type, newTokenRes.token);
+    
+    return {
+      code: 200,
+      data:{
+	  userInfo,
+      newToken: newTokenRes.result.data.token  }// 返回新token给客户端
+    };
+  }
 };
+
+async function getUserFromDB(user_id, userType, token) {
+  const usersCollection = db.collection('users');
+  let query;
+  
+  if (userType === "陪诊师") {
+    query = usersCollection.aggregate()
+      .match({ user_id })
+      .lookup({
+        from: 'escorts',
+        localField: 'user_id',
+        foreignField: 'user_id',
+        as: 'moreInfo'
+      })
+      .unwind('$moreInfo')
+      .end();
+  } else {
+    query = usersCollection.where({ user_id }).get();
+  }
+
+  const res = await query;
+  if (!res.data || res.data.length === 0) {
+    throw new Error('未找到匹配的用户数据');
+  }
+  console.log(res.data[0])
+  const userInfo=res.data[0];
+  userInfo.user_id=token;
+  console.log(userInfo)
+  // 返回数据时不要修改原始数据
+  return {
+    userInfo
+   
+  };
+}

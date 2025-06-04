@@ -1,9 +1,7 @@
 <template>
   <view class="page">
     <view class="custom-nav">
-      <view class="nav-title">
-        我的地址
-      </view>
+      <view class="nav-title">选择科室</view>
       <view class="nav-right" @tap="onManageTap">
         <text class="manage-text">管理</text>
       </view>
@@ -29,11 +27,11 @@
         </view>
       </scroll-view>
       <!-- 右边细分科室 -->
-      <scroll-view class="department-sub" scroll-y :scroll-y="!isSubDisabled" @touchstart="disableScroll" @touchend="enableScroll">
+      <scroll-view class="department-sub" scroll-y>
         <view
           v-for="(sub, subIndex) in selectedSubDepartments"
           :key="subIndex"
-          class="sub-item"
+          :class="['sub-item', { selected: selectedSubDepartment === sub.name }]"
           @tap="selectSubDepartment(sub)"
         >
           {{ sub.name }}
@@ -42,6 +40,7 @@
     </view>
   </view>
 </template>
+
 <script>export default {
   data() {
     return {
@@ -79,7 +78,7 @@
       selectedSubDepartment: null, // 当前选中的细分科室
       searchQuery: '', // 搜索框内容
       filteredMajors: [], // 过滤后的大类列表
-      isSubDisabled: false // 是否禁用右边细分科室的滚动
+  initialSelected: '' // 用于存储从order页面传递过来的已选科室
     };
   },
   computed: {
@@ -92,33 +91,36 @@
     // 选择科室大类
     selectMajor(index) {
       this.selectedMajorIndex = index;
-      this.selectedSubDepartment = null; // 清空选中的细分科室
     },
     // 选择细分科室
     selectSubDepartment(sub) {
-      this.selectedSubDepartment = sub;
-      // 将选中的细分科室存储到本地存储
-      uni.setStorageSync('selectedDepartment', sub.name);
-      // 返回上一页
-      uni.navigateBack();
+      this.selectedSubDepartment = sub.name;
+     // 1. 存储到本地缓存
+          uni.setStorageSync('selectedDepartment', sub.name);
+          
+          // 2. 返回数据到order页面
+          const pages = getCurrentPages();
+          if (pages.length > 1) {
+            // 获取上一个页面实例
+            const prevPage = pages[pages.length - 2];
+            // 调用上一个页面的方法更新数据
+            prevPage.$vm.selectedDepartment = sub.name;}
+			 // 3. 返回上一页
+			      uni.navigateBack();
     },
     // 搜索科室
     filterDepartments() {
-      if (!this.searchQuery) {
-        this.filteredMajors = this.departmentMajors;
-      } else {
-        this.filteredMajors = this.departmentMajors.filter(major => {
-          return major.name.includes(this.searchQuery) || major.subs.some(sub => sub.includes(this.searchQuery));
-        });
-      }
-    },
-    // 禁用右边细分科室的滚动
-    disableScroll() {
-      this.isSubDisabled = true;
-    },
-    // 启用右边细分科室的滚动
-    enableScroll() {
-      this.isSubDisabled = false;
+        if (!this.searchQuery) {
+             this.filteredMajors = this.departmentMajors;
+             return;}
+			   this.filteredMajors = this.departmentMajors.filter(major => {
+			         return major.name.includes(this.searchQuery) || 
+			                major.subs.some(sub => sub.includes(this.searchQuery));
+			       });
+				      // 如果有搜索结果，自动选中第一个大类
+				         if (this.filteredMajors.length > 0) {
+				           this.selectedMajorIndex = 0;
+				         }
     },
     // 管理按钮点击事件
     onManageTap() {
@@ -126,11 +128,34 @@
       uni.navigateTo({
         url: '/pages/manageAddresses/manageAddresses'
       });
-    }
+    },
+	 // 初始化已选科室
+	    initSelectedDepartment() {
+	      if (this.initialSelected) {
+	        // 查找并选中对应的科室
+	        for (let i = 0; i < this.departmentMajors.length; i++) {
+	          const subs = this.departmentMajors[i].subs;
+	          if (subs.includes(this.initialSelected)) {
+	            this.selectedMajorIndex = i;
+	            this.selectedSubDepartment = this.initialSelected;
+	            break;
+	          }
+	        }
+	      }
+	    },onLoad(options) {
+ // 接收从order页面传递过来的已选科室
+     if (options && options.selected) {
+       this.initialSelected = options.selected;
+     }
   },
+
+}, onReady() {
+      this.filteredMajors = this.departmentMajors;
+      this.initSelectedDepartment();
+    },
   watch: {
     // 监听 searchQuery 的变化，自动调用 filterDepartments
-    searchQuery(newVal) {
+    searchQuery() {
       this.filterDepartments();
     }
   },

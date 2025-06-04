@@ -6,32 +6,37 @@ import zpMixins from '@/uni_modules/zp-mixins/index.js';
 
 // #ifndef VUE3
 import Vue from 'vue';
-
+import api from './Utils/api';
+import uView from 'uview-ui'
+Vue.use(uView)
 Vue.use(zpMixins);
 
 Vue.config.productionTip = false;
 App.mpType = 'app';
+Vue.prototype.$api = api;
 
 // 全局注册 custom-nav 组件
 Vue.component('custom-nav', CustomNav);
 
 const app = new Vue({
-    ...App
+	...App
 });
 app.$mount();
 // #endif
 
 // #ifdef VUE3
-import { createSSRApp } from 'vue';
+import {
+	createSSRApp
+} from 'vue';
 export function createApp() {
-    const app = createSSRApp(App);
-    app.mixin(zpMixins);
-    
-    // 全局注册 custom-nav 组件
-    app.component('custom-nav', CustomNav);
-    
-    return {
-        app
-    };
+	const app = createSSRApp(App);
+	app.mixin(zpMixins);
+
+	// 全局注册 custom-nav 组件
+	app.component('custom-nav', CustomNav);
+
+	return {
+		app
+	};
 }
 // #endif

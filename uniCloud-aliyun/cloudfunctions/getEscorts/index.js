@@ -1,4 +1,5 @@
 'use strict';
+const jwt = require('../common/jwt.js');
 const db = uniCloud.database()
 
 exports.main = async (event, context) => {
@@ -29,7 +30,11 @@ exports.main = async (event, context) => {
       'moreInfo.rating': -1 // 按照 rating 从大到小排序
     })
     .end()
-    
+	
+    res.data.forEach(item => {
+      item.user_id = generateToken(user_id);
+    });
+    // console.log(userInfo)
     console.log('查询结果：', res)
     
     return {

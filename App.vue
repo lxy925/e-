@@ -4,7 +4,7 @@ export default {
     data() {
         return {};
     },
-	
+
     onLaunch: function () {
         if (!wx.cloud) {
             console.error('请使用 2.2.3 或以上的基础库以使用云能力');
@@ -14,17 +14,111 @@ export default {
                 //   env 参数决定接下来小程序发起的云开发调用（wx.cloud.xxx）会默认请求到哪个云环境的资源
                 //   此处请填入环境 ID, 环境 ID 可打开云控制台查看
                 //   如不填则使用默认环境（第一个创建的环境）
-                env: '',
+                env: 'mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18',
                 traceUser: true
             });
         }
+
         this.globalData = {};
     },
+
+    onShow: function () {
+        // 在小程序切换到前台时更新 tabBar
+        this.updateTabBar();
+    },
+
+    methods: {
+        updateTabBar() {
+            // 获取缓存的 userInfo
+            const userInfo = uni.getStorageSync('userInfo');
+            console.log("userInfo", userInfo);
+
+            if (userInfo) {
+                const type = userInfo.type;
+
+                // 根据 type 动态设置 tabBar
+                let tabBarList = [];
+                if (type === '陪诊师') {
+                    tabBarList = [
+                        {
+                            "pagePath": "pages/index/index",
+                            "text": "首页",
+                            "iconPath": "static/images/icons/home.png",
+                            "selectedIconPath": "static/images/icons/home-active.png"
+                        },
+                        {
+                            "pagePath": "pages/doctor/doctor",
+                            "text": "陪诊师",
+                            "iconPath": "static/images/icons/doctor.png",
+                            "selectedIconPath": "static/images/icons/doctor-active.png"
+                        },
+                        {
+                            "pagePath": "pages/health/health",
+                            "text": "健康管理",
+                            "iconPath": "static/images/icons/health.png",
+                            "selectedIconPath": "static/images/icons/health-active.png"
+                        },
+                        {
+                            "pagePath": "pages/doctorlogin/doctorlogin",
+                            "text": "我的",
+                            "iconPath": "static/images/icons/mine.png",
+                            "selectedIconPath": "static/images/icons/mine-active.png"
+                        }
+                    ];
+                } else {
+                    tabBarList = [
+                        {
+                            "pagePath": "pages/index/index",
+                            "text": "首页",
+                            "iconPath": "static/images/icons/home.png",
+                            "selectedIconPath": "static/images/icons/home-active.png"
+                        },
+                        {
+                            "pagePath": "pages/doctor/doctor",
+                            "text": "陪诊师",
+                            "iconPath": "static/images/icons/doctor.png",
+                            "selectedIconPath": "static/images/icons/doctor-active.png"
+                        },
+                        {
+                            "pagePath": "pages/health/health",
+                            "text": "健康管理",
+                            "iconPath": "static/images/icons/health.png",
+                            "selectedIconPath": "static/images/icons/health-active.png"
+                        },
+                        {
+                            "pagePath": "pages/mine/mine",
+                            "text": "我的",
+                            "iconPath": "static/images/icons/mine.png",
+                            "selectedIconPath": "static/images/icons/mine-active.png"
+                        }
+                    ];
+                }
+
+                // 更新 tabBar
+                if (tabBarList.length > 0) {
+                    tabBarList.forEach((item, index) => {
+                        uni.setTabBarItem({
+                            index: index,
+                            ...item,
+                            success: () => {
+                                console.log(`tabBar index ${index} 更新成功`);
+                            },
+                            fail: (err) => {
+                                console.error(`tabBar index ${index} 更新失败`, err);
+                            }
+                        });
+                    });
+                }
+            }
+        }
+    },
+
     globalData: {}
 };
 </script>
+
 <style>
-/**app.wxss**/
+/** app.wxss **/
 
 .container {
     display: flex;
@@ -46,11 +140,11 @@ button::after {
 }
 
 page {
-    background: linear-gradient(to bottom, #1cd6c7, #99efe9,rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239),rgb(239, 239, 239));
+    background: linear-gradient(to bottom, #1cd6c7, #99efe9, rgb(239, 239, 239), rgb(239, 239, 239), rgb(239, 239, 239), rgb(239, 239, 239));
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    min-height: 100vh;;
+    min-height: 100vh;
 }
 @import "/wxcomponents/vant/common/index.wxss";
 </style>

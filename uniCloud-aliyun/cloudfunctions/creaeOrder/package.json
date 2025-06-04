@@ -1,0 +1,7 @@
+{
+  "name": "creaeOrder",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

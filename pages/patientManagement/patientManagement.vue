@@ -55,7 +55,7 @@ export default {
             method: 'GET',
             data: {
               appid: 'wxf8afb6dce14d487a', // 你的小程序的APPID
-              secret: 'f00ab7cf65338de89b24cb5a52c640a4', // 你的小程序秘钥
+              secret: '06d3e5f2f7ed1bf8504fe90a1a1e04e5', // 你的小程序秘钥
               js_code: js_code, // 从 uni.login 获取的代码
               grant_type: 'authorization_code' // 固定值
             },

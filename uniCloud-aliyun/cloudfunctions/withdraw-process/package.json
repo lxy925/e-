@@ -1,0 +1,12 @@
+{
+  "name": "user-login",
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1",
+    "uni-pay": "file:../../../uni_modules/uni-pay/uniCloud/cloudfunctions/common/uni-pay",
+    "vk-uni-pay": "file:../../../uni_modules/vk-uni-pay/uniCloud/cloudfunctions/common/vk-uni-pay",
+    "uni-config-center": "file:../../../uni_modules/uni-config-center/uniCloud/cloudfunctions/common/uni-config-center"
+  },
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "getPaymentParams",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

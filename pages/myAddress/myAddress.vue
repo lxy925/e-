@@ -5,7 +5,7 @@
       <custom-nav title="我的地址" :isHomePage="false"></custom-nav>
       <!-- 地址列表 -->
       <view class="address-list" v-if="addresses.length > 0">
-        <view class="address-item" v-for="(address, index) in addresses" :key="index">
+        <view class="address-item" v-for="(address, index) in addresses" :key="index" @click="selectAddress(address)">
           <!-- 编辑按钮 -->
           <image
             src="../../static/images/address/edit.png"
@@ -422,7 +422,15 @@ export default {
         .replace(this.location.city, '')
         .replace(this.location.district, '');
       this.newAddress.detail = cleanAddress.trim();
-    }
+    },
+	selectAddress(address) {
+	  // 将整个 patient 对象存储到本地
+	  uni.setStorageSync('selectedAddress', address);
+	  // 跳转到 order 页面
+	  uni.navigateTo({
+	    url: '/pages/order/order'
+	  });
+	},
   },
   created() {
     this.getLocationInfo();

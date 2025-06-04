@@ -1,23 +1,15 @@
 {
 	"passwordSecret": "passwordSecret-demo",
 	"tokenSecret": "tokenSecret-demo",
-	"tokenExpiresIn": 7200,
-	"tokenExpiresThreshold": 600,
+	"tokenExpiresIn": 604800,
+	"tokenExpiresThreshold": 3600,
 	"passwordErrorLimit": 6,
-	"bindTokenToDevice": true,
+	"bindTokenToDevice": false,
 	"passwordErrorRetryTime": 3600,
-	"autoSetInviteCode": false,
+	"autoSetInviteCode": true,
 	"forceInviteCode": false,
 	"app": {
-		"tokenExpiresIn": 2592000,
-		"oauth": {
-			"weixin": {
-				"appid": "weixin appid",
-				"appsecret": "weixin appsecret"
-			}
-		}
-	},
-	"mp-weixin": {
+		"tokenExpiresIn": 604800,
 		"oauth": {
 			"weixin": {
 				"appid": "",
@@ -25,20 +17,42 @@
 			}
 		}
 	},
+	"mp-weixin": {
+		"oauth": {
+			"weixin": {
+				"appid": "wxf8afb6dce14d487a",
+				"appsecret": "06d3e5f2f7ed1bf8504fe90a1a1e04e5"
+			}
+		}
+	},
 	"mp-alipay": {
 		"oauth": {
 			"alipay": {
-				"appid": "alipay appid",
-				"privateKey": "alipay privateKey"
+				"appid": "",
+				"privateKey": ""
+			}
+		}
+	},
+	"mp-qq": {
+		"oauth": {
+			"qq": {
+				"appid": "",
+				"appsecret": ""
 			}
 		}
 	},
 	"service": {
 		"sms": {
-			"name": "DCloud",
-			"codeExpiresIn": 300,
-			"smsKey": "your sms key",
-			"smsSecret": "your sms secret"
+			"name": "重要",
+			"codeExpiresIn": 180,
+			"smsKey": "",
+			"smsSecret": "",
+			"templateId": ""
+		},
+		"univerify": {
+			"appid": "",
+			"apiKey": "",
+			"apiSecret": ""
 		}
 	}
 }

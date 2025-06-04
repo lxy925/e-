@@ -18,7 +18,8 @@ exports.main = async (event, context) => {
 		language,
 		provide_transport,
 		familiar_hospitals,
-		familiar_departments
+		familiar_departments,
+		parentId
 	} = event;
 
 let result;
@@ -26,7 +27,7 @@ let moreResult;
 
 	try {
 		// 将数据存储到云数据库
-			
+		//用户已经入驻过
 		if(type=="陪诊师"){
 				
 			result = await db.collection('escorts')
@@ -45,9 +46,11 @@ let moreResult;
 				qualification_id: qualificationNumber,
 				is_certified:false,
 				is_bookable:false,
+				parentId:parentId,
 				state:"待审核"
 			})
 		}else{
+			//用户未入驻过
 			result = await db.collection('escorts').add({
 				user_id: user_id,
 				name: name,
@@ -60,12 +63,19 @@ let moreResult;
 				qualification_id: qualificationNumber,
 				is_certified:false,
 				is_bookable:false,
+				parentId:parentId,
 				state:"待审核"
 			});
+			//更新escort_relation表（上下级关系）
+			relationResult = await uniCloud.callFunction({
+				name: 'escort_relation',
+				data: {
+					// 传递上级和下级的陪诊师id的数据
+					doctorId:parentId,
+					subordinateId:user_id
+				}
+			});
 		}
-	
-		
-		
 		// 调用 addEscortMore 云函数
 		
 		moreResult = await uniCloud.callFunction({

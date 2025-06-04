@@ -8,43 +8,8 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/index/index",
-          "pathName": "pages/index/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/order/order",
-          "pathName": "pages/order/order",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/department/department",
-          "pathName": "pages/department/department",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/myAddress/myAddress",
-          "pathName": "pages/myAddress/myAddress",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/object/object",
-          "pathName": "pages/object/object",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "pages/patientManagement/patientManagement",
-          "pathName": "pages/patientManagement/patientManagement",
+          "name": "pages/wx_pay/wx_pay",
+          "pathName": "pages/wx_pay/wx_pay",
           "query": "",
           "launchMode": "default",
           "scene": null

@@ -2,6 +2,8 @@
 
 const jwt = require('./jwt.js');
 const db = uniCloud.database();
+const _ = db.command;
+const $ = db.command.aggregate; // 确保 $ 是聚合查询操作符
 
 exports.main = async (event, context) => {
   console.log("event:", event);
@@ -28,18 +30,20 @@ console.log(user_id)
     let userInfo = await getUserFromDB(openid, type, user_id);
 	userInfo.userInfo.user_id=user_id;
 	if(type=="陪诊师"){
+		const withdrawStats = await getWithdrawStats(openid);
+		userInfo.userInfo.withdrawStats = withdrawStats;
 		userInfo.userInfo.moreInfo.user_id=user_id;
 		userInfo.userInfo.accountInfo.user_id=user_id;
 	}
 	
-	
+	console.log("userInfo",userInfo.userInfo)
     return { 
       code: 200,
       data: userInfo.userInfo 
     };
 
   } catch (err) {
-   return { code: 401, msg: 'token过期，需重新登录' };
+   return { code: 401, msg: err };
     
     // // 3. 使用refreshToken获取新token
     // const newTokenRes = await uniCloud.callFunction({
@@ -73,6 +77,7 @@ async function getUserFromDB(user_id, userType, token) {
   let query;
   
   if (userType === "陪诊师") {
+	  
     query = usersCollection.aggregate()
       .match({ user_id })
       .lookup({
@@ -90,6 +95,7 @@ async function getUserFromDB(user_id, userType, token) {
       .unwind('$moreInfo')
 	   .unwind('$accountInfo')
       .end();
+	 
   } else {
     query = usersCollection.where({ user_id }).get();
   }
@@ -107,4 +113,67 @@ async function getUserFromDB(user_id, userType, token) {
     userInfo
    
   };
+  
+}
+
+async function getWithdrawStats(user_id) {
+  const withdrawCollection = db.collection('withdraw_record');
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const week = getWeekNumber(now);
+  const day = now.getDate();
+
+  // 查询年、月、周、日的提现金额
+  const yearAmount = await getWithdrawAmount(user_id, year, null, null);
+  const monthAmount = await getWithdrawAmount(user_id, year, month, null);
+  const weekAmount = await getWithdrawAmount(user_id, year, null, week);
+  const dayAmount = await getWithdrawAmount(user_id, year, month, week,day);
+
+  return {
+    yearAmount: yearAmount || 0,
+    monthAmount: monthAmount || 0,
+    weekAmount: weekAmount || 0,
+    dayAmount: dayAmount || 0
+  };
+}
+
+async function getWithdrawAmount(user_id, year, month, week,day) {
+	
+  const withdrawCollection = db.collection('withdraw_records');
+  let query = withdrawCollection.aggregate()
+    .match({
+      openid:user_id,
+      status: 'SUCCESS',
+      year
+    });
+
+  if (month !== null) {
+    query = query.match({ month });
+  }
+
+  if (week !== null) {
+    query = query.match({ week });
+  }
+if (day !== null) {
+    query = query.match({ day });
+  }
+
+  query = query.group({
+    _id:null,
+    totalAmount: $.sum('$amount')
+  }).end();
+
+  const res = await query;
+  
+  return res.data[0]?.totalAmount || 0;
+}
+
+// 获取ISO周数
+function getWeekNumber(date) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+  const week1 = new Date(d.getFullYear(), 0, 4);
+  return 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
 }

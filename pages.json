@@ -141,6 +141,13 @@
         "backgroundColor": "#F8F8F8",
         "navigationBarTitleText": "收银台"
     }
+},
+{
+	"path" : "pages/withdraw/withdraw",
+	"style" : 
+	{
+		"navigationBarTitleText" : ""
+	}
 }
 ],
 	"sitemapLocation": "sitemap.json",

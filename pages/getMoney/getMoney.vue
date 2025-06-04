@@ -7,7 +7,8 @@
 		<view class="content">
 			<view class="balance-card">
 				<text>可提现余额</text>
-				<text class="amount" >¥{{ (this.accountInfo.withdrawable_amount / 100).toFixed(2) }}</text>
+				<text class="amount"
+					v-model="this.accountInfo.withdrawable_amount">¥{{ (this.accountInfo.withdrawable_amount / 100).toFixed(2) }}</text>
 			</view>
 
 			<view class="input-card">
@@ -47,7 +48,6 @@
 
 <script>
 	// import options from '@dcloudio/vue-cli-plugin-uni/lib/options';
-
 	export default {
 		data() {
 			return {
@@ -74,6 +74,8 @@
 					this.amountInCent <= this.accountInfo.balance &&
 					!this.loading;
 			}
+		
+			
 		},
 		onLoad(options) {
 			// 获取导航栏高度
@@ -111,7 +113,7 @@
 					const res = await uniCloud.callFunction({
 						name: 'withdraw-apply',
 						data: {
-							user_id: this.accountInfo.user_id,
+							accountInfo:this.accountInfo,
 							amount: this.amountInCent,
 							refreshToken: this.refreshToken
 						}
@@ -119,9 +121,10 @@
 					if (res.result.code === 201) {
 						// uni.showToast({ title: '提现申请待确认' });
 						// this.loadBalance(); // 刷新余额
-						this.options = res.result.data.options
+						this.options = res.result.data.options;
+						this.out_bill_no=res.result.data.out_bill_no;
 						this.confirmTransfer();
-						this.amount = ''; // 清空输入框
+						
 						// this.$refs.confirmPopup.open(); // 弹出确认框
 						console.log(res.result.data)
 
@@ -138,7 +141,13 @@
 							title: res.result.msg,
 							icon: 'none'
 						});
-						this.getMoneyFail();
+							
+						if(res.result.code==401){
+							uni.navigateTo({
+								url: '/pages/userInfoDetail/userInfoDetail'
+							});
+						}
+						// this.getMoneyFail();
 
 					}
 				} catch (e) {
@@ -152,75 +161,89 @@
 					this.loading = false;
 				}
 			},
-			// 用户确认收款
+			// 确认转账
 			async confirmTransfer() {
-				const options = this.options;
-				try {
-					uni.requestMerchantTransfer({
-						...options, // 变量 options 就是 vkPay.transfer 接口的返回值中的 options 参数
+			  const options = this.options;
+			  await uni.requestMerchantTransfer({
+			    ...options,
+			    success: async (res) => { // 添加async
+			      try {
+			        const result = await uniCloud.callFunction({ // 添加await
+			          name: 'withdraw-action',
+			          data: {
+			            action: 'confirmTransfer',
+			            options: this.options,
+			            accountInfo: this.accountInfo,
+			            amount: this.amountInCent,
+			            out_bill_no: this.out_bill_no
+			          }
+			        });
+			        
+			       
+			        
+			        if (result.result.code === 200) { // 注意改为result.result
+			          uni.showToast({ title: '提现成功！' });
+			          this.amount = '';
+					  console.log(result.result.data)
+			          this.accountInfo = result.result.data.updatedAccount.newAccountInfo;
+			        } else {
+			          uni.showToast({
+			            title: result.result.message,
+			            icon: 'none'
+			          });
+			        }
+			      } catch (error) {
+			        uni.showToast({
+			          title: error.message,
+			          icon: 'none'
+			        });
+			      }
+			    },
+			    fail: (res) => {
+			      this.getMoneyFail(res.errMsg || '转账失败');
+			    }
+			  });
+			
+			},
 
-						success: (res) => {
-							// console.log("res",res)
-							uni.showToast({
-								title: '提现成功！'
-							});
-							let _id = this.accountInfo._id;
-							//解冻金额
-							await db.collection('escort_account').doc(_id).update({
-								frozen_amount: this.accountInfo.frozen_amount,
-								update_time: Date.now()
-							});
-							_id = options.out_bill_no;
-							await db.collection('withdraw_records').doc(_id).update({
-								status: 'SUCCESS',
-								update_time: Date.now()
-							});
-							this.accountInfo.withdrawable_amount-=amount;
-						},
-						fail: (res) => {
-							// console.log("res",res)
-							uni.showToast({
-								title: res.result.msg,
-								icon: 'none'
-							});
-							this.getMoneyFail();
+			// 取消转账
+			async getMoneyFail(message = '操作失败') {
+				// uni.showToast({
+				// 	title: message,
+				// 	icon: 'none'
+				// });
+				// console.log(message)
+				try {
+					const res = await uniCloud.callFunction({
+						name: 'withdraw-action',
+						data: {
+							action: 'cancelTransfer',
+							accountInfo: this.accountInfo,
+							out_bill_no: this.out_bill_no
 						}
 					});
-				} catch (e) {
+
 					uni.showToast({
-						title: '确认失败',
+						title: res.result.message,
+						icon: res.result.code === 200 ? 'success' : 'none'
+					});
+				} catch (error) {
+					uni.showToast({
+						title: error.message || '操作失败',
 						icon: 'none'
 					});
-					this.getMoneyFail();
 				}
 			},
-			async getMoneyFail() {
-				let _id = this.accountInfo._id;
-				//解冻金额
-				await db.collection('escort_account').doc(_id).update({
-					frozen_amount: this.accountInfo.frozen_amount,
-					withdrawable_amount: this.accountInfo.withdrawable_amount,
-					update_time: Date.now()
-				});
-				_id = options.out_bill_no;
-				await db.collection('withdraw_records').doc(_id).update({
-					status: 'FAIL',
-					update_time: Date.now()
-				});
-			},
-			async cancelTransfer() {
-				await db.collection('escort_account').doc(account._id).update({
-					withdrawable_amount: account.withdrawable_amount - amount,
-					frozen_amount: (account.frozen_amount || 0) + amount,
-					update_time: Date.now()
-				});
-			},
+			
 			// 跳转提现记录
 			navigateToRecords() {
-				uni.navigateTo({
-					url: '/pages/withdraw/records'
-				});
-			}
+				const accountInfo = encodeURIComponent(JSON.stringify(this.accountInfo));
+					uni.navigateTo({
+					  url: `/pages/withdraw/withdraw?accountInfo=${accountInfo}`
+					});
+					
+				}
+			
 		}
 	}
 </script>

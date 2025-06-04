@@ -1,14 +1,7 @@
 {
   "bsonType": "object",
   "required": [
-    "info_id",
-    "language",
-    "provide_transport",
-    "rating",
-    "review",
-    "certificate",
-    "self_introduction",
-    "order"
+    "user_id"
   ],
   "permission": {
     "read": true,
@@ -20,19 +13,12 @@
     "_id": {
       "description": "ID，系统自动生成"
     },
-    "info_id": {
-      "bsonType": "string",
-      "description": "信息ID（唯一）",
-      "maxLength": 50,
-      "uniqueItems": true
+    "user_id": {
+      "description": "用户ID"
     },
     "language": {
-      "bsonType": "array",
-      "description": "语言",
-      "items": {
-        "bsonType": "string",
-        "maxLength": 50
-      }
+      "bsonType": "string",
+      "description": "语言"
     },
     "provide_transport": {
       "bsonType": "bool",
@@ -48,25 +34,28 @@
       "bsonType": "int",
       "description": "订单数量"
     },
-    "review": {
+    "reviews": {
       "bsonType": "array",
-        "description": "评价",
-        "items": {
-          "bsonType": "object",
-          "required": ["rating", "review"],
-          "properties": {
-            "rating": {
-              "bsonType": "int",
-              "minimum": 1,
-              "maximum": 5,
-              "description": "评分（1到5分）"
-            },
-            "review": {
-              "bsonType": "string",
-              "maxLength": 1000,
-              "description": "评价内容"
-            }
+      "description": "评价",
+      "items": {
+        "bsonType": "object",
+        "required": [
+          "rating",
+          "review"
+        ],
+        "properties": {
+          "rating": {
+            "bsonType": "int",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "评分（1到5分）"
+          },
+          "review": {
+            "bsonType": "string",
+            "maxLength": 1000,
+            "description": "评价内容"
           }
+        }
       }
     },
     "certificate": {
@@ -80,8 +69,28 @@
       "maxLength": 1000
     },
     "create_time": {
-      "bsonType": "string",
-      "description": "创建时间"
+      "description": "创建时间",
+      "bsonType": "number"
+    },
+    "familiar_hospitals": {
+      "bsonType": "array",
+      "description": "熟悉的医院",
+      "items": {
+        "bsonType": "string",
+        "maxLength": 100
+      }
+    },
+    "familiar_departments": {
+      "bsonType": "array",
+      "description": "熟悉的科室",
+      "items": {
+        "bsonType": "string",
+        "maxLength": 100
+      }
+    },
+    "update_time": {
+      "description": "更新时间",
+      "bsonType": "number"
     }
   }
 }

@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 407))
+      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 415))
     },
   }
 } catch (e) {
@@ -428,7 +428,8 @@ var _default = {
       settledAmount: 0.00,
       pendingAmount: 0.00,
       salesAmount: 0.00,
-      orderCount: 0
+      orderCount: 0,
+      selectedTime: 'today' // 默认选择今日
     };
   },
   onLoad: function onLoad() {
@@ -436,13 +437,27 @@ var _default = {
     var systemInfo = uni.getSystemInfoSync();
     this.navHeight = systemInfo.statusBarHeight + 44;
     this.initUserInfo();
+    this.selectTime('today');
   },
   onShow: function onShow() {
     this.initUserInfo();
+    this.selectTime('today');
   },
   methods: {
     handleScroll: function handleScroll(e) {
       this.scrollTop = e.detail.scrollTop;
+    },
+    selectTime: function selectTime(time) {
+      this.selectedTime = time; // 更新选择的时间选项
+      if (time === "today") {
+        this.pendingAmount = this.userInfo.withdrawStats.dayAmount;
+      } else if (time === "month") {
+        this.pendingAmount = this.userInfo.withdrawStats.monthAmount;
+      } else if (time === "week") {
+        this.pendingAmount = this.userInfo.withdrawStats.weekAmount;
+      } else if (time === "year") {
+        this.pendingAmount = this.userInfo.withdrawStats.yearAmount;
+      }
     },
     //跳转到二维码页面
     showQRCode: function showQRCode() {
@@ -502,9 +517,10 @@ var _default = {
                     icon: "none"
                   });
                   _this.logout();
-                  uni.redirectTo({
-                    url: '/pages/userInfoDetail/userInfoDetail'
+                  uni.navigateTo({
+                    url: "/pages/userInfoDetail/userInfoDetail"
                   });
+                  // uni.redirectTo({ url: '/pages/userInfoDetail/userInfoDetail' })
                 } else {
                   uni.showToast({
                     title: result.msg || "获取用户数据失败",
@@ -553,26 +569,6 @@ var _default = {
         duration: 2000
       });
     },
-    // 检查 session_key 是否过期
-    // checkSession() {
-    // 	wx.checkSession({
-    // 		success: () => {
-    // 			console.log("session_key 有效");
-    // 		},
-    // 		fail: () => {
-    // 			console.log("session_key 已过期");
-    // 			wx.showModal({
-    // 				title: "提示",
-    // 				content: "登录状态已过期，请重新登录",
-    // 				success: (res) => {
-    // 					if (res.confirm) {
-    // 						this.login(); // 重新登录
-    // 					}
-    // 				},
-    // 			});
-    // 		},
-    // 	});
-    // },
     // 处理头部点击事件
     handleHeaderClick: function handleHeaderClick() {
       if (this.userInfo.user_id) {
@@ -642,10 +638,10 @@ var _default = {
         }, _callee2, null, [[1, 9]]);
       }))();
     },
-    toAccount: function toAccount() {
+    toApply: function toApply() {
       var accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));
       uni.navigateTo({
-        url: "/pages/account/account?accountInfo=".concat(accountInfo)
+        url: "/pages/getMoney/getMoney?accountInfo=".concat(accountInfo)
       });
     }
   }

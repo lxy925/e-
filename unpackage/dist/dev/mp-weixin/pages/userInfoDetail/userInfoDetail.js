@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 407))
+      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 415))
     },
   }
 } catch (e) {
@@ -286,6 +286,7 @@ var _default = {
         // 本地临时文件路径
         cloudPath: cloudPath,
         // 云存储路径
+        cloudPathAsRealPath: true,
         onUploadProgress: function onUploadProgress(progressEvent) {
           // 上传进度回调
           var percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
@@ -464,6 +465,7 @@ var _default = {
                   // const isLoggedIn = true;
                   // uni.setStorageSync('isLoggedIn', isLoggedIn);
                   uni.setStorageSync('userInfoForm', result.data.userInfo);
+                  uni.navigateBack();
                 } else {
                   uni.showToast({
                     title: result.message || '登录失败',
@@ -473,7 +475,9 @@ var _default = {
                 }
 
                 // 返回上一页
-                uni.navigateBack();
+                uni.navigateTo({
+                  url: '/pages/index/index'
+                });
               case 12:
               case "end":
                 return _context2.stop();

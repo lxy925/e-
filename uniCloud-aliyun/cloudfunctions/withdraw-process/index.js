@@ -50,11 +50,17 @@ console.log("transferRes",transferRes)
         code: 200,
         msg: transferRes.msg,
         data: {
-          options:transferRes.options
+          options:transferRes.options,
+		  out_bill_no:transferRes.result.out_bill_no
         }
       };
     } else {
       throw new Error(transferRes.message || '转账提交失败');
+	  await db.collection('withdraw_records').doc(_id).update({
+	    status: 'FAILED',
+	    error_msg: e.message,
+	    update_time: Date.now()
+	  });
     }
 
   } catch (e) {
@@ -62,7 +68,7 @@ console.log("transferRes",transferRes)
     console.error('提现失败:', e);
 
     await db.collection('withdraw_records').doc(_id).update({
-      status: 'FAIL',
+      status: 'FAILED',
       error_msg: e.message,
       update_time: Date.now()
     });

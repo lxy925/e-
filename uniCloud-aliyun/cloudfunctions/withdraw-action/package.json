@@ -1,0 +1,10 @@
+{
+  "name": "confirmWithdraw",
+  "dependencies": {
+    "vk-uni-pay": "file:../../../uni_modules/vk-uni-pay/uniCloud/cloudfunctions/common/vk-uni-pay",
+    "uni-pay": "file:../../../uni_modules/uni-pay/uniCloud/cloudfunctions/common/uni-pay"
+  },
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

@@ -436,10 +436,6 @@
 
 
 
-
-
-
-
 /* pages/mine/mine.wxss */
 .page-container {
 	min-height: 100vh;
@@ -788,8 +784,12 @@
 	cursor: pointer;
 }
 .time-option:hover {
-	background-color: #1fc7d6;
-	color: white;
+  background-color: #1fc7d6;
+  color: white;
+}
+.time-option.selected {
+  background-color: #1fc7d6;
+  color: white;
 }
 .data-display {
 	margin-top: 20px;

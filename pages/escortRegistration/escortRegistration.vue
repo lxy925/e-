@@ -200,7 +200,7 @@
 						cityName: "",
 						areaName: "",
 					},
-					type: "",
+					// type:"",
 					qualificationNumber: "",
 					// idNumber: "",
 					avatarList: "",
@@ -237,36 +237,43 @@
 			};
 		},
 		onLoad(options) {
-		
+			
+			//检查是否登陆过
+			// const userInfo =uni.getStorageSync('userInfo');
+			this.userInfo=uni.getStorageSync('userInfo');
+			const userInfo=this.userInfo
+				if (userInfo==null) {
+					
+				
+					uni.showToast({
+						title: '请先登录',
+						icon: 'none',
+						duration: 2000,
+					});
+					uni.navigateTo({
+						url: '/pages/userInfoDetail/userInfoDetail?from=mine'
+					});
+			}else{
+				console.log("登录后的用户userInfo",userInfo)
+				this.formData.user_id=userInfo.user_id;
+				// this.formData.type=userInfo.type;
+				this.formData.name=userInfo.name;
+				
+				
+			}
+			
 			//如果填过陪诊师信息则调用填充
 			 const formData= uni.getStorageSync('formData');
 			if(formData){
 				this.formData=formData;
 				this.selectedAddress = `${this.formData.city.provinceName} ${this.formData.city.cityName} ${this.formData.city.areaName}`;
-				console.log(this.formData)
+				console.log("缓存过的表格值",this.formData)
 			}
 			// 若扫码入驻的则解析 scene 参数（陪诊师的 user_id）
 			    const scene = decodeURIComponent(options.scene);
 			    this.formData. parentId= scene; // 保存上级陪诊师的 user_id
 		
-		//检查是否登陆过
-		const userInfo =uni.getStorageSync('userInfo');
-		
-			if (userInfo==null) {
-				
-			
-				uni.showToast({
-					title: '请先登录',
-					icon: 'none',
-					duration: 2000,
-				});
-				uni.navigateTo({
-					url: '/pages/userInfoDetail/userInfoDetail?from=mine'
-				});
-		}else{
-			this.formData.user_id=userInfo.user_id;
-			console.log(this.formData.user_id)
-		}
+	
 			if (options.familiarHospitals) {
 				try {
 					// 确保传入的是数组
@@ -353,6 +360,7 @@
 			        uniCloud.uploadFile({
 			          filePath, // 本地临时文件路径
 			          cloudPath, // 云存储路径
+					  cloudPathAsRealPath: true,
 			          onUploadProgress: (progressEvent) => {
 			            // 上传进度回调
 			            const percentCompleted = Math.round(
@@ -498,15 +506,7 @@
 					errors.push('证书不能为空');
 					return errors;
 				}
-				// if (!this.formData.idNumber || !/^\d{18}$/.test(this.formData.idNumber)) {
-				// 	errors.push('身份证号码格式不正确');
-				// 	return errors;
-				// }
-
-
-				//     if (!this.formData.idCardBackList) {
-				//       errors.push('身份证反面不能为空');
-				//     }
+			
 				return errors;
 			},
 			async submitForm() {
@@ -541,12 +541,12 @@
 
 				if (result.code === 200) {
 					uni.showToast({
-						title: '保存成功',
+						title: '提交成功',
 						icon: 'success',
 						duration: 2000,
 					});
-					this.userInfo=uni.getStorageSync('userInfo');
-					this.userInfo.type = "陪诊师",
+					
+					// this.userInfo.type = "陪诊师",
 					uni.setStorageSync('formData', this.formData);// 更新缓存中的 formData
 					uni.setStorageSync('userInfo', this.userInfo); // 更新缓存中的 userInfo,用于转换mine页面
 					// uni.setStorageSync('type', "陪诊师"); 

@@ -2,18 +2,18 @@
 const db = uniCloud.database();
 const withdrawRecords = db.collection('withdraw_records');
 const escortAccount = db.collection('escort_account');
-const uniPay = uniCloud.importObject('uni-pay');
+// const uniPay = uniCloud.importObject('uni-pay');
 const jwt = require('./jwt.js');
 
 exports.main = async (event, context) => {
 	const {
-		user_id,
+		accountInfo,
 		amount,
 		
 	} = event;
 
 	// 参数校验
-	if (!user_id || !amount || amount <= 0 ) {
+	if (!accountInfo.user_id || !amount || amount <= 0 ) {
 		return {
 			code: 400,
 			msg: '参数错误'
@@ -23,7 +23,7 @@ exports.main = async (event, context) => {
 	let openid;
 	// 验证主token
 	try {
-		let decoded = jwt.verifyToken(user_id);
+		let decoded = jwt.verifyToken(accountInfo.user_id);
 		openid = decoded.userId;
 		if (!openid) {
 			return {
@@ -34,32 +34,32 @@ exports.main = async (event, context) => {
 	} catch (err) {
 		return {
 			code: 401,
-			msg: 'Token过期，需重新登录'
+			msg: '登录过期，需重新登录'
 		};
 		
 	}
 
 	console.log("账户id", openid);
 
-	// 查询用户账户
-	const accountRes = await escortAccount.where({
-		user_id: openid
-	}).get();
+	// // 查询用户账户
+	// const accountRes = await escortAccount.where({
+	// 	user_id: openid
+	// }).get();
 
-	console.log("账户", accountRes);
+	// console.log("账户", accountRes);
 
-	if (accountRes.data.length === 0) {
-		return {
-			code: 404,
-			msg: '账户不存在'
-		};
-	}
+	// if (accountRes.data.length === 0) {
+	// 	return {
+	// 		code: 404,
+	// 		msg: '账户不存在'
+	// 	};
+	// }
 
-	const account = accountRes.data[0];
-	console.log("提取的钱", amount)
-	console.log("余额", account)
+	// const account = accountRes.data[0];
+	// console.log("提取的钱", amount)
+	// console.log("余额", account)
 	// 检查余额
-	if (account.withdrawable_amount < amount) {
+	if (accountInfo.withdrawable_amount < amount) {
 		return {
 			code: 403,
 			msg: '余额不足'
@@ -70,9 +70,9 @@ exports.main = async (event, context) => {
 	const transaction = await db.startTransaction();
 	try {
 		// 冻结金额
-		await transaction.collection('escort_account').doc(account._id).update({
-			withdrawable_amount: account.withdrawable_amount - amount,
-			frozen_amount: (account.frozen_amount || 0) + amount,
+		await transaction.collection('escort_account').doc(accountInfo._id).update({
+			withdrawable_amount: accountInfo.withdrawable_amount - amount,
+			frozen_amount: (accountInfo.frozen_amount || 0) + amount,
 			update_time: Date.now()
 		});
 
@@ -80,7 +80,7 @@ exports.main = async (event, context) => {
 		const record = {
 			openid,
 			amount,
-			status: 'loading',
+			status: 'PROCESSING',
 			create_time: Date.now(),
 			update_time: Date.now(),
 			year: new Date().getFullYear(),
@@ -90,7 +90,7 @@ exports.main = async (event, context) => {
 		};
 
 		const recordRes = await transaction.collection('withdraw_records').add(record);
-
+		const _id=recordRes.id;
 		// 提交事务
 		await transaction.commit();
 
@@ -112,13 +112,19 @@ exports.main = async (event, context) => {
 					code: 201,
 					msg: result.msg,
 					data: {
-						options:result.data.options
+						options:result.data.options,
+						out_bill_no:result.data.out_bill_no
 					}
 			}
 			}
 		} catch (e) {
 			console.error('异步提现处理失败:', e);
-			// 异步失败不影响主流程
+			
+			await db.collection('withdraw_records').doc(_id).update({
+			  status: 'FAIL',
+			  error_msg: e.message,
+			  update_time: Date.now()
+			});
 		}
 
 		return {
@@ -139,6 +145,12 @@ exports.main = async (event, context) => {
 			}
 		}
 		console.error('提现申请提交失败:', e);
+		
+		await db.collection('withdraw_records').doc(_id).update({
+		  status: 'FAIL',
+		  error_msg: e.message,
+		  update_time: Date.now()
+		});
 		return {
 			code: 500,
 			msg: '提现申请提交失败',

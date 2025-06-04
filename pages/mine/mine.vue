@@ -40,7 +40,7 @@
 
 		</view> -->
 				<view class="account-box" v-if="userInfo.type == '陪诊师'">
-					<view class="account" @click="toAccount">
+					<view class="account" @click="toApply">
 						<view class="account-header">
 							<text class="account-title">我的账户</text>
 						</view>
@@ -61,10 +61,10 @@
 					</view>
 					<!-- 新增时间选项 -->
 					<view class="time-options">
-						<view class="time-option" @click="selectTime('today')">今日</view>
-						<view class="time-option" @click="selectTime('week')">本周</view>
-						<view class="time-option" @click="selectTime('month')">本月</view>
-						<view class="time-option" @click="selectTime('year')">今年</view>
+					  <view class="time-option" :class="{'selected': selectedTime === 'today'}" @click="selectTime('today')">今日</view>
+					  <view class="time-option" :class="{'selected': selectedTime === 'week'}" @click="selectTime('week')">本周</view>
+					  <view class="time-option" :class="{'selected': selectedTime === 'month'}" @click="selectTime('month')">本月</view>
+					  <view class="time-option" :class="{'selected': selectedTime === 'year'}" @click="selectTime('year')">今年</view>
 					</view>
 
 					<!-- 数据展示 -->
@@ -232,7 +232,7 @@
 				pendingAmount: 0.00,
 				salesAmount: 0.00,
 				orderCount: 0,
-
+				selectedTime: 'today', // 默认选择今日
 			};
 		},
 		onLoad() {
@@ -240,14 +240,28 @@
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
 			this.initUserInfo();
-			
+			this.selectTime('today');
 		},
 		onShow() {
 			this.initUserInfo();
+			this.selectTime('today');
 		},
 		methods: {
 			handleScroll(e) {
 				this.scrollTop = e.detail.scrollTop
+			},
+			selectTime(time) {
+			    this.selectedTime = time; // 更新选择的时间选项
+			    if (time === "today") {
+			      this.pendingAmount = this.userInfo.withdrawStats.dayAmount;
+			    } else if (time === "month") {
+			      this.pendingAmount = this.userInfo.withdrawStats.monthAmount;
+			    } else if (time === "week") {
+			      this.pendingAmount = this.userInfo.withdrawStats.weekAmount;
+			    } else if (time === "year") {
+			      this.pendingAmount = this.userInfo.withdrawStats.yearAmount;
+			    }
+			  
 			},
 			//跳转到二维码页面
 			showQRCode() {
@@ -269,9 +283,9 @@
 
 				if (userInfo) {
 					this.userInfo = userInfo;
-					
 					this.getUser();
 				}
+			
 			},
 
 			// 获取用户信息
@@ -296,6 +310,7 @@
 					if (result.code == 200) {
 						console.log(result.data);
 						this.userInfo=result.data;
+						
 						console.log("调取后检查", this.userInfo);
 						uni.setStorageSync("userInfo", this.userInfo);
 						console.log(this.userInfo.type)
@@ -305,7 +320,10 @@
 							icon: "none",
 						});
 						this.logout();
-						 uni.redirectTo({ url: '/pages/userInfoDetail/userInfoDetail' })
+						uni.navigateTo({
+							url: `/pages/userInfoDetail/userInfoDetail`,
+						});
+						 // uni.redirectTo({ url: '/pages/userInfoDetail/userInfoDetail' })
 					}else {
 						uni.showToast({
 							title: result.msg || "获取用户数据失败",
@@ -349,26 +367,7 @@
 				});
 			},
 
-			// 检查 session_key 是否过期
-			// checkSession() {
-			// 	wx.checkSession({
-			// 		success: () => {
-			// 			console.log("session_key 有效");
-			// 		},
-			// 		fail: () => {
-			// 			console.log("session_key 已过期");
-			// 			wx.showModal({
-			// 				title: "提示",
-			// 				content: "登录状态已过期，请重新登录",
-			// 				success: (res) => {
-			// 					if (res.confirm) {
-			// 						this.login(); // 重新登录
-			// 					}
-			// 				},
-			// 			});
-			// 		},
-			// 	});
-			// },
+			
 
 			// 处理头部点击事件
 			handleHeaderClick() {
@@ -425,17 +424,14 @@
 					});
 				}
 			},
-			toAccount() {
-				const accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));
-				
-				uni.navigateTo({
-				  url: `/pages/account/account?accountInfo=${accountInfo}`
-				});
-				
-			}
-		},
-
-
+		toApply() {
+			const accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));
+			uni.navigateTo({
+			  url: `/pages/getMoney/getMoney?accountInfo=${accountInfo}`
+			});
+			
+		}
+		}
 	};
 </script>
 
@@ -845,8 +841,13 @@
 	}
 
 	.time-option:hover {
-		background-color: #1fc7d6;
-		color: white;
+	  background-color: #1fc7d6;
+	  color: white;
+	}
+	
+	.time-option.selected {
+	  background-color: #1fc7d6;
+	  color: white;
 	}
 
 	.data-display {

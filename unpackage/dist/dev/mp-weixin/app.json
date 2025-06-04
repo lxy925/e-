@@ -23,7 +23,8 @@
     "pages/getMoney/getMoney",
     "uni_modules/uni-pay/pages/success/success",
     "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview",
-    "uni_modules/uni-pay/pages/pay-desk/pay-desk"
+    "uni_modules/uni-pay/pages/pay-desk/pay-desk",
+    "pages/withdraw/withdraw"
   ],
   "subPackages": [],
   "window": {

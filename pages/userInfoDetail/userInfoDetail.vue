@@ -113,8 +113,10 @@
 				const cloudPath = `avatar/${fileName}`; // 例如：avatarList/1741500000000_abc123.jpg
 				// 上传图片到云存储
 				uniCloud.uploadFile({
+					
 					filePath: avatar, // 本地临时文件路径
 					cloudPath, // 云存储路径
+					 cloudPathAsRealPath: true,
 					onUploadProgress: (progressEvent) => {
 						// 上传进度回调
 						const percentCompleted = Math.round(
@@ -253,7 +255,7 @@
 					// const isLoggedIn = true;
 					// uni.setStorageSync('isLoggedIn', isLoggedIn);
 					uni.setStorageSync('userInfoForm', result.data.userInfo);
-					
+					uni.navigateBack();
 				} else {
 					uni.showToast({
 						title: result.message || '登录失败',
@@ -263,7 +265,9 @@
 				}
 
 				// 返回上一页
-				uni.navigateBack();
+				uni.navigateTo({
+				  url: '/pages/index/index'
+				});
 			},
 			validateFormData() {
 				const errors = [];

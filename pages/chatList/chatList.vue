@@ -33,7 +33,6 @@
 </template>
 
 <script>
-const db = uniCloud.database();
 import customNav from '@/components/custom-nav/custom-nav.vue'
 
 export default {
@@ -79,52 +78,24 @@ export default {
         });
       }
     },
-    //查询订单
+
     async getChatPartners() {
       try {
-        const orderCollection = db.collection('order');
-        const query = {
-          $or: [
-              { order_status: '已完成' },
-              { order_status: '已确认' }
-            ],
-          $or: [
-            { user_id: this.currentUser._id },
-            { escort_id: this.currentUser._id }
-          ]
-        };
-        
-        const { result } = await orderCollection.where(query).get();
-        console.log('订单查询结果:', result);
-        
-        if (result.data && result.data.length > 0) {
-          const partners = new Set(); // 使用Set去重
-          
-          for (const order of result.data) {
-            let partnerId, partnerType;
-            
-            if (this.currentUser.type === '普通用户') {
-              // 当前用户是普通用户，获取陪诊师信息
-              partnerId = order.escort_id;
-              partnerType = '陪诊师';
-            } else {
-              // 当前用户是陪诊师，获取普通用户信息
-              partnerId = order.user_id;
-              partnerType = '普通用户';
-            }
-            
-            // 获取聊天对象信息
-			console.log('partnerId',partnerId);
-            const partnerInfo = await this.getPartnerInfo(partnerId, partnerType);
-			console.log('partnerInfo',partnerInfo);
-            if (partnerInfo) {
-              partners.add(JSON.stringify(partnerInfo));
-            }
+        const { result } = await uniCloud.callFunction({
+          name: 'getChatList',
+          data: {
+            currentUser: this.currentUser
           }
-          
-          // 将Set转换为数组
-          this.chatPartners = Array.from(partners).map(item => JSON.parse(item));
+        });
+
+        if (result.code === 200) {
+          this.chatPartners = result.data;
           console.log('聊天对象列表:', this.chatPartners);
+        } else {
+          uni.showToast({
+            title: result.msg || '获取聊天对象失败',
+            icon: 'none'
+          });
         }
       } catch (e) {
         console.error('获取聊天对象失败:', e);
@@ -135,36 +106,6 @@ export default {
       }
     },
     
-    async getPartnerInfo(partnerId, partnerType) {
-      try {
-        let collection;
-		//选择查询的数据库
-        if (partnerType === '陪诊师') {
-          collection = db.collection('escorts');
-        } else {
-          collection = db.collection('users');
-        }
-        
-        const { result } = await collection.doc(partnerId).get();
-        if (result.data && result.data.length > 0) {
-          const partner = result.data[0];
-		  //console.log('userInfo',partner);
-          return {
-            _id: partner._id,
-            name: partner.realName || partner.name || '未知用户',
-            avatar: partner.avatarUrl || partner.avatar || '/static/service-default.png',
-            type: partnerType
-          };
-        }
-        return null;
-      } catch (e) {
-        console.error('获取聊天对象信息失败:', e);
-        return null;
-      }
-    },
-    
-
-	
     startChat(partner) {
       // 存储聊天对象信息
       uni.setStorageSync('currentUserInfo', {
@@ -187,17 +128,18 @@ export default {
         }
       });
     },
-	goBack() {
-	    uni.navigateBack({
-	        delta: 1,
-	        fail: () => {
-	            // 如果返回失败，则跳转到首页
-	            uni.switchTab({
-	                url: '/pages/mine/mine'
-	            });
-	        }
-	    });
-	}
+    
+    goBack() {
+      uni.navigateBack({
+        delta: 1,
+        fail: () => {
+          // 如果返回失败，则跳转到首页
+          uni.switchTab({
+            url: '/pages/mine/mine'
+          });
+        }
+      });
+    }
   }
 }
 </script>

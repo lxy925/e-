@@ -486,15 +486,15 @@ var _default = {
       });
     },
     goToChat: function goToChat() {
-      this.userInfo._id = "683ed16321821bbfdbd3ab37";
-      this.userInfo.user_id = "obl9Y7LkhJ7F9iRh_9fq8y33eYZg";
-      this.userInfo.avatar = "https://mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18.cdn.bspapp.com/cloudstorage/f697dc5e-07a8-4bdd-8eaf-16a1de754834.jpg";
-      this.userInfo.nickName = "kiwi";
-      this.userInfo.realName = "薛欣琪";
-      this.userInfo.idNumber = "371521200508016127";
-      this.userInfo.phone = "15218782112";
-      this.userInfo.type = "普通用户";
-      /* this.userInfo._id="683ed99e2eea65be20450dfb";
+      /*this.userInfo._id="683ed16321821bbfdbd3ab37";
+      this.userInfo.user_id="obl9Y7LkhJ7F9iRh_9fq8y33eYZg";
+      this.userInfo.avatar="https://mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18.cdn.bspapp.com/cloudstorage/f697dc5e-07a8-4bdd-8eaf-16a1de754834.jpg";
+      this.userInfo.nickName="kiwi";
+      this.userInfo.realName="薛欣琪";
+      this.userInfo.idNumber="371521200508016127";
+      this.userInfo.phone="15218782112";
+      this.userInfo.type="普通用户"; 
+       this.userInfo._id="683ed99e2eea65be20450dfb";
       this.userInfo.user_id="obl9Y7LkhJ7F9iRh_9fq8y33eYZg";
       this.userInfo.avatar="https://mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18.cdn.bspapp.com/cloudstorage/f697dc5e-07a8-4bdd-8eaf-16a1de754834.jpg";
       this.userInfo.nickName="kiwi";
@@ -502,37 +502,34 @@ var _default = {
       this.userInfo.idNumber="371521200508016127";
       this.userInfo.phone="15218782112";
       this.userInfo.type="陪诊师"; */
-
-      console.log('当前用户信息', this.userInfo);
-      if (this.userInfo._id) {
-        var currentUserInfo = {
-          _id: this.userInfo._id,
-          user_id: this.userInfo.user_id,
-          type: this.userInfo.type,
-          nickName: this.userInfo.nickName,
-          realName: this.userInfo.realName,
-          avatar: this.userInfo.avatar,
-          phone: this.userInfo.phone
-        };
-        console.log('准备存储的用户信息：', currentUserInfo);
-        uni.setStorageSync('currentUserInfo', currentUserInfo);
-        uni.navigateTo({
-          url: '/pages/chatList/chatList',
-          fail: function fail(err) {
-            console.error('页面跳转失败:', err);
-            uni.showToast({
-              title: '页面跳转失败',
-              icon: 'none'
-            });
-          }
-        });
-      } else {
+      if (!this.userInfo._id) {
         uni.showToast({
           title: '请先登录',
           icon: 'none'
         });
         return;
       }
+      var currentUserInfo = {
+        _id: this.userInfo._id,
+        user_id: this.userInfo.user_id,
+        type: this.userInfo.type,
+        nickName: this.userInfo.nickName,
+        realName: this.userInfo.realName,
+        avatar: this.userInfo.avatar,
+        phone: this.userInfo.phone
+      };
+      console.log('准备存储的用户信息：', currentUserInfo);
+      uni.setStorageSync('currentUserInfo', currentUserInfo);
+      uni.navigateTo({
+        url: '/pages/chatList/chatList',
+        fail: function fail(err) {
+          console.error('页面跳转失败:', err);
+          uni.showToast({
+            title: '页面跳转失败',
+            icon: 'none'
+          });
+        }
+      });
     },
     goBack: function goBack() {
       uni.navigateBack();

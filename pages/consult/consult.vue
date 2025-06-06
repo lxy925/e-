@@ -270,13 +270,11 @@ export default {
       isFullscreen: false,
       currentVideoUrl: '',
       videoContext: null,
-      // 添加评价相关的数据
       showReviewModal: false,
       reviewRating: 5,
       reviewContent: '',
       reviewImages: [],
       currentOrderId: '',
-      // 添加总结相关的数据
       showSummaryModal: false,
       summaryContent: '',
       summaryImages: []
@@ -319,12 +317,10 @@ export default {
       await this.loadMessages();
       this.startMessageListener();
       
-      // 添加检查订单和评价的调用
       if (this.userType === '普通用户') {
         await this.checkOrderAndReview();
       }
 
-      // 添加检查订单和总结的调用
       if (this.userType === '陪诊师') {
         await this.checkOrderAndSummary();
       }
@@ -341,7 +337,6 @@ export default {
   },
   
   onUnload() {
-    // 页面卸载时停止监听
     if (this.messageListener) {
       this.messageListener.close();
     }
@@ -389,27 +384,6 @@ export default {
       }
     },
 
-    // 切换多媒体选项显示状态
-    toggleMediaOptions() {
-      this.showMediaOptions = !this.showMediaOptions;
-    },
-    
-    // 输入框获取焦点时隐藏多媒体选项
-    onInputFocus() {
-      this.showMediaOptions = false;
-    },
-    
-    // 判断是否是自己的消息
-    isSelfMessage(message) {
-      return message.user_id === this.userId;
-    },
-    
-    // 获取自己的头像
-    getSelfAvatar() {
-      const currentUserInfo = uni.getStorageSync('currentUserInfo');
-      return currentUserInfo.avatar || '/static/service-default.png';
-    },
-    
     // 加载历史消息
     async loadMessages() {
       try {
@@ -417,28 +391,30 @@ export default {
           throw new Error('用户信息不完整');
         }
         
-        const { result } = await messageCollection
-          .where({
-            $or: [
-              { user_id: this.userId, escort_id: this.chatPartner._id },
-              { user_id: this.chatPartner._id, escort_id: this.userId }
-            ]
-          })
-          .orderBy('time', 'desc')
-          .limit(this.pageSize)
-          .get();
-          
-        if (result.data) {
-          this.messageList = result.data.reverse();
-          // 确保在消息加载完成后滚动到底部
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'getMessages',
+            data: {
+              userId: this.userId,
+              chatPartnerId: this.chatPartner._id,
+              pageSize: this.pageSize
+            }
+          }
+        });
+        
+        if (result.code === 200) {
+          this.messageList = result.data;
           this.$nextTick(() => {
             this.scrollToBottom();
           });
+        } else {
+          throw new Error(result.msg || '加载消息失败');
         }
       } catch (e) {
         console.error('加载消息失败:', e);
         uni.showToast({
-          title: '加载消息失败',
+          title: e.message || '加载消息失败',
           icon: 'none'
         });
       }
@@ -450,23 +426,28 @@ export default {
       
       try {
         const lastMessage = this.messageList[0];
-        const { result } = await messageCollection
-          .where({
-            $or: [
-              { user_id: this._id, escort_id: this.chatPartner._id },
-              { user_id: this.chatPartner._id, escort_id: this._id }
-            ],
-            time: db.command.lt(lastMessage.time)
-          })
-          .orderBy('time', 'desc')
-          .limit(this.pageSize)
-          .get();
-          console.log('历史会话',result.data);
-        if (result.data && result.data.length > 0) {
-          this.messageList = [...result.data.reverse(), ...this.messageList];
-          this.hasMore = result.data.length === this.pageSize;
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'loadMoreMessages',
+            data: {
+              userId: this.userId,
+              chatPartnerId: this.chatPartner._id,
+              lastMessageTime: lastMessage.time,
+              pageSize: this.pageSize
+            }
+          }
+        });
+        
+        if (result.code === 200) {
+          if (result.data && result.data.length > 0) {
+            this.messageList = [...result.data, ...this.messageList];
+            this.hasMore = result.data.length === this.pageSize;
+          } else {
+            this.hasMore = false;
+          }
         } else {
-          this.hasMore = false;
+          throw new Error(result.msg || '加载更多消息失败');
         }
       } catch (e) {
         console.error('加载更多消息失败:', e);
@@ -474,49 +455,61 @@ export default {
     },
     
     // 开始监听新消息
-    startMessageListener() {
+    async startMessageListener() {
       try {
         if (this.messageListener) {
           this.messageListener.close();
         }
-    
-        // 监听双方的消息
-        const query = {
-          $or: [
-            { user_id: this.userId, escort_id: this.chatPartner._id }, // 用户1发送给用户2
-            { user_id: this.chatPartner._id, escort_id: this.userId } // 用户2发送给用户1
-          ]
-        };
-    
-        console.log('开始监听消息，查询条件：', query);
-    
-        this.messageListener = messageCollection
-          .where(query)
-          .orderBy('time', 'desc')
-          .limit(20)
-          .watch({
-            onChange: (snapshot) => {
-              console.log('收到新消息:', snapshot);
-              if (snapshot.docs && snapshot.docs.length > 0) {
-                const newMessages = snapshot.docs.map(doc => doc.data());
-                // 过滤掉已经存在的消息和当前用户正在发送的消息
-                const uniqueMessages = newMessages.filter(newMsg =>
+        
+        // 使用云函数获取最新消息
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'startMessageListener',
+            data: {
+              userId: this.userId,
+              chatPartnerId: this.chatPartner._id
+            }
+          }
+        });
+        
+        if (result.code === 200) {
+          // 设置定时器定期检查新消息
+          this.messageListener = setInterval(async () => {
+            try {
+              const { result } = await uniCloud.callFunction({
+                name: 'chatMessage',
+                data: {
+                  action: 'getLatestMessages',
+                  data: {
+                    userId: this.userId,
+                    chatPartnerId: this.chatPartner._id,
+                    lastMessageTime: this.messageList.length > 0 ? this.messageList[this.messageList.length - 1].time : '0'
+                  }
+                }
+              });
+              
+              if (result.code === 200 && result.data && result.data.length > 0) {
+                // 过滤掉已经存在的消息
+                const newMessages = result.data.filter(newMsg =>
                   !this.messageList.some(existingMsg =>
                     existingMsg._id === newMsg._id || 
                     (existingMsg.status === 'sending' && existingMsg.time === newMsg.time)
                   )
                 );
-                if (uniqueMessages.length > 0) {
-                  console.log('添加新消息:', uniqueMessages);
-                  this.messageList = [...this.messageList, ...uniqueMessages];
+                
+                if (newMessages.length > 0) {
+                  this.messageList = [...this.messageList, ...newMessages];
                   this.scrollToBottom();
                 }
               }
-            },
-            onError: (err) => {
-              console.error('监听消息失败:', err);
+            } catch (e) {
+              console.error('获取新消息失败:', e);
             }
-          });
+          }, 3000); // 每3秒检查一次新消息
+        } else {
+          throw new Error(result.msg || '启动消息监听失败');
+        }
       } catch (e) {
         console.error('启动消息监听失败:', e);
       }
@@ -542,23 +535,26 @@ export default {
           receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
         };
         
-        console.log('准备发送消息:', message);
-        
         // 先显示消息
         this.messageList.push(message);
         this.scrollToBottom();
         
-        // 发送到数据库
-        const { result } = await messageCollection.add(message);
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'sendMessage',
+            data: message
+          }
+        });
         
-        if (result.id) {
-          console.log('消息发送成功，ID:', result.id);
-          // 更新消息状态为已发送
+        if (result.code === 200) {
           const index = this.messageList.findIndex(msg => msg.status === 'sending');
           if (index !== -1) {
             this.messageList[index].status = 'sent';
-            this.messageList[index]._id = result.id;
+            this.messageList[index]._id = result.data.id;
           }
+        } else {
+          throw new Error(result.msg || '发送消息失败');
         }
         
         this.messageText = '';
@@ -566,10 +562,216 @@ export default {
       } catch (e) {
         console.error('发送消息失败:', e);
         uni.showToast({
-          title: '发送消息失败',
+          title: e.message || '发送消息失败',
           icon: 'none'
         });
       }
+    },
+    
+    // 检查订单状态和评价
+    async checkOrderAndReview() {
+      try {
+        const { result } = await uniCloud.callFunction({
+          name: 'chatReview',
+          data: {
+            action: 'checkOrderAndReview',
+            data: {
+              userId: this.userId,
+              escortId: this.chatPartner._id
+            }
+          }
+        });
+        
+        if (result.code === 200) {
+          if (result.data.hasOrder && !result.data.hasReview) {
+            this.currentOrderId = result.data.orderId;
+            this.showReviewModal = true;
+          }
+        } else {
+          throw new Error(result.msg || '检查订单和评价失败');
+        }
+      } catch (e) {
+        console.error('检查订单和评价失败:', e);
+      }
+    },
+    
+    // 检查订单状态和总结
+    async checkOrderAndSummary() {
+      try {
+        const { result } = await uniCloud.callFunction({
+          name: 'chatReview',
+          data: {
+            action: 'checkOrderAndSummary',
+            data: {
+              userId: this.userId,
+              escortId: this.chatPartner._id
+            }
+          }
+        });
+        
+        if (result.code === 200) {
+          if (result.data.hasOrder && !result.data.hasSummary) {
+            this.currentOrderId = result.data.orderId;
+            this.showSummaryModal = true;
+          }
+        } else {
+          throw new Error(result.msg || '检查订单和总结失败');
+        }
+      } catch (e) {
+        console.error('检查订单和总结失败:', e);
+      }
+    },
+    
+    // 提交评价
+    async submitReview() {
+      try {
+        if (!this.reviewContent.trim()) {
+          uni.showToast({
+            title: '请输入评价内容',
+            icon: 'none'
+          });
+          return;
+        }
+        
+        uni.showLoading({
+          title: '提交中...'
+        });
+        
+        // 上传图片
+        const uploadedImages = [];
+        for (const image of this.reviewImages) {
+          const uploadRes = await uniCloud.uploadFile({
+            filePath: image,
+            cloudPath: `reviews/${Date.now()}_${Math.random().toString(36).slice(-6)}.${image.split('.').pop()}`
+          });
+          
+          if (uploadRes && uploadRes.fileID) {
+            uploadedImages.push(uploadRes.fileID);
+          }
+        }
+        
+        const reviewData = {
+          order_id: this.currentOrderId,
+          user_id: this.userId,
+          escort_id: this.chatPartner._id,
+          rating: this.reviewRating,
+          content: this.reviewContent,
+          images: uploadedImages,
+          create_time: Date.now()
+        };
+        
+        const { result } = await uniCloud.callFunction({
+          name: 'chatReview',
+          data: {
+            action: 'submitReview',
+            data: reviewData
+          }
+        });
+        
+        if (result.code === 200) {
+          uni.showToast({
+            title: '评价成功',
+            icon: 'success'
+          });
+          this.closeReviewModal();
+        } else {
+          throw new Error(result.msg || '提交评价失败');
+        }
+      } catch (e) {
+        console.error('提交评价失败:', e);
+        uni.showToast({
+          title: e.message || '提交评价失败',
+          icon: 'none'
+        });
+      } finally {
+        uni.hideLoading();
+      }
+    },
+    
+    // 提交总结
+    async submitSummary() {
+      try {
+        if (!this.summaryContent.trim()) {
+          uni.showToast({
+            title: '请输入总结内容',
+            icon: 'none'
+          });
+          return;
+        }
+        
+        uni.showLoading({
+          title: '提交中...'
+        });
+        
+        // 上传图片
+        const uploadedImages = [];
+        for (const image of this.summaryImages) {
+          const uploadRes = await uni.uploadFile({
+            filePath: image,
+            cloudPath: `summaries/${Date.now()}_${Math.random().toString(36).slice(-6)}.${image.split('.').pop()}`
+          });
+          
+          if (uploadRes && uploadRes.fileID) {
+            uploadedImages.push(uploadRes.fileID);
+          }
+        }
+        
+        const summaryData = {
+          order_id: this.currentOrderId,
+          user_id: this.chatPartner._id,
+          escort_id: this.userId,
+          content: this.summaryContent,
+          images: uploadedImages,
+          create_time: Date.now()
+        };
+        
+        const { result } = await uni.callFunction({
+          name: 'chatReview',
+          data: {
+            action: 'submitSummary',
+            data: summaryData
+          }
+        });
+        
+        if (result.code === 200) {
+          uni.showToast({
+            title: '提交成功',
+            icon: 'success'
+          });
+          this.closeSummaryModal();
+        } else {
+          throw new Error(result.msg || '提交总结失败');
+        }
+      } catch (e) {
+        console.error('提交总结失败:', e);
+        uni.showToast({
+          title: e.message || '提交总结失败',
+          icon: 'none'
+        });
+      } finally {
+        uni.hideLoading();
+      }
+    },
+    
+    // 切换多媒体选项显示状态
+    toggleMediaOptions() {
+      this.showMediaOptions = !this.showMediaOptions;
+    },
+    
+    // 输入框获取焦点时隐藏多媒体选项
+    onInputFocus() {
+      this.showMediaOptions = false;
+    },
+    
+    // 判断是否是自己的消息
+    isSelfMessage(message) {
+      return message.user_id === this.userId;
+    },
+    
+    // 获取自己的头像
+    getSelfAvatar() {
+      const currentUserInfo = uni.getStorageSync('currentUserInfo');
+      return currentUserInfo.avatar || '/static/service-default.png';
     },
     
     // 滚动到底部
@@ -1181,59 +1383,6 @@ export default {
       }
     },
 
-    // 检查订单状态和评价
-    async checkOrderAndReview() {
-      try {
-        const db = uniCloud.database();
-        const ordersCollection = db.collection('order');
-        const reviewsCollection = db.collection('reviews');
-        
-        // 获取当前用户的订单
-        const { result } = await ordersCollection
-          .where({
-            user_id: this.userId,
-            escort_id: this.chatPartner._id,
-            order_status: '已完成'
-          })
-          .get();
-          
-        console.log('评价订单：', result.data);
-        
-        if (result.data && result.data.length > 0) {
-          const completedOrder = result.data[0];
-          this.currentOrderId = completedOrder._id;
-          
-          console.log('当前订单ID：', this.currentOrderId);
-          
-          // 检查是否已经评价过
-          const reviewResult = await reviewsCollection
-            .where({
-              order_id: this.currentOrderId
-            })
-            .get();
-            
-          console.log('检查评价结果：', reviewResult);
-          
-          // 检查评价结果是否存在且有效
-          if (!reviewResult.result || !reviewResult.result.data || reviewResult.result.data.length === 0) {
-            console.log('未找到评价，显示评价弹窗');
-            // 如果没有评价，显示评价弹窗
-            this.showReviewModal = true;
-          } else {
-            console.log('已存在评价，不显示评价弹窗');
-            this.showReviewModal = false;
-          }
-        }
-      } catch (e) {
-        console.error('检查订单和评价失败:', e);
-        // 打印详细的错误信息
-        console.error('错误详情:', {
-          message: e.message,
-          stack: e.stack
-        });
-      }
-    },
-    
     // 关闭评价弹窗
     closeReviewModal() {
       this.showReviewModal = false;
@@ -1276,109 +1425,7 @@ export default {
     deleteReviewImage(index) {
       this.reviewImages.splice(index, 1);
     },
-    
-    // 提交评价
-    async submitReview() {
-      try {
-        if (!this.reviewContent.trim()) {
-          uni.showToast({
-            title: '请输入评价内容',
-            icon: 'none'
-          });
-          return;
-        }
-        
-        uni.showLoading({
-          title: '提交中...'
-        });
-        
-        const db = uniCloud.database();
-        const reviewsCollection = db.collection('reviews');
-        
-        // 上传图片
-        const uploadedImages = [];
-        for (const image of this.reviewImages) {
-          const uploadRes = await uniCloud.uploadFile({
-            filePath: image,
-            cloudPath: `reviews/${Date.now()}_${Math.random().toString(36).slice(-6)}.${image.split('.').pop()}`
-          });
-          
-          if (uploadRes && uploadRes.fileID) {
-            uploadedImages.push(uploadRes.fileID);
-          }
-        }
-        
-        // 保存评价
-        const reviewData = {
-          order_id: this.currentOrderId,
-          user_id: this.userId,
-          escort_id: this.chatPartner._id,
-          rating: this.reviewRating,
-          content: this.reviewContent,
-          images: uploadedImages,
-          create_time: Date.now() // 使用时间戳
-        };
-        
-        console.log('提交的数据：', reviewData);
-        const { result } = await reviewsCollection.add(reviewData);
-        
-        if (result.id) {
-          uni.showToast({
-            title: '评价成功',
-            icon: 'success'
-          });
-          this.closeReviewModal();
-        } else {
-          throw new Error('保存评价失败');
-        }
-      } catch (e) {
-        console.error('提交评价失败:', e);
-        uni.showToast({
-          title: e.message || '提交评价失败',
-          icon: 'none'
-        });
-      } finally {
-        uni.hideLoading();
-      }
-    },
 
-    // 检查订单状态和是否有总结
-    async checkOrderAndSummary() {
-      try {
-        const db = uniCloud.database();
-        const ordersCollection = db.collection('order');
-        const summariesCollection = db.collection('visit_summaries');
-        
-        // 获取当前陪诊师的订单
-        const { result } = await ordersCollection
-          .where({
-            escort_id: this.userId,
-            user_id: this.chatPartner._id,
-            order_status: '已完成'
-          })
-          .get();
-
-        if (result.data && result.data.length > 0) {
-          const completedOrder = result.data[0];
-          this.currentOrderId = completedOrder._id;
-          
-          // 只使用 order_id 检查是否已经写过总结
-          const summaryResult = await summariesCollection
-            .where({
-              order_id: completedOrder._id
-            })
-            .get();
-            console.log('检查总结结果',summaryResult.result.data)
-          if (!summaryResult.result.data || summaryResult.result.data.length === 0) {
-            // 如果没有总结，显示总结弹窗
-            this.showSummaryModal = true;
-          }
-        }
-      } catch (e) {
-        console.error('检查订单和总结失败:', e);
-      }
-    },
-    
     // 关闭总结弹窗
     closeSummaryModal() {
       this.showSummaryModal = false;
@@ -1414,70 +1461,6 @@ export default {
     // 删除总结图片
     deleteSummaryImage(index) {
       this.summaryImages.splice(index, 1);
-    },
-    
-    // 提交总结
-    async submitSummary() {
-      try {
-        if (!this.summaryContent.trim()) {
-          uni.showToast({
-            title: '请输入总结内容',
-            icon: 'none'
-          });
-          return;
-        }
-        
-        uni.showLoading({
-          title: '提交中...'
-        });
-        
-        const db = uniCloud.database();
-        const summariesCollection = db.collection('visit_summaries');
-        
-        // 上传图片
-        const uploadedImages = [];
-        for (const image of this.summaryImages) {
-          const uploadRes = await uniCloud.uploadFile({
-            filePath: image,
-            cloudPath: `summaries/${Date.now()}_${Math.random().toString(36).slice(-6)}.${image.split('.').pop()}`
-          });
-          
-          if (uploadRes && uploadRes.fileID) {
-            uploadedImages.push(uploadRes.fileID);
-          }
-        }
-        
-        // 保存总结
-        const summaryData = {
-          order_id: this.currentOrderId,
-          user_id: this.chatPartner._id,
-          escort_id: this.userId,
-          content: this.summaryContent,
-          images: uploadedImages,
-          create_time: Date.now()// 使用时间戳
-        };
-        
-        console.log('提交的数据：', summaryData);
-        const { result } = await summariesCollection.add(summaryData);
-        
-        if (result.id) {
-          uni.showToast({
-            title: '提交成功',
-            icon: 'success'
-          });
-          this.closeSummaryModal();
-        } else {
-          throw new Error('保存总结失败');
-        }
-      } catch (e) {
-        console.error('提交总结失败:', e);
-        uni.showToast({
-          title: e.message || '提交总结失败',
-          icon: 'none'
-        });
-      } finally {
-        uni.hideLoading();
-      }
     },
   }
 }

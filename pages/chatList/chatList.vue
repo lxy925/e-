@@ -79,12 +79,15 @@ export default {
         });
       }
     },
-    
+    //查询订单
     async getChatPartners() {
       try {
         const orderCollection = db.collection('order');
         const query = {
-          order_status: '已确认',
+          $or: [
+              { order_status: '已完成' },
+              { order_status: '已确认' }
+            ],
           $or: [
             { user_id: this.currentUser._id },
             { escort_id: this.currentUser._id }
@@ -111,6 +114,7 @@ export default {
             }
             
             // 获取聊天对象信息
+			console.log('partnerId',partnerId);
             const partnerInfo = await this.getPartnerInfo(partnerId, partnerType);
 			console.log('partnerInfo',partnerInfo);
             if (partnerInfo) {
@@ -134,6 +138,7 @@ export default {
     async getPartnerInfo(partnerId, partnerType) {
       try {
         let collection;
+		//选择查询的数据库
         if (partnerType === '陪诊师') {
           collection = db.collection('escorts');
         } else {

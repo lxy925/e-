@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <!-- 聊天头部 - 显示聊天对象信息 -->
-    <view class="chat-header">
+    <view class="chat-header fixed">
       <view class="header-content">
         <view class="back-btn" @click="goBack">
           <image src="/static/images/icons/back.png" class="back-icon"></image>
@@ -32,11 +32,70 @@
               <text user-select>{{item.content}}</text>
             </template>
             <template v-else-if="item.message_type === 'image'">
-              <image :src="item.content" mode="widthFix" class="msg-image"></image>
+              <image 
+                :src="item.content" 
+                mode="widthFix" 
+                class="msg-image"
+                @click="previewImage(item.content)"
+                :style="{ maxWidth: '400rpx' }"
+              ></image>
+            </template>
+            <template v-else-if="item.message_type === 'video'">
+              <view class="video-message">
+                <view class="video-container" @click="playVideo(item.content)">
+                  <video 
+                    :id="'video-' + index"
+                    :src="item.content"
+                    class="msg-video"
+                    :controls="false"
+                    :show-fullscreen-btn="false"
+                    :show-play-btn="false"
+                    :show-center-play-btn="true"
+                    :enable-progress-gesture="false"
+                    :style="{ maxWidth: '400rpx' }"
+                    @error="handleVideoError"
+                  ></video>
+                  <view class="video-play-icon">
+                    <!-- <image src="/static/images/icons/play.png" class="play-icon"></image> -->
+                  </view>
+                </view>
+              </view>
+            </template>
+            <template v-else-if="item.message_type === 'file'">
+              <view class="file-message" @click="downloadFile(item.content)">
+                <view class="file-icon">
+                  <image src="/static/images/icons/file.png" class="file-type-icon"></image>
+                </view>
+                <view class="file-info">
+                  <text class="file-name">{{JSON.parse(item.content).name}}</text>
+                  <text class="file-size">{{formatFileSize(JSON.parse(item.content).size)}}</text>
+                </view>
+              </view>
             </template>
             <template v-else-if="item.message_type === 'location'">
-              <view class="location-message">
-                <text>{{item.content}}</text>
+              <view class="location-message" @click="openLocation(item.content)">
+                <view class="location-content">
+                  <image src="/static/images/icons/location.png" class="location-icon"></image>
+                  <view class="location-info">
+                    <text class="location-name">{{JSON.parse(item.content).name || JSON.parse(item.content).address}}</text>
+                    <text class="location-address">{{JSON.parse(item.content).address}}</text>
+                  </view>
+                </view>
+                <view class="location-map">
+                  <map
+                    :latitude="JSON.parse(item.content).latitude"
+                    :longitude="JSON.parse(item.content).longitude"
+                    :markers="[{
+                      latitude: JSON.parse(item.content).latitude,
+                      longitude: JSON.parse(item.content).longitude,
+                      iconPath: '/static/images/icons/marker.png',
+                      width: 32,
+                      height: 32
+                    }]"
+                    scale="16"
+                    style="width: 100%; height: 200rpx;"
+                  ></map>
+                </view>
               </view>
             </template>
           </view>
@@ -89,6 +148,102 @@
         </view>
       </view>
     </view>
+
+    <!-- 全屏视频播放器 -->
+    <view class="video-fullscreen" v-if="isFullscreen">
+      <video 
+        :id="'fullscreen-video'"
+        :src="currentVideoUrl"
+        class="fullscreen-video"
+        controls
+        autoplay
+        :show-fullscreen-btn="false"
+        :show-center-play-btn="false"
+        :enable-progress-gesture="true"
+        @ended="exitFullscreen"
+      ></video>
+      <view class="fullscreen-close" @click="exitFullscreen">
+        <image src="/static/images/icons/close.png" class="close-icon"></image>
+      </view>
+    </view>
+
+    <!-- 评价弹窗 -->
+    <view class="review-modal" v-if="showReviewModal">
+      <view class="review-content">
+        <view class="review-header">
+          <text class="review-title">服务评价</text>
+          <view class="close-btn" @click="closeReviewModal">×</view>
+        </view>
+        <view class="rating-section">
+          <text class="rating-label">评分</text>
+          <view class="stars">
+            <text 
+              v-for="i in 5" 
+              :key="i" 
+              class="star" 
+              :class="{ active: i <= reviewRating }"
+              @click="setRating(i)"
+            >★</text>
+          </view>
+        </view>
+        <view class="content-section">
+          <textarea 
+            v-model="reviewContent" 
+            placeholder="请输入您的评价内容" 
+            class="review-textarea"
+          ></textarea>
+        </view>
+        <view class="image-upload-section">
+          <view class="image-list">
+            <view 
+              v-for="(image, index) in reviewImages" 
+              :key="index" 
+              class="image-item"
+            >
+              <image :src="image" mode="aspectFill"></image>
+              <view class="delete-btn" @click="deleteReviewImage(index)">×</view>
+            </view>
+            <view class="upload-btn" @click="chooseReviewImage" v-if="reviewImages.length < 9">
+              <text class="upload-icon">+</text>
+            </view>
+          </view>
+        </view>
+        <button class="submit-btn" @click="submitReview">提交评价</button>
+      </view>
+    </view>
+
+    <!-- 就诊总结弹窗 -->
+    <view class="summary-modal" v-if="showSummaryModal">
+      <view class="summary-content">
+        <view class="summary-header">
+          <text class="summary-title">就诊总结</text>
+          <view class="close-btn" @click="closeSummaryModal">×</view>
+        </view>
+        <view class="content-section">
+          <textarea 
+            v-model="summaryContent" 
+            placeholder="请输入就诊总结内容" 
+            class="summary-textarea"
+          ></textarea>
+        </view>
+        <view class="image-upload-section">
+          <view class="image-list">
+            <view 
+              v-for="(image, index) in summaryImages" 
+              :key="index" 
+              class="image-item"
+            >
+              <image :src="image" mode="aspectFill"></image>
+              <view class="delete-btn" @click="deleteSummaryImage(index)">×</view>
+            </view>
+            <view class="upload-btn" @click="chooseSummaryImage" v-if="summaryImages.length < 9">
+              <text class="upload-icon">+</text>
+            </view>
+          </view>
+        </view>
+        <button class="submit-btn" @click="submitSummary">提交总结</button>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -110,7 +265,21 @@ export default {
       scrollTop: 0,
       messageListener: null,
       pageSize: 20,
-      hasMore: true
+      hasMore: true,
+      currentVideoId: null,
+      isFullscreen: false,
+      currentVideoUrl: '',
+      videoContext: null,
+      // 添加评价相关的数据
+      showReviewModal: false,
+      reviewRating: 5,
+      reviewContent: '',
+      reviewImages: [],
+      currentOrderId: '',
+      // 添加总结相关的数据
+      showSummaryModal: false,
+      summaryContent: '',
+      summaryImages: []
     }
   },
   
@@ -149,6 +318,16 @@ export default {
       await this.getChatPartner();
       await this.loadMessages();
       this.startMessageListener();
+      
+      // 添加检查订单和评价的调用
+      if (this.userType === '普通用户') {
+        await this.checkOrderAndReview();
+      }
+
+      // 添加检查订单和总结的调用
+      if (this.userType === '陪诊师') {
+        await this.checkOrderAndSummary();
+      }
     } catch (e) {
       console.error('页面加载失败:', e);
       uni.showToast({
@@ -241,8 +420,8 @@ export default {
         const { result } = await messageCollection
           .where({
             $or: [
-              { user_id: this._id, escort_id: this.chatPartner._id },
-              { user_id: this.chatPartner._id, escort_id: this._id }
+              { user_id: this.userId, escort_id: this.chatPartner._id },
+              { user_id: this.chatPartner._id, escort_id: this.userId }
             ]
           })
           .orderBy('time', 'desc')
@@ -251,7 +430,10 @@ export default {
           
         if (result.data) {
           this.messageList = result.data.reverse();
-          this.scrollToBottom();
+          // 确保在消息加载完成后滚动到底部
+          this.$nextTick(() => {
+            this.scrollToBottom();
+          });
         }
       } catch (e) {
         console.error('加载消息失败:', e);
@@ -301,8 +483,8 @@ export default {
         // 监听双方的消息
         const query = {
           $or: [
-            { user_id: this._id, escort_id: this.chatPartner._id }, // 用户1发送给用户2
-            { user_id: this.chatPartner._id, escort_id: this._id } // 用户2发送给用户1
+            { user_id: this.userId, escort_id: this.chatPartner._id }, // 用户1发送给用户2
+            { user_id: this.chatPartner._id, escort_id: this.userId } // 用户2发送给用户1
           ]
         };
     
@@ -317,10 +499,11 @@ export default {
               console.log('收到新消息:', snapshot);
               if (snapshot.docs && snapshot.docs.length > 0) {
                 const newMessages = snapshot.docs.map(doc => doc.data());
-                // 过滤掉已经存在的消息
+                // 过滤掉已经存在的消息和当前用户正在发送的消息
                 const uniqueMessages = newMessages.filter(newMsg =>
                   !this.messageList.some(existingMsg =>
-                    existingMsg._id === newMsg._id
+                    existingMsg._id === newMsg._id || 
+                    (existingMsg.status === 'sending' && existingMsg.time === newMsg.time)
                   )
                 );
                 if (uniqueMessages.length > 0) {
@@ -423,88 +606,334 @@ export default {
     // 选择图片
     async chooseImage() {
       try {
-        const res = await uni.chooseImage({
+        const [err, res] = await uni.chooseImage({
           count: 1,
           sizeType: ['compressed'],
           sourceType: ['album', 'camera']
         });
         
-        this.messageList.push({
-          type: 'patient',
-          messageType: 'image',
-          content: res.tempFilePaths[0],
-          time: Date.now()
+        if (err) {
+          throw new Error('选择图片失败');
+        }
+        
+        if (!res || !res.tempFilePaths || res.tempFilePaths.length === 0) {
+          throw new Error('未选择图片');
+        }
+        
+        const tempFilePath = res.tempFilePaths[0];
+        const currentTime = Date.now().toString();
+        
+        // 显示发送中的消息
+        const tempMessage = {
+          user_id: this.userId,
+          escort_id: this.chatPartner._id,
+          content: tempFilePath,
+          message_type: 'image',
+          time: currentTime,
+          status: 'sending',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
+        };
+        
+        this.messageList.push(tempMessage);
+        this.scrollToBottom();
+        
+        // 上传图片到云存储
+        const uploadRes = await uniCloud.uploadFile({
+          filePath: tempFilePath,
+          cloudPath: `chat/images/${Date.now()}_${Math.random().toString(36).slice(-6)}.${tempFilePath.split('.').pop()}`
         });
         
-        this.showMediaOptions = false;  // 选择后隐藏多媒体选项
+        if (!uploadRes || !uploadRes.fileID) {
+          throw new Error('上传图片失败：未获取到文件ID');
+        }
+        
+        // 发送消息到数据库
+        const message = {
+          ...tempMessage,
+          content: uploadRes.fileID,
+          status: 'sent'
+        };
+        
+        const { result } = await messageCollection.add(message);
+        if (result.id) {
+          // 更新本地消息状态
+          const index = this.messageList.findIndex(msg => 
+            msg.status === 'sending' && msg.time === currentTime
+          );
+          if (index !== -1) {
+            this.messageList[index] = {
+              ...message,
+              _id: result.id
+            };
+          }
+        } else {
+          throw new Error('保存消息失败');
+        }
+        
+        this.showMediaOptions = false;
       } catch (e) {
-        console.error(e);
+        console.error('发送图片失败:', e);
+        uni.showToast({
+          title: e.message || '发送图片失败',
+          icon: 'none'
+        });
+        
+        // 移除发送失败的消息
+        const index = this.messageList.findIndex(msg => msg.status === 'sending');
+        if (index !== -1) {
+          this.messageList.splice(index, 1);
+        }
       }
     },
     
     // 选择视频
     async chooseVideo() {
       try {
-        const res = await uni.chooseVideo({
-          sourceType: ['album', 'camera']
+        const [err, res] = await uni.chooseVideo({
+          sourceType: ['album', 'camera'],
+          maxDuration: 60,
+          camera: 'back'
         });
         
-        this.messageList.push({
-          type: 'patient',
-          messageType: 'video',
-          content: res.tempFilePath,
-          time: Date.now()
+        if (err) {
+          throw new Error('选择视频失败');
+        }
+        
+        if (!res || !res.tempFilePath) {
+          throw new Error('未选择视频');
+        }
+        
+        const tempFilePath = res.tempFilePath;
+        const currentTime = Date.now().toString();
+        
+        // 显示发送中的消息
+        const tempMessage = {
+          user_id: this.userId,
+          escort_id: this.chatPartner._id,
+          content: tempFilePath,
+          message_type: 'video',
+          time: currentTime,
+          status: 'sending',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
+        };
+        
+        this.messageList.push(tempMessage);
+        this.scrollToBottom();
+        
+        // 获取文件扩展名
+        const fileExt = tempFilePath.substring(tempFilePath.lastIndexOf('.') + 1);
+        
+        // 上传视频到云存储
+        const uploadRes = await uniCloud.uploadFile({
+          filePath: tempFilePath,
+          cloudPath: `chat/videos/${Date.now()}_${Math.random().toString(36).slice(-6)}.${fileExt}`
         });
         
-        this.showMediaOptions = false;  // 选择后隐藏多媒体选项
+        if (!uploadRes || !uploadRes.fileID) {
+          throw new Error('上传视频失败：未获取到文件ID');
+        }
+        
+        // 发送消息到数据库
+        const message = {
+          ...tempMessage,
+          content: uploadRes.fileID,
+          status: 'sent'
+        };
+        
+        const { result } = await messageCollection.add(message);
+        if (result.id) {
+          // 更新本地消息状态
+          const index = this.messageList.findIndex(msg => 
+            msg.status === 'sending' && msg.time === currentTime
+          );
+          if (index !== -1) {
+            this.messageList[index] = {
+              ...message,
+              _id: result.id
+            };
+          }
+        } else {
+          throw new Error('保存消息失败');
+        }
+        
+        this.showMediaOptions = false;
       } catch (e) {
-        console.error(e);
-      }
-    },
-    
-    // 选择位置
-    async chooseLocation() {
-      try {
-        const res = await uni.chooseLocation();
-        
-        this.messageList.push({
-          type: 'patient',
-          messageType: 'location',
-          content: {
-            latitude: res.latitude,
-            longitude: res.longitude,
-            address: res.address
-          },
-          time: Date.now()
+        console.error('发送视频失败:', e);
+        uni.showToast({
+          title: e.message || '发送视频失败',
+          icon: 'none'
         });
         
-        this.showMediaOptions = false;  // 选择后隐藏多媒体选项
-      } catch (e) {
-        console.error(e);
+        // 移除发送失败的消息
+        const index = this.messageList.findIndex(msg => msg.status === 'sending');
+        if (index !== -1) {
+          this.messageList.splice(index, 1);
+        }
       }
     },
     
     // 选择文件
     async chooseFile() {
       try {
-        const res = await uni.chooseFile({
+        // 使用 uni.chooseMessageFile 替代 uni.chooseFile
+        const [err, res] = await uni.chooseMessageFile({
           count: 1,
-          type: 'all'
+          type: 'all',
+          extension: ['.doc', '.docx', '.pdf', '.xls', '.xlsx', '.ppt', '.pptx', '.txt']
         });
         
-        this.messageList.push({
-          type: 'patient',
-          messageType: 'file',
-          content: {
-            name: res.tempFiles[0].name,
-            path: res.tempFiles[0].path
-          },
-          time: Date.now()
+        if (err) {
+          throw new Error('选择文件失败');
+        }
+        
+        if (!res || !res.tempFiles || res.tempFiles.length === 0) {
+          throw new Error('未选择文件');
+        }
+        
+        const file = res.tempFiles[0];
+        const currentTime = Date.now().toString();
+        
+        // 显示发送中的消息
+        const tempMessage = {
+          user_id: this.userId,
+          escort_id: this.chatPartner._id,
+          content: JSON.stringify({
+            name: file.name,
+            size: file.size,
+            path: file.path
+          }),
+          message_type: 'file',
+          time: currentTime,
+          status: 'sending',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
+        };
+        
+        this.messageList.push(tempMessage);
+        this.scrollToBottom();
+        
+        // 上传文件到云存储
+        const uploadRes = await uniCloud.uploadFile({
+          filePath: file.path,
+          cloudPath: `chat/files/${Date.now()}_${file.name}`
         });
+        
+        if (!uploadRes || !uploadRes.fileID) {
+          throw new Error('上传文件失败：未获取到文件ID');
+        }
+        
+        // 发送消息到数据库
+        const message = {
+          ...tempMessage,
+          content: JSON.stringify({
+            name: file.name,
+            size: file.size,
+            fileID: uploadRes.fileID
+          }),
+          status: 'sent'
+        };
+        
+        const { result } = await messageCollection.add(message);
+        if (result.id) {
+          // 更新本地消息状态
+          const index = this.messageList.findIndex(msg => 
+            msg.status === 'sending' && msg.time === currentTime
+          );
+          if (index !== -1) {
+            this.messageList[index] = {
+              ...message,
+              _id: result.id
+            };
+          }
+        } else {
+          throw new Error('保存消息失败');
+        }
         
         this.showMediaOptions = false;
       } catch (e) {
-        console.error(e);
+        console.error('发送文件失败:', e);
+        uni.showToast({
+          title: e.message || '发送文件失败',
+          icon: 'none'
+        });
+        
+        // 移除发送失败的消息
+        const index = this.messageList.findIndex(msg => msg.status === 'sending');
+        if (index !== -1) {
+          this.messageList.splice(index, 1);
+        }
+      }
+    },
+    
+    // 选择位置
+    async chooseLocation() {
+      try {
+        const [err, res] = await uni.chooseLocation();
+        
+        if (err) {
+          throw new Error('选择位置失败');
+        }
+        
+        if (!res) {
+          throw new Error('未选择位置');
+        }
+
+        const currentTime = Date.now().toString();
+        
+        // 显示发送中的消息
+        const tempMessage = {
+          user_id: this.userId,
+          escort_id: this.chatPartner._id,
+          content: JSON.stringify({
+            latitude: res.latitude,
+            longitude: res.longitude,
+            address: res.address,
+            name: res.name
+          }),
+          message_type: 'location',
+          time: currentTime,
+          status: 'sending',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
+        };
+        
+        this.messageList.push(tempMessage);
+        this.scrollToBottom();
+        
+        // 发送到数据库
+        const { result } = await messageCollection.add(tempMessage);
+        
+        if (result.id) {
+          // 更新本地消息状态
+          const index = this.messageList.findIndex(msg => 
+            msg.status === 'sending' && msg.time === currentTime
+          );
+          if (index !== -1) {
+            this.messageList[index] = {
+              ...tempMessage,
+              _id: result.id,
+              status: 'sent'
+            };
+          }
+        } else {
+          throw new Error('保存位置信息失败');
+        }
+        
+        this.showMediaOptions = false;
+      } catch (e) {
+        console.error('发送位置失败:', e);
+        uni.showToast({
+          title: e.message || '发送位置失败',
+          icon: 'none'
+        });
+        
+        // 移除发送失败的消息
+        const index = this.messageList.findIndex(msg => msg.status === 'sending');
+        if (index !== -1) {
+          this.messageList.splice(index, 1);
+        }
       }
     },
     
@@ -548,7 +977,508 @@ export default {
         // 当前用户是陪诊师，聊天对象是普通用户
         return this.chatPartner.realName || '未知用户';
       }
-    }
+    },
+
+    // 预览图片
+    previewImage(src) {
+      uni.previewImage({
+        urls: [src],
+        current: src
+      });
+    },
+
+    // 下载文件
+    async downloadFile(content) {
+      try {
+        const fileInfo = JSON.parse(content);
+        if (!fileInfo.fileID) {
+          throw new Error('文件信息不完整');
+        }
+
+        uni.showLoading({
+          title: '下载中...'
+        });
+        
+        // 获取文件的临时访问链接
+        const res = await uniCloud.getTempFileURL({
+          fileList: [fileInfo.fileID]
+        });
+        
+        if (!res.fileList || !res.fileList[0] || !res.fileList[0].tempFileURL) {
+          throw new Error('获取文件链接失败');
+        }
+        
+        // 下载文件
+        const downloadRes = await uni.downloadFile({
+          url: res.fileList[0].tempFileURL,
+          success: (res) => {
+            if (res.statusCode === 200) {
+              // 保存文件到本地
+              uni.saveFile({
+                tempFilePath: res.tempFilePath,
+                success: (saveRes) => {
+                  uni.showToast({
+                    title: '下载成功',
+                    icon: 'success'
+                  });
+                  
+                  // 打开文件
+                  uni.openDocument({
+                    filePath: saveRes.savedFilePath,
+                    success: () => {
+                      console.log('打开文件成功');
+                    },
+                    fail: (err) => {
+                      console.error('打开文件失败:', err);
+                      uni.showToast({
+                        title: '打开文件失败',
+                        icon: 'none'
+                      });
+                    }
+                  });
+                },
+                fail: (err) => {
+                  console.error('保存文件失败:', err);
+                  uni.showToast({
+                    title: '保存文件失败',
+                    icon: 'none'
+                  });
+                }
+              });
+            } else {
+              throw new Error('下载文件失败');
+            }
+          },
+          fail: (err) => {
+            console.error('下载文件失败:', err);
+            throw new Error('下载文件失败');
+          }
+        });
+      } catch (e) {
+        console.error('下载文件失败:', e);
+        uni.showToast({
+          title: e.message || '下载文件失败',
+          icon: 'none'
+        });
+      } finally {
+        uni.hideLoading();
+      }
+    },
+
+    // 打开位置
+    openLocation(location) {
+      try {
+        const locationData = typeof location === 'string' ? JSON.parse(location) : location;
+        uni.openLocation({
+          latitude: locationData.latitude,
+          longitude: locationData.longitude,
+          name: locationData.name || locationData.address,
+          scale: 18
+        });
+      } catch (e) {
+        console.error('打开位置失败:', e);
+        uni.showToast({
+          title: '打开位置失败',
+          icon: 'none'
+        });
+      }
+    },
+
+    // 格式化文件大小
+    formatFileSize(size) {
+      if (size < 1024) {
+        return size + 'B';
+      } else if (size < 1024 * 1024) {
+        return (size / 1024).toFixed(2) + 'KB';
+      } else if (size < 1024 * 1024 * 1024) {
+        return (size / (1024 * 1024)).toFixed(2) + 'MB';
+      } else {
+        return (size / (1024 * 1024 * 1024)).toFixed(2) + 'GB';
+      }
+    },
+
+    // 播放视频
+    async playVideo(fileID) {
+      if (!fileID) return;
+      
+      try {
+        let videoUrl = fileID;
+        
+        // 如果是云存储文件ID，获取临时访问链接
+        if (!fileID.startsWith('http') && !fileID.startsWith('/')) {
+          const res = await uniCloud.getTempFileURL({
+            fileList: [fileID]
+          });
+          
+          if (res.fileList && res.fileList[0] && res.fileList[0].tempFileURL) {
+            videoUrl = res.fileList[0].tempFileURL;
+          } else {
+            throw new Error('获取视频链接失败');
+          }
+        }
+        
+        // 设置当前视频URL并显示全屏播放器
+        this.currentVideoUrl = videoUrl;
+        this.isFullscreen = true;
+        
+        // 等待DOM更新后获取视频上下文
+        this.$nextTick(() => {
+          this.videoContext = uni.createVideoContext('fullscreen-video', this);
+          if (this.videoContext) {
+            this.videoContext.play();
+          }
+        });
+      } catch (e) {
+        console.error('播放视频失败:', e);
+        uni.showToast({
+          title: '播放视频失败',
+          icon: 'none'
+        });
+      }
+    },
+    
+    // 退出全屏
+    exitFullscreen() {
+      if (this.videoContext) {
+        this.videoContext.stop();
+      }
+      this.isFullscreen = false;
+      this.currentVideoUrl = '';
+      this.videoContext = null;
+    },
+    
+    // 处理视频错误
+    handleVideoError(e) {
+      console.error('视频加载失败:', e);
+      uni.showToast({
+        title: '视频加载失败',
+        icon: 'none'
+      });
+    },
+    
+    // 获取视频缩略图
+    async getVideoThumbnail(fileID) {
+      if (!fileID) return '';
+      
+      try {
+        // 如果是临时路径，直接返回
+        if (fileID.startsWith('http') || fileID.startsWith('/')) {
+          return fileID;
+        }
+        
+        // 如果是云存储文件ID，获取临时访问链接
+        const res = await uniCloud.getTempFileURL({
+          fileList: [fileID]
+        });
+        
+        if (res.fileList && res.fileList[0] && res.fileList[0].tempFileURL) {
+          return res.fileList[0].tempFileURL;
+        }
+        return fileID;
+      } catch (e) {
+        console.error('获取视频缩略图失败:', e);
+        return fileID;
+      }
+    },
+
+    // 检查订单状态和评价
+    async checkOrderAndReview() {
+      try {
+        const db = uniCloud.database();
+        const ordersCollection = db.collection('order');
+        const reviewsCollection = db.collection('reviews');
+        
+        // 获取当前用户的订单
+        const { result } = await ordersCollection
+          .where({
+            user_id: this.userId,
+            escort_id: this.chatPartner._id,
+            order_status: '已完成'
+          })
+          .get();
+          
+        console.log('评价订单：', result.data);
+        
+        if (result.data && result.data.length > 0) {
+          const completedOrder = result.data[0];
+          this.currentOrderId = completedOrder._id;
+          
+          console.log('当前订单ID：', this.currentOrderId);
+          
+          // 检查是否已经评价过
+          const reviewResult = await reviewsCollection
+            .where({
+              order_id: this.currentOrderId
+            })
+            .get();
+            
+          console.log('检查评价结果：', reviewResult);
+          
+          // 检查评价结果是否存在且有效
+          if (!reviewResult.result || !reviewResult.result.data || reviewResult.result.data.length === 0) {
+            console.log('未找到评价，显示评价弹窗');
+            // 如果没有评价，显示评价弹窗
+            this.showReviewModal = true;
+          } else {
+            console.log('已存在评价，不显示评价弹窗');
+            this.showReviewModal = false;
+          }
+        }
+      } catch (e) {
+        console.error('检查订单和评价失败:', e);
+        // 打印详细的错误信息
+        console.error('错误详情:', {
+          message: e.message,
+          stack: e.stack
+        });
+      }
+    },
+    
+    // 关闭评价弹窗
+    closeReviewModal() {
+      this.showReviewModal = false;
+      this.reviewRating = 5;
+      this.reviewContent = '';
+      this.reviewImages = [];
+    },
+    
+    // 设置评分
+    setRating(rating) {
+      this.reviewRating = rating;
+    },
+    
+    // 选择评价图片
+    async chooseReviewImage() {
+      try {
+        const [err, res] = await uni.chooseImage({
+          count: 9 - this.reviewImages.length,
+          sizeType: ['compressed'],
+          sourceType: ['album', 'camera']
+        });
+        
+        if (err) {
+          throw new Error('选择图片失败');
+        }
+        
+        if (res && res.tempFilePaths) {
+          this.reviewImages = [...this.reviewImages, ...res.tempFilePaths];
+        }
+      } catch (e) {
+        console.error('选择图片失败:', e);
+        uni.showToast({
+          title: '选择图片失败',
+          icon: 'none'
+        });
+      }
+    },
+    
+    // 删除评价图片
+    deleteReviewImage(index) {
+      this.reviewImages.splice(index, 1);
+    },
+    
+    // 提交评价
+    async submitReview() {
+      try {
+        if (!this.reviewContent.trim()) {
+          uni.showToast({
+            title: '请输入评价内容',
+            icon: 'none'
+          });
+          return;
+        }
+        
+        uni.showLoading({
+          title: '提交中...'
+        });
+        
+        const db = uniCloud.database();
+        const reviewsCollection = db.collection('reviews');
+        
+        // 上传图片
+        const uploadedImages = [];
+        for (const image of this.reviewImages) {
+          const uploadRes = await uniCloud.uploadFile({
+            filePath: image,
+            cloudPath: `reviews/${Date.now()}_${Math.random().toString(36).slice(-6)}.${image.split('.').pop()}`
+          });
+          
+          if (uploadRes && uploadRes.fileID) {
+            uploadedImages.push(uploadRes.fileID);
+          }
+        }
+        
+        // 保存评价
+        const reviewData = {
+          order_id: this.currentOrderId,
+          user_id: this.userId,
+          escort_id: this.chatPartner._id,
+          rating: this.reviewRating,
+          content: this.reviewContent,
+          images: uploadedImages,
+          create_time: Date.now() // 使用时间戳
+        };
+        
+        console.log('提交的数据：', reviewData);
+        const { result } = await reviewsCollection.add(reviewData);
+        
+        if (result.id) {
+          uni.showToast({
+            title: '评价成功',
+            icon: 'success'
+          });
+          this.closeReviewModal();
+        } else {
+          throw new Error('保存评价失败');
+        }
+      } catch (e) {
+        console.error('提交评价失败:', e);
+        uni.showToast({
+          title: e.message || '提交评价失败',
+          icon: 'none'
+        });
+      } finally {
+        uni.hideLoading();
+      }
+    },
+
+    // 检查订单状态和是否有总结
+    async checkOrderAndSummary() {
+      try {
+        const db = uniCloud.database();
+        const ordersCollection = db.collection('order');
+        const summariesCollection = db.collection('visit_summaries');
+        
+        // 获取当前陪诊师的订单
+        const { result } = await ordersCollection
+          .where({
+            escort_id: this.userId,
+            user_id: this.chatPartner._id,
+            order_status: '已完成'
+          })
+          .get();
+
+        if (result.data && result.data.length > 0) {
+          const completedOrder = result.data[0];
+          this.currentOrderId = completedOrder._id;
+          
+          // 只使用 order_id 检查是否已经写过总结
+          const summaryResult = await summariesCollection
+            .where({
+              order_id: completedOrder._id
+            })
+            .get();
+            console.log('检查总结结果',summaryResult.result.data)
+          if (!summaryResult.result.data || summaryResult.result.data.length === 0) {
+            // 如果没有总结，显示总结弹窗
+            this.showSummaryModal = true;
+          }
+        }
+      } catch (e) {
+        console.error('检查订单和总结失败:', e);
+      }
+    },
+    
+    // 关闭总结弹窗
+    closeSummaryModal() {
+      this.showSummaryModal = false;
+      this.summaryContent = '';
+      this.summaryImages = [];
+    },
+    
+    // 选择总结图片
+    async chooseSummaryImage() {
+      try {
+        const [err, res] = await uni.chooseImage({
+          count: 9 - this.summaryImages.length,
+          sizeType: ['compressed'],
+          sourceType: ['album', 'camera']
+        });
+        
+        if (err) {
+          throw new Error('选择图片失败');
+        }
+        
+        if (res && res.tempFilePaths) {
+          this.summaryImages = [...this.summaryImages, ...res.tempFilePaths];
+        }
+      } catch (e) {
+        console.error('选择图片失败:', e);
+        uni.showToast({
+          title: '选择图片失败',
+          icon: 'none'
+        });
+      }
+    },
+    
+    // 删除总结图片
+    deleteSummaryImage(index) {
+      this.summaryImages.splice(index, 1);
+    },
+    
+    // 提交总结
+    async submitSummary() {
+      try {
+        if (!this.summaryContent.trim()) {
+          uni.showToast({
+            title: '请输入总结内容',
+            icon: 'none'
+          });
+          return;
+        }
+        
+        uni.showLoading({
+          title: '提交中...'
+        });
+        
+        const db = uniCloud.database();
+        const summariesCollection = db.collection('visit_summaries');
+        
+        // 上传图片
+        const uploadedImages = [];
+        for (const image of this.summaryImages) {
+          const uploadRes = await uniCloud.uploadFile({
+            filePath: image,
+            cloudPath: `summaries/${Date.now()}_${Math.random().toString(36).slice(-6)}.${image.split('.').pop()}`
+          });
+          
+          if (uploadRes && uploadRes.fileID) {
+            uploadedImages.push(uploadRes.fileID);
+          }
+        }
+        
+        // 保存总结
+        const summaryData = {
+          order_id: this.currentOrderId,
+          user_id: this.chatPartner._id,
+          escort_id: this.userId,
+          content: this.summaryContent,
+          images: uploadedImages,
+          create_time: Date.now()// 使用时间戳
+        };
+        
+        console.log('提交的数据：', summaryData);
+        const { result } = await summariesCollection.add(summaryData);
+        
+        if (result.id) {
+          uni.showToast({
+            title: '提交成功',
+            icon: 'success'
+          });
+          this.closeSummaryModal();
+        } else {
+          throw new Error('保存总结失败');
+        }
+      } catch (e) {
+        console.error('提交总结失败:', e);
+        uni.showToast({
+          title: e.message || '提交总结失败',
+          icon: 'none'
+        });
+      } finally {
+        uni.hideLoading();
+      }
+    },
   }
 }
 </script>
@@ -559,6 +1489,7 @@ export default {
   flex-direction: column;
   height: 100vh;
   background-color: #f5f5f5;
+  position: relative;
 }
 
 .chat-header {
@@ -566,6 +1497,14 @@ export default {
   border-bottom: 1rpx solid #eee;
   width: 100%;
   padding-top: 20rpx;
+  z-index: 100;
+}
+
+.chat-header.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 .header-content {
@@ -624,6 +1563,8 @@ export default {
   flex: 1;
   padding: 20rpx 30rpx;
   background-color: #f5f5f5;
+  margin-top: 120rpx; /* 为固定头部留出空间 */
+  margin-bottom: 120rpx; /* 为底部输入框留出空间 */
 }
 
 .message {
@@ -779,10 +1720,59 @@ export default {
 }
 
 .location-message {
-  background: #f5f5f5;
-  padding: 20rpx;
+  background: #fff;
   border-radius: 8rpx;
+  overflow: hidden;
+  width: 100%;
+  max-width: 400rpx;
+}
+
+.location-content {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.location-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 16rpx;
+}
+
+.location-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.location-name {
   font-size: 28rpx;
+  color: #333;
+  margin-bottom: 4rpx;
+}
+
+.location-address {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.location-map {
+  width: 100%;
+  height: 200rpx;
+}
+
+.self .location-message {
+  background: #02D4C6;
+}
+
+.self .location-content {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.self .location-name,
+.self .location-address {
+  color: #fff;
 }
 
 /* 文件消息样式 */
@@ -812,6 +1802,303 @@ export default {
 
 .message.sending {
   opacity: 0.7;
+}
+
+.video-message {
+  max-width: 400rpx;
+  border-radius: 8rpx;
+}
+
+.msg-video {
+  width: 100%;
+  height: 100%;
+  border-radius: 8rpx;
+}
+
+.file-message {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+}
+
+.file-type-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 20rpx;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-name {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.file-size {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.video-container {
+  position: relative;
+  width: 400rpx;
+  height: 300rpx;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.msg-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.video-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreen-video {
+  width: 100%;
+  height: 100%;
+}
+
+.fullscreen-close {
+  position: absolute;
+  top: 40rpx;
+  right: 40rpx;
+  width: 60rpx;
+  height: 60rpx;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.close-icon {
+  width: 30rpx;
+  height: 30rpx;
+}
+
+/* 评价弹窗样式 */
+.review-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.review-content {
+  width: 90%;
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  overflow-y: auto;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.review-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.close-btn {
+  font-size: 40rpx;
+  color: #999;
+  padding: 10rpx;
+}
+
+.rating-section {
+  margin-bottom: 30rpx;
+}
+
+.rating-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.stars {
+  display: flex;
+  gap: 20rpx;
+}
+
+.star {
+  font-size: 50rpx;
+  color: #ddd;
+  cursor: pointer;
+}
+
+.star.active {
+  color: #ffd700;
+}
+
+.content-section {
+  margin-bottom: 30rpx;
+}
+
+.review-textarea {
+  width: 100%;
+  height: 200rpx;
+  background: #f5f5f5;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+}
+
+.image-upload-section {
+  margin-bottom: 30rpx;
+}
+
+.image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.image-item {
+  width: 160rpx;
+  height: 160rpx;
+  position: relative;
+}
+
+.image-item image {
+  width: 100%;
+  height: 100%;
+  border-radius: 10rpx;
+}
+
+.delete-btn {
+  position: absolute;
+  top: -20rpx;
+  right: -20rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+}
+
+.upload-btn {
+  width: 160rpx;
+  height: 160rpx;
+  background: #f5f5f5;
+  border-radius: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-icon {
+  font-size: 60rpx;
+  color: #999;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #02D4C6;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+}
+
+/* 总结弹窗样式 */
+.summary-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-content {
+  width: 90%;
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  overflow-y: auto;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.summary-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.summary-textarea {
+  width: 100%;
+  height: 300rpx;
+  background: #f5f5f5;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  margin-bottom: 30rpx;
 }
 </style>
 

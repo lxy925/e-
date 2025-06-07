@@ -75,7 +75,6 @@
             <template v-else-if="item.message_type === 'location'">
               <view class="location-message" @click="openLocation(item.content)">
                 <view class="location-content">
-                  <image src="/static/images/icons/location.png" class="location-icon"></image>
                   <view class="location-info">
                     <text class="location-name">{{JSON.parse(item.content).name || JSON.parse(item.content).address}}</text>
                     <text class="location-address">{{JSON.parse(item.content).address}}</text>
@@ -244,6 +243,51 @@
         <button class="submit-btn" @click="submitSummary">提交总结</button>
       </view>
     </view>
+
+    <!-- 打卡弹窗 -->
+    <view class="check-in-modal" v-if="showCheckInModal">
+      <view class="check-in-content">
+        <view class="check-in-header">
+          <text class="check-in-title">打卡任务</text>
+          <view class="close-btn" @click="closeCheckInModal">×</view>
+        </view>
+        <view class="check-in-body">
+          <view class="location-section">
+            <text class="section-title">当前位置</text>
+            <view class="location-info" v-if="currentLocation">
+              <text class="location-text">{{currentLocation.address}}</text>
+              <button class="refresh-btn" @click="refreshLocation">刷新</button>
+            </view>
+            <button class="get-location-btn" @click="getLocation" v-else>获取位置</button>
+          </view>
+          <view class="image-section">
+            <text class="section-title">现场照片</text>
+            <view class="image-list">
+              <view 
+                v-for="(image, index) in checkInImages" 
+                :key="index" 
+                class="image-item"
+              >
+                <image :src="image" mode="aspectFill"></image>
+                <view class="delete-btn" @click="deleteCheckInImage(index)">×</view>
+              </view>
+              <view class="upload-btn" @click="chooseCheckInImage" v-if="checkInImages.length < 9">
+                <text class="upload-icon">+</text>
+              </view>
+            </view>
+          </view>
+          <view class="description-section">
+            <text class="section-title">备注说明（选填）</text>
+            <textarea 
+              v-model="checkInDescription" 
+              placeholder="请输入备注说明" 
+              class="description-textarea"
+            ></textarea>
+          </view>
+        </view>
+        <button class="submit-btn" @click="submitCheckIn" :disabled="!canSubmitCheckIn">提交打卡</button>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -277,7 +321,19 @@ export default {
       currentOrderId: '',
       showSummaryModal: false,
       summaryContent: '',
-      summaryImages: []
+      summaryImages: [],
+      showCheckInModal: false,
+      currentCheckIn: null,
+      currentLocation: null,
+      checkInImages: [],
+      checkInDescription: '',
+      checkInTimer: null
+    }
+  },
+  
+  computed: {
+    canSubmitCheckIn() {
+      return this.currentLocation && this.checkInImages.length > 0;
     }
   },
   
@@ -324,6 +380,11 @@ export default {
       if (this.userType === '陪诊师') {
         await this.checkOrderAndSummary();
       }
+
+      // 如果是陪诊师，启动打卡检查
+      if (this.userType === '陪诊师') {
+        this.startCheckInCheck();
+      }
     } catch (e) {
       console.error('页面加载失败:', e);
       uni.showToast({
@@ -339,6 +400,9 @@ export default {
   onUnload() {
     if (this.messageListener) {
       this.messageListener.close();
+    }
+    if (this.checkInTimer) {
+      clearInterval(this.checkInTimer);
     }
   },
   
@@ -1069,10 +1133,54 @@ export default {
       }
     },
     
-    // 选择位置
+    // 获取当前位置
+    async getLocation() {
+      try {
+        const [err, res] = await uni.chooseLocation({
+          latitude: 23.12463,  // 默认纬度
+          longitude: 113.36199, // 默认经度
+        });
+        
+        if (err) {
+          throw new Error('获取位置失败');
+        }
+        
+        console.log('获取到的位置信息:', res);
+        
+        // 直接使用微信返回的位置信息
+        this.currentLocation = {
+          latitude: parseFloat(res.latitude),
+          longitude: parseFloat(res.longitude),
+          address: res.address,
+          name: res.name
+        };
+        
+        // 保存位置信息到本地存储
+        if (res.province) {
+          uni.setStorageSync('provinceName', res.province);
+        }
+        if (res.city) {
+          uni.setStorageSync('cityName', res.city);
+        }
+        if (res.district) {
+          uni.setStorageSync('areaName', res.district);
+        }
+      } catch (e) {
+        console.error('获取位置失败:', e);
+        uni.showToast({
+          title: e.message || '获取位置失败',
+          icon: 'none'
+        });
+      }
+    },
+    
+    // 选择位置（用于发送位置消息）
     async chooseLocation() {
       try {
-        const [err, res] = await uni.chooseLocation();
+        const [err, res] = await uni.chooseLocation({
+          latitude: 23.12463,  // 默认纬度
+          longitude: 113.36199, // 默认经度
+        });
         
         if (err) {
           throw new Error('选择位置失败');
@@ -1081,7 +1189,7 @@ export default {
         if (!res) {
           throw new Error('未选择位置');
         }
-
+        
         const currentTime = Date.now().toString();
         
         // 显示发送中的消息
@@ -1462,6 +1570,219 @@ export default {
     deleteSummaryImage(index) {
       this.summaryImages.splice(index, 1);
     },
+
+    // 开始检查打卡任务
+    startCheckInCheck() {
+      // 立即执行一次检查
+      this.checkPendingCheckIns();
+      
+      // 每10秒检查一次是否有待打卡任务
+      this.checkInTimer = setInterval(() => {
+        this.checkPendingCheckIns();
+		//console.log('check');
+      }, 10000);
+    },
+    
+    // 检查待打卡任务
+    async checkPendingCheckIns() {
+      try {
+        console.log('开始检查打卡任务，当前用户ID:', this.userId);
+        
+        // 先检查是否有成功的打卡记录
+        const checkResult = await uniCloud.callFunction({
+          name: 'checkIn',
+          data: {
+            action: 'checkSuccessfulCheckIn',
+            data: {
+              escort_id: this.userId
+            }
+          }
+        });
+        
+        console.log('检查成功打卡记录结果:', checkResult);
+        
+        if (checkResult.result.code === 200 && checkResult.result.data.hasSuccessfulCheckIn) {
+          console.log('已有成功打卡记录，停止检查');
+          // 如果有成功打卡记录，停止检查
+          if (this.checkInTimer) {
+            clearInterval(this.checkInTimer);
+            this.checkInTimer = null;
+          }
+          // 如果弹窗显示，关闭它
+          if (this.showCheckInModal) {
+            this.closeCheckInModal();
+          }
+          return;
+        }
+        
+        // 如果没有成功打卡记录，继续检查待打卡任务
+        const { result } = await uniCloud.callFunction({
+          name: 'checkIn',
+          data: {
+            action: 'getPendingCheckIns',
+            data: {
+              escort_id: this.userId
+            }
+          }
+        });
+        
+        console.log('云函数返回结果:', result);
+        
+        if (result.code === 200) {
+          if (result.data && result.data.length > 0) {
+            console.log('找到待打卡任务:', result.data);
+            // 如果当前没有显示打卡弹窗，则显示
+            if (!this.showCheckInModal) {
+              console.log('显示打卡弹窗');
+              this.currentCheckIn = result.data[0];
+              this.showCheckInModal = true;
+              
+              // 获取位置信息
+              await this.getLocation();
+              
+              // 显示提示
+              uni.showToast({
+                title: '请及时完成打卡',
+                icon: 'none',
+                duration: 2000
+              });
+            } else {
+              console.log('打卡弹窗已显示，不重复显示');
+            }
+          } else {
+            console.log('没有找到待打卡任务');
+            // 如果没有待打卡任务，关闭打卡弹窗
+            if (this.showCheckInModal) {
+              console.log('关闭打卡弹窗');
+              this.closeCheckInModal();
+            }
+          }
+        } else {
+          console.error('检查打卡任务失败:', result.msg);
+        }
+      } catch (e) {
+        console.error('检查打卡任务失败:', e);
+      }
+    },
+    
+    // 刷新位置
+    refreshLocation() {
+      this.currentLocation = null;
+      this.getLocation();
+    },
+    
+    // 选择打卡图片
+    async chooseCheckInImage() {
+      try {
+        const [err, res] = await uni.chooseImage({
+          count: 9 - this.checkInImages.length,
+          sizeType: ['compressed'],
+          sourceType: ['album', 'camera']
+        });
+        
+        if (err) {
+          throw new Error('选择图片失败');
+        }
+        
+        if (res && res.tempFilePaths) {
+          this.checkInImages = [...this.checkInImages, ...res.tempFilePaths];
+        }
+      } catch (e) {
+        console.error('选择图片失败:', e);
+        uni.showToast({
+          title: '选择图片失败',
+          icon: 'none'
+        });
+      }
+    },
+    
+    // 删除打卡图片
+    deleteCheckInImage(index) {
+      this.checkInImages.splice(index, 1);
+    },
+    
+    // 提交打卡
+    async submitCheckIn() {
+      if (!this.canSubmitCheckIn) return;
+      
+      try {
+        uni.showLoading({
+          title: '提交中...'
+        });
+        
+        // 上传图片
+        const uploadedImages = [];
+        for (const image of this.checkInImages) {
+          const uploadRes = await uniCloud.uploadFile({
+            filePath: image,
+            cloudPath: `check-ins/${Date.now()}_${Math.random().toString(36).slice(-6)}.${image.split('.').pop()}`
+          });
+          
+          if (uploadRes && uploadRes.fileID) {
+            uploadedImages.push(uploadRes.fileID);
+          }
+        }
+        
+        // 确保位置信息包含详细地址
+        if (!this.currentLocation.address || this.currentLocation.address.includes('经度')) {
+          // 如果地址不完整，重新获取一次
+          await this.getLocation();
+        }
+        
+        const { result } = await uniCloud.callFunction({
+          name: 'checkIn',
+          data: {
+            action: 'submitCheckIn',
+            data: {
+              check_in_id: this.currentCheckIn._id,
+              location: {
+                latitude: this.currentLocation.latitude,
+                longitude: this.currentLocation.longitude,
+                address: this.currentLocation.address,
+                name: this.currentLocation.name
+              },
+              images: uploadedImages,
+              description: this.checkInDescription
+            }
+          }
+        });
+        
+        if (result.code === 200) {
+          uni.showToast({
+            title: '打卡成功',
+            icon: 'success'
+          });
+          
+          // 关闭打卡弹窗
+          this.closeCheckInModal();
+          
+          // 停止检查打卡任务
+          if (this.checkInTimer) {
+            clearInterval(this.checkInTimer);
+            this.checkInTimer = null;
+          }
+        } else {
+          throw new Error(result.msg || '提交打卡失败');
+        }
+      } catch (e) {
+        console.error('提交打卡失败:', e);
+        uni.showToast({
+          title: e.message || '提交打卡失败',
+          icon: 'none'
+        });
+      } finally {
+        uni.hideLoading();
+      }
+    },
+    
+    // 关闭打卡弹窗
+    closeCheckInModal() {
+      this.showCheckInModal = false;
+      this.currentCheckIn = null;
+      this.currentLocation = null;
+      this.checkInImages = [];
+      this.checkInDescription = '';
+    }
   }
 }
 </script>
@@ -1699,11 +2020,11 @@ export default {
 
 .option-item text {
   font-size: 26rpx;
-  color: #666;
+   color: #666; 
 }
 
 .location-message {
-  background: #fff;
+  background: transparent;
   border-radius: 8rpx;
   overflow: hidden;
   width: 100%;
@@ -1711,20 +2032,12 @@ export default {
 }
 
 .location-content {
-  display: flex;
-  align-items: center;
   padding: 20rpx;
   border-bottom: 1rpx solid #eee;
-}
-
-.location-icon {
-  width: 40rpx;
-  height: 40rpx;
-  margin-right: 16rpx;
+  background: transparent;
 }
 
 .location-info {
-  flex: 1;
   display: flex;
   flex-direction: column;
 }
@@ -1733,11 +2046,17 @@ export default {
   font-size: 28rpx;
   color: #333;
   margin-bottom: 4rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .location-address {
   font-size: 24rpx;
-  color: #999;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .location-map {
@@ -1746,16 +2065,11 @@ export default {
 }
 
 .self .location-message {
-  background: #02D4C6;
+  background: transparent;
 }
 
 .self .location-content {
-  border-bottom-color: rgba(255, 255, 255, 0.2);
-}
-
-.self .location-name,
-.self .location-address {
-  color: #fff;
+  border-bottom-color: rgba(0, 0, 0, 0.1);
 }
 
 /* 文件消息样式 */
@@ -2039,8 +2353,8 @@ export default {
   font-size: 28rpx;
 }
 
-/* 总结弹窗样式 */
-.summary-modal {
+/* 打卡弹窗样式 */
+.check-in-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -2053,7 +2367,7 @@ export default {
   justify-content: center;
 }
 
-.summary-content {
+.check-in-content {
   width: 90%;
   max-height: 80vh;
   background: #fff;
@@ -2062,26 +2376,93 @@ export default {
   overflow-y: auto;
 }
 
-.summary-header {
+.check-in-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30rpx;
 }
 
-.summary-title {
+.check-in-title {
   font-size: 32rpx;
   font-weight: bold;
 }
 
-.summary-textarea {
+.check-in-body {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.location-section {
+  margin-bottom: 30rpx;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f5f5f5;
+  padding: 20rpx;
+  border-radius: 10rpx;
+}
+
+.location-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.refresh-btn {
+  margin-left: 20rpx;
+  font-size: 24rpx;
+  color: #02D4C6;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.get-location-btn {
   width: 100%;
-  height: 300rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #02D4C6;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+}
+
+.image-section {
+  margin-bottom: 30rpx;
+}
+
+.description-textarea {
+  width: 100%;
+  height: 200rpx;
   background: #f5f5f5;
   border-radius: 10rpx;
   padding: 20rpx;
   font-size: 28rpx;
-  margin-bottom: 30rpx;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #02D4C6;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+}
+
+.submit-btn[disabled] {
+  background: #ccc;
+  color: #fff;
 }
 </style>
 

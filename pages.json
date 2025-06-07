@@ -143,17 +143,17 @@
     }
 },
 {
-	"path" : "pages/consult/consult",
-	"style" : 
-	{
-		"navigationBarTitleText" : ""
-	}
-},
-{
 	"path" : "pages/chatList/chatList",
 	"style" : 
 	{
 		"navigationBarTitleText" : "聊天列表"
+	}
+},
+{
+	"path" : "pages/consult/consult",
+	"style" : 
+	{
+		"navigationBarTitleText" : ""
 	}
 }
 ],

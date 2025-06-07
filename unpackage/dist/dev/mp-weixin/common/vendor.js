@@ -10101,7 +10101,7 @@ var b = "development" === "development",
   k = "true" === undefined || !0 === undefined,
   P = T([]),
   C = "h5" === E ? "web" : "app-plus" === E || "app-harmony" === E ? "app" : E,
-  A = T({"address":["127.0.0.1","192.168.5.1","192.168.139.1","192.168.56.201"],"servePort":7000,"debugPort":9000,"initialLaunchType":"remote","skipFiles":["<node_internals>/**","D:/Web-Install/HBuilderX/HBuilderX/plugins/unicloud/**/*.js"]}),
+  A = T({"address":["127.0.0.1","192.168.5.1","192.168.139.1","172.20.154.7"],"servePort":7001,"debugPort":9001,"initialLaunchType":"remote","skipFiles":["<node_internals>/**","D:/Web-Install/HBuilderX/HBuilderX/plugins/unicloud/**/*.js"]}),
   O = T([{"provider":"aliyun","spaceName":"e-space","spaceId":"mp-f5303e3c-7928-482e-b2e2-0cf6877289c6","clientSecret":"j5ZFeQnRUa4zMdq7m0bSnQ==","endpoint":"https://api.next.bspapp.com"}]) || [],
   x = true;
 var N = "";
@@ -18610,14 +18610,14 @@ var _default = {
       "navigationBarTitleText": "收银台"
     }
   }, {
-    "path": "pages/consult/consult",
-    "style": {
-      "navigationBarTitleText": ""
-    }
-  }, {
     "path": "pages/chatList/chatList",
     "style": {
       "navigationBarTitleText": "聊天列表"
+    }
+  }, {
+    "path": "pages/consult/consult",
+    "style": {
+      "navigationBarTitleText": ""
     }
   }],
   "sitemapLocation": "sitemap.json",

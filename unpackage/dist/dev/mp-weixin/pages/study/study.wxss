@@ -1,0 +1,85 @@
+
+.all {
+	margin-top: 400rpx;
+	background-color: #f9f9f9;
+	border-radius: 20rpx;
+	padding: 80rpx 20rpx ;
+	box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);
+	margin-left: 40rpx;
+	margin-right: 40rpx;
+}
+.title{
+	font-size: 32rpx;
+	font-weight: bold;
+	margin-bottom: 20rpx;
+	text-align: center;
+	color:rgb(246, 109, 109);
+}
+.progress{
+	margin-bottom: 20rpx;
+	margin-left: 50rpx;
+	margin-right: 30rpx;
+}
+.page-section-title {
+	font-size: 32rpx;
+	font-weight: bold;
+	margin-bottom: 20rpx;
+	margin-top: 20rpx;
+	margin-left: 30rpx;
+	margin-right: 30rpx;
+}
+.radio-item{
+	color: #000;
+	margin-left: 30rpx;
+	margin-right: 30rpx;
+	margin-top: 20rpx;
+}
+.red {
+	color: red;
+}
+.green {
+	color: green;
+	font-weight: bold;
+}
+.answer{
+	margin-left: 30rpx;
+	margin-right: 30rpx;
+	margin-top: 20rpx;
+	color:green;
+	font-size: 32rpx;
+	font-weight: bold;
+}
+.score{
+	text-align: center;
+	font-size: 32rpx;
+	font-weight: bold;
+	margin-top: 50rpx;
+	color:green;
+}
+/* 将按钮组放置在页面底部 */
+.button-group {
+    position: fixed; /* 固定定位 */
+    bottom: 0;       /* 置于页面底部 */
+    left: 0;         /* 置于页面左侧 */
+    width: 100%;     /* 宽度占满整个页面 */
+    display: flex;   /* 使用弹性布局 */
+    justify-content:space-around; /* 子元素在主轴上均匀分布 */
+    padding: 10px 0px;   /* 添加内边距，避免内容紧贴边缘 */
+    background-color: #f9f9f9; /* 添加背景色（可选） */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影（可选） */
+}
+/* 为按钮添加样式 */
+.button-group button {
+    padding: 10px 10px; /* 按钮内边距 */
+    font-size: 16px;    /* 字体大小 */
+    border: none;       /* 去掉边框 */
+    border-radius: 5px; /* 圆角边框 */
+    color:darkturquoise;       /* 文字颜色 */
+    cursor: pointer;    /* 鼠标悬停时显示手型 */
+}
+/* 按钮悬停效果 */
+.button-group button:hover {
+    background-color:rgb(203, 251, 235); /* 悬停时背景色变深 */
+}
+
+

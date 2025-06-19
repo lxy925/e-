@@ -156,7 +156,7 @@
 							<image src="../../static/images/mine/patient.png" alt=""></image>
 							<text class="box-title">个人信息管理</text>
 						</view>
-						<view class="boxed">
+						<view class="boxed" @click="goToSetTime">
 							<image src="../../static/images/mine/advice.png" alt=""></image>
 							<text class="box-title">查看用户评价</text>
 						</view>
@@ -254,6 +254,12 @@
 		methods: {
 			handleScroll(e) {
 				this.scrollTop = e.detail.scrollTop
+			},
+				
+			goToSetTime(){
+				uni.navigateTo({
+					url: `/pages/time/time`
+				});
 			},
 			selectTime(time) {
 			    this.selectedTime = time; // 更新选择的时间选项

@@ -71,7 +71,7 @@
 				const max = 500000; // 5000元=500000分
 				return this.amountInCent >= min &&
 					this.amountInCent <= max &&
-					this.amountInCent <= this.accountInfo.balance &&
+					this.amountInCent <= this.accountInfo.withdrawable_amount &&
 					!this.loading;
 			}
 		
@@ -97,7 +97,7 @@
 
 			// 校验金额
 			validateAmount() {
-				if (this.amountInCent > this.accountInfo.balance) {
+				if (this.amountInCent > this.accountInfo.withdrawable_amount) {
 					uni.showToast({
 						title: '超出可提现金额',
 						icon: 'none'

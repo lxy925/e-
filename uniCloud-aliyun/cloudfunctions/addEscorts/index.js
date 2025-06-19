@@ -4,7 +4,7 @@ const jwt = require('./jwt.js');
 exports.main = async (event, context) => {
     const db = uniCloud.database();
     const {
-      
+		
         name,
         age,
         gender,

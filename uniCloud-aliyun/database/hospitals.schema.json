@@ -1,0 +1,82 @@
+// 医院
+{
+  "bsonType": "object",
+  "required": ["name", "level", "type", "phone", "address", "status"],
+  "permission": {
+    "read": true,
+    "create": false,
+    "update": true,
+    "delete": false
+  },
+  "properties": {
+    "name": {
+      "bsonType": "string",
+      "title": "医院名称",
+      "description": "医院的名称"
+    },
+    "level": {
+      "bsonType": "string",
+      "title": "医院等级",
+      "description": "医院的等级（如：三级甲等）"
+    },
+    "type": {
+      "bsonType": "string",
+      "title": "经营方式",
+      "description": "医院的经营方式"
+    },
+    "phone": {
+      "bsonType": "string",
+      "title": "联系电话",
+      "description": "医院的联系电话"
+    },
+    "address": {
+      "bsonType": "object",
+      "title": "地址信息",
+      "properties": {
+        "province": {
+          "bsonType": "string",
+          "title": "省份"
+        },
+        "city": {
+          "bsonType": "string",
+          "title": "城市"
+        },
+        "district": {
+          "bsonType": "string",
+          "title": "区域"
+        },
+        "detail": {
+          "bsonType": "string",
+          "title": "详细地址"
+        }
+      }
+    },
+    "website": {
+      "bsonType": "string",
+      "title": "医院网站",
+      "description": "医院的官方网站"
+    },
+    "specialties": {
+      "bsonType": "string",
+      "title": "重点科室",
+      "description": "医院的重点科室"
+    },
+    "fax": {
+      "bsonType": "string",
+      "title": "传真号码",
+      "description": "医院的传真号码"
+    },
+    "email": {
+      "bsonType": "string",
+      "title": "电子邮箱",
+      "description": "医院的电子邮箱"
+    },
+    "status": {
+      "bsonType": "int",
+      "title": "状态",
+      "description": "医院状态：1-正常，0-禁用",
+      "minimum": 0,
+      "maximum": 1
+    }
+  }
+}

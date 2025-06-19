@@ -205,9 +205,135 @@
 			</view>
 		
 	</scroll-view>
+	<view class="page">
+		<view class="header" @click="handleHeaderClick">
+			<img :src="userInfo.moreInfo.avatarUrl || '../../static/images/mine/avatar.png'" v-if="userInfo.type=='陪诊师'" alt="">
+			<img :src="userInfo.avatar || '../../static/images/mine/avatar.png'" v-else alt="">
+			<text class="username">{{userInfo.nickName || '登录'}}</text>
+			<text class="user-info" v-if="userInfo.type=='陪诊师'">
+				{{ userInfo.moreInfo.is_certified ? '已认证' : '未认证' }}</text>
+			<view class="state-box" v-if="userInfo.type=='陪诊师'">
+				<text class="state">接单状态:</text>
+				<switch class="switch" :checked="userInfo.moreInfo.is_bookable" @change="onSwitchChange"
+					color="#ff94da" />
+			</view>
+		</view>
+		<view class="down" v-if="userInfo.type=='陪诊师'">
+			<view class="box">
+				<text class="header-num">1</text>
+				<text class="header-title">总收益(元)</text>
+			</view>
+			<view class="box">
+				<text class="header-num">1</text>
+				<text class="header-title">总销量</text>
+			</view>
+			<view class="box">
+				<text class="header-num">1</text>
+				<text class="header-title">用户评分</text>
+			</view>
+		</view>
+		<view class="info-box" v-else>
+			<view class="money">
+				<text class="money-num"> 1</text>
+				<view class="money-box">
+					<image src="../../static/images/index/money (2).png" alt=""></image>
+					<text class="money-title"> 当前余额(元)</text>
+				</view>
+			</view>
+			<view class="benefit">
+				<text class="benefit-num"> 0</text>
+				<view class="benefit-box">
+					<image src="../../static/images/index/card.png" alt=""></image>
+					<text class="benefit-title">优惠券</text>
+				</view>
+			</view>
+		</view>
+
+		<view class="order-box">
+			<text class="order-title">{{ userInfo.type=='陪诊师' ? '订单数据' : '基本功能' }}</text>
+			<view class="all-box" v-if="userInfo.type=='陪诊师'">
+				<view class="data-box">
+					<text class="num">1</text>
+					<text class="title">订单收入(元)</text>
+				</view>
+				<view class="data-box">
+					<text class="num">1</text>
+					<text class="title">总订单数</text>
+				</view>
+			</view>
+			<view class="order-item" v-else>
+				<view class="box" style="margin-left: 0;">
+					<image src="../../static/images/mine/pay.png" alt=""></image>
+					<text class="box-title">待付款</text>
+				</view>
+				<view class="box">
+					<image src="../../static/images/mine/ordering.png" alt=""></image>
+					<text class="box-title">进行中</text>
+				</view>
+				<view class="box">
+					<image src="../../static/images/mine/finish.png" alt=""></image>
+					<text class="box-title">已完成</text>
+				</view>
+				<view class="box">
+					<image src="../../static/images/mine/cancel.png" alt=""></image>
+					<text class="box-title">已取消</text>
+				</view>
+			</view>
+		</view>
+		<view class="order-box">
+			<text class="order-title"> {{ userInfo.type=='陪诊师' ? '订单管理' : '我的工具' }}</text>
+			<view class="order-item" v-if="userInfo.type=='陪诊师'">
+				<view class="boxed" @click="doctorRegister">
+					<image src="../../static/images/mine/patient.png" alt=""></image>
+					<text class="box-title">个人信息管理</text>
+				</view>
+				<view class="boxed">
+					<image src="../../static/images/mine/advice.png" alt=""></image>
+					<text class="box-title">查看用户评价</text>
+				</view>
+				<view class="boxed" @click="goToChat">
+					<image src="../../static/images/mine/chat.png" alt=""></image>
+					<text class="box-title">聊天</text>
+				</view>
+				<view class="boxed">
+					<image src="../../static/images/mine/setting.png" alt=""></image>
+					<text class="box-title">设置中心</text>
+				</view>
+			</view>
+			<view class="order-item" v-else>
+				<view class="box" id="box1" style="margin-left: 0;">
+					<image src="../../static/images/mine/location.png" alt=""></image>
+					<text class="box-title">地址管理</text>
+				</view>
+				<view class="box">
+					<image src="../../static/images/mine/patient.png" alt=""></image>
+					<text class="box-title">就诊人管理</text>
+				</view>
+				<view class="box" @click="goToChat">
+					<image src="../../static/images/mine/chat1.png" alt=""></image>
+					<text class="box-title">聊天</text>
+				</view>
+				<view class="box">
+					<image src="../../static/images/mine/advice.png" alt=""></image>
+					<text class="box-title">投诉建议</text>
+				</view>
+				<view class="box" style="margin-left: 0;" @click="doctorRegister">
+					<image src="../../static/images/mine/help.png" alt=""></image>
+					<text class="box-title">陪诊师入驻</text>
+				</view>
+				<view class="box">
+					<image src="../../static/images/mine/setting.png" alt=""></image>
+					<text class="box-title">设置中心</text>
+				</view>
+			</view>
+		</view>
+		<view class="logout-box">
+			<image src="../../static/images/mine/logout.png" alt=""></image>
+			<button class="logout" @click="logout" v-if="userInfo.user_id">退出登录</button>
+		</view>
+	</view>
 </template>
 
-// pages/mine/mine.js
 <script>
 	export default {
 		data() {
@@ -218,15 +344,15 @@
 				lastScrollTop: 0,
 				pageScrollTop: 0, // 在父组件中管理滚动位置
 				userInfo: {
-					user_id: '',
-					nickName: '',
-					realName: '',
-					idCard: '',
-					phoneNumber: '',
+					session_key: '',
 					avatar: '',
-					type:'',
-					moreInfo: {}
-
+					nickName: '',
+					is_certified: '',
+					user_id: '',
+					phone: '',
+					idNumber: '',
+					type: '',
+					moreInfo: {},
 				},
 				settledAmount: 0.00,
 				pendingAmount: 0.00,
@@ -275,21 +401,18 @@
 			  
 			},
 			//跳转到二维码页面
+
 			showQRCode() {
 				const data = this.userInfo.user_id;
-				// 将数据转换为查询字符串
 				const query = Object.keys(data)
 					.map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
 					.join('&');
-				// 跳转到目标页面
 				uni.navigateTo({
 					url: `/pages/RQcode/RQcode?${query}`,
 				});
 			},
-			// 初始化用户信息
 			initUserInfo() {
 				const userInfo = uni.getStorageSync("userInfo");
-				
 				console.log("初始化后的值：", userInfo);
 
 				if (userInfo) {
@@ -298,8 +421,6 @@
 				}
 			
 			},
-
-			// 获取用户信息
 			async getUser() {
 				console.log("调取前检查", this.userInfo);
 				
@@ -350,15 +471,10 @@
 					uni.hideLoading();
 				}
 			},
-
-		
-
-			// 退出登录
 			logout() {
 				uni.removeStorageSync("userInfo");
-				
-				
-				
+				uni.removeStorageSync("token");
+				uni.removeStorageSync("refreshToken");
 				this.userInfo = {
 					user_id: '',
 					nickName: '',
@@ -369,18 +485,16 @@
 					type:'',
 					moreInfo: {}
 				};
-				// console.log("头像？", this.userInfo.moreInfo.avatarUrl);
 				
 				uni.showToast({
 					title: "退出登录成功",
 					icon: "success",
 					duration: 2000,
 				});
-			},
-
-			
+			},	
 
 			// 处理头部点击事件
+
 			handleHeaderClick() {
 				if (this.userInfo.user_id) {
 					console.log("已登录");
@@ -392,15 +506,12 @@
 					});
 				} 
 			},
-
 			doctorRegister() {
-				
 					uni.navigateTo({
 						url: "/pages/escortRegistration/escortRegistration",
 					});
 				
 			},
-			// 切换陪诊状态
 			async onSwitchChange() {
 				console.log("改变之前的值", this.userInfo.moreInfo.is_bookable);
 				try {
@@ -430,19 +541,79 @@
 					}
 				} catch (e) {
 					uni.showToast({
-						title: "修改失败",
-						icon: "none",
+						title: '获取用户数据失败',
+						icon: 'none'
 					});
+				} finally {
+					uni.hideLoading();
 				}
 			},
+
 		toApply() {
 			const accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));
 			uni.navigateTo({
 			  url: `/pages/getMoney/getMoney?accountInfo=${accountInfo}`
 			});
 			
-		}
-		}
+		},
+			toAccount() {
+				uni.navigateTo({
+					url: '/pages/account/account'
+				})
+			},
+			goToChat() {
+			/*	this.userInfo._id="683ed16321821bbfdbd3ab37";
+				this.userInfo.user_id="obl9Y7LkhJ7F9iRh_9fq8y33eYZg";
+				this.userInfo.avatar="https://mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18.cdn.bspapp.com/cloudstorage/f697dc5e-07a8-4bdd-8eaf-16a1de754834.jpg";
+				this.userInfo.nickName="kiwi";
+				this.userInfo.realName="薛欣琪";
+				this.userInfo.idNumber="371521200508016127";
+				this.userInfo.phone="15218782112";
+				this.userInfo.type="普通用户"; */
+				 this.userInfo._id="683ed99e2eea65be20450dfb";
+				this.userInfo.user_id="obl9Y7LkhJ7F9iRh_9fq8y33eYZg";
+				this.userInfo.avatar="https://mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18.cdn.bspapp.com/cloudstorage/f697dc5e-07a8-4bdd-8eaf-16a1de754834.jpg";
+				this.userInfo.nickName="kiwi";
+				this.userInfo.realName="薛欣琪";
+				this.userInfo.idNumber="371521200508016127";
+				this.userInfo.phone="15218782112";
+				this.userInfo.type="陪诊师"; 
+				if (!this.userInfo._id) {
+					uni.showToast({
+						title: '请先登录',
+						icon: 'none'
+					});
+					return;
+				}
+
+				const currentUserInfo = {
+					_id: this.userInfo._id,
+					user_id: this.userInfo.user_id,
+					type: this.userInfo.type,
+					nickName: this.userInfo.nickName,
+					realName: this.userInfo.realName,
+					avatar: this.userInfo.avatar,
+					phone: this.userInfo.phone
+				};
+				
+				console.log('准备存储的用户信息：', currentUserInfo);
+				uni.setStorageSync('currentUserInfo', currentUserInfo);
+				
+				uni.navigateTo({
+					url: '/pages/chatList/chatList',
+					fail: (err) => {
+						console.error('页面跳转失败:', err);
+						uni.showToast({
+							title: '页面跳转失败',
+							icon: 'none'
+						});
+					}
+				});
+			},
+			goBack() {
+				uni.navigateBack();
+			}
+		}			
 	};
 </script>
 
@@ -465,40 +636,47 @@
 		  margin: 0 ; /* 水平居中 */
 		  padding:0;
 		  box-sizing: border-box;
+		background: linear-gradient(to bottom,
+				#0bd6c8,
+				#99efe9,
+				#ddf5f4,
+				rgb(226, 226, 226));
+		padding-top: 50rpx;
 	}
 
 	.header {
 		display: flex;
 		align-items: center;
-		/* background-color: #a5d63f; */
-		width: 100%;
-		margin-top: 50rpx;
+	}
 
+	.header img {
+		width: 180rpx;
+		height: 180rpx;
+		border-radius: 50%;
+		margin-left: 50rpx;
+		margin-top: 50rpx;
 	}
 
 	.headerimg {
 		width: 180rpx;
 		height: 180rpx;
 		border-radius: 50%;
-		/* background-color: #18d681; */
-
 	}
-
-
 
 	.username {
 		font-size: 25px;
 		font-weight: bold;
 		margin-left: 50rpx;
+		margin-top: 10rpx;
 		margin-top: -50rpx;
-		/* background-color: #ddf5f4; */
 	}
 
 	.user-info {
 		font-size: 13px;
 		font-weight: bold;
 		margin-left: 30rpx;
-		/* margin-top: 10rpx; */
+		margin-top: 10rpx;
+		background-color: #a5d63f;
 		margin-top: -50rpx;
 		background-color: #1c9bd6;
 		padding: 10rpx;
@@ -507,17 +685,12 @@
 	}
 
 	.sao {
-		/* background-color: aqua; */
 		margin-left: 150rpx;
 		margin-top: -50rpx;
 		border-radius: 0;
 		height: 50rpx;
 		width: 50rpx;
-		/* background-color: aqua; */
 	}
-
-
-
 
 	.state-box {
 		margin-top: 100rpx;
@@ -561,7 +734,6 @@
 	.header-title {
 		font-size: 13px;
 		font-weight: bold;
-		/* color: #fff; */
 		margin-top: 0;
 	}
 
@@ -572,10 +744,9 @@
 		background-color: #fff;
 		border-radius: 15rpx;
 		padding: 20rpx;
-		/* margin-left: 50rpx;
-		margin-right: 50rpx; */
+		margin-left: 50rpx;
+		margin-right: 50rpx;
 		color: #333;
-		/* width: 100%; */
 	}
 
 	.money {
@@ -658,9 +829,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		/* margin-left: 50rpx;
-		margin-right: 50rpx;
-		margin-top: 20rpx; */
 		margin-top: 20rpx;
 		width: 250rpx;
 		gap: 10rpx;
@@ -691,6 +859,9 @@
 		margin-top: 40rpx;
 		background-color: #fff;
 		border-radius: 15rpx;
+		padding: 20rpx;
+		margin-left: 50rpx;
+		margin-right: 50rpx;
 		padding: 20 0rpx;
 		width: 100%;
 	}
@@ -700,15 +871,12 @@
 		font-weight: bold;
 		color: #333;
 		margin-left: 20rpx;
-		
 	}
 
 	.order-item {
 		margin-top: 20rpx;
 		display: flex;
-
 		flex-wrap: wrap;
-		/* justify-content: space-a; */
 	}
 
 	.boxed {
@@ -765,9 +933,45 @@
 		width: 50rpx;
 		height: 50rpx;
 		position: absolute;
-		/* 使用绝对定位 */
 		left: calc(50% - 120rpx);
-		/* 调整图标位置 */
+		z-index: 1;
+	}
+
+	.logout-box button {
+		width: 400rpx;
+		height: 80rpx;
+		background-color: #54c69a;
+		color: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-left: 50rpx;
+	}
+
+	.box image {
+		width: 75rpx;
+		height: 75rpx;
+		margin-bottom: 10rpx;
+	}
+
+	.box-title {
+		font-size: 13px;
+		font-weight: bold;
+		margin-top: 10rpx;
+	}
+
+	.logout-box {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 40rpx;
+	}
+
+	.logout-box image {
+		width: 50rpx;
+		height: 50rpx;
+		position: absolute;
+		left: calc(50% - 120rpx);
 		z-index: 1;
 	}
 
@@ -782,7 +986,6 @@
 		padding-left: 50rpx;
 	}
 
-	/* 新增陪诊师账户模块样式 */
 	.account-box {
 		background-color: #fff;
 		border-radius: 15rpx;
@@ -845,7 +1048,6 @@
 	.time-option {
 		padding: 8rpx 25rpx;
 		border: 1px solid #1fc7d6;
-
 		border-radius: 30rpx;
 		color: #1fc7d6;
 		cursor: pointer;
@@ -876,7 +1078,6 @@
 		justify-content: center;
 		align-items: center;
 		font-size: 25rpx;
-		/* background-color: #a5d63f; */
 		width: 200rpx;
 	}
 
@@ -884,5 +1085,21 @@
 		margin-bottom: 20rpx;
 		font-weight: bold;
 		font-size: 30rpx;
+	}
+
+	.back-btn {
+		position: absolute;
+		top: 20rpx;
+		left: 20rpx;
+		width: 80rpx;
+		height: 80rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.back-icon {
+		width: 40rpx;
+		height: 40rpx;
 	}
 </style>

@@ -358,6 +358,7 @@
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -447,9 +448,12 @@
 
 
 
+=======
+>>>>>>> xxq
 /* pages/mine/mine.wxss */
 .page-container {
 	min-height: 100vh;
+<<<<<<< HEAD
 	position: relative;
 	padding: 0 rpx;
 	padding-left: 25rpx;
@@ -464,32 +468,44 @@
 	  margin: 0 ; /* 水平居中 */
 	  padding:0;
 	  box-sizing: border-box;
+=======
+	background: linear-gradient(to bottom,
+			#0bd6c8,
+			#99efe9,
+			#ddf5f4,
+			rgb(226, 226, 226));
+	padding-top: 50rpx;
+>>>>>>> xxq
 }
 .header {
 	display: flex;
 	align-items: center;
-	/* background-color: #a5d63f; */
-	width: 100%;
+}
+.header ._img {
+	width: 180rpx;
+	height: 180rpx;
+	border-radius: 50%;
+	margin-left: 50rpx;
 	margin-top: 50rpx;
 }
 .headerimg {
 	width: 180rpx;
 	height: 180rpx;
 	border-radius: 50%;
-	/* background-color: #18d681; */
 }
 .username {
 	font-size: 25px;
 	font-weight: bold;
 	margin-left: 50rpx;
+	margin-top: 10rpx;
 	margin-top: -50rpx;
-	/* background-color: #ddf5f4; */
 }
 .user-info {
 	font-size: 13px;
 	font-weight: bold;
 	margin-left: 30rpx;
-	/* margin-top: 10rpx; */
+	margin-top: 10rpx;
+	background-color: #a5d63f;
 	margin-top: -50rpx;
 	background-color: #1c9bd6;
 	padding: 10rpx;
@@ -497,13 +513,11 @@
 	border-radius: 20rpx;
 }
 .sao {
-	/* background-color: aqua; */
 	margin-left: 150rpx;
 	margin-top: -50rpx;
 	border-radius: 0;
 	height: 50rpx;
 	width: 50rpx;
-	/* background-color: aqua; */
 }
 .state-box {
 	margin-top: 100rpx;
@@ -542,7 +556,6 @@
 .header-title {
 	font-size: 13px;
 	font-weight: bold;
-	/* color: #fff; */
 	margin-top: 0;
 }
 .info-box {
@@ -552,10 +565,9 @@
 	background-color: #fff;
 	border-radius: 15rpx;
 	padding: 20rpx;
-	/* margin-left: 50rpx;
-	margin-right: 50rpx; */
+	margin-left: 50rpx;
+	margin-right: 50rpx;
 	color: #333;
-	/* width: 100%; */
 }
 .money {
 	display: flex;
@@ -628,9 +640,6 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	/* margin-left: 50rpx;
-	margin-right: 50rpx;
-	margin-top: 20rpx; */
 	margin-top: 20rpx;
 	width: 250rpx;
 	gap: 10rpx;
@@ -657,6 +666,9 @@
 	margin-top: 40rpx;
 	background-color: #fff;
 	border-radius: 15rpx;
+	padding: 20rpx;
+	margin-left: 50rpx;
+	margin-right: 50rpx;
 	padding: 20 0rpx;
 	width: 100%;
 }
@@ -669,9 +681,7 @@
 .order-item {
 	margin-top: 20rpx;
 	display: flex;
-
 	flex-wrap: wrap;
-	/* justify-content: space-a; */
 }
 .boxed {
 	display: flex;
@@ -720,9 +730,40 @@
 	width: 50rpx;
 	height: 50rpx;
 	position: absolute;
-	/* 使用绝对定位 */
 	left: calc(50% - 120rpx);
-	/* 调整图标位置 */
+	z-index: 1;
+}
+.logout-box button {
+	width: 400rpx;
+	height: 80rpx;
+	background-color: #54c69a;
+	color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-left: 50rpx;
+}
+.box image {
+	width: 75rpx;
+	height: 75rpx;
+	margin-bottom: 10rpx;
+}
+.box-title {
+	font-size: 13px;
+	font-weight: bold;
+	margin-top: 10rpx;
+}
+.logout-box {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 40rpx;
+}
+.logout-box image {
+	width: 50rpx;
+	height: 50rpx;
+	position: absolute;
+	left: calc(50% - 120rpx);
 	z-index: 1;
 }
 .logout-box button {
@@ -735,7 +776,6 @@
 	align-items: center;
 	padding-left: 50rpx;
 }
-/* 新增陪诊师账户模块样式 */
 .account-box {
 	background-color: #fff;
 	border-radius: 15rpx;
@@ -789,7 +829,6 @@
 .time-option {
 	padding: 8rpx 25rpx;
 	border: 1px solid #1fc7d6;
-
 	border-radius: 30rpx;
 	color: #1fc7d6;
 	cursor: pointer;
@@ -816,12 +855,25 @@
 	justify-content: center;
 	align-items: center;
 	font-size: 25rpx;
-	/* background-color: #a5d63f; */
 	width: 200rpx;
 }
 .data-item-item {
 	margin-bottom: 20rpx;
 	font-weight: bold;
 	font-size: 30rpx;
+}
+.back-btn {
+	position: absolute;
+	top: 20rpx;
+	left: 20rpx;
+	width: 80rpx;
+	height: 80rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.back-icon {
+	width: 40rpx;
+	height: 40rpx;
 }
 

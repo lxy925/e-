@@ -1,0 +1,81 @@
+//陪诊师和普通用户沟通
+{
+  "bsonType": "object",
+  "required": [
+    "user_id",
+    "escort_id",
+    "time",
+    "content",
+    "message_type",
+    "status",
+    "sender_type",
+    "receiver_type"
+  ],
+  "permission": {
+    "read": true,
+    "create": true,
+    "update": true,
+    "delete": true
+  },
+  "properties": {
+    "_id": {
+      "description": "ID，系统自动生成"
+    },
+    "user_id": {
+      "description": "用户ID",
+      "bsonType": "string",
+      "minLength": 1
+    },
+    "escort_id": {
+      "description": "陪诊师ID",
+      "bsonType": "string",
+      "minLength": 1
+    },
+    "time": {
+      "description": "消息发送时间戳",
+      "bsonType": "string"
+    },
+    "content": {
+      "description": "用户的对话内容",
+      "bsonType": "string"
+    },
+    "message_type": {
+      "description": "信息类型",
+      "bsonType": "string",
+      "enum": [
+        "text",
+        "image",
+        "video",
+        "location",
+        "file"
+      ]
+    },
+    "status": {
+      "description": "信息状态",
+      "bsonType": "string",
+      "enum": [
+        "sending",
+        "sent",
+        "read"
+      ]
+    },
+    "sender_type": {
+      "description": "发送者用户类型（如普通用户、管理员等）",
+      "bsonType": "string",
+      "enum": [
+        "普通用户",
+        "陪诊师",
+        "管理员"
+      ]
+    },
+    "receiver_type": {
+      "description": "接收者用户类型（如普通用户、管理员等）",
+      "bsonType": "string",
+      "enum": [
+        "普通用户",
+        "陪诊师",
+        "管理员"
+      ]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 'use strict';
-
 const jwt = require('./jwt.js');
+//const jwt = require('../common/jwt.js');
 const db = uniCloud.database();
 const _ = db.command;
 const $ = db.command.aggregate; // 确保 $ 是聚合查询操作符

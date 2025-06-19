@@ -1,4 +1,7 @@
+'use strict';
 const jwt = require('./jwt');
+//const jwt = require('../common/jwt');
+
 const db = uniCloud.database();
 
 exports.main = async (event, context) => {

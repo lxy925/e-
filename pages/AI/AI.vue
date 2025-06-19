@@ -9,6 +9,11 @@
       <text class="doctor-dept">AI助手智能回答</text>
     </view> -->
 
+    <!-- 历史对话按钮 -->
+    <view class="history-btn" @tap="showHistoryDialog">
+      <text>历史对话</text>
+    </view>
+
     <scroll-view class="chat-content" scroll-y>
       <view v-for="(item, index) in messageList" :key="index">
         <!-- 时间显示 -->
@@ -43,6 +48,22 @@
       <input type="text" v-model="messageText" placeholder="请输入内容" />
       <button @click="sendMessage">发送</button>
     </view>
+
+    <!-- 历史对话弹窗 -->
+    <uni-popup ref="historyPopup" type="bottom">
+      <view class="history-popup">
+        <view class="popup-header">
+          <text class="title">历史对话</text>
+          <text class="close" @tap="closeHistoryDialog">关闭</text>
+        </view>
+        <scroll-view class="history-list" scroll-y>
+          <view class="history-item" v-for="(session, index) in historySessions" :key="index" @tap="loadHistorySession(session)">
+            <text class="session-time">{{formatDate(session.timestamp)}}</text>
+            <text class="session-preview">{{session.preview}}</text>
+          </view>
+        </scroll-view>
+      </view>
+    </uni-popup>
   </view>
 </template>
 
@@ -57,7 +78,9 @@ export default {
       messageList: [],
       accessToken: '',
       sessionId: '',
-      userId: ''
+      userId: '',
+      historySessions: [], // 历史对话列表
+      currentSession: null // 当前对话会话
     }
   },
   
@@ -88,8 +111,8 @@ export default {
        timestamp: Date.now()
      });
      
-     // 获取历史消息
-     await this.loadHistoryMessages();
+     // 获取历史会话列表
+     await this.loadHistorySessions();
      
      // 获取token
      this.getAccessToken();
@@ -162,41 +185,75 @@ export default {
       }
     },
 
-    // 加载历史消息
-    async loadHistoryMessages() {
-        try {
-          const { result } = await db.collection('chat_messages')
-            .where({
-              userId: this.userId
-            })
-            .orderBy('timestamp', 'asc')
-            .limit(50)
-            .get();
-            
-          if (result && result.data) {
-            // 保留欢迎消息，添加历史消息
-            const welcomeMessage = this.messageList[0];
-            this.messageList = [
-              welcomeMessage,
-              ...result.data.map(msg => ({
-                type: msg.type,
-                content: msg.content,
-                timestamp: msg.timestamp
-              }))
-            ];
-          } else {
-            console.log('没有历史消息');
-            // 只保留欢迎消息
-            this.messageList = this.messageList.slice(0, 1);
-          }
-        } catch (error) {
-          console.error('加载历史消息失败：', error);
-          if (error.message.includes('schema.json')) {
-            console.log('schema错误，继续执行');
-            // 只保留欢迎消息
-            this.messageList = this.messageList.slice(0, 1);
-          }
+    // 获取历史会话列表
+    async loadHistorySessions() {
+      try {
+        const { result } = await uniCloud.database()
+          .collection('chat_sessions')
+          .where({
+            userId: this.userId
+          })
+          .orderBy('timestamp', 'desc')
+          .limit(20)
+          .get();
+          
+        if (result && result.data) {
+          this.historySessions = result.data.map(session => ({
+            ...session,
+            preview: session.messages[0]?.content || '无内容'
+          }));
         }
+      } catch (error) {
+        console.error('获取历史会话失败：', error);
+      }
+    },
+
+    // 加载历史会话
+    async loadHistorySession(session) {
+      try {
+        this.currentSession = session;
+        this.sessionId = session.sessionId;
+        
+        // 清空当前消息列表
+        this.messageList = [];
+        
+        // 加载该会话的所有消息
+        const { result } = await uniCloud.database()
+          .collection('chat_messages')
+          .where({
+            sessionId: session.sessionId
+          })
+          .orderBy('timestamp', 'asc')
+          .get();
+          
+        if (result && result.data) {
+          this.messageList = result.data;
+        }
+        
+        this.closeHistoryDialog();
+      } catch (error) {
+        console.error('加载历史会话失败：', error);
+        uni.showToast({
+          title: '加载失败',
+          icon: 'none'
+        });
+      }
+    },
+
+    // 显示历史对话弹窗
+    showHistoryDialog() {
+      this.$refs.historyPopup.open();
+    },
+
+    // 关闭历史对话弹窗
+    closeHistoryDialog() {
+      this.$refs.historyPopup.close();
+    },
+
+    // 格式化日期
+    formatDate(timestamp) {
+      const date = new Date(timestamp);
+      return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
     },
 
     // 发送消息
@@ -540,5 +597,76 @@ export default {
 /* 添加长按菜单样式 */
 .msg-content.active {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 历史对话按钮样式 */
+.history-btn {
+  position: fixed;
+  right: 30rpx;
+  top: 150rpx;
+  background: #ffffff;
+  padding: 10rpx 30rpx;
+  border-radius: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.history-btn text {
+  color: #1cd6c7;
+  font-size: 28rpx;
+}
+
+/* 历史对话弹窗样式 */
+.history-popup {
+  background: #ffffff;
+  border-radius: 20rpx 20rpx 0 0;
+  padding: 30rpx;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.popup-header .title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.popup-header .close {
+  color: #999;
+  font-size: 28rpx;
+}
+
+.history-list {
+  max-height: 60vh;
+}
+
+.history-item {
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.history-item:active {
+  background-color: #f5f5f5;
+}
+
+.session-time {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.session-preview {
+  font-size: 28rpx;
+  color: #333;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

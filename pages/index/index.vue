@@ -21,6 +21,23 @@
 						@tap="handleNavClick(item.path)">
 						<image :src="item.icon" mode="aspectFit" class="nav-icon"></image>
 						<text class="nav-text">{{ item.text }}</text>
+					<!-- AI悬浮按钮 -->
+					<view class="ai-float-btn" 
+						@touchstart="touchStart" 
+						@touchmove="touchMove" 
+						@touchend="touchEnd"
+						:style="{ left: buttonX + 'px', top: buttonY + 'px' }"
+						@tap="navigateToAI">
+						<text>AI咨询</text>
+					</view>
+
+					<!-- 新增的图标导航栏 -->
+					<view class="icon-nav">
+						<view class="icon-item" v-for="(item, index) in navItems" :key="index"
+							@tap="handleNavClick(item.path)">
+							<image :src="item.icon" mode="aspectFit" class="nav-icon"></image>
+							<text class="nav-text">{{ item.text }}</text>
+						</view>
 					</view>
 				</view>
 
@@ -80,13 +97,17 @@
 			return {
 				pageTitle: '首页',
 				scrollTop: 0,
-				navHeight: 0, // 添加导航栏高度存储
+				navHeight: 0,// 添加导航栏高度存储
+				buttonX: 30, // 按钮初始X坐标
+				buttonY: 200, // 按钮初始Y坐标
+				startX: 0, // 触摸开始X坐标
+				startY: 0, // 触摸开始Y坐标
+				isDragging: false, // 是否正在拖拽
 				banners: [],
 				indicatorDots: true,
 				autoplay: true,
 				interval: 2000,
 				duration: 500,
-				startY: 0,
 				endY: 0,
 				navItems: [{
 						icon: "/static/images/index/index-service.png",
@@ -208,6 +229,52 @@
 				uni.navigateTo({
 					url: `/pages/hospital/detail?id=${id}`,
 				});
+			},
+			// 跳转到AI问答页面
+			navigateToAI() {
+				if (!this.isDragging) { // 只有在非拖拽状态才触发跳转
+					uni.navigateTo({
+						url: '/pages/AI/AI'
+					});
+				}
+			},
+			// 触摸开始
+			touchStart(e) {
+				this.startX = e.touches[0].clientX;
+				this.startY = e.touches[0].clientY;
+				this.isDragging = false;
+			},
+			// 触摸移动
+			touchMove(e) {
+				const moveX = e.touches[0].clientX - this.startX;
+				const moveY = e.touches[0].clientY - this.startY;
+				
+				// 如果移动距离超过10px，认为是拖拽
+				if (Math.abs(moveX) > 10 || Math.abs(moveY) > 10) {
+					this.isDragging = true;
+				}
+				
+				// 计算新的位置
+				let newX = this.buttonX + moveX;
+				let newY = this.buttonY + moveY;
+				
+				// 获取屏幕尺寸
+				const systemInfo = uni.getSystemInfoSync();
+				const screenWidth = systemInfo.windowWidth;
+				const screenHeight = systemInfo.windowHeight;
+				
+				// 限制按钮在屏幕范围内
+				newX = Math.max(0, Math.min(newX, screenWidth - 100));
+				newY = Math.max(0, Math.min(newY, screenHeight - 100));
+				
+				this.buttonX = newX;
+				this.buttonY = newY;
+				this.startX = e.touches[0].clientX;
+				this.startY = e.touches[0].clientY;
+			},
+			// 触摸结束
+			touchEnd() {
+				this.isDragging = false;
 			},
 			// 获取轮播图数据
 			async getBanners() {
@@ -464,5 +531,30 @@
 
 	.detail-item.address .value {
 		word-break: break-all;
+	}
+
+	/* AI悬浮按钮样式 */
+	.ai-float-btn {
+		position: fixed;
+		width: 100rpx;
+		height: 100rpx;
+		background: linear-gradient(135deg, #1cd6c7, #99efe9);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.2);
+		z-index: 999;
+		transition: all 0.3s ease;
+	}
+
+	.ai-float-btn text {
+		color: #ffffff;
+		font-size: 32rpx;
+		font-weight: bold;
+	}
+
+	.ai-float-btn:active {
+		transform: scale(0.95);
 	}
 </style>

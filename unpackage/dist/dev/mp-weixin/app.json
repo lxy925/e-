@@ -24,8 +24,16 @@
     "pages/time/time",
     "pages/account/account",
     "pages/getMoney/getMoney",
+<<<<<<< HEAD
     "pages/withdraw/withdraw",
     "uni_modules/uni-pay/pages/success/success"
+=======
+    "uni_modules/uni-pay/pages/success/success",
+    "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview",
+    "uni_modules/uni-pay/pages/pay-desk/pay-desk",
+    "pages/chatList/chatList",
+    "pages/consult/consult"
+>>>>>>> xxq
   ],
   "subPackages": [],
   "window": {

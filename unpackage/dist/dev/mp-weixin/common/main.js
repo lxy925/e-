@@ -23,11 +23,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 var CustomNav = function CustomNav() {
   __webpack_require__.e(/*! require.ensure | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then((function () {
-<<<<<<< HEAD
-    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 435));
-=======
-    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 424));
->>>>>>> xxq
+    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 467));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 _vue.default.use(_index2.default);

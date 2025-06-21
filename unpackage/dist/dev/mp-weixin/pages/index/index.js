@@ -102,11 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-<<<<<<< HEAD
-      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 435))
-=======
-      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 424))
->>>>>>> xxq
+      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 467))
     },
   }
 } catch (e) {
@@ -247,8 +243,6 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
-<<<<<<< HEAD
-=======
 //
 //
 //
@@ -262,7 +256,11 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
->>>>>>> xxq
+//
+//
+//
+//
+//
 // pages/index/index.js
 var _default = {
   data: function data() {
@@ -270,6 +268,7 @@ var _default = {
       pageTitle: '首页',
       scrollTop: 0,
       navHeight: 0,
+      // 添加导航栏高度存储
       buttonX: 30,
       // 按钮初始X坐标
       buttonY: 200,

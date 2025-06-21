@@ -21,6 +21,7 @@
 						@tap="handleNavClick(item.path)">
 						<image :src="item.icon" mode="aspectFit" class="nav-icon"></image>
 						<text class="nav-text">{{ item.text }}</text>
+					</view>
 					<!-- AI悬浮按钮 -->
 					<view class="ai-float-btn" 
 						@touchstart="touchStart" 
@@ -32,13 +33,13 @@
 					</view>
 
 					<!-- 新增的图标导航栏 -->
-					<view class="icon-nav">
+					<!-- <view class="icon-nav">
 						<view class="icon-item" v-for="(item, index) in navItems" :key="index"
 							@tap="handleNavClick(item.path)">
 							<image :src="item.icon" mode="aspectFit" class="nav-icon"></image>
 							<text class="nav-text">{{ item.text }}</text>
 						</view>
-					</view>
+					</view> -->
 				</view>
 
 			</view>

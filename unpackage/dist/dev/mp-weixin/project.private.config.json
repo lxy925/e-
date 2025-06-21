@@ -3,18 +3,5 @@
     "projectname": "e-",
     "setting": {
         "compileHotReLoad": true
-    },
-    "condition": {
-        "miniprogram": {
-            "list": [
-                {
-                    "name": "pages/time/time",
-                    "pathName": "pages/time/time",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                }
-            ]
-        }
     }
 }

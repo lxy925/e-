@@ -194,6 +194,10 @@
 							<image src="../../static/images/mine/setting.png" alt=""></image>
 							<text class="box-title">设置中心</text>
 						</view>
+						<view class="box" @click="goToChat">
+							<image src="../../static/images/mine/chat.png" alt=""></image>
+							<text class="box-title">聊天</text>
+						</view>
 					</view>
 				</view>
 				<view class="logout-box">
@@ -205,7 +209,7 @@
 			</view>
 		
 	</scroll-view>
-	<view class="page">
+	<!-- <view class="page">
 		<view class="header" @click="handleHeaderClick">
 			<img :src="userInfo.moreInfo.avatarUrl || '../../static/images/mine/avatar.png'" v-if="userInfo.type=='陪诊师'" alt="">
 			<img :src="userInfo.avatar || '../../static/images/mine/avatar.png'" v-else alt="">
@@ -331,7 +335,7 @@
 			<image src="../../static/images/mine/logout.png" alt=""></image>
 			<button class="logout" @click="logout" v-if="userInfo.user_id">退出登录</button>
 		</view>
-	</view>
+	</view> -->
 </template>
 
 <script>
@@ -570,14 +574,14 @@
 				this.userInfo.idNumber="371521200508016127";
 				this.userInfo.phone="15218782112";
 				this.userInfo.type="普通用户"; */
-				 this.userInfo._id="683ed99e2eea65be20450dfb";
+				 /* this.userInfo._id="683ed99e2eea65be20450dfb";
 				this.userInfo.user_id="obl9Y7LkhJ7F9iRh_9fq8y33eYZg";
 				this.userInfo.avatar="https://mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18.cdn.bspapp.com/cloudstorage/f697dc5e-07a8-4bdd-8eaf-16a1de754834.jpg";
 				this.userInfo.nickName="kiwi";
 				this.userInfo.realName="薛欣琪";
 				this.userInfo.idNumber="371521200508016127";
 				this.userInfo.phone="15218782112";
-				this.userInfo.type="陪诊师"; 
+				this.userInfo.type="陪诊师"; */
 				if (!this.userInfo._id) {
 					uni.showToast({
 						title: '请先登录',

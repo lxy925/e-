@@ -358,7 +358,6 @@
 
 
 
-<<<<<<< HEAD
 
 
 
@@ -448,12 +447,184 @@
 
 
 
-=======
->>>>>>> xxq
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* pages/mine/mine.wxss */
 .page-container {
 	min-height: 100vh;
-<<<<<<< HEAD
 	position: relative;
 	padding: 0 rpx;
 	padding-left: 25rpx;
@@ -468,14 +639,12 @@
 	  margin: 0 ; /* 水平居中 */
 	  padding:0;
 	  box-sizing: border-box;
-=======
 	background: linear-gradient(to bottom,
 			#0bd6c8,
 			#99efe9,
 			#ddf5f4,
 			rgb(226, 226, 226));
 	padding-top: 50rpx;
->>>>>>> xxq
 }
 .header {
 	display: flex;

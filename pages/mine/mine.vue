@@ -200,6 +200,7 @@
 						</view>
 					</view>
 				</view>
+				
 				<view class="logout-box">
 					<image src="../../static/images/mine/logout.png" alt=""></image>
 					<button class="logout" @click="logout" v-if="userInfo.user_id">

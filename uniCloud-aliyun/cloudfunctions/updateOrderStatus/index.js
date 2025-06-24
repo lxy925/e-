@@ -1,15 +1,33 @@
 const db = uniCloud.database();
 
 exports.main = async (event) => {
+	// 打印完整的event对象
+	console.log('完整的event对象:', JSON.stringify(event, null, 2));
+
 	const {
 		order_no,
 		from_status,
-		to_status
-	} = event;
+		to_status,
+		update_data = {}
+	} = event.args || event;
 	console.log('更新订单状态参数:', event);
 
 	try {
-		// 1. 查询订单是否存在
+		// 参数验证
+		if (!order_no || !from_status || !to_status) {
+			console.log('参数验证失败:', {
+				order_no,
+				from_status,
+				to_status
+			});
+			return {
+				code: 400,
+				success: false,
+				message: '缺少必要参数: order_no, from_status, to_status'
+			};
+		}
+
+		// 查询订单是否存在
 		const orderRes = await db.collection('orders')
 			.where({
 				order_no
@@ -19,45 +37,50 @@ exports.main = async (event) => {
 		const order = orderRes.data[0];
 		if (!order) {
 			return {
+				code: 404,
 				success: false,
 				message: '订单不存在'
 			};
 		}
 
-		// 2. 检查状态是否允许更新
+		// 检查状态是否允许更新
 		if (order.status !== from_status) {
 			return {
+				code: 400,
 				success: false,
-				message: `订单状态不匹配，当前状态: ${order.status}`
+				message: `订单状态不匹配，当前状态: ${order.status}, 期望状态: ${from_status}`
 			};
 		}
 
-		// 3. 执行更新，强制添加 updated_time 字段
+		// 构建更新数据
+		const updateData = {
+			status: to_status,
+			updated_time: Date.now(),
+			...update_data // 合并传入的额外更新数据
+		};
+
+		// 执行更新
 		const updateRes = await db.collection('orders')
-			.doc(order._id) // 使用 _id 确保唯一性
-			.update({
-				status: to_status,
-				updated_time: Date.now() // 强制添加时间戳字段
-			});
+			.doc(order._id)
+			.update(updateData);
 
-		console.log('更新结果:', updateRes);
-
-		// 4. 更新后再次查询订单，验证字段是否添加成功
+		// 更新后查询订单
 		const updatedOrder = await db.collection('orders')
 			.doc(order._id)
 			.get();
 
-		console.log('更新后的订单:', updatedOrder.data);
-
 		return {
+			code: 200,
 			success: updateRes.updated === 1,
-			updated: updateRes.updated,
-			updatedOrder: updatedOrder.data // 返回完整的更新后数据
+			message: '订单状态更新成功',
+			data: updatedOrder.data
 		};
 	} catch (err) {
 		console.error('更新订单状态失败:', err);
 		return {
+			code: 500,
 			success: false,
+			message: '服务器错误',
 			error: err.message
 		};
 	}

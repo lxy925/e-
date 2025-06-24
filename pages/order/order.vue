@@ -2,7 +2,7 @@
 	<view class="page">
 		<custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
 
-		<!-- 服务须知弹窗（最外层，确保最高层级） -->
+		<!-- 服务须知弹窗 -->
 		<service-notice-popup ref="serviceNoticePopup" @confirm="onNoticeConfirm"></service-notice-popup>
 
 		<view class="container">
@@ -11,29 +11,32 @@
 					<image src="../../static/images/order/icon_1.png" class="icon" />
 					<text class="title">预约信息</text>
 				</view>
-				<view class="input-group">
-					<text class="label">就诊人</text>
+				<!-- 输入框错误状态 -->
+				<view class="input-group" :class="{ 'error-field': fieldErrors.patient }">
+					<text class="label">就诊人<span class="required">*</span></text>
 					<input class="input" placeholder="请选择就诊人" :value="selectedPatientName"
 						@click="goToPatientManagement" />
 				</view>
-				<view class="input-group">
-					<text class="label">服务医院</text>
+
+				<view class="input-group" :class="{ 'error-field': fieldErrors.hospital }">
+					<text class="label">服务医院<span class="required">*</span></text>
 					<input class="input" placeholder="请选择医院" @click="goToSelectHospitals" :value="selectedHospital" />
 				</view>
-				<view class="input-group">
-					<text class="label">服务时间</text>
+
+				<view class="input-group" :class="{ 'error-field': fieldErrors.datetime }">
+					<text class="label">服务时间<span class="required">*</span></text>
 					<input class="input" placeholder="请选择服务时间" :value="selectedDateTime" @tap="showDateTimePicker"
 						disabled />
 				</view>
+
 				<view class="input-group">
 					<text class="label">陪诊师</text>
 					<input class="input" disabled placeholder="请选择陪诊师" :value="selectedDoctorName"
 						@click="goToDoctorList" />
 				</view>
-				<view class="input-group" v-if="include_transport">
-					<text class="label">接送地点</text>
-					<input class="input" placeholder="请选择地址" :value="selectAddress" :class="{ show: include_transport }"
-						@click="goToAddressList" />
+				<view class="input-group" v-if="include_transport" :class="{ 'error-field': fieldErrors.address }">
+					<text class="label">接送地点<span class="required">*</span></text>
+					<input class="input" placeholder="请选择地址" :value="selectAddress" @click="goToAddressList" />
 				</view>
 				<view class="note-info">
 					<image src="../../static/images/order/icon_2.png" class="icon" />
@@ -87,37 +90,53 @@
 
 			<view class="requirements">
 				<text class="label_1">就诊人特点及陪诊需求</text>
-				<view class="requirements-list">
-					<label class="custom-checkbox" :class="{ selected: selectedCheckboxes.includes('halfSelf') }"
-						@tap="toggleCheckbox" data-value="halfSelf">
-						<text class="checkbox-text">半自理</text>
-						<checkbox value="halfSelf" class="hidden-checkbox" />
-					</label>
-					<label class="custom-checkbox" :class="{ selected: selectedCheckboxes.includes('noSelf') }"
-						@tap="toggleCheckbox" data-value="noSelf">
-						<text class="checkbox-text">无法自理</text>
-						<checkbox value="noSelf" class="hidden-checkbox" />
-					</label>
-					<label class="custom-checkbox" :class="{ selected: selectedCheckboxes.includes('common') }"
-						@tap="toggleCheckbox" data-value="common">
-						<text class="checkbox-text">普通话沟通</text>
-						<checkbox value="common" class="hidden-checkbox" />
-					</label>
-					<label class="custom-checkbox" :class="{ selected: selectedCheckboxes.includes('family') }"
-						@tap="toggleCheckbox" data-value="family">
-						<text class="checkbox-text">有家属陪同</text>
-						<checkbox value="family" class="hidden-checkbox" />
-					</label>
-					<label class="custom-checkbox" :class="{ selected: selectedCheckboxes.includes('male') }"
-						@tap="toggleCheckbox" data-value="male">
-						<text class="checkbox-text">男陪诊师</text>
-						<checkbox value="male" class="hidden-checkbox" />
-					</label>
-					<label class="custom-checkbox" :class="{ selected: selectedCheckboxes.includes('female') }"
-						@tap="toggleCheckbox" data-value="female">
-						<text class="checkbox-text">女陪诊师</text>
-						<checkbox value="female" class="hidden-checkbox" />
-					</label>
+
+				<!-- 就诊人特点分组 -->
+				<view class="requirements-group">
+					<text class="group-title">就诊人特点</text>
+					<view class="requirements-list">
+						<label v-for="item in patientFeatures" :key="item.value" class="custom-checkbox"
+							:class="{ selected: selectedCheckboxes.includes(item.value) }" @tap="toggleCheckbox"
+							:data-value="item.value">
+							<text class="checkbox-text">{{ item.label }}</text>
+							<checkbox :value="item.value" class="hidden-checkbox" />
+						</label>
+					</view>
+				</view>
+
+				<!-- 沟通需求分组 -->
+				<view class="requirements-group">
+					<text class="group-title">沟通需求</text>
+					<view class="requirements-list">
+						<label v-for="item in communicationNeeds" :key="item.value" class="custom-checkbox"
+							:class="{ selected: selectedCheckboxes.includes(item.value) }" @tap="toggleCheckbox"
+							:data-value="item.value">
+							<text class="checkbox-text">{{ item.label }}</text>
+							<checkbox :value="item.value" class="hidden-checkbox" />
+						</label>
+					</view>
+				</view>
+
+				<!-- 陪诊师偏好分组 -->
+				<view class="requirements-group">
+					<text class="group-title">陪诊师偏好</text>
+					<view class="requirements-list">
+						<label v-for="item in doctorPreferences" :key="item.value" class="custom-checkbox"
+							:class="{ selected: selectedCheckboxes.includes(item.value) }" @tap="toggleCheckbox"
+							:data-value="item.value">
+							<text class="checkbox-text">{{ item.label }}</text>
+							<checkbox :value="item.value" class="hidden-checkbox" />
+						</label>
+					</view>
+				</view>
+
+				<!-- 自定义需求描述 -->
+				<view class="requirements-textarea">
+					<text class="textarea-label">其他特殊需求描述</text>
+					<textarea v-model="customRequirements" placeholder="请输入您的特殊需求（如：需要轮椅服务、语言翻译等）"
+						placeholder-class="textarea-placeholder" auto-height maxlength="500"
+						@input="onCustomRequirementsInput"></textarea>
+					<text class="char-count">{{ customRequirements.length }}/500</text>
 				</view>
 			</view>
 		</view>
@@ -129,13 +148,18 @@
 					<text class="currency" style="color: black;">¥</text>
 					<span class="total-amount" style="color:#DD5858;">{{ service_price }}</span>
 				</view>
-				<!-- <text class="discount">含单值保险 ¥30 优惠抵扣 ¥5</text> -->
 			</view>
-			<payment-component :amount="1" buttonText="提交订单" />
-			<!-- 	<button class="submit-button" @tap="openNoticePopup">提交订单</button> -->
+			<!-- 修改支付组件调用 -->
+			<template>
+				<!-- 主页面模板中支付组件的调用 -->
+				<payment-component :buttonText="buttonText" :orderInfo="orderInfo" :servicePrice="service_price"
+					:serviceId="serviceData.service_id" :serviceName="serviceData.service_name"
+					:serviceDesc="serviceData.service_desc" :formValid="formValid" :requiredErrors="fieldErrors"
+					buttonText="提交订单" :missingOptional="missingOptionalFields" ref="paymentComponent" />
+			</template>
 		</view>
 
-		<!-- 日期时间选择器（层级低于弹窗） -->
+		<!-- 日期时间选择器 -->
 		<view class="datetime-picker-mask" v-if="showPicker" @tap="hideDateTimePicker"></view>
 		<view class="datetime-picker" :class="{ 'picker-show': showPicker }">
 			<view class="picker-header">
@@ -167,19 +191,25 @@
 	import ServiceNoticePopup from '@/components/service-notice-popup.vue';
 
 	export default {
-		// name: 'OrderComponent',
 		components: {
 			ServiceNoticePopup,
 			PaymentComponent
 		},
 		data() {
 			return {
+				// 选择科室
 				selectedDepartment: null,
+				// 就诊人特点&需求
 				selectedCheckboxes: [],
+				// 病例照片
 				photoList: [],
+				// 最多照片数
 				maxPhotos: 15,
+				// 每次最多上传多少张照片
 				maxPerUpload: 9,
+				// 照片尺寸
 				maxSize: 5 * 1024 * 1024,
+				// 是否展示日期选择弹窗
 				showPicker: false,
 				dateList: [],
 				timeList: [],
@@ -187,53 +217,125 @@
 				selectedTimeIndex: -1,
 				selectedDateTime: '',
 				selectedPatientName: '',
+				selectPatientPhone: '',
 				selectedDoctorName: '',
+				selectDoctorId: '',
 				selectedHospital: '',
 				selectAddress: ' ',
-				//服务信息
+				// 服务信息
 				serviceData: {},
 				service_price: '',
 				service_id: '',
 				include_transport: ' ',
 				storageTimestamp: 0,
 				STORAGE_KEY: 'order_form_data',
-				STORAGE_EXPIRE: 30 * 60 * 1000
+				STORAGE_EXPIRE: 30 * 60 * 1000,
+				// 就诊人特点选项
+				patientFeatures: [{
+						value: 'halfSelf',
+						label: '半自理'
+					},
+					{
+						value: 'noSelf',
+						label: '无法自理'
+					},
+					{
+						value: 'family',
+						label: '有家属陪同'
+					}
+				],
+				// 沟通需求选项
+				communicationNeeds: [{
+					value: 'common',
+					label: '普通话沟通'
+				}],
+				// 陪诊师偏好选项
+				doctorPreferences: [{
+						value: 'male',
+						label: '男陪诊师'
+					},
+					{
+						value: 'female',
+						label: '女陪诊师'
+					}
+				],
+				// 自定义需求描述
+				customRequirements: '',
+				// 表单验证相关
+				missingRequiredFields: false,
+				// 表单验证状态
+				formValid: false,
+				fieldErrors: {
+					patient: false,
+					hospital: false,
+					datetime: false,
+					address: false
+				},
+				missingOptionalFields: []
 			};
 		},
+
 		onLoad(options) {
 			this.loadSavedPhotos();
 			this.initDateTimeList();
 			const serviceDataString = options.service;
-			console.log("收到的service参数", serviceDataString)
 			if (serviceDataString) {
 				try {
 					this.serviceData = JSON.parse(decodeURIComponent(serviceDataString));
+					console.log(this.serviceData);
+					this.service_price = this.serviceData.service_price;
 				} catch (error) {
 					this.serviceData = decodeURIComponent(serviceDataString);
 				}
 			}
-			console.log("传入商品参数", this.serviceData)
 			this.include_transport = this.serviceData.include_transport;
 			this.service_price = this.serviceData.service_price;
 			this.service_id = this.serviceData.service_id;
 			this.loadPatientInfo();
 			this.loadDoctorInfo();
 			const address = uni.getStorageSync('selectedAddress');
+			console.log("获取地址是：" + address)
 			if (address) {
 				this.selectAddress = address.district + address.detail || '';
 			}
 		},
+
+		computed: {
+			// 整合所有订单信息
+			orderInfo() {
+				return {
+					patient_phone: this.selectPatientPhone,
+					patient_name: this.selectPatientName,
+					hospital: this.selectedHospital,
+					service_time: this.selectedDateTime,
+					doctor_name: this.selectedDoctorName,
+					doctor_id: this.selectDoctorId,
+					department: this.selectedDepartment,
+					materials: this.photoList,
+					requirements: this.selectedCheckboxes,
+					custom_requirements: this.customRequirements,
+					include_transport: this.include_transport,
+					service_id: this.serviceData.service_id,
+					service_name: this.serviceData.service_name || '自定义医疗陪诊服务',
+					service_desc: this.serviceData.service_desc || '根据您的需求提供专业陪诊服务'
+				};
+			}
+		},
+
 		onShow() {
 			this.loadDoctorInfo();
 			this.loadPatientInfo();
 			this.restoreFormData();
 		},
+
 		onHide() {
 			this.saveFormData();
 		},
+
 		onUnload() {
 			// 可选：保存数据
 		},
+
 		onBackPress() {
 			if (this.hasFormData()) {
 				uni.showModal({
@@ -252,30 +354,144 @@
 				return true;
 			}
 		},
+
+		mounted() {
+			console.log('支付组件实例:', this.$refs.paymentComponent);
+			if (!this.$refs.paymentComponent) {
+				console.error('未获取到支付组件实例，请检查ref名称是否正确');
+			}
+		},
+
 		methods: {
+			// 提交订单处理函数
+			handleSubmitOrder() {
+				console.log('提交订单事件触发，开始验证表单');
+				this.validateForm().then(valid => {
+					if (valid) {
+						this.openNoticePopup(); // 显示服务须知
+					} else {
+						uni.showToast({
+							title: '请完成必填信息',
+							icon: 'none'
+						});
+					}
+				});
+			},
+
+			// 表单验证方法
+			validateForm() {
+				return new Promise((resolve) => {
+					// 重置验证状态
+					this.fieldErrors = {
+						patient: !this.selectedPatientName,
+						hospital: !this.selectedHospital,
+						datetime: !this.selectedDateTime,
+						address: this.include_transport && (!this.selectAddress || this.selectAddress
+							.trim() === '')
+					};
+
+					// 检查必填字段
+					const requiredFields = ['patient', 'hospital', 'datetime'];
+					const missingRequired = requiredFields.some(field => this.fieldErrors[field]);
+
+					if (missingRequired) {
+						// 收集错误字段并显示提示
+						const errorFields = requiredFields.filter(field => this.fieldErrors[field])
+							.map(field => {
+								switch (field) {
+									case 'patient':
+										return '就诊人';
+									case 'hospital':
+										return '服务医院';
+									case 'datetime':
+										return '服务时间';
+									case 'address':
+										return '接送地点';
+									default:
+										return field;
+								}
+							});
+
+						uni.showToast({
+							title: '请填写以下必填信息：' + errorFields.join('、'),
+							icon: 'none'
+						});
+						resolve(false);
+						return;
+					}
+
+					// 选填字段检查
+					this.missingOptionalFields = [];
+					const optionalFields = [{
+							value: this.selectedDepartment,
+							name: '科室'
+						},
+						{
+							value: this.selectedCheckboxes.length > 0,
+							name: '就诊人特点及陪诊需求'
+						},
+						{
+							value: this.photoList.length > 0,
+							name: '上传材料'
+						},
+						{
+							value: this.customRequirements,
+							name: '其他特殊需求描述'
+						}
+					];
+
+					const missingOptional = optionalFields.filter(field => {
+						if (typeof field.value === 'string') {
+							return !field.value || field.value.trim() === '';
+						}
+						return !field.value;
+					});
+
+					if (missingOptional.length > 0) {
+						this.missingOptionalFields = missingOptional.map(field => field.name);
+						// 显示选填字段提示
+						uni.showModal({
+							title: '提示',
+							content: `您尚未填写以下选填信息：${missingOptional.map(field => field.name).join('、')}，是否继续提交？`,
+							success: (res) => {
+								resolve(res.confirm);
+							},
+							fail: () => resolve(true)
+						});
+					} else {
+						resolve(true);
+					}
+				});
+			},
 			openNoticePopup() {
 				this.$refs.serviceNoticePopup.show();
 			},
+
 			onNoticeConfirm() {
-				uni.showToast({
-					title: '订单提交成功',
-					icon: 'success'
-				});
-				this.clearFormData();
-				uni.navigateBack();
+				console.log('服务须知已确认，开始创建订单');
+				// 服务须知确认后，调用组件的提交方法
+				this.$refs.paymentComponent.submitOrderAfterValidation();
 			},
+
 			loadDoctorInfo() {
 				const doctor = uni.getStorageSync('selectedDoctor');
+				console.log("获取医生信息：" + doctor._id);
 				if (doctor) {
+					this.selectDoctorId = doctor._id;
 					this.selectedDoctorName = doctor.name || '';
 				}
 			},
+
 			loadPatientInfo() {
 				const patient = uni.getStorageSync('selectedPatient');
+				console.log(patient);
 				if (patient) {
-					this.selectedPatientName = patient.name || '';
+					this.selectPatientPhone = patient.phone;
+					this.selectPatientName = patient.name || '';
+					console.log("病人是" + this.selectPatientName + this.selectPatientPhone)
 				}
 			},
+
 			goToSelectHospitals() {
 				uni.navigateTo({
 					url: '/pages/more/more?from=order',
@@ -286,10 +502,12 @@
 					}
 				});
 			},
+
 			hasFormData() {
 				return this.selectedDepartment || this.selectedCheckboxes.length > 0 || this.photoList.length > 0 || this
 					.selectedDateTime;
 			},
+
 			saveFormData() {
 				const formData = {
 					selectedDepartment: this.selectedDepartment,
@@ -299,10 +517,12 @@
 					selectedPatientName: this.selectedPatientName,
 					selectedDoctorName: this.selectedDoctorName,
 					selectAddress: this.selectAddress,
+					customRequirements: this.customRequirements,
 					timestamp: new Date().getTime()
 				};
 				uni.setStorageSync(this.STORAGE_KEY, formData);
 			},
+
 			restoreFormData() {
 				const savedData = uni.getStorageSync(this.STORAGE_KEY);
 				if (savedData && !this.isDataExpired(savedData.timestamp)) {
@@ -313,34 +533,43 @@
 					if (!this.selectedPatientName) this.selectedPatientName = savedData.selectedPatientName;
 					if (!this.selectedDoctorName) this.selectedDoctorName = savedData.selectedDoctorName;
 					if (!this.selectAddress) this.selectAddress = savedData.selectAddress;
+					if (!this.customRequirements) this.customRequirements = savedData.customRequirements ||
+						'';
 				} else {
 					uni.removeStorageSync(this.STORAGE_KEY);
 				}
 			},
+
 			isDataExpired(timestamp) {
 				return new Date().getTime() - timestamp > this.STORAGE_EXPIRE;
 			},
+
 			clearFormData() {
 				uni.removeStorageSync(this.STORAGE_KEY);
 				this.selectedDepartment = null;
 				this.selectedCheckboxes = [];
 				this.photoList = [];
 				this.selectedDateTime = '';
+				this.customRequirements = '';
 			},
+
 			goToDepartmentPage() {
 				uni.navigateTo({
 					url: '/pages/department/department?selected=' + (this.selectedDepartment || '')
 				});
 			},
+
 			selectDepartment(event) {
 				this.selectedDepartment = event.currentTarget.dataset.department;
 			},
+
 			toggleCheckbox(event) {
 				const value = event.currentTarget.dataset.value;
 				this.selectedCheckboxes.includes(value) ?
 					this.selectedCheckboxes = this.selectedCheckboxes.filter(item => item !== value) :
 					this.selectedCheckboxes.push(value);
 			},
+
 			loadSavedPhotos() {
 				try {
 					const savedPhotoList = wx.getStorageSync('photoList');
@@ -349,6 +578,7 @@
 					console.error("Error loading saved photos:", e);
 				}
 			},
+
 			chooseImage() {
 				const remaining = this.maxPhotos - this.photoList.length;
 				if (remaining <= 0) {
@@ -368,6 +598,7 @@
 					}
 				});
 			},
+
 			checkFileSize(filePath) {
 				const fs = wx.getFileSystemManager();
 				fs.getFileInfo({
@@ -389,6 +620,7 @@
 					}
 				});
 			},
+
 			uploadImg(imgSrc) {
 				wx.showLoading({
 					title: "上传中..."
@@ -423,6 +655,7 @@
 					}
 				});
 			},
+
 			deletePhoto(e) {
 				const index = e.currentTarget.dataset.index;
 				this.photoList.splice(index, 1);
@@ -432,6 +665,7 @@
 					icon: 'success'
 				});
 			},
+
 			initDateTimeList() {
 				const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 				this.dateList = Array.from({
@@ -450,18 +684,23 @@
 					if (hour < 18) this.timeList.push(`${hour}:30`);
 				}
 			},
+
 			showDateTimePicker() {
 				this.showPicker = true;
 			},
+
 			hideDateTimePicker() {
 				this.showPicker = false;
 			},
+
 			selectDate(index) {
 				this.selectedDateIndex = index;
 			},
+
 			selectTime(index) {
 				this.selectedTimeIndex = index;
 			},
+
 			confirmDateTime() {
 				if (this.selectedTimeIndex === -1) {
 					uni.showToast({
@@ -475,36 +714,62 @@
 				this.selectedDateTime = `${date.day} ${date.week} ${time}`;
 				this.hideDateTimePicker();
 			},
+
 			goToPatientManagement() {
 				uni.navigateTo({
 					url: '/pages/patientManagement/patientManagement'
 				});
 			},
+
 			goToDoctorList() {
 				uni.navigateTo({
 					url: `/pages/doctorlist/doctorlist?from=order`
 				});
 			},
+
 			goToAddressList() {
 				uni.navigateTo({
 					url: '/pages/myAddress/myAddress'
 				});
+			},
+
+			// 处理自定义需求输入
+			onCustomRequirementsInput(e) {
+				this.customRequirements = e.detail.value;
 			}
 		}
 	};
 </script>
 
-
 <style scoped>
+	/* 添加错误状态样式 */
+	.error-field {
+		border: 1px solid #ff4d4f !important;
+		border-radius: 8rpx;
+		animation: shake 0.5s;
+	}
+
+	@keyframes shake {
+
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+
+		25% {
+			transform: translateX(-5px);
+		}
+
+		75% {
+			transform: translateX(5px);
+		}
+	}
+
 	.page {
 		z-index: 1;
-		/* 确保页面内容层级低于弹窗 */
 		overflow-y: auto;
-		/* 允许垂直滚动 */
 		-webkit-overflow-scrolling: touch;
-		/* iOS平滑滚动 */
 		padding-bottom: 50rpx;
-		/* 留出底部空间 */
 		margin-top: 140rpx;
 		height: 100vh;
 		display: flex;
@@ -517,17 +782,13 @@
 		margin: 0 20rpx;
 		margin-top: 40rpx;
 		padding: 20rpx;
-
 		padding-bottom: 200rpx;
-		/* 增加底部内边距 */
 		margin-bottom: 40rpx;
-		/* 增加底部外边距 */
 		border-radius: 30rpx;
 		background-color: #ffffff;
 		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 		display: flex;
 		flex-direction: column;
-
 	}
 
 	.userinfo,
@@ -556,6 +817,12 @@
 		width: 100px;
 		color: #646464;
 		font-weight: 500;
+	}
+
+	/* 必填项标记样式 */
+	.required {
+		color: #FF4D4F;
+		margin-left: 4rpx;
 	}
 
 	.input {
@@ -716,8 +983,6 @@
 		color: #999;
 	}
 
-
-
 	.icon {
 		width: 45rpx;
 		height: 45rpx;
@@ -758,10 +1023,26 @@
 		color: #b0b0b0;
 	}
 
+	.requirements {
+		margin-top: 20rpx;
+	}
+
+	.requirements-group {
+		margin-bottom: 20rpx;
+	}
+
+	.group-title {
+		font-size: 16px;
+		color: #545454;
+		margin-bottom: 10rpx;
+		padding-left: 10rpx;
+		border-left: 4px solid #18d1c2;
+	}
+
 	.requirements-list {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: space-between;
+		/* 	justify-content: space-between; */
 		width: 100%;
 		padding: 0 1rpx;
 	}
@@ -775,7 +1056,7 @@
 		background-color: #e5e5e5;
 		border-radius: 20px;
 		padding: 10rpx 15rpx;
-		margin: 12rpx 0;
+		margin: 12rpx 5rpx;
 		transition: background-color 0.3s, color 0.3s;
 		min-height: 64rpx;
 		box-sizing: border-box;
@@ -798,6 +1079,39 @@
 		word-wrap: break-word;
 		word-break: break-all;
 		line-height: 1.2;
+	}
+
+	.requirements-textarea {
+		margin-top: 20rpx;
+	}
+
+	.textarea-label {
+		font-size: 16px;
+		color: #545454;
+		margin-bottom: 10rpx;
+		display: block;
+	}
+
+	textarea {
+		width: auto;
+		min-height: 120rpx;
+		padding: 15rpx;
+		background-color: #f8f8f8;
+		border-radius: 10rpx;
+		font-size: 15px;
+		line-height: 1.5;
+	}
+
+	.textarea-placeholder {
+		color: #b3b3b3;
+	}
+
+	.char-count {
+		display: block;
+		text-align: right;
+		font-size: 14px;
+		color: #999;
+		margin-top: 8rpx;
 	}
 
 	.datetime-picker-mask {

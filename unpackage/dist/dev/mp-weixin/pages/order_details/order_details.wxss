@@ -145,12 +145,14 @@
 
 
 
+
 /**index.wxss**/
 /* pages/order_details/order_details.wxss */
 page.data-v-8cff30ac {
 	background: linear-gradient(#18d1c2, #F2F3F9, white);
 }
 .container.data-v-8cff30ac {
+	margin-top: 200rpx;
 	display: flex;
 	flex-direction: column;
 	height: 100%;

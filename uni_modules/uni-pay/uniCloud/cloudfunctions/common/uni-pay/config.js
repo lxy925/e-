@@ -13,7 +13,7 @@ module.exports = {
 	// 统一 - 支付回调地址,格式为 "服务空间ID":"URL化地址"
 	"notifyUrl": {
 		// 测试环境服务空间-支付回调地址
-		"mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18": "https://fc-mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18.next.bspapp.com/uni-pay-co",
+		"mp-f5303e3c-7928-482e-b2e2-0cf6877289c6": "https://fc-mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.next.bspapp.com/uni-pay-co",
 		// 线上环境服务空间-支付回调地址（如果只有一个服务空间，则只需要配置线上环境服务空间即可）
 	},
 	"notifyKey": "5FB2CD73C7B53918728417C50762E6D4", // 跨云函数通信时的加密密钥，建议手动改下，不要使用默认的密钥，长度保持在32位即可

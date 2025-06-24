@@ -7,7 +7,7 @@ exports.main = async (event, context) => {
 		provider: "wxpay",
 		data: {
 			//"用户openid，小程序支付时必传"
-			openid: event.openid,
+			openid: openid,
 			//"必填项，商户支付订单号，需自行保证全局唯一"
 			out_trade_no: event.out_trade_no,
 			total_fee: 1, // 订单金额（单位分 100 = 1元）

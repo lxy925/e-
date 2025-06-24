@@ -1,5 +1,6 @@
 <template>
 	<view class="page">
+		<custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
 		<!--pages/order_details/order_details.wxml-->
 		<view class="container">
 			<scroll-view scroll-y="true" class="scroll-content">
@@ -152,6 +153,7 @@
 	}
 
 	.container {
+		margin-top: 200rpx;
 		display: flex;
 		flex-direction: column;
 		height: 100%;

@@ -1,13 +1,789 @@
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 添加错误状态样式 */
+.error-field.data-v-127632e4 {
+	border: 1px solid #ff4d4f !important;
+	border-radius: 8rpx;
+	-webkit-animation: shake-data-v-127632e4 0.5s;
+	        animation: shake-data-v-127632e4 0.5s;
+}
+@-webkit-keyframes shake-data-v-127632e4 {
+0%,
+	100% {
+		-webkit-transform: translateX(0);
+		        transform: translateX(0);
+}
+25% {
+		-webkit-transform: translateX(-5px);
+		        transform: translateX(-5px);
+}
+75% {
+		-webkit-transform: translateX(5px);
+		        transform: translateX(5px);
+}
+}
+@keyframes shake-data-v-127632e4 {
+0%,
+	100% {
+		-webkit-transform: translateX(0);
+		        transform: translateX(0);
+}
+25% {
+		-webkit-transform: translateX(-5px);
+		        transform: translateX(-5px);
+}
+75% {
+		-webkit-transform: translateX(5px);
+		        transform: translateX(5px);
+}
+}
 .page.data-v-127632e4 {
 	z-index: 1;
-	/* 确保页面内容层级低于弹窗 */
 	overflow-y: auto;
-	/* 允许垂直滚动 */
 	-webkit-overflow-scrolling: touch;
-	/* iOS平滑滚动 */
 	padding-bottom: 50rpx;
-	/* 留出底部空间 */
 	margin-top: 140rpx;
 	height: 100vh;
 	display: flex;
@@ -19,11 +795,8 @@
 	margin: 0 20rpx;
 	margin-top: 40rpx;
 	padding: 20rpx;
-
 	padding-bottom: 200rpx;
-	/* 增加底部内边距 */
 	margin-bottom: 40rpx;
-	/* 增加底部外边距 */
 	border-radius: 30rpx;
 	background-color: #ffffff;
 	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
@@ -53,6 +826,11 @@
 	width: 100px;
 	color: #646464;
 	font-weight: 500;
+}
+/* 必填项标记样式 */
+.required.data-v-127632e4 {
+	color: #FF4D4F;
+	margin-left: 4rpx;
 }
 .input.data-v-127632e4 {
 	position: relative;
@@ -223,10 +1001,23 @@
 	font-size: 15px;
 	color: #b0b0b0;
 }
+.requirements.data-v-127632e4 {
+	margin-top: 20rpx;
+}
+.requirements-group.data-v-127632e4 {
+	margin-bottom: 20rpx;
+}
+.group-title.data-v-127632e4 {
+	font-size: 16px;
+	color: #545454;
+	margin-bottom: 10rpx;
+	padding-left: 10rpx;
+	border-left: 4px solid #18d1c2;
+}
 .requirements-list.data-v-127632e4 {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
+	/* 	justify-content: space-between; */
 	width: 100%;
 	padding: 0 1rpx;
 }
@@ -239,7 +1030,7 @@
 	background-color: #e5e5e5;
 	border-radius: 20px;
 	padding: 10rpx 15rpx;
-	margin: 12rpx 0;
+	margin: 12rpx 5rpx;
 	transition: background-color 0.3s, color 0.3s;
 	min-height: 64rpx;
 	box-sizing: border-box;
@@ -259,6 +1050,34 @@
 	word-wrap: break-word;
 	word-break: break-all;
 	line-height: 1.2;
+}
+.requirements-textarea.data-v-127632e4 {
+	margin-top: 20rpx;
+}
+.textarea-label.data-v-127632e4 {
+	font-size: 16px;
+	color: #545454;
+	margin-bottom: 10rpx;
+	display: block;
+}
+textarea.data-v-127632e4 {
+	width: auto;
+	min-height: 120rpx;
+	padding: 15rpx;
+	background-color: #f8f8f8;
+	border-radius: 10rpx;
+	font-size: 15px;
+	line-height: 1.5;
+}
+.textarea-placeholder.data-v-127632e4 {
+	color: #b3b3b3;
+}
+.char-count.data-v-127632e4 {
+	display: block;
+	text-align: right;
+	font-size: 14px;
+	color: #999;
+	margin-top: 8rpx;
 }
 .datetime-picker-mask.data-v-127632e4 {
 	position: fixed;

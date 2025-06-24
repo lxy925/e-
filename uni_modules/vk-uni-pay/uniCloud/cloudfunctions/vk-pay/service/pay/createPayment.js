@@ -18,8 +18,13 @@ module.exports = {
 	 * @param {String} orderInfo  支付订单信息
 	 */
 	main: async (event) => {
-		let { data = {}, originalParam, uniIdToken } = event;
-		let res = { code: 0, msg: '' };
+		let {
+			data = {}, originalParam, uniIdToken
+		} = event;
+		let res = {
+			code: 0,
+			msg: ''
+		};
 		/**
 		 * 实际项目支付的时候，应该先下单（先执行你系统的下单逻辑）
 		 * 你系统订单下单成功后，返回订单号，再调用await vkPay.createPayment接口，
@@ -29,12 +34,17 @@ module.exports = {
 		// 这里示例是给充值余额的订单，故金额是从前端传过来的
 
 		// 尝试解析下 uniIdToken，如果能拿到user_id，则传给支付接口（主要用作记录用，做支付统计时会用到）
-		let user_id = await vkPay.checkTokenReturnUserId({ uniIdToken, context: originalParam.context });
+		let user_id = await vkPay.checkTokenReturnUserId({
+			uniIdToken,
+			context: originalParam.context
+		});
 		let nickname = await vkPay.getUserNickname(user_id);
 		// 获取支付参数开始-----------------------------------------------------------
 		res = await vkPay.createPayment({
-			context: originalParam.context, // 云函数传 `originalParam.context` 云对象传 `this.getClientInfo()` 官方云函数传 `context`
-			provider: data.provider, // 支付供应商：详见 https://vkdoc.fsq.pub/vk-uni-pay/uniCloud/createPayment.html#%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0
+			context: originalParam
+			.context, // 云函数传 `originalParam.context` 云对象传 `this.getClientInfo()` 官方云函数传 `context`
+			provider: data
+			.provider, // 支付供应商：详见 https://vkdoc.fsq.pub/vk-uni-pay/uniCloud/createPayment.html#%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0
 			provider_pay_method: data.provider_pay_method, // 自定义渠道支付下的支付方式
 			alipayAppPayToH5Pay: data.alipayAppPayToH5Pay,
 			isPC: data.isPC,

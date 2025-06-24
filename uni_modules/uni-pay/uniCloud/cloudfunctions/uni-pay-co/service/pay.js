@@ -179,32 +179,6 @@ class service {
 	 * 统一支付 - 创建支付订单
 	 */
 	async createOrder(data = {}) {
-<<<<<<< HEAD
-		 let {
-		    provider, // 支付供应商
-		    total_fee, // 支付金额
-		    user_id, // 用户user_id（统计需要）
-		    openid, // 用户openid
-		    order_no, // 订单号
-		    out_trade_no, // 支付插件订单号
-		    description, // 订单描述
-		    type, // 回调类型
-		    qr_code, // 是否强制使用扫码支付
-		    custom, // 自定义参数（不会发送给第三方支付服务器）
-		    other, // 其他请求参数（会发送给第三方支付服务器）
-		    clientInfo, // 客户端信息
-		    cloudInfo, // 云端信息
-		    wxpay_virtual, // 仅用于微信虚拟支付
-		    biz_type, // 业务类型，仅用于华为支付
-		  } = data;
-
-		let subject = description;
-		let body = description;
-		 // 校验openid是否必填
-		  if (provider === "wxpay" && (!openid || typeof openid !== "string")) {
-		    throw { errCode: ERROR[51013], errMsg: "openid is required for wxpay" };
-		  }
-=======
 		let {
 			provider, // 支付供应商
 			total_fee, // 支付金额
@@ -224,7 +198,6 @@ class service {
 		} = data;
 		let subject = description;
 		let body = description;
->>>>>>> origin/lxy
 		if (!out_trade_no) out_trade_no = libs.common.createOrderNo();
 		if (!order_no || typeof order_no !== "string") {
 			throw { errCode: ERROR[51003] };
@@ -484,12 +457,6 @@ class service {
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
 	}
-<<<<<<< HEAD
-	
-	
-	
-=======
->>>>>>> origin/lxy
 	/**
 	 * 统一支付结果查询
 	 * @description 根据商户订单号或者平台订单号查询订单信息，主要用于未接收到支付通知时可以使用此接口进行支付结果验证

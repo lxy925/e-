@@ -1,29 +1,4 @@
 const fs = require('fs');
-<<<<<<< HEAD
-const path = require('path')
-// 在config.js顶部添加
-console.log('证书路径验证:', {
-	cert: path.join(__dirname, 'wxpay/apiclient_cert.pem'),
-	key: path.join(__dirname, 'wxpay/apiclient_key.pem'),
-	exists: {
-		cert: fs.existsSync(path.join(__dirname, 'wxpay/apiclient_cert.pem')),
-		key: fs.existsSync(path.join(__dirname, 'wxpay/apiclient_key.pem'))
-	}
-});
-module.exports = {
-	// 统一 - 支付回调地址,格式为 "服务空间ID":"URL化地址"
-	"notifyUrl": {
-		// 测试环境服务空间-支付回调地址
-		"mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18": "https://fc-mp-d3196fd4-48df-43aa-88ae-e8c598b0fa18.next.bspapp.com/uni-pay-co",
-		// 线上环境服务空间-支付回调地址（如果只有一个服务空间，则只需要配置线上环境服务空间即可）
-	},
-	"notifyKey": "5FB2CD73C7B53918728417C50762E6D4", // 跨云函数通信时的加密密钥，建议手动改下，不要使用默认的密钥，长度保持在32位即可
-	// 微信支付相关
-	"wxpay": {
-		"enable": true, // 是否启用微信支付
-		// 微信 - 小程序支付
-		"mp": {
-=======
 const path = require('path');
 module.exports = {
 	/**
@@ -65,7 +40,6 @@ module.exports = {
 	"wxpay": {
 		// 微信 - 小程序支付（微信支付申请JSAPI支付）
 		"mp-weixin": {
->>>>>>> origin/lxy
 			"appId": "wxf8afb6dce14d487a", // 小程序的appid
 			"secret": "06d3e5f2f7ed1bf8504fe90a1a1e04e5", // 小程序的secret
 			"mchId": "1711967249", // 商户id
@@ -74,18 +48,6 @@ module.exports = {
 			"v3Key": "Epwy9402123456789012345678901940", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-<<<<<<< HEAD
-			"wxpayPublicKeyPath": path.join(__dirname,
-			'wxpay/pub_key.pem'), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数）
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
-		},
-		// 微信 - APP支付
-		"app": {
-			"appId": "", // app开放平台下的应用的appid
-			"secret": "", // app开放平台下的应用的secret
-			"mchId": "", // 商户id
-			// "key": "", // v2的api key
-=======
 			"wxpayPublicKeyPath":"", // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数）
 			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
 
@@ -96,23 +58,10 @@ module.exports = {
 			"secret": "", // 微信开放平台下的移动应用的secret
 			"mchId": "", // 微信支付的商户id
 			"key": "", // v2的api key
->>>>>>> origin/lxy
 			// "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
 			"v3Key": "", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-<<<<<<< HEAD
-			"wxpayPublicKeyPath": path.join(__dirname,
-			'wxpay/pub_key.pem'), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数）
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
-		},
-		// 微信 - 扫码支付
-		"native": {
-			"appId": "", // 可以是小程序或公众号或app开放平台下的应用的任意一个appid
-			"secret": "", // secret
-			"mchId": "", // 商户id
-			// "key": "", // v2的api key
-=======
 			"wxpayPublicKeyPath": "", // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
 			"wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
 			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
@@ -123,23 +72,10 @@ module.exports = {
 			"secret": "", // secret
 			"mchId": "", // 微信支付的商户id
 			"key": "", // v2的api key
->>>>>>> origin/lxy
 			// "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
 			"v3Key": "", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-<<<<<<< HEAD
-			"wxpayPublicKeyPath": path.join(__dirname,
-			'wxpay/pub_key.pem'), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数）
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
-		},
-		// 微信 - 公众号支付
-		"jsapi": {
-			"appId": "", // 公众号的appid
-			"secret": "", // 公众号的secret
-			"mchId": "", // 商户id
-			// "key": "", // v2的api key
-=======
 			"wxpayPublicKeyPath":"", // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
 			"wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
 			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
@@ -150,23 +86,10 @@ module.exports = {
 			"secret": "", // 公众号的secret
 			"mchId": "", // 微信支付的商户id
 			"key": "", // v2的api key
->>>>>>> origin/lxy
 			// "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
 			"v3Key": "", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-<<<<<<< HEAD
-			"wxpayPublicKeyPath": path.join(__dirname,
-			'wxpay/pub_key.pem'), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数）
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
-		},
-		// 微信 - 手机外部浏览器H5支付
-		"mweb": {
-			"appId": "", // 可以是小程序或公众号或app开放平台下的应用的任意一个appid
-			"secret": "", // secret
-			"mchId": "", // 商户id
-			// "key": "", // v2的api key
-=======
 			"wxpayPublicKeyPath": "", // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
 			"wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
 			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
@@ -177,57 +100,16 @@ module.exports = {
 			"secret": "", // secret
 			"mchId": "", // 微信支付的商户id
 			"key": "", // v2的api key
->>>>>>> origin/lxy
 			// "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
 			"v3Key": "", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-<<<<<<< HEAD
-			"wxpayPublicKeyPath": path.join(__dirname,
-			'wxpay/pub_key.pem'), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数）
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
-=======
 			"wxpayPublicKeyPath":"", // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
 			"wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
->>>>>>> origin/lxy
 			// 场景信息，必填
 			"sceneInfo": {
 				"h5_info": {
 					"type": "Wap", // 此值固定Wap
-<<<<<<< HEAD
-					"wap_url": "", // 你的H5首页地址，必须和你发起支付的页面的域名一致。
-					"wap_name": "", // 你的H5网站名称
-				}
-			}
-		},
-	},
-	// 支付宝相关（加签方式选证书模式，加密算法选RSA2）
-	"alipay": {
-		"enable": true, // 是否启用支付宝支付
-		// 支付宝 - 小程序支付配置
-		"mp": {
-			"appId": "", // 支付宝小程序appid
-			"privateKey": "", // 支付宝商户私钥
-			"appCertPath": path.join(__dirname, 'alipay/appCertPublicKey.crt'), // 支付宝商户公钥路径
-			"alipayPublicCertPath": path.join(__dirname, 'alipay/alipayCertPublicKey_RSA2.crt'), // 支付宝公钥路径
-			"alipayRootCertPath": path.join(__dirname, 'alipay/alipayRootCert.crt'), // 支付宝根证书路径
-		},
-		// 支付宝 - APP支付配置
-		"app": {
-			"appId": "", // 支付宝开放平台下应用的appid
-			"privateKey": "", // 支付宝商户私钥
-			"appCertPath": path.join(__dirname, 'alipay/appCertPublicKey.crt'), // 支付宝商户公钥路径
-			"alipayPublicCertPath": path.join(__dirname, 'alipay/alipayCertPublicKey_RSA2.crt'), // 支付宝公钥路径
-			"alipayRootCertPath": path.join(__dirname, 'alipay/alipayRootCert.crt'), // 支付宝根证书路径
-		},
-		// 支付宝 - H5支付配置（包含：网站二维码、手机H5，需申请支付宝当面付接口权限）
-		"native": {
-			"appId": "", // 支付宝开放平台下应用的appid
-			"privateKey": "", // 支付宝商户私钥
-			"appCertPath": path.join(__dirname, 'alipay/appCertPublicKey.crt'), // 支付宝商户公钥路径
-			"alipayPublicCertPath": path.join(__dirname, 'alipay/alipayCertPublicKey_RSA2.crt'), // 支付宝公钥路径
-			"alipayRootCertPath": path.join(__dirname, 'alipay/alipayRootCert.crt'), // 支付宝根证书路径
-=======
 					"wap_url": "https://www.xxxxxx.com", // 你的H5首页地址，必须和你发起支付的页面的域名一致。
 					"wap_name": "网站名称", // 你的H5网站名称
 				}
@@ -315,59 +197,34 @@ module.exports = {
 			"alipayRootCertPath": path.join(__dirname, 'alipay/alipayRootCert.crt'), // 支付宝根证书路径
 			"appCertPath": path.join(__dirname, 'alipay/appCertPublicKey.crt'), // 支付宝商户公钥路径
 			"sandbox": false
->>>>>>> origin/lxy
 		}
 	},
 	// ios内购相关
 	"appleiap": {
 		// ios内购支付
-<<<<<<< HEAD
-		"app": {
-			"password": "", // App 专用共享密钥，App 专用共享密钥是用于接收此 App 自动续期订阅收据的唯一代码。如果您要将此 App 转让给其他开发者或不想公开主共享密钥，建议使用 App 专用共享密钥。非自动续订场景不需要此参数
-			"timeout": 10000, // 请求超时时间，单位：毫秒
-			"sandbox": true, // 是否是沙箱环境
-		},
-=======
 		"app-plus": {
 			"password": "", // App 专用共享密钥，App 专用共享密钥是用于接收此 App 自动续期订阅收据的唯一代码。如果您要将此 App 转让给其他开发者或不想公开主共享密钥，建议使用 App 专用共享密钥。非自动续订场景不需要此参数
 			"timeout": 10000, // 请求超时时间，单位：毫秒
 			"receiptExpiresIn": 86400, // ios内购凭据有效期，单位：秒 86400 = 24小时 3600 = 1小时
 			"sandbox": true, // 是否是沙箱环境（正式上线时必须配置为false）
 		}
->>>>>>> origin/lxy
 	},
 	// 微信虚拟支付
 	"wxpay-virtual": {
 		// 微信 - 小程序支付
-<<<<<<< HEAD
-		"mp": {
-			"appId": "", // 小程序的appid
-			"secret": "",
-=======
 		"mp-weixin": {
 			"appId": "", // 小程序的appid
 			"secret": "", // 小程序的secret
->>>>>>> origin/lxy
 			"mchId": "", // 商户id
 			"offerId": "", // 支付应用ID
 			"appKey": "", // 现网AppKey（正式环境）
 			"sandboxAppKey": "", // 沙箱AppKey
-<<<<<<< HEAD
-			"rate": 100, // 代币兑换比例，比如1元兑换100代币，那么这里就是100（需要开通虚拟支付的时候也设置成 1 人民币 = 100 代币）
-=======
 			"rate": 100, // 代币兑换比例，比如1元兑换100代币，那么这里就是100，建议设置为100（需要开通虚拟支付的时候也设置成 1 人民币 = 100 代币）
->>>>>>> origin/lxy
 			"token": "", // 微信小程序通信的token，在开发 - 开发管理 - 消息推送 - Token(令牌)
 			"encodingAESKey": "", // 必须43位，微信小程序消息加密密钥，在开发 - 开发管理 - 消息推送 - EncodingAESKey(消息加解密密钥)
 			"sandbox": false, // 是否是沙箱环境（注意：沙箱环境异步回调可能有延迟，建议直接正式环境测试）
 		}
 	},
-<<<<<<< HEAD
-	// 华为支付
-	"huawei": {
-		// 华为 - 元服务支付
-		"mp": {
-=======
 	/**
 	 * VksPay商户支付配置
 	 * 支持个人无需营业执照即可签约开户，正规通道，非市面上的挂机免签。（同时也支持企业签约）
@@ -394,7 +251,6 @@ module.exports = {
 	"huawei": {
 		// 华为 - 元服务支付
 		"mp-harmony": {
->>>>>>> origin/lxy
 			"appId": "", // 应用的appId
 			"mchId": "", // 商户号
 			"mchAuthId": "", // 商户证书编号
@@ -403,11 +259,7 @@ module.exports = {
 			"clientType": "mp-harmony" // 固定 mp-harmony 请勿修改
 		},
 		// 华为 - APP支付
-<<<<<<< HEAD
-		"app": {
-=======
 		"app-harmony": {
->>>>>>> origin/lxy
 			"appId": "", // 应用的appId
 			"mchId": "", // 商户号
 			"mchAuthId": "", // 商户证书编号

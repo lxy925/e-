@@ -31,7 +31,7 @@
 			"path": "pages/more/more",
 			"style": {
 				"navigationBarTitleText": "更多",
-				"usingComponents": {} // 补充缺失的 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
@@ -66,19 +66,19 @@
 		{
 			"path": "pages/order/order",
 			"style": {
-				"usingComponents": {} // 补充缺失的 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
 			"path": "pages/order_details/order_details",
 			"style": {
-				"usingComponents": {} // 补充缺失的 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
 			"path": "pages/order_manage/order_manage",
 			"style": {
-				"usingComponents": {} // 补充缺失的 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
@@ -91,13 +91,13 @@
 		{
 			"path": "pages/serviceSelection/serviceSelection",
 			"style": {
-				"usingComponents": {} // 补充缺失的 style 和 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
 			"path": "pages/escortRegistration/escortRegistration",
 			"style": {
-				"usingComponents": {} // 补充缺失的 style 和 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
@@ -117,31 +117,31 @@
 		{
 			"path": "pages/department/department",
 			"style": {
-				"usingComponents": {} // 补充缺失的 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
 			"path": "pages/myAddress/myAddress",
 			"style": {
-				"usingComponents": {} // 补充缺失的 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
 			"path": "pages/object/object",
 			"style": {
-				"usingComponents": {} // 补充缺失的 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
 			"path": "pages/object_serverDetail/object_serverDetail",
 			"style": {
-				"usingComponents": {} // 补充缺失的 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
 			"path": "pages/patientManagement/patientManagement",
 			"style": {
-				"usingComponents": {} // 补充缺失的 usingComponents
+				"usingComponents": {}
 			}
 		},
 		{
@@ -201,6 +201,29 @@
 				"navigationBarTitleText": "ad",
 				"usingComponents": {}
 			}
+		},
+		{
+			"path": "pages/withdraw/withdraw",
+			"style": {}
+		},
+		{
+			"path": "pages/addPatient/addPatient",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/vkPayTest/vkPayTest",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path" : "pages/refund/refund",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
 		}
 	],
 	"sitemapLocation": "sitemap.json",
@@ -249,5 +272,12 @@
 	"scripts": {
 		"start": "node server.js",
 		"dev": "nodemon server.js"
+	},
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+		}
 	}
 }

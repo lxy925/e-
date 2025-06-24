@@ -1,10 +1,6 @@
 'use strict';
-<<<<<<< HEAD
-const jwt = require('../common/jwt.js');
-=======
 // const jwt = require('../common/jwt.js');
 const crypto = require('crypto');
->>>>>>> origin/lxy
 const db = uniCloud.database()
 
 exports.main = async (event, context) => {
@@ -36,11 +32,6 @@ exports.main = async (event, context) => {
       'moreInfo.rating': -1 // 按照 rating 从大到小排序
     })
     .end()
-<<<<<<< HEAD
-	
-    res.data.forEach(item => {
-      item.user_id = generateToken(user_id);
-=======
 	//给数据加密
 	console.log(res.data)
     res.data.forEach(item => {
@@ -50,7 +41,6 @@ exports.main = async (event, context) => {
 	  // item.card_id= encryptData(item.card_id);
 	//   item.phone= encryptData(item.phone);
 	  
->>>>>>> origin/lxy
     });
     // console.log(userInfo)
     console.log('查询结果：', res)

@@ -3,12 +3,7 @@
     "dependencies": {
         "uni-config-center": "file:..\/..\/..\/..\/uni-config-center\/uniCloud\/cloudfunctions\/common\/uni-config-center",
         "uni-id-common": "file:..\/..\/..\/..\/uni-id-common\/uniCloud\/cloudfunctions\/common\/uni-id-common",
-<<<<<<< HEAD
-        "uni-pay": "file:..\/common\/uni-pay",
-		 "crypto-js": "^4.1.1"
-=======
         "uni-pay": "file:..\/common\/uni-pay"
->>>>>>> origin/lxy
     },
     "extensions": {},
     "cloudfunction-config": {

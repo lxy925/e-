@@ -1,10 +1,6 @@
 'use strict';
 
-<<<<<<< HEAD
-const jwt = require('../common/jwt.js');
-=======
 const jwt = require('./jwt.js');
->>>>>>> origin/lxy
 const db = uniCloud.database();
 const _ = db.command;
 const $ = db.command.aggregate; // 确保 $ 是聚合查询操作符
@@ -12,14 +8,6 @@ const $ = db.command.aggregate; // 确保 $ 是聚合查询操作符
 exports.main = async (event, context) => {
   console.log("event:", event);
   const { user_id, type } = event.userInfo;
-<<<<<<< HEAD
-  const refreshToken = event.refreshToken;
-
-  if (!user_id) {
-    return { code: 401, msg: '未提供Token' };
-  }
-
-=======
   // const refreshToken = event.refreshToken;
   console.log(event.userInfo)
 console.log(user_id)
@@ -27,15 +15,11 @@ console.log(user_id)
     return { code: 401, msg: '未提供Token' };
   }
 
->>>>>>> origin/lxy
   try {
     // 1. 验证主token
     let decoded = jwt.verifyToken(user_id);
     let openid = decoded.userId;
-<<<<<<< HEAD
-=======
 	console.log(decoded);
->>>>>>> origin/lxy
     console.log(openid, type);
     
     if (!openid) {
@@ -44,39 +28,6 @@ console.log(user_id)
 
     // 2. 获取用户数据
     let userInfo = await getUserFromDB(openid, type, user_id);
-<<<<<<< HEAD
-    return { 
-      code: 200,
-      data: userInfo 
-    };
-
-  } catch (err) {
-    console.error('需要更新token:', err);
-    
-    // 3. 使用refreshToken获取新token
-    const newTokenRes = await uniCloud.callFunction({
-      name: 'refresh-token',
-      data: { refreshToken }  // 注意这里要传对象
-    });
-    
-    if (newTokenRes.code === 401) {
-      return { code: 401, msg: 'refreshToken过期，需重新登录' };
-    }
-    
-    // 4. 验证新token并获取用户数据
-	// console.log("生成的refreshToken",newTokenRes.result.data.token)
-    const newDecoded = jwt.verifyToken(newTokenRes.result.data.token);  // 确保使用正确的字段
-	// console.log(newDecoded)
-    const newOpenid = newDecoded.uid;
-    const userInfo = await getUserFromDB(newOpenid, type, newTokenRes.token);
-    
-    return {
-      code: 200,
-      data:{
-	  userInfo,
-      newToken: newTokenRes.result.data.token  }// 返回新token给客户端
-    };
-=======
 	userInfo.userInfo.user_id=user_id;
 	if(type=="陪诊师"){
 		const withdrawStats = await getWithdrawStats(openid);
@@ -118,7 +69,6 @@ console.log(user_id)
  //      data:newCatchUserInfo.userInfo,
        
  //    };
->>>>>>> origin/lxy
   }
 };
 
@@ -127,10 +77,7 @@ async function getUserFromDB(user_id, userType, token) {
   let query;
   
   if (userType === "陪诊师") {
-<<<<<<< HEAD
-=======
 	  
->>>>>>> origin/lxy
     query = usersCollection.aggregate()
       .match({ user_id })
       .lookup({
@@ -139,10 +86,6 @@ async function getUserFromDB(user_id, userType, token) {
         foreignField: 'user_id',
         as: 'moreInfo'
       })
-<<<<<<< HEAD
-      .unwind('$moreInfo')
-      .end();
-=======
 	  .lookup({
 	    from: 'escort_account',
 	    localField: 'user_id',
@@ -153,7 +96,6 @@ async function getUserFromDB(user_id, userType, token) {
 	   .unwind('$accountInfo')
       .end();
 	 
->>>>>>> origin/lxy
   } else {
     query = usersCollection.where({ user_id }).get();
   }
@@ -162,25 +104,15 @@ async function getUserFromDB(user_id, userType, token) {
   if (!res.data || res.data.length === 0) {
     throw new Error('未找到匹配的用户数据');
   }
-<<<<<<< HEAD
-  console.log(res.data[0])
-  const userInfo=res.data[0];
-  userInfo.user_id=token;
-  console.log(userInfo)
-  // 返回数据时不要修改原始数据
-=======
   // 返回数据时不要加密原始数据
  
   const userInfo=res.data[0];
   console.log("获取的用户数据",userInfo)
   
->>>>>>> origin/lxy
   return {
     userInfo
    
   };
-<<<<<<< HEAD
-=======
   
 }
 
@@ -244,5 +176,4 @@ function getWeekNumber(date) {
   d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
   const week1 = new Date(d.getFullYear(), 0, 4);
   return 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
->>>>>>> origin/lxy
 }

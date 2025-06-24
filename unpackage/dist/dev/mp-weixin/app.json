@@ -29,7 +29,11 @@
     "pages/account/account",
     "pages/getMoney/getMoney",
     "uni_modules/uni-pay/pages/success/success",
-    "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview"
+    "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview",
+    "pages/withdraw/withdraw",
+    "pages/addPatient/addPatient",
+    "pages/vkPayTest/vkPayTest",
+    "pages/refund/refund"
   ],
   "subPackages": [],
   "window": {

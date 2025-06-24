@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-	"action": "createPayment",
-=======
 	"action": "pay/createPayment",
->>>>>>> origin/lxy
 	"data": {
 		"out_trade_no": "test202501110001",
 		"total_fee": 1,
@@ -22,8 +18,4 @@
 	"clientInfo": {
 		"PLATFORM": "h5"
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/lxy

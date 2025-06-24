@@ -1,13 +1,8 @@
 {
-<<<<<<< HEAD
-  "name": "refresh-token",
-  "dependencies": {},
-=======
   "name": "user-login",
   "dependencies": {
       "jsonwebtoken": "^8.5.1"
     },
->>>>>>> origin/lxy
   "extensions": {
     "uni-cloud-jql": {}
   }

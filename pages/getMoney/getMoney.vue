@@ -17,7 +17,7 @@
 					<text class="prefix">¥</text>
 					<input type="digit" v-model="amount" placeholder="请输入提现金额" @input="validateAmount" />
 				</view>
-				<text class="hint">单笔最低1元，最高5000元</text>
+				<text class="hint">单笔最低0.1元，最高5000元</text>
 			</view>
 
 			<button class="submit-btn" :disabled="!canSubmit || loading" @click="handleWithdraw">
@@ -67,15 +67,15 @@
 				return Math.round(parseFloat(this.amount || 0) * 100);
 			},
 			canSubmit() {
-				const min = 1; // 0.01元=1分
+				const min = 10; // 0.01元=1分
 				const max = 500000; // 5000元=500000分
 				return this.amountInCent >= min &&
 					this.amountInCent <= max &&
-					this.amountInCent <= this.accountInfo.balance &&
+					this.amountInCent <= this.accountInfo.withdrawable_amount &&
 					!this.loading;
 			}
-		
-			
+
+
 		},
 		onLoad(options) {
 			// 获取导航栏高度
@@ -97,7 +97,7 @@
 
 			// 校验金额
 			validateAmount() {
-				if (this.amountInCent > this.accountInfo.balance) {
+				if (this.amountInCent > this.accountInfo.withdrawable_amount) {
 					uni.showToast({
 						title: '超出可提现金额',
 						icon: 'none'
@@ -113,7 +113,7 @@
 					const res = await uniCloud.callFunction({
 						name: 'withdraw-apply',
 						data: {
-							accountInfo:this.accountInfo,
+							accountInfo: this.accountInfo,
 							amount: this.amountInCent,
 							refreshToken: this.refreshToken
 						}
@@ -122,9 +122,9 @@
 						// uni.showToast({ title: '提现申请待确认' });
 						// this.loadBalance(); // 刷新余额
 						this.options = res.result.data.options;
-						this.out_bill_no=res.result.data.out_bill_no;
+						this.out_bill_no = res.result.data.out_bill_no;
 						this.confirmTransfer();
-						
+
 						// this.$refs.confirmPopup.open(); // 弹出确认框
 						console.log(res.result.data)
 
@@ -141,8 +141,8 @@
 							title: res.result.msg,
 							icon: 'none'
 						});
-							
-						if(res.result.code==401){
+
+						if (res.result.code == 401) {
 							uni.navigateTo({
 								url: '/pages/userInfoDetail/userInfoDetail'
 							});
@@ -163,47 +163,49 @@
 			},
 			// 确认转账
 			async confirmTransfer() {
-			  const options = this.options;
-			  await uni.requestMerchantTransfer({
-			    ...options,
-			    success: async (res) => { // 添加async
-			      try {
-			        const result = await uniCloud.callFunction({ // 添加await
-			          name: 'withdraw-action',
-			          data: {
-			            action: 'confirmTransfer',
-			            options: this.options,
-			            accountInfo: this.accountInfo,
-			            amount: this.amountInCent,
-			            out_bill_no: this.out_bill_no
-			          }
-			        });
-			        
-			       
-			        
-			        if (result.result.code === 200) { // 注意改为result.result
-			          uni.showToast({ title: '提现成功！' });
-			          this.amount = '';
-					  console.log(result.result.data)
-			          this.accountInfo = result.result.data.updatedAccount.newAccountInfo;
-			        } else {
-			          uni.showToast({
-			            title: result.result.message,
-			            icon: 'none'
-			          });
-			        }
-			      } catch (error) {
-			        uni.showToast({
-			          title: error.message,
-			          icon: 'none'
-			        });
-			      }
-			    },
-			    fail: (res) => {
-			      this.getMoneyFail(res.errMsg || '转账失败');
-			    }
-			  });
-			
+				const options = this.options;
+				await uni.requestMerchantTransfer({
+					...options,
+					success: async (res) => { // 添加async
+						try {
+							const result = await uniCloud.callFunction({ // 添加await
+								name: 'withdraw-action',
+								data: {
+									action: 'confirmTransfer',
+									options: this.options,
+									accountInfo: this.accountInfo,
+									amount: this.amountInCent,
+									out_bill_no: this.out_bill_no
+								}
+							});
+
+
+
+							if (result.result.code === 200) { // 注意改为result.result
+								uni.showToast({
+									title: '提现成功！'
+								});
+								this.amount = '';
+								console.log(result.result.data)
+								this.accountInfo = result.result.data.updatedAccount.newAccountInfo;
+							} else {
+								uni.showToast({
+									title: result.result.message,
+									icon: 'none'
+								});
+							}
+						} catch (error) {
+							uni.showToast({
+								title: error.message,
+								icon: 'none'
+							});
+						}
+					},
+					fail: (res) => {
+						this.getMoneyFail(res.errMsg || '转账失败');
+					}
+				});
+
 			},
 
 			// 取消转账
@@ -234,16 +236,15 @@
 					});
 				}
 			},
-			
+
 			// 跳转提现记录
 			navigateToRecords() {
 				const accountInfo = encodeURIComponent(JSON.stringify(this.accountInfo));
-					uni.navigateTo({
-					  url: `/pages/withdraw/withdraw?accountInfo=${accountInfo}`
-					});
-					
-				}
-			
+				uni.navigateTo({
+					url: `/pages/withdraw/withdraw?accountInfo=${accountInfo}`
+				});
+			}
+
 		}
 	}
 </script>

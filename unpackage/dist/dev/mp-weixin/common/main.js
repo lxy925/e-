@@ -26,9 +26,14 @@ var CustomNav = function CustomNav() {
     return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 435));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
+// import api from './Utils/api';
+// import uView from 'uview-ui';
+
+_vue.default.use(uView);
 _vue.default.use(_index2.default);
 _vue.default.config.productionTip = false;
 _App.default.mpType = 'app';
+_vue.default.prototype.$api = api;
 
 // 全局注册 custom-nav 组件
 _vue.default.component('custom-nav', CustomNav);

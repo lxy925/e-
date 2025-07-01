@@ -8,7 +8,7 @@
 		<view class="container">
 			<view class="userinfo">
 				<view class="appointment-info">
-					<image src="../../static/images/order/icon_1.png" class="icon" />
+					<image src="../../static/images/order/icon_1.png" class="icon" /> 
 					<text class="title">预约信息</text>
 				</view>
 				<!-- 输入框错误状态 -->
@@ -20,7 +20,7 @@
 
 				<view class="input-group" :class="{ 'error-field': fieldErrors.hospital }">
 					<text class="label">服务医院<span class="required">*</span></text>
-					<input class="input" placeholder="请选择医院" @click="goToSelectHospitals" :value="selectedHospital" />
+					<input class="input" placeholder="请选择医院":value="selectedHospital"  @click="goToSelectHospitals" />
 				</view>
 
 				<view class="input-group" :class="{ 'error-field': fieldErrors.datetime }">
@@ -217,7 +217,7 @@
 				selectedTimeIndex: -1,
 				selectedDateTime: '',
 				selectedPatientName: '',
-				selectPatientPhone: '',
+				selectedPatientPhone: '',
 				selectedDoctorName: '',
 				selectDoctorId: '',
 				selectedHospital: '',
@@ -304,8 +304,8 @@
 			// 整合所有订单信息
 			orderInfo() {
 				return {
-					patient_phone: this.selectPatientPhone,
-					patient_name: this.selectPatientName,
+					patient_phone: this.selectedPatientPhone,
+					patient_name: this.selectedPatientName,
 					hospital: this.selectedHospital,
 					service_time: this.selectedDateTime,
 					doctor_name: this.selectedDoctorName,
@@ -325,6 +325,7 @@
 		onShow() {
 			this.loadDoctorInfo();
 			this.loadPatientInfo();
+			this.loadSavedPhotos();
 			this.restoreFormData();
 		},
 
@@ -486,9 +487,9 @@
 				const patient = uni.getStorageSync('selectedPatient');
 				console.log(patient);
 				if (patient) {
-					this.selectPatientPhone = patient.phone;
-					this.selectPatientName = patient.name || '';
-					console.log("病人是" + this.selectPatientName + this.selectPatientPhone)
+					this.selectedPatientPhone = patient.phone;
+					this.selectedPatientName = patient.name || '';
+					console.log("病人是" + this.selectedPatientName + "电话为"+this.selectedPatientPhone)
 				}
 			},
 

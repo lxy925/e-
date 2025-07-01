@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
+		<custom-nav title="e陪无忧" :isHomePage="false" class="fixed-nav"></custom-nav>
 		<!--pages/order_details/order_details.wxml-->
 		<view class="container">
 			<scroll-view scroll-y="true" class="scroll-content">
@@ -149,19 +149,26 @@
 	/**index.wxss**/
 	/* pages/order_details/order_details.wxss */
 	page {
-		background: linear-gradient(#18d1c2, #F2F3F9, white);
+		/* background: linear-gradient(#18d1c2, #F2F3F9, white); */
+		padding: 0 20rpx;
+		padding-top: 200rpx;
 	}
 
-	.container {
-		margin-top: 200rpx;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		padding: 0;
+.container {
+		margin-top: 200rpx; /* 根据导航栏高度调整 */
+		padding-bottom: 120rpx; /* 避免底部按钮遮挡内容 */
+	}
+.fixed-nav {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 1000; /* 确保导航栏在最上层 */
 	}
 
 	.scroll-content {
-		flex: 1;
+		height: calc(100vh - 200rpx - 120rpx); /* 动态高度：视窗高度 - 导航栏 - 底部按钮 */
+		overflow-y: auto;
 	}
 
 	.image-container {

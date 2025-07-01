@@ -1,11 +1,6 @@
 <template>
   <view class="page">
-    <view class="custom-nav">
-      <view class="nav-title">选择科室</view>
-      <view class="nav-right" @tap="onManageTap">
-        <text class="manage-text">管理</text>
-      </view>
-    </view>
+	  <custom-nav title="陪诊诊室"></custom-nav>
     <view class="search-container">
       <input
         class="search-input"
@@ -165,90 +160,135 @@
   }
 };</script>
 <style>
-	.page {
-	  background-color: white;
-	  padding: 0 20rpx;
-	  padding-top: 180rpx;
-	}
-	
-	.search-container {
-	  width: 100%;
-	  position: fixed;
-	  margin-bottom: 20rpx;
-	  z-index: 1000;
-	}
-	
-	.search-input {
-	  width: 100%;
-	  padding: 20rpx;
-	  font-size: 28rpx;
-	  color: #333;
-	  border: 1rpx solid #e0e0e0;
-	  border-radius: 12rpx;
-	  background-color: #f9f9f9;
-	}
-	
-	.department-container {
-	  margin-top: 120rpx;
-	  display: flex;
-	  height: calc(100vh - 120rpx);
-	}
-	
-	.department-major,
-	.department-sub {
-	  flex: 1;
-	  height: 100%;
-	  border-radius: 12rpx;
-	  background-color: #ffffff;
-	  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
-	  margin: 10rpx;
-	}
-	
-	.major-item,
-	.sub-item {
-	  padding: 20rpx;
-	  text-align: center;
-	  border-bottom: 1rpx solid #e0e0e0;
-	  font-size: 28rpx;
-	  color: #333;
-	}
-	
-	.major-item.active {
-	  background-color: #f0f9f8;
-	  color: #18d1c2;
-	}
-	
-	.sub-item {
-	  border-bottom: 1rpx solid #e0e0e0;
-	}
-	
-	.sub-item:last-child {
-	  border-bottom: none;
-	}
-	
-	.custom-nav {
-	  display: flex;
-	  justify-content: space-between;
-	  align-items: center;
-	  padding: 20rpx;
-	  background-color: #ffffff;
-	  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
-	}
-	
-	.nav-title {
-	  font-size: 32rpx;
-	  font-weight: bold;
-	  color: #333;
-	}
-	
-	.nav-right {
-	  display: flex;
-	  align-items: center;
-	}
-	
-	.manage-text {
-	  font-size: 28rpx;
-	  color: #18d1c2;
-	  margin-left: 10rpx;
-	}
+  .page {
+    height: 100vh;
+    padding-top: 160rpx;
+    box-sizing: border-box;
+  }
+  
+  .custom-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200rpx;
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+    z-index: 100;
+  }
+  
+  .nav-title {
+    font-size: 36rpx;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .nav-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .manage-text {
+    font-size: 28rpx;
+    color: #18b2a6;
+    font-weight: 500;
+  }
+  
+  .search-container {
+    position: fixed;
+    top: 120rpx;
+    left: 0;
+    right: 0;
+    padding: 20rpx 15rpx;
+    z-index: 99;
+  }
+  
+  .search-input {
+	  margin-top: 50rpx;
+    width: 90%;
+    height: 80rpx;
+    padding: 0 30rpx;
+    font-size: 28rpx;
+    color: #333;
+    background-color: #fff;
+    border-radius: 40rpx;
+  }
+  
+  .search-input::placeholder {
+    color: #999;
+  }
+  
+  .department-container {
+    display: flex;
+	margin-top:120rpx ;
+    height: calc(100vh - 200rpx);
+    padding: 0 20rpx;
+    box-sizing: border-box;
+  }
+  
+  .department-major {
+    width: 220rpx;
+    height: 100%;
+    background-color: #f5f5f5;
+    border-radius: 16rpx 0 0 16rpx;
+    overflow: hidden;
+  }
+  
+  .department-sub {
+    flex: 1;
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 0 16rpx 16rpx 0;
+    overflow: hidden;
+  }
+  
+  .major-item {
+    height: 100rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28rpx;
+    color: #666;
+    border-bottom: 1rpx solid #eee;
+    padding: 0 20rpx;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  .major-item.active {
+    background-color: #ffffff;
+    color: #18b2a6;
+    font-weight: 500;
+    position: relative;
+  }
+  
+  .major-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 30rpx;
+    bottom: 30rpx;
+    width: 6rpx;
+    background-color: #18b2a6;
+    border-radius: 3rpx;
+  }
+  
+  .sub-item {
+    height: 100rpx;
+    display: flex;
+    align-items: center;
+    padding: 0 30rpx;
+    font-size: 28rpx;
+    color: #333;
+    border-bottom: 1rpx solid #f5f5f5;
+  }
+  
+  .sub-item.selected {
+    color: #18b2a6;
+    font-weight: 500;
+    background-color: #f0f9f8;
+  }
+  
+  .sub-item:last-child {
+    border-bottom: none;
+  }
 </style>

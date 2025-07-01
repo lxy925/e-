@@ -238,7 +238,7 @@ var _default = {
       selectedTimeIndex: -1,
       selectedDateTime: '',
       selectedPatientName: '',
-      selectPatientPhone: '',
+      selectedPatientPhone: '',
       selectedDoctorName: '',
       selectDoctorId: '',
       selectedHospital: '',
@@ -318,8 +318,8 @@ var _default = {
     // 整合所有订单信息
     orderInfo: function orderInfo() {
       return {
-        patient_phone: this.selectPatientPhone,
-        patient_name: this.selectPatientName,
+        patient_phone: this.selectedPatientPhone,
+        patient_name: this.selectedPatientName,
         hospital: this.selectedHospital,
         service_time: this.selectedDateTime,
         doctor_name: this.selectedDoctorName,
@@ -338,6 +338,7 @@ var _default = {
   onShow: function onShow() {
     this.loadDoctorInfo();
     this.loadPatientInfo();
+    this.loadSavedPhotos();
     this.restoreFormData();
   },
   onHide: function onHide() {
@@ -493,9 +494,9 @@ var _default = {
       var patient = uni.getStorageSync('selectedPatient');
       console.log(patient);
       if (patient) {
-        this.selectPatientPhone = patient.phone;
-        this.selectPatientName = patient.name || '';
-        console.log("病人是" + this.selectPatientName + this.selectPatientPhone);
+        this.selectedPatientPhone = patient.phone;
+        this.selectedPatientName = patient.name || '';
+        console.log("病人是" + this.selectedPatientName + "电话为" + this.selectedPatientPhone);
       }
     },
     goToSelectHospitals: function goToSelectHospitals() {

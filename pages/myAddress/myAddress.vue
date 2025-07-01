@@ -13,8 +13,8 @@
 
 					<!-- 地址内容 -->
 					<view class="address-content" @click="() => selectAddress(address)">
-						<view class=" address-district">{{ address.district || '未选择地区' }}</view>
-						<view class="address-detail">{{ address.detail || '未填写详细地址' }}</view>
+						<view class="address-district">{{ address.district || '未选择地区' }}</view>
+					<view class="address-detail">{{ address.detail || '未填写详细地址' }}</view>
 						<view class="addressNameAndNumber">{{ address.name || '未填写姓名' }} {{ address.phone || '未填写电话' }}
 						</view>
 					</view>
@@ -323,17 +323,30 @@
 				}
 
 				try {
+				    // 1. 构建完整地区字符串
+				    const fullDistrict = `${this.location.province} ${this.location.city} ${this.location.district}`;
+				    
+				    // 2. 从详细地址中彻底移除所有地区信息
+				    const cleanDetail = this.newAddress.detail.trim()
+				      .replace(new RegExp(`^${this.location.province}\\s*`, 'i'), '')  // 移除开头的省
+				      .replace(new RegExp(`^${this.location.city}\\s*`, 'i'), '')     // 移除开头的市
+				      .replace(new RegExp(`^${this.location.district}\\s*`, 'i'), '') // 移除开头的区
+				      .replace(new RegExp(`\\s*${this.location.province}$`, 'i'), '') // 移除结尾的省
+				      .replace(new RegExp(`\\s*${this.location.city}$`, 'i'), '')      // 移除结尾的市
+				      .replace(new RegExp(`\\s*${this.location.district}$`, 'i'), '') // 移除结尾的区
+				      .replace(/\s+/g, ' ')  // 合并多余空格
+				      .trim();
 					const addressData = {
-						name: this.newAddress.name,
-						phone: this.newAddress.phone,
-						detail: `${this.location.province} ${this.location.city} ${this.location.district} ${this.newAddress.detail}`,
-						district: `${this.location.province} ${this.location.city} ${this.location.district}`,
-						latitude: this.latitude,
-						longitude: this.longitude,
-						isDefault: this.isDefaultAddress,
-						updateTime: new Date()
-					};
-					console.log(addressData);
+					      name: this.newAddress.name,
+					      phone: this.newAddress.phone,
+					      detail: cleanDetail || '未填写详细地址',  // 确保不为空
+					      district: fullDistrict,
+					      latitude: this.latitude,
+					      longitude: this.longitude,
+					      isDefault: this.isDefaultAddress,
+					      updateTime: new Date()
+					    };
+					    console.log('处理后地址数据:', addressData);
 					let res;
 					if (this.currentEditIndex !== null) {
 						addressData._id = this.addresses[this.currentEditIndex]._id;
@@ -489,7 +502,12 @@
 						this.getCityFromCoordinates(res.latitude, res.longitude)
 							.then(region => {
 								this.location = region;
-								this.newAddress.detail = res.address.replace(/^.+?(省|市|区)/, '');
+								  this.newAddress.detail = res.address
+								            .replace(new RegExp(region.province, 'ig'), '')
+								            .replace(new RegExp(region.city, 'ig'), '')
+								            .replace(new RegExp(region.district, 'ig'), '')
+								            .replace(/\s+/g, ' ')
+								            .trim();
 							})
 							.catch(() => {
 								this.parseAddressString(res.address);
@@ -542,20 +560,22 @@
 			},
 
 			// 解析地址字符串
-			parseAddressString(address) {
-				const regex = /^(.*?省|.*?市)?(.*?市|.*?州|.*?区|.*?县)?(.*?区|.*?市|.*?县|.*?镇)?/;
-				const matches = address.match(regex);
-
-				this.location.province = matches[1] || '';
-				this.location.city = matches[2] || this.location.province;
-				this.location.district = matches[3] || '';
-
-				const cleanAddress = address
-					.replace(this.location.province, '')
-					.replace(this.location.city, '')
-					.replace(this.location.district, '');
-				this.newAddress.detail = cleanAddress.trim();
-			},
+		parseAddressString(address) {
+		  const regex = /^(.*?省|.*?市)?(.*?市|.*?州|.*?区|.*?县)?(.*?区|.*?市|.*?县|.*?镇)?/;
+		  const matches = address.match(regex);
+		
+		  this.location.province = matches[1] || '';
+		  this.location.city = matches[2] || this.location.province;
+		  this.location.district = matches[3] || '';
+		
+		  // 彻底移除所有地区信息
+		  this.newAddress.detail = address
+		    .replace(new RegExp(this.location.province, 'ig'), '')
+		    .replace(new RegExp(this.location.city, 'ig'), '')
+		    .replace(new RegExp(this.location.district, 'ig'), '')
+		    .replace(/\s+/g, ' ')
+		    .trim();
+		},
 
 			// 选择地址
 			selectAddress(address) {
@@ -579,7 +599,7 @@
 					return;
 				}
 				uni.setStorageSync('selectedAddress', address);
-				console.log("成功存储地址:", address.name, address.detail);
+				console.log("成功存储地址:", address.detail);
 				uni.navigateBack();
 			}
 		}

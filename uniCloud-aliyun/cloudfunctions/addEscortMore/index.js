@@ -24,7 +24,8 @@ const type=moreData.type;
 			self_introduction: moreData.self_introduction,
 			familiar_hospitals: moreData.familiar_hospitals,
 			familiar_departments: moreData.familiar_departments,
-			update_time: new Timestamp()
+			
+			update_time: Date.now()
 		})
 	}else{
 		result = await db.collection('escorts_more').add(moreData);

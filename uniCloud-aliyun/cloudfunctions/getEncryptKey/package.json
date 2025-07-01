@@ -1,0 +1,7 @@
+{
+  "name": "getEncryptKey",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

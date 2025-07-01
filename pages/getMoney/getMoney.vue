@@ -237,6 +237,7 @@
 			
 			// 跳转提现记录
 			navigateToRecords() {
+				
 				const accountInfo = encodeURIComponent(JSON.stringify(this.accountInfo));
 					uni.navigateTo({
 					  url: `/pages/withdraw/withdraw?accountInfo=${accountInfo}`

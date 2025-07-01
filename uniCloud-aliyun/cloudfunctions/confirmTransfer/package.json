@@ -1,0 +1,7 @@
+{
+  "name": "confirmWithdraw",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

@@ -174,7 +174,7 @@
 							<image src="../../static/images/mine/location.png" alt=""></image>
 							<text class="box-title">地址管理</text>
 						</view>
-						<view class="box">
+						<view class="box" @click="goPationManager">
 							<image src="../../static/images/mine/patient.png" alt=""></image>
 							<text class="box-title">就诊人管理</text>
 						</view>
@@ -441,6 +441,12 @@
 			  url: `/pages/getMoney/getMoney?accountInfo=${accountInfo}`
 			});
 			
+		},
+			//跳转到就诊人管理页面
+		goPationManager(){
+			uni.navigateTo({
+			  url: "/pages/patientManagement/patientManagement"
+			});
 		}
 		}
 	};

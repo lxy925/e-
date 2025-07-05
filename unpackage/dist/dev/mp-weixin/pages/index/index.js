@@ -243,6 +243,17 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // pages/index/index.js
 var _default = {
   data: function data() {
@@ -250,13 +261,21 @@ var _default = {
       pageTitle: '首页',
       scrollTop: 0,
       navHeight: 0,
-      // 添加导航栏高度存储
+      buttonX: 30,
+      // 按钮初始X坐标
+      buttonY: 200,
+      // 按钮初始Y坐标
+      startX: 0,
+      // 触摸开始X坐标
+      startY: 0,
+      // 触摸开始Y坐标
+      isDragging: false,
+      // 是否正在拖拽
       banners: [],
       indicatorDots: true,
       autoplay: true,
       interval: 2000,
       duration: 500,
-      startY: 0,
       endY: 0,
       navItems: [{
         icon: "/static/images/index/index-service.png",
@@ -367,6 +386,52 @@ var _default = {
       uni.navigateTo({
         url: "/pages/hospital/detail?id=".concat(id)
       });
+    },
+    // 跳转到AI问答页面
+    navigateToAI: function navigateToAI() {
+      if (!this.isDragging) {
+        // 只有在非拖拽状态才触发跳转
+        uni.navigateTo({
+          url: '/pages/AI/AI'
+        });
+      }
+    },
+    // 触摸开始
+    touchStart: function touchStart(e) {
+      this.startX = e.touches[0].clientX;
+      this.startY = e.touches[0].clientY;
+      this.isDragging = false;
+    },
+    // 触摸移动
+    touchMove: function touchMove(e) {
+      var moveX = e.touches[0].clientX - this.startX;
+      var moveY = e.touches[0].clientY - this.startY;
+
+      // 如果移动距离超过10px，认为是拖拽
+      if (Math.abs(moveX) > 10 || Math.abs(moveY) > 10) {
+        this.isDragging = true;
+      }
+
+      // 计算新的位置
+      var newX = this.buttonX + moveX;
+      var newY = this.buttonY + moveY;
+
+      // 获取屏幕尺寸
+      var systemInfo = uni.getSystemInfoSync();
+      var screenWidth = systemInfo.windowWidth;
+      var screenHeight = systemInfo.windowHeight;
+
+      // 限制按钮在屏幕范围内
+      newX = Math.max(0, Math.min(newX, screenWidth - 100));
+      newY = Math.max(0, Math.min(newY, screenHeight - 100));
+      this.buttonX = newX;
+      this.buttonY = newY;
+      this.startX = e.touches[0].clientX;
+      this.startY = e.touches[0].clientY;
+    },
+    // 触摸结束
+    touchEnd: function touchEnd() {
+      this.isDragging = false;
     },
     // 获取轮播图数据
     getBanners: function getBanners() {

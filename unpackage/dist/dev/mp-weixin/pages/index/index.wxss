@@ -178,4 +178,27 @@
 .detail-item.address .value {
 		word-break: break-all;
 }
+/* AI悬浮按钮样式 */
+.ai-float-btn {
+		position: fixed;
+		width: 100rpx;
+		height: 100rpx;
+		background: linear-gradient(135deg, #1cd6c7, #99efe9);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.2);
+		z-index: 999;
+		transition: all 0.3s ease;
+}
+.ai-float-btn text {
+		color: #ffffff;
+		font-size: 32rpx;
+		font-weight: bold;
+}
+.ai-float-btn:active {
+		-webkit-transform: scale(0.95);
+		        transform: scale(0.95);
+}
 

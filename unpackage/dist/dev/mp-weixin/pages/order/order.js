@@ -197,21 +197,24 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni, wx) {
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _components$data$onSh;
 var PaymentComponent = function PaymentComponent() {
   __webpack_require__.e(/*! require.ensure | components/PaymentComponent */ "components/PaymentComponent").then((function () {
-    return resolve(__webpack_require__(/*! @/components/PaymentComponent.vue */ 639));
+    return resolve(__webpack_require__(/*! @/components/PaymentComponent.vue */ 663));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var ServiceNoticePopup = function ServiceNoticePopup() {
   __webpack_require__.e(/*! require.ensure | components/service-notice-popup */ "components/service-notice-popup").then((function () {
-    return resolve(__webpack_require__(/*! @/components/service-notice-popup.vue */ 646));
+    return resolve(__webpack_require__(/*! @/components/service-notice-popup.vue */ 670));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
-var _default = {
+var _default = (_components$data$onSh = {
   components: {
     ServiceNoticePopup: ServiceNoticePopup,
     PaymentComponent: PaymentComponent
@@ -290,28 +293,46 @@ var _default = {
       missingOptionalFields: []
     };
   },
+  onShow: function onShow() {
+    // 恢复服务数据
+    var savedService = uni.getStorageSync('current_service');
+    if (savedService) {
+      console.log("获取缓存的服务数据", savedService);
+      this.serviceData = savedService;
+      this.service_price = savedService.service_price;
+    }
+    this.loadDoctorInfo();
+    this.loadPatientInfo();
+    this.loadSavedPhotos();
+    this.restoreFormData();
+  },
   onLoad: function onLoad(options) {
+    var _this$serviceData, _this$serviceData2, _this$serviceData3;
     this.loadSavedPhotos();
     this.initDateTimeList();
+
+    // 解析并存储服务数据
     var serviceDataString = options.service;
     if (serviceDataString) {
       try {
         this.serviceData = JSON.parse(decodeURIComponent(serviceDataString));
-        console.log(this.serviceData);
+        console.log("初始服务数据:", this.serviceData);
         this.service_price = this.serviceData.service_price;
+        // 立即存储服务数据
+        uni.setStorageSync('current_service', this.serviceData);
       } catch (error) {
-        this.serviceData = decodeURIComponent(serviceDataString);
+        console.error('解析服务数据失败:', error);
       }
     }
-    this.include_transport = this.serviceData.include_transport;
-    this.service_price = this.serviceData.service_price;
-    this.service_id = this.serviceData.service_id;
+    this.include_transport = ((_this$serviceData = this.serviceData) === null || _this$serviceData === void 0 ? void 0 : _this$serviceData.include_transport) || '';
+    this.service_price = ((_this$serviceData2 = this.serviceData) === null || _this$serviceData2 === void 0 ? void 0 : _this$serviceData2.service_price) || '';
+    this.service_id = ((_this$serviceData3 = this.serviceData) === null || _this$serviceData3 === void 0 ? void 0 : _this$serviceData3.service_id) || '';
     this.loadPatientInfo();
     this.loadDoctorInfo();
     var address = uni.getStorageSync('selectedAddress');
-    console.log("获取地址是：" + address);
+    console.log("获取地址:", address);
     if (address) {
-      this.selectAddress = address.district + address.detail || '';
+      this.selectAddress = (address.district || '') + (address.detail || '');
     }
   },
   computed: {
@@ -334,397 +355,407 @@ var _default = {
         service_desc: this.serviceData.service_desc || '根据您的需求提供专业陪诊服务'
       };
     }
-  },
-  onShow: function onShow() {
-    this.loadDoctorInfo();
-    this.loadPatientInfo();
-    this.loadSavedPhotos();
-    this.restoreFormData();
-  },
-  onHide: function onHide() {
-    this.saveFormData();
-  },
-  onUnload: function onUnload() {
-    // 可选：保存数据
-  },
-  onBackPress: function onBackPress() {
-    var _this = this;
-    if (this.hasFormData()) {
-      uni.showModal({
-        title: '提示',
-        content: '您有未提交的订单数据，是否保存？',
-        success: function success(res) {
-          if (res.confirm) {
-            _this.saveFormData();
-            uni.navigateBack();
-          } else if (res.cancel) {
-            _this.clearFormData();
-            uni.navigateBack();
-          }
+  }
+}, (0, _defineProperty2.default)(_components$data$onSh, "onShow", function onShow() {
+  this.loadDoctorInfo();
+  this.loadPatientInfo();
+  this.loadSavedPhotos();
+  this.restoreFormData();
+}), (0, _defineProperty2.default)(_components$data$onSh, "onHide", function onHide() {
+  this.saveFormData();
+}), (0, _defineProperty2.default)(_components$data$onSh, "onUnload", function onUnload() {
+  // 可选：保存数据
+}), (0, _defineProperty2.default)(_components$data$onSh, "onBackPress", function onBackPress() {
+  var _this = this;
+  if (this.hasFormData()) {
+    uni.showModal({
+      title: '提示',
+      content: '您有未提交的订单数据，是否保存？',
+      success: function success(res) {
+        if (res.confirm) {
+          _this.saveFormData();
+          uni.navigateBack();
+        } else if (res.cancel) {
+          _this.clearFormData();
+          uni.navigateBack();
         }
-      });
-      return true;
-    }
-  },
-  mounted: function mounted() {
-    console.log('支付组件实例:', this.$refs.paymentComponent);
-    if (!this.$refs.paymentComponent) {
-      console.error('未获取到支付组件实例，请检查ref名称是否正确');
-    }
-  },
-  methods: {
-    // 提交订单处理函数
-    handleSubmitOrder: function handleSubmitOrder() {
-      var _this2 = this;
-      console.log('提交订单事件触发，开始验证表单');
-      this.validateForm().then(function (valid) {
-        if (valid) {
-          _this2.openNoticePopup(); // 显示服务须知
-        } else {
-          uni.showToast({
-            title: '请完成必填信息',
-            icon: 'none'
-          });
-        }
-      });
-    },
-    // 表单验证方法
-    validateForm: function validateForm() {
-      var _this3 = this;
-      return new Promise(function (resolve) {
-        // 重置验证状态
-        _this3.fieldErrors = {
-          patient: !_this3.selectedPatientName,
-          hospital: !_this3.selectedHospital,
-          datetime: !_this3.selectedDateTime,
-          address: _this3.include_transport && (!_this3.selectAddress || _this3.selectAddress.trim() === '')
-        };
-
-        // 检查必填字段
-        var requiredFields = ['patient', 'hospital', 'datetime'];
-        var missingRequired = requiredFields.some(function (field) {
-          return _this3.fieldErrors[field];
-        });
-        if (missingRequired) {
-          // 收集错误字段并显示提示
-          var errorFields = requiredFields.filter(function (field) {
-            return _this3.fieldErrors[field];
-          }).map(function (field) {
-            switch (field) {
-              case 'patient':
-                return '就诊人';
-              case 'hospital':
-                return '服务医院';
-              case 'datetime':
-                return '服务时间';
-              case 'address':
-                return '接送地点';
-              default:
-                return field;
-            }
-          });
-          uni.showToast({
-            title: '请填写以下必填信息：' + errorFields.join('、'),
-            icon: 'none'
-          });
-          resolve(false);
-          return;
-        }
-
-        // 选填字段检查
-        _this3.missingOptionalFields = [];
-        var optionalFields = [{
-          value: _this3.selectedDepartment,
-          name: '科室'
-        }, {
-          value: _this3.selectedCheckboxes.length > 0,
-          name: '就诊人特点及陪诊需求'
-        }, {
-          value: _this3.photoList.length > 0,
-          name: '上传材料'
-        }, {
-          value: _this3.customRequirements,
-          name: '其他特殊需求描述'
-        }];
-        var missingOptional = optionalFields.filter(function (field) {
-          if (typeof field.value === 'string') {
-            return !field.value || field.value.trim() === '';
-          }
-          return !field.value;
-        });
-        if (missingOptional.length > 0) {
-          _this3.missingOptionalFields = missingOptional.map(function (field) {
-            return field.name;
-          });
-          // 显示选填字段提示
-          uni.showModal({
-            title: '提示',
-            content: "\u60A8\u5C1A\u672A\u586B\u5199\u4EE5\u4E0B\u9009\u586B\u4FE1\u606F\uFF1A".concat(missingOptional.map(function (field) {
-              return field.name;
-            }).join('、'), "\uFF0C\u662F\u5426\u7EE7\u7EED\u63D0\u4EA4\uFF1F"),
-            success: function success(res) {
-              resolve(res.confirm);
-            },
-            fail: function fail() {
-              return resolve(true);
-            }
-          });
-        } else {
-          resolve(true);
-        }
-      });
-    },
-    openNoticePopup: function openNoticePopup() {
-      this.$refs.serviceNoticePopup.show();
-    },
-    onNoticeConfirm: function onNoticeConfirm() {
-      console.log('服务须知已确认，开始创建订单');
-      // 服务须知确认后，调用组件的提交方法
-      this.$refs.paymentComponent.submitOrderAfterValidation();
-    },
-    loadDoctorInfo: function loadDoctorInfo() {
-      var doctor = uni.getStorageSync('selectedDoctor');
-      console.log("获取医生信息：" + doctor._id);
-      if (doctor) {
-        this.selectDoctorId = doctor._id;
-        this.selectedDoctorName = doctor.name || '';
       }
-    },
-    loadPatientInfo: function loadPatientInfo() {
-      var patient = uni.getStorageSync('selectedPatient');
-      console.log(patient);
-      if (patient) {
-        this.selectedPatientPhone = patient.phone;
-        this.selectedPatientName = patient.name || '';
-        console.log("病人是" + this.selectedPatientName + "电话为" + this.selectedPatientPhone);
-      }
-    },
-    goToSelectHospitals: function goToSelectHospitals() {
-      var _this4 = this;
-      uni.navigateTo({
-        url: '/pages/more/more?from=order',
-        success: function success() {
-          uni.$once('select-hospital', function (hospital) {
-            _this4.selectedHospital = hospital.name;
-          });
-        }
-      });
-    },
-    hasFormData: function hasFormData() {
-      return this.selectedDepartment || this.selectedCheckboxes.length > 0 || this.photoList.length > 0 || this.selectedDateTime;
-    },
-    saveFormData: function saveFormData() {
-      var formData = {
-        selectedDepartment: this.selectedDepartment,
-        selectedCheckboxes: this.selectedCheckboxes,
-        photoList: this.photoList,
-        selectedDateTime: this.selectedDateTime,
-        selectedPatientName: this.selectedPatientName,
-        selectedDoctorName: this.selectedDoctorName,
-        selectAddress: this.selectAddress,
-        customRequirements: this.customRequirements,
-        timestamp: new Date().getTime()
-      };
-      uni.setStorageSync(this.STORAGE_KEY, formData);
-    },
-    restoreFormData: function restoreFormData() {
-      var savedData = uni.getStorageSync(this.STORAGE_KEY);
-      if (savedData && !this.isDataExpired(savedData.timestamp)) {
-        if (!this.selectedDepartment) this.selectedDepartment = savedData.selectedDepartment;
-        if (!this.selectedCheckboxes) this.selectedCheckboxes = savedData.selectedCheckboxes;
-        if (!this.photoList) this.photoList = savedData.photoList;
-        if (!this.selectedDateTime) this.selectedDateTime = savedData.selectedDateTime;
-        if (!this.selectedPatientName) this.selectedPatientName = savedData.selectedPatientName;
-        if (!this.selectedDoctorName) this.selectedDoctorName = savedData.selectedDoctorName;
-        if (!this.selectAddress) this.selectAddress = savedData.selectAddress;
-        if (!this.customRequirements) this.customRequirements = savedData.customRequirements || '';
+    });
+    return true;
+  }
+}), (0, _defineProperty2.default)(_components$data$onSh, "mounted", function mounted() {
+  console.log('支付组件实例:', this.$refs.paymentComponent);
+  if (!this.$refs.paymentComponent) {
+    console.error('未获取到支付组件实例，请检查ref名称是否正确');
+  }
+}), (0, _defineProperty2.default)(_components$data$onSh, "methods", {
+  // 提交订单处理函数
+  handleSubmitOrder: function handleSubmitOrder() {
+    var _this2 = this;
+    console.log('提交订单事件触发，开始验证表单');
+    this.validateForm().then(function (valid) {
+      if (valid) {
+        _this2.openNoticePopup(); // 显示服务须知
       } else {
-        uni.removeStorageSync(this.STORAGE_KEY);
-      }
-    },
-    isDataExpired: function isDataExpired(timestamp) {
-      return new Date().getTime() - timestamp > this.STORAGE_EXPIRE;
-    },
-    clearFormData: function clearFormData() {
-      uni.removeStorageSync(this.STORAGE_KEY);
-      this.selectedDepartment = null;
-      this.selectedCheckboxes = [];
-      this.photoList = [];
-      this.selectedDateTime = '';
-      this.customRequirements = '';
-    },
-    goToDepartmentPage: function goToDepartmentPage() {
-      uni.navigateTo({
-        url: '/pages/department/department?selected=' + (this.selectedDepartment || '')
-      });
-    },
-    selectDepartment: function selectDepartment(event) {
-      this.selectedDepartment = event.currentTarget.dataset.department;
-    },
-    toggleCheckbox: function toggleCheckbox(event) {
-      var value = event.currentTarget.dataset.value;
-      this.selectedCheckboxes.includes(value) ? this.selectedCheckboxes = this.selectedCheckboxes.filter(function (item) {
-        return item !== value;
-      }) : this.selectedCheckboxes.push(value);
-    },
-    loadSavedPhotos: function loadSavedPhotos() {
-      try {
-        var savedPhotoList = wx.getStorageSync('photoList');
-        if (savedPhotoList) this.photoList = savedPhotoList;
-      } catch (e) {
-        console.error("Error loading saved photos:", e);
-      }
-    },
-    chooseImage: function chooseImage() {
-      var _this5 = this;
-      var remaining = this.maxPhotos - this.photoList.length;
-      if (remaining <= 0) {
-        wx.showToast({
-          title: '最多只能上传15张图片',
+        uni.showToast({
+          title: '请完成必填信息',
           icon: 'none'
         });
+      }
+    });
+  },
+  // 表单验证方法
+  validateForm: function validateForm() {
+    var _this3 = this;
+    return new Promise(function (resolve) {
+      // 重置验证状态
+      _this3.fieldErrors = {
+        patient: !_this3.selectedPatientName,
+        hospital: !_this3.selectedHospital,
+        datetime: !_this3.selectedDateTime,
+        address: _this3.include_transport && (!_this3.selectAddress || _this3.selectAddress.trim() === '')
+      };
+
+      // 检查必填字段
+      var requiredFields = ['patient', 'hospital', 'datetime'];
+      var missingRequired = requiredFields.some(function (field) {
+        return _this3.fieldErrors[field];
+      });
+      if (missingRequired) {
+        // 收集错误字段并显示提示
+        var errorFields = requiredFields.filter(function (field) {
+          return _this3.fieldErrors[field];
+        }).map(function (field) {
+          switch (field) {
+            case 'patient':
+              return '就诊人';
+            case 'hospital':
+              return '服务医院';
+            case 'datetime':
+              return '服务时间';
+            case 'address':
+              return '接送地点';
+            default:
+              return field;
+          }
+        });
+        uni.showToast({
+          title: '请填写以下必填信息：' + errorFields.join('、'),
+          icon: 'none'
+        });
+        resolve(false);
         return;
       }
-      var count = Math.min(this.maxPerUpload, remaining);
-      wx.chooseImage({
-        count: count,
-        sizeType: ['compressed'],
-        sourceType: ['album', 'camera'],
-        success: function success(res) {
-          res.tempFilePaths.forEach(function (filePath) {
-            return _this5.checkFileSize(filePath);
-          });
+
+      // 选填字段检查
+      _this3.missingOptionalFields = [];
+      var optionalFields = [{
+        value: _this3.selectedDepartment,
+        name: '科室'
+      }, {
+        value: _this3.selectedCheckboxes.length > 0,
+        name: '就诊人特点及陪诊需求'
+      }, {
+        value: _this3.photoList.length > 0,
+        name: '上传材料'
+      }, {
+        value: _this3.customRequirements,
+        name: '其他特殊需求描述'
+      }];
+      var missingOptional = optionalFields.filter(function (field) {
+        if (typeof field.value === 'string') {
+          return !field.value || field.value.trim() === '';
         }
+        return !field.value;
       });
-    },
-    checkFileSize: function checkFileSize(filePath) {
-      var _this6 = this;
-      var fs = wx.getFileSystemManager();
-      fs.getFileInfo({
-        filePath: filePath,
-        success: function success(res) {
-          res.size > _this6.maxSize ? wx.showToast({
-            title: '图片大小不能超过5MB',
-            icon: 'none'
-          }) : _this6.uploadImg(filePath);
-        },
-        fail: function fail(err) {
-          console.error("Failed to get file size:", err);
-          wx.showToast({
-            title: '无法获取文件大小',
-            icon: 'none'
-          });
-        }
-      });
-    },
-    uploadImg: function uploadImg(imgSrc) {
-      var _this7 = this;
-      wx.showLoading({
-        title: "上传中..."
-      });
-      var fs = wx.getFileSystemManager();
-      fs.saveFile({
-        tempFilePath: imgSrc,
-        success: function success(res) {
-          if (res.savedFilePath) {
-            _this7.photoList.push(res.savedFilePath);
-            wx.setStorageSync('photoList', _this7.photoList);
-            wx.hideLoading();
-            wx.showToast({
-              title: '上传成功',
-              icon: 'success'
-            });
-          } else {
-            wx.hideLoading();
-            wx.showToast({
-              title: '上传失败',
-              icon: 'none'
-            });
+      if (missingOptional.length > 0) {
+        _this3.missingOptionalFields = missingOptional.map(function (field) {
+          return field.name;
+        });
+        // 显示选填字段提示
+        uni.showModal({
+          title: '提示',
+          content: "\u60A8\u5C1A\u672A\u586B\u5199\u4EE5\u4E0B\u9009\u586B\u4FE1\u606F\uFF1A".concat(missingOptional.map(function (field) {
+            return field.name;
+          }).join('、'), "\uFF0C\u662F\u5426\u7EE7\u7EED\u63D0\u4EA4\uFF1F"),
+          success: function success(res) {
+            resolve(res.confirm);
+          },
+          fail: function fail() {
+            return resolve(true);
           }
-        },
-        fail: function fail(err) {
-          console.error("Save failed:", err);
+        });
+      } else {
+        resolve(true);
+      }
+    });
+  },
+  openNoticePopup: function openNoticePopup() {
+    this.$refs.serviceNoticePopup.show();
+  },
+  onNoticeConfirm: function onNoticeConfirm() {
+    console.log('服务须知已确认，开始创建订单');
+    // 服务须知确认后，调用组件的提交方法
+    this.$refs.paymentComponent.submitOrderAfterValidation();
+  },
+  loadDoctorInfo: function loadDoctorInfo() {
+    var doctor = uni.getStorageSync('selectedDoctor');
+    console.log("获取医生信息：" + doctor._id);
+    if (doctor) {
+      this.selectDoctorId = doctor._id;
+      this.selectedDoctorName = doctor.name || '';
+    }
+  },
+  loadPatientInfo: function loadPatientInfo() {
+    var patient = uni.getStorageSync('selectedPatient');
+    console.log(patient);
+    if (patient) {
+      this.selectedPatientPhone = patient.phone;
+      this.selectedPatientName = patient.name || '';
+      console.log("病人是" + this.selectedPatientName + "电话为" + this.selectedPatientPhone);
+    }
+  },
+  goToSelectHospitals: function goToSelectHospitals() {
+    var _this4 = this;
+    uni.navigateTo({
+      url: '/pages/more/more?from=order',
+      success: function success() {
+        uni.$once('select-hospital', function (hospital) {
+          _this4.selectedHospital = hospital.name;
+        });
+      }
+    });
+  },
+  hasFormData: function hasFormData() {
+    return this.selectedDepartment || this.selectedCheckboxes.length > 0 || this.photoList.length > 0 || this.selectedDateTime;
+  },
+  saveFormData: function saveFormData() {
+    var formData = {
+      selectedDepartment: this.selectedDepartment,
+      selectedCheckboxes: this.selectedCheckboxes,
+      photoList: this.photoList,
+      selectedDateTime: this.selectedDateTime,
+      selectedPatientName: this.selectedPatientName,
+      selectedDoctorName: this.selectedDoctorName,
+      selectAddress: this.selectAddress,
+      customRequirements: this.customRequirements,
+      serviceData: this.serviceData,
+      // 新增服务数据保存
+      service_price: this.service_price,
+      // 新增价格保存
+      timestamp: new Date().getTime()
+    };
+    uni.setStorageSync(this.STORAGE_KEY, formData);
+  },
+  restoreFormData: function restoreFormData() {
+    var savedData = uni.getStorageSync(this.STORAGE_KEY);
+    if (savedData && !this.isDataExpired(savedData.timestamp)) {
+      // 恢复表单数据
+      if (!this.selectedDepartment) this.selectedDepartment = savedData.selectedDepartment;
+      if (!this.selectedCheckboxes) this.selectedCheckboxes = savedData.selectedCheckboxes;
+      if (!this.photoList) this.photoList = savedData.photoList;
+      if (!this.selectedDateTime) this.selectedDateTime = savedData.selectedDateTime;
+      if (!this.selectedPatientName) this.selectedPatientName = savedData.selectedPatientName;
+      if (!this.selectedDoctorName) this.selectedDoctorName = savedData.selectedDoctorName;
+      if (!this.selectAddress) this.selectAddress = savedData.selectAddress;
+      if (!this.customRequirements) this.customRequirements = savedData.customRequirements || '';
+
+      // 恢复服务数据
+      if (savedData.serviceData) {
+        this.serviceData = savedData.serviceData;
+        this.service_price = savedData.service_price;
+      }
+    } else {
+      uni.removeStorageSync(this.STORAGE_KEY);
+    }
+  },
+  isDataExpired: function isDataExpired(timestamp) {
+    return new Date().getTime() - timestamp > this.STORAGE_EXPIRE;
+  },
+  clearFormData: function clearFormData() {
+    uni.removeStorageSync(this.STORAGE_KEY);
+    this.selectedDepartment = null;
+    this.selectedCheckboxes = [];
+    this.photoList = [];
+    this.selectedDateTime = '';
+    this.customRequirements = '';
+  },
+  goToDepartmentPage: function goToDepartmentPage() {
+    uni.navigateTo({
+      url: '/pages/department/department?selected=' + (this.selectedDepartment || '')
+    });
+  },
+  selectDepartment: function selectDepartment(event) {
+    this.selectedDepartment = event.currentTarget.dataset.department;
+  },
+  toggleCheckbox: function toggleCheckbox(event) {
+    var value = event.currentTarget.dataset.value;
+    this.selectedCheckboxes.includes(value) ? this.selectedCheckboxes = this.selectedCheckboxes.filter(function (item) {
+      return item !== value;
+    }) : this.selectedCheckboxes.push(value);
+  },
+  loadSavedPhotos: function loadSavedPhotos() {
+    try {
+      var savedPhotoList = wx.getStorageSync('photoList');
+      if (savedPhotoList) this.photoList = savedPhotoList;
+    } catch (e) {
+      console.error("Error loading saved photos:", e);
+    }
+  },
+  chooseImage: function chooseImage() {
+    var _this5 = this;
+    var remaining = this.maxPhotos - this.photoList.length;
+    if (remaining <= 0) {
+      wx.showToast({
+        title: '最多只能上传15张图片',
+        icon: 'none'
+      });
+      return;
+    }
+    var count = Math.min(this.maxPerUpload, remaining);
+    wx.chooseImage({
+      count: count,
+      sizeType: ['compressed'],
+      sourceType: ['album', 'camera'],
+      success: function success(res) {
+        res.tempFilePaths.forEach(function (filePath) {
+          return _this5.checkFileSize(filePath);
+        });
+      }
+    });
+  },
+  checkFileSize: function checkFileSize(filePath) {
+    var _this6 = this;
+    var fs = wx.getFileSystemManager();
+    fs.getFileInfo({
+      filePath: filePath,
+      success: function success(res) {
+        res.size > _this6.maxSize ? wx.showToast({
+          title: '图片大小不能超过5MB',
+          icon: 'none'
+        }) : _this6.uploadImg(filePath);
+      },
+      fail: function fail(err) {
+        console.error("Failed to get file size:", err);
+        wx.showToast({
+          title: '无法获取文件大小',
+          icon: 'none'
+        });
+      }
+    });
+  },
+  uploadImg: function uploadImg(imgSrc) {
+    var _this7 = this;
+    wx.showLoading({
+      title: "上传中..."
+    });
+    var fs = wx.getFileSystemManager();
+    fs.saveFile({
+      tempFilePath: imgSrc,
+      success: function success(res) {
+        if (res.savedFilePath) {
+          _this7.photoList.push(res.savedFilePath);
+          wx.setStorageSync('photoList', _this7.photoList);
+          wx.hideLoading();
+          wx.showToast({
+            title: '上传成功',
+            icon: 'success'
+          });
+        } else {
           wx.hideLoading();
           wx.showToast({
             title: '上传失败',
             icon: 'none'
           });
         }
-      });
-    },
-    deletePhoto: function deletePhoto(e) {
-      var index = e.currentTarget.dataset.index;
-      this.photoList.splice(index, 1);
-      wx.setStorageSync('photoList', this.photoList);
-      wx.showToast({
-        title: '图片已删除',
-        icon: 'success'
-      });
-    },
-    initDateTimeList: function initDateTimeList() {
-      var days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-      this.dateList = Array.from({
-        length: 7
-      }, function (_, i) {
-        var date = new Date();
-        date.setDate(date.getDate() + i);
-        return {
-          day: "".concat(date.getMonth() + 1, "\u6708").concat(date.getDate(), "\u65E5"),
-          week: days[date.getDay()]
-        };
-      });
-      this.timeList = [];
-      for (var hour = 8; hour <= 18; hour++) {
-        this.timeList.push("".concat(hour, ":00"));
-        if (hour < 18) this.timeList.push("".concat(hour, ":30"));
-      }
-    },
-    showDateTimePicker: function showDateTimePicker() {
-      this.showPicker = true;
-    },
-    hideDateTimePicker: function hideDateTimePicker() {
-      this.showPicker = false;
-    },
-    selectDate: function selectDate(index) {
-      this.selectedDateIndex = index;
-    },
-    selectTime: function selectTime(index) {
-      this.selectedTimeIndex = index;
-    },
-    confirmDateTime: function confirmDateTime() {
-      if (this.selectedTimeIndex === -1) {
-        uni.showToast({
-          title: '请选择时间',
+      },
+      fail: function fail(err) {
+        console.error("Save failed:", err);
+        wx.hideLoading();
+        wx.showToast({
+          title: '上传失败',
           icon: 'none'
         });
-        return;
       }
-      var date = this.dateList[this.selectedDateIndex];
-      var time = this.timeList[this.selectedTimeIndex];
-      this.selectedDateTime = "".concat(date.day, " ").concat(date.week, " ").concat(time);
-      this.hideDateTimePicker();
-    },
-    goToPatientManagement: function goToPatientManagement() {
-      uni.navigateTo({
-        url: '/pages/patientManagement/patientManagement'
-      });
-    },
-    goToDoctorList: function goToDoctorList() {
-      uni.navigateTo({
-        url: "/pages/doctorlist/doctorlist?from=order"
-      });
-    },
-    goToAddressList: function goToAddressList() {
-      uni.navigateTo({
-        url: '/pages/myAddress/myAddress'
-      });
-    },
-    // 处理自定义需求输入
-    onCustomRequirementsInput: function onCustomRequirementsInput(e) {
-      this.customRequirements = e.detail.value;
+    });
+  },
+  deletePhoto: function deletePhoto(e) {
+    var index = e.currentTarget.dataset.index;
+    this.photoList.splice(index, 1);
+    wx.setStorageSync('photoList', this.photoList);
+    wx.showToast({
+      title: '图片已删除',
+      icon: 'success'
+    });
+  },
+  initDateTimeList: function initDateTimeList() {
+    var days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    this.dateList = Array.from({
+      length: 7
+    }, function (_, i) {
+      var date = new Date();
+      date.setDate(date.getDate() + i);
+      return {
+        day: "".concat(date.getMonth() + 1, "\u6708").concat(date.getDate(), "\u65E5"),
+        week: days[date.getDay()]
+      };
+    });
+    this.timeList = [];
+    for (var hour = 8; hour <= 18; hour++) {
+      this.timeList.push("".concat(hour, ":00"));
+      if (hour < 18) this.timeList.push("".concat(hour, ":30"));
     }
+  },
+  showDateTimePicker: function showDateTimePicker() {
+    this.showPicker = true;
+  },
+  hideDateTimePicker: function hideDateTimePicker() {
+    this.showPicker = false;
+  },
+  selectDate: function selectDate(index) {
+    this.selectedDateIndex = index;
+  },
+  selectTime: function selectTime(index) {
+    this.selectedTimeIndex = index;
+  },
+  confirmDateTime: function confirmDateTime() {
+    if (this.selectedTimeIndex === -1) {
+      uni.showToast({
+        title: '请选择时间',
+        icon: 'none'
+      });
+      return;
+    }
+    var date = this.dateList[this.selectedDateIndex];
+    var time = this.timeList[this.selectedTimeIndex];
+    this.selectedDateTime = "".concat(date.day, " ").concat(date.week, " ").concat(time);
+    this.hideDateTimePicker();
+  },
+  goToPatientManagement: function goToPatientManagement() {
+    // 跳转前保存所有数据
+    this.saveFormData();
+    uni.setStorageSync('current_service', this.serviceData);
+    uni.navigateTo({
+      url: '/pages/patientManagement/patientManagement'
+    });
+  },
+  goToDoctorList: function goToDoctorList() {
+    this.saveFormData();
+    uni.setStorageSync('current_service', this.serviceData);
+    uni.navigateTo({
+      url: "/pages/doctorlist/doctorlist?from=order"
+    });
+  },
+  goToAddressList: function goToAddressList() {
+    uni.navigateTo({
+      url: '/pages/myAddress/myAddress'
+    });
+  },
+  // 处理自定义需求输入
+  onCustomRequirementsInput: function onCustomRequirementsInput(e) {
+    this.customRequirements = e.detail.value;
   }
-};
+}), _components$data$onSh);
 exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
 

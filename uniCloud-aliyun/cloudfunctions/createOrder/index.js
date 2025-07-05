@@ -111,13 +111,23 @@ async function createOrder(event, openid) {
 	const timestamp = Date.now();
 	const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
 	const order_no = `ORD${timestamp}${random}`;
-
-
+	const input_doctor_id = event.doctor_id;  // 从event获取的doctor_id
+		// 1. 查询 escorts 表，获取陪诊师信息
+	const escortRes = await db.collection('escorts').doc(input_doctor_id).get();
+	if (!escortRes.data || escortRes.data.length === 0) {
+		return {
+			code: 404,
+			msg: '未找到该陪诊师'
+		};
+	}
+	const escortInfo = escortRes.data[0];
+	const doctor_user_id = escortInfo.user_id;  // 从数据库获取的user_id
+	
 	// 构建订单数据
 	const orderData = {
 		patient_name: event.patient_name,
 		patient_phone: event.patient_phone,
-		doctor_id: event.doctor_id,
+		doctor_id: doctor_user_id,
 		order_no,
 		out_trade_no: order_no,
 		user_id: openid,

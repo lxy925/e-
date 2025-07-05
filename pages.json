@@ -1,6 +1,5 @@
 {
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/index/index",
 			"style": {
 				"usingComponents": {},
@@ -155,8 +154,7 @@
 		{
 			"path": "pages/wx_pay/wx_pay",
 			"style": {
-				"navigationBarTitleText": "",
-				"usingComponents": {}
+				"navigationBarTitleText": "支付页面"
 			}
 		},
 		{
@@ -231,6 +229,25 @@
 				"backgroundColor": "#F8F8F8",
 				"navigationBarTitleText": "支付成功"
 			}
+		},
+		{
+			"path": "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview",
+			"style": {
+				"backgroundColor": "#F8F8F8",
+				"navigationBarTitleText": "ad"
+			}
+		},
+		{
+			"path": "pages/chatList/chatList",
+			"style": {
+				"navigationBarTitleText": "聊天列表"
+			}
+		},
+		{
+			"path": "pages/consult/consult",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
 	],
 	"globalStyle": {
@@ -241,12 +258,15 @@
 		"navigationBarTextStyle": "white",
 		"navigationStyle": "custom"
 	},
+
+	"sitemapLocation": "sitemap.json",
+	"style": "v2",
+	"lazyCodeLoading": "requiredComponents",
 	"tabBar": {
 		"color": "#A2A9B0",
 		"selectedColor": "#1fc7d6",
 		"backgroundColor": "#ffffff",
-		"list": [
-			{
+		"list": [{
 				"pagePath": "pages/index/index",
 				"text": "首页",
 				"iconPath": "static/images/icons/home.png",
@@ -281,9 +301,6 @@
 			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 		}
 	},
-	"sitemapLocation": "sitemap.json",
-	"style": "v2",
-	"lazyCodeLoading": "requiredComponents",
 	"scripts": {
 		"start": "node server.js",
 		"dev": "nodemon server.js"

@@ -10101,7 +10101,7 @@ var b = "development" === "development",
   k = "true" === undefined || !0 === undefined,
   P = T([]),
   C = "h5" === E ? "web" : "app-plus" === E || "app-harmony" === E ? "app" : E,
-  A = T({"address":["127.0.0.1","192.168.72.197"],"servePort":7000,"debugPort":9000,"initialLaunchType":"remote","skipFiles":["<node_internals>/**","D:/HBuilderX.4.45.2025010502/HBuilderX.4.66.2025051912/HBuilderX/plugins/unicloud/**/*.js"]}),
+  A = T({"address":["127.0.0.1","172.20.10.4"],"servePort":7000,"debugPort":9000,"initialLaunchType":"remote","skipFiles":["<node_internals>/**","D:/HBuilderX.4.45.2025010502/HBuilderX.4.66.2025051912/HBuilderX/plugins/unicloud/**/*.js"]}),
   O = T([{"provider":"aliyun","spaceName":"e-space","spaceId":"mp-f5303e3c-7928-482e-b2e2-0cf6877289c6","clientSecret":"j5ZFeQnRUa4zMdq7m0bSnQ==","endpoint":"https://api.next.bspapp.com"}]) || [],
   x = true;
 var N = "";
@@ -18624,8 +18624,7 @@ var _default = {
   }, {
     "path": "pages/wx_pay/wx_pay",
     "style": {
-      "navigationBarTitleText": "",
-      "usingComponents": {}
+      "navigationBarTitleText": "支付页面"
     }
   }, {
     "path": "pages/setting/setting",
@@ -18688,6 +18687,22 @@ var _default = {
       "backgroundColor": "#F8F8F8",
       "navigationBarTitleText": "支付成功"
     }
+  }, {
+    "path": "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview",
+    "style": {
+      "backgroundColor": "#F8F8F8",
+      "navigationBarTitleText": "ad"
+    }
+  }, {
+    "path": "pages/chatList/chatList",
+    "style": {
+      "navigationBarTitleText": "聊天列表"
+    }
+  }, {
+    "path": "pages/consult/consult",
+    "style": {
+      "navigationBarTitleText": ""
+    }
   }],
   "globalStyle": {
     "backgroundColor": "#0bd6c8",
@@ -18697,6 +18712,9 @@ var _default = {
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom"
   },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
   "tabBar": {
     "color": "#A2A9B0",
     "selectedColor": "#1fc7d6",
@@ -18732,9 +18750,6 @@ var _default = {
       "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
     }
   },
-  "sitemapLocation": "sitemap.json",
-  "style": "v2",
-  "lazyCodeLoading": "requiredComponents",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
@@ -39180,9 +39195,9 @@ exports.default = _default;
 /* 317 */,
 /* 318 */,
 /* 319 */
-/*!****************************************************************************************!*\
-  !*** D:/陪诊小程序/e-/utils/aes-sample.eae1f364/aes-sample.eae1f364/Node/WXBizDataCrypt.js ***!
-  \****************************************************************************************/
+/*!*******************************************!*\
+  !*** D:/陪诊小程序/e-/utils/WXBizDataCrypt.js ***!
+  \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39213,7 +39228,7 @@ WXBizDataCrypt.prototype.decryptData = function (encryptedData, iv) {
   return decoded;
 };
 module.exports = WXBizDataCrypt;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../../HBuilderX.4.45.2025010502/HBuilderX.4.66.2025051912/HBuilderX/plugins/uniapp-cli/node_modules/buffer/index.js */ 74).Buffer))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../HBuilderX.4.45.2025010502/HBuilderX.4.66.2025051912/HBuilderX/plugins/uniapp-cli/node_modules/buffer/index.js */ 74).Buffer))
 
 /***/ }),
 /* 320 */
@@ -60678,7 +60693,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACt
 /* 598 */,
 /* 599 */,
 /* 600 */,
-/* 601 */
+/* 601 */,
+/* 602 */,
+/* 603 */
 /*!***************************************************!*\
   !*** D:/陪诊小程序/e-/static/images/mine/outMoney.png ***!
   \***************************************************/
@@ -60688,8 +60705,6 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACt
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAALjSURBVDiNhZNLaFRnFMd/57t38hgdZjRMDEW0wqgTNYSAi1LSB1RF7VK7zCaLQNK6tQ+6EAPi3icu3FjIqgiWQAuiVgIuDOj4aEl8JGZRdYYkxuh0Mnfud1zczOTezKhn9Z3znf/vO/8Dn9AgdGqog7L0g+5HZSfCemAJmEK5hauXJHP2eiOtRED6ncNk+ldUjiLEGwlCcZOy1y9dF540BOr4QJJE7Hfgm9qt9bDFOaiUwDhISxJpSoTlc1gOSefpGxGg6jHDZP4vkD0AWinhv7yPnX8C1o9airfhdPRg1m6olhbBfCHbT+UADAAThV9qsKXXVB79iZ2drIMBaHGWytOr+PmH1VIC7GXN9a0BMProSBrhKACVJSpPr6He24+sD/wXd/HnauvbQmtiMJjQ2r7gFfDzDyIwd/cZ3M9/C6yme4kdyEEsuQJ9fgf1y0FiGaha3h8UKuEXA8GzEcwn3yKpLpwdP6KFMfAWQg1L2IWZ4CyyVR8PZVyULgT0/3mwXnRfhTFsYQyn+wQm3Yt3u7vOur7Jw/rM8gNml8HQDqCVYl2z+9UfmHQvJt0LQOxgDolvigIjOm13UTygGXHqgHZ6BC2M4ez4CfvfKPrqPhq2DEhYp9YzwBSAtCRZHZLqQpank+TKORItqbBi2kW5hZCVpgQSb0OLs7VrP/czAE2H5/H/OYl9NlLHc5LLKxBKaGnc4Oql2mVHT/0EgL6dAe91Xd2kNiPxtmo6KtmLi8HXm/j+b+BLAD//EP/F3YbgcEhzklhmHzhNABa1PZI9dy/4emWvH2QOwGnfibPxM3Ca3wszqU+JZfZWYWB1WLLn7gXOq7b+/eFrjF5h+deoX8YuzKBv8qhXRBwXaVmHSW5CWteFRpXzsu30YC2N7GriSDfYy8CWj3oGi9Vh6Tx7LLKK1V2a61tDa2IQywAiW+swQgkYxdrjVZsfBEbgj4cy+GYXaDtqPZBpKI1L9uLi+zTvAL1aHd0qKLNqAAAAAElFTkSuQmCC"
 
 /***/ }),
-/* 602 */,
-/* 603 */,
 /* 604 */,
 /* 605 */,
 /* 606 */,
@@ -60722,7 +60737,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACN
 /* 633 */,
 /* 634 */,
 /* 635 */,
-/* 636 */
+/* 636 */,
+/* 637 */,
+/* 638 */
 /*!********************************************************!*\
   !*** D:/陪诊小程序/e-/uni_modules/uni-pay/js_sdk/js_sdk.js ***!
   \********************************************************/
@@ -60843,8 +60860,6 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 637 */,
-/* 638 */,
 /* 639 */,
 /* 640 */,
 /* 641 */,
@@ -60864,7 +60879,38 @@ exports.default = _default;
 /* 655 */,
 /* 656 */,
 /* 657 */,
-/* 658 */
+/* 658 */,
+/* 659 */,
+/* 660 */,
+/* 661 */,
+/* 662 */,
+/* 663 */,
+/* 664 */,
+/* 665 */,
+/* 666 */,
+/* 667 */,
+/* 668 */,
+/* 669 */,
+/* 670 */,
+/* 671 */,
+/* 672 */,
+/* 673 */,
+/* 674 */,
+/* 675 */,
+/* 676 */,
+/* 677 */,
+/* 678 */,
+/* 679 */,
+/* 680 */,
+/* 681 */,
+/* 682 */,
+/* 683 */,
+/* 684 */,
+/* 685 */,
+/* 686 */,
+/* 687 */,
+/* 688 */,
+/* 689 */
 /*!************************************************************!*\
   !*** D:/陪诊小程序/e-/uni_modules/vk-uni-pay/js_sdk/vk-util.js ***!
   \************************************************************/
@@ -61207,12 +61253,12 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27)["uniCloud"]))
 
 /***/ }),
-/* 659 */,
-/* 660 */,
-/* 661 */,
-/* 662 */,
-/* 663 */,
-/* 664 */
+/* 690 */,
+/* 691 */,
+/* 692 */,
+/* 693 */,
+/* 694 */,
+/* 695 */
 /*!*****************************************************************************!*\
   !*** D:/陪诊小程序/e-/uni_modules/vk-uni-pay/components/vk-uni-qrcode/qrcode.js ***!
   \*****************************************************************************/
@@ -62223,14 +62269,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 665 */,
-/* 666 */,
-/* 667 */,
-/* 668 */,
-/* 669 */,
-/* 670 */,
-/* 671 */,
-/* 672 */
+/* 696 */,
+/* 697 */,
+/* 698 */,
+/* 699 */,
+/* 700 */,
+/* 701 */,
+/* 702 */,
+/* 703 */
 /*!************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-icons/uniicons_file_vue.js ***!
   \************************************************************************************/
@@ -62733,14 +62779,14 @@ var fontData = [{
 exports.fontData = fontData;
 
 /***/ }),
-/* 673 */,
-/* 674 */,
-/* 675 */,
-/* 676 */,
-/* 677 */,
-/* 678 */,
-/* 679 */,
-/* 680 */
+/* 704 */,
+/* 705 */,
+/* 706 */,
+/* 707 */,
+/* 708 */,
+/* 709 */,
+/* 710 */,
+/* 711 */
 /*!*********************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/index.js ***!
   \*********************************************************************************/
@@ -62755,9 +62801,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 681));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 682));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 683));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 712));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 713));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 714));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -62766,7 +62812,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 681 */
+/* 712 */
 /*!********************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/en.json ***!
   \********************************************************************************/
@@ -62776,7 +62822,7 @@ exports.default = _default;
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show more\",\"uni-load-more.contentrefresh\":\"loading...\",\"uni-load-more.contentnomore\":\"No more data\"}");
 
 /***/ }),
-/* 682 */
+/* 713 */
 /*!*************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hans.json ***!
   \*************************************************************************************/
@@ -62786,7 +62832,7 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show mo
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多\",\"uni-load-more.contentrefresh\":\"正在加载...\",\"uni-load-more.contentnomore\":\"没有更多数据了\"}");
 
 /***/ }),
-/* 683 */
+/* 714 */
 /*!*************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hant.json ***!
   \*************************************************************************************/
@@ -62794,6 +62840,154 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉顯示更多\",\"uni-load-more.contentrefresh\":\"正在加載...\",\"uni-load-more.contentnomore\":\"沒有更多數據了\"}");
+
+/***/ }),
+/* 715 */,
+/* 716 */,
+/* 717 */,
+/* 718 */,
+/* 719 */,
+/* 720 */,
+/* 721 */,
+/* 722 */,
+/* 723 */,
+/* 724 */,
+/* 725 */,
+/* 726 */,
+/* 727 */,
+/* 728 */,
+/* 729 */
+/*!***************************************************************************************!*\
+  !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-transition/createAnimation.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createAnimation = createAnimation;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+// const defaultOption = {
+// 	duration: 300,
+// 	timingFunction: 'linear',
+// 	delay: 0,
+// 	transformOrigin: '50% 50% 0'
+// }
+var MPAnimation = /*#__PURE__*/function () {
+  function MPAnimation(options, _this) {
+    (0, _classCallCheck2.default)(this, MPAnimation);
+    this.options = options;
+    // 在iOS10+QQ小程序平台下，传给原生的对象一定是个普通对象而不是Proxy对象，否则会报parameter should be Object instead of ProxyObject的错误
+    this.animation = uni.createAnimation(_objectSpread({}, options));
+    this.currentStepAnimates = {};
+    this.next = 0;
+    this.$ = _this;
+  }
+  (0, _createClass2.default)(MPAnimation, [{
+    key: "_nvuePushAnimates",
+    value: function _nvuePushAnimates(type, args) {
+      var aniObj = this.currentStepAnimates[this.next];
+      var styles = {};
+      if (!aniObj) {
+        styles = {
+          styles: {},
+          config: {}
+        };
+      } else {
+        styles = aniObj;
+      }
+      if (animateTypes1.includes(type)) {
+        if (!styles.styles.transform) {
+          styles.styles.transform = '';
+        }
+        var unit = '';
+        if (type === 'rotate') {
+          unit = 'deg';
+        }
+        styles.styles.transform += "".concat(type, "(").concat(args + unit, ") ");
+      } else {
+        styles.styles[type] = "".concat(args);
+      }
+      this.currentStepAnimates[this.next] = styles;
+    }
+  }, {
+    key: "_animateRun",
+    value: function _animateRun() {
+      var styles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var ref = this.$.$refs['ani'].ref;
+      if (!ref) return;
+      return new Promise(function (resolve, reject) {
+        nvueAnimation.transition(ref, _objectSpread({
+          styles: styles
+        }, config), function (res) {
+          resolve();
+        });
+      });
+    }
+  }, {
+    key: "_nvueNextAnimate",
+    value: function _nvueNextAnimate(animates) {
+      var _this2 = this;
+      var step = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var fn = arguments.length > 2 ? arguments[2] : undefined;
+      var obj = animates[step];
+      if (obj) {
+        var styles = obj.styles,
+          config = obj.config;
+        this._animateRun(styles, config).then(function () {
+          step += 1;
+          _this2._nvueNextAnimate(animates, step, fn);
+        });
+      } else {
+        this.currentStepAnimates = {};
+        typeof fn === 'function' && fn();
+        this.isEnd = true;
+      }
+    }
+  }, {
+    key: "step",
+    value: function step() {
+      var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      this.animation.step(config);
+      return this;
+    }
+  }, {
+    key: "run",
+    value: function run(fn) {
+      this.$.animationData = this.animation.export();
+      this.$.timer = setTimeout(function () {
+        typeof fn === 'function' && fn();
+      }, this.$.durationTime);
+    }
+  }]);
+  return MPAnimation;
+}();
+var animateTypes1 = ['matrix', 'matrix3d', 'rotate', 'rotate3d', 'rotateX', 'rotateY', 'rotateZ', 'scale', 'scale3d', 'scaleX', 'scaleY', 'scaleZ', 'skew', 'skewX', 'skewY', 'translate', 'translate3d', 'translateX', 'translateY', 'translateZ'];
+var animateTypes2 = ['opacity', 'backgroundColor'];
+var animateTypes3 = ['width', 'height', 'left', 'right', 'top', 'bottom'];
+animateTypes1.concat(animateTypes2, animateTypes3).forEach(function (type) {
+  MPAnimation.prototype[type] = function () {
+    var _this$animation;
+    (_this$animation = this.animation)[type].apply(_this$animation, arguments);
+    return this;
+  };
+});
+function createAnimation(option, _this) {
+  if (!_this) return;
+  clearTimeout(_this.timer);
+  return new MPAnimation(option, _this);
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ })
 ]]);

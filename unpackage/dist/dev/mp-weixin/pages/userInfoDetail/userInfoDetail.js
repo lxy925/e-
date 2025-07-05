@@ -168,7 +168,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
-var _WXBizDataCrypt = _interopRequireDefault(__webpack_require__(/*! ../../utils/aes-sample.eae1f364/aes-sample.eae1f364/Node/WXBizDataCrypt */ 319));
+var _WXBizDataCrypt = _interopRequireDefault(__webpack_require__(/*! ../../utils/WXBizDataCrypt.js */ 319));
 //
 //
 //
@@ -213,6 +213,7 @@ var _WXBizDataCrypt = _interopRequireDefault(__webpack_require__(/*! ../../utils
 //
 //
 //
+//import jwt from '../../uniCloud/cloudfunctions/commom/jwt.js'
 var _default = {
   data: function data() {
     return {

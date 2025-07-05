@@ -1,77 +1,75 @@
 <template>
 	<view class="page">
 		<custom-nav title="新增服务对象" :isHomePage="false"></custom-nav>
-		<view class="object_info">
-			<view class="add_object_container">
-				<button class="add_object" @tap="login">
-					<text class="add_text">+新增服务对象</text>
-				</button>
-				<view class="divider"></view>
-			</view>
-			<!-- 服务对象照片 -->
-			<view class="photo-container">
-				<text class="label">服务对象照片</text>
-				<view class="photo-input">
-					<button class="upload-photo-button" @tap="uploadPhoto">
-						<image :src="photoUrl||'../../static/images/mine/avatar.png'" class="default-upload-photo"
-							mode="aspectFill" @click="previewImage(photoUrl)" />
+		<scroll-view class="content-container" scroll-y>
+			<view class="object_info">
+				<!-- 服务对象照片 -->
+				<view class="photo-container">
+					<text class="label">服务对象照片</text>
+					<view class="photo-input">
+						<button class="upload-photo-button" @tap="uploadPhoto">
+							<image :src="photoUrl||'../../static/images/mine/avatar.png'" class="default-upload-photo"
+								mode="aspectFill" @click="previewImage(photoUrl)" />
+						</button>
+					</view>
+				</view>
+				<view class="input_group">
+					<text class="label">服务对象姓名</text>
+					<input class="input" placeholder="请填写就诊人姓名" v-model="name" />
+				</view>
+				<view class="input_group">
+					<text class="label">服务对象性别</text>
+					<view class="gender-select-container">
+						<button class="gender-select" :class="{ active: selectedGender === '男' }"
+							@tap="selectGender('男')">男</button>
+						<button class="gender-select" :class="{ active: selectedGender === '女' }"
+							@tap="selectGender('女')">女</button>
+					</view>
+				</view>
+				<view class="input_group">
+					<text class="label">服务对象年龄</text>
+					<input class="input" placeholder="请填写周岁年龄" v-model="age" />
+				</view>
+				<view class="input_group">
+					<text class="label">服务对象手机</text>
+					<input class="input" placeholder="如没有可填监护人手机号" v-model="phone" />
+				</view>
+				<view class="input_group">
+					<text class="label">与就诊人关系</text>
+					<input class="input" placeholder="请填写与就诊人关系" v-model="relationship" />
+				</view>
+				<view class="input_group">
+					<text class="label">过往病史信息</text>
+					<input class="input" id="patient_information" placeholder="请填写病例信息" v-model="medicalInfo" />
+					<button class="upload-button" @tap="uploadImage">上传图片</button>
+				</view>
+				<view class="input_group">
+					<text class="label">服务对象住址</text>
+					<input class="input" placeholder="请添加服务对象住址" v-model="address" @click="chooseLocation"
+						:readonly="!address" multiline auto-height />
+				</view>
+				<view class="uploaded-images">
+					<text class="label">已上传图片</text>
+					<view class="image-container" v-for="(image, index) in uploadedImages" :key="index">
+						<image :src="image" class="uploaded-image" mode="aspectFill" @tap="viewImage(image)" />
+						<button class="delete-image-button" @tap="deleteImage(index)">×</button>
+					</view>
+				</view>
+				<view class="button-container">
+					<button class="object_confirm" @tap="submitData" :disabled="isSubmitting">
+						<text>{{ isSubmitting ? '提交中...' : '确认保存' }}</text>
 					</button>
 				</view>
 			</view>
-			<view class="input_group">
-				<text class="label">服务对象姓名</text>
-				<input class="input" placeholder="请填写就诊人姓名" v-model="name" />
-			</view>
-			<view class="input_group">
-				<text class="label">服务对象性别</text>
-				<view class="gender-select-container">
-					<button class="gender-select" :class="{ active: selectedGender === '男' }"
-						@tap="selectGender('男')">男</button>
-					<button class="gender-select" :class="{ active: selectedGender === '女' }"
-						@tap="selectGender('女')">女</button>
+			<!-- 自定义底部弹出框 -->
+			<view v-if="showPicker" class="picker-overlay" @tap="hideGenderPicker">
+				<view class="picker-content" @tap="stopPropagation">
+					<view class="picker-option" @tap="selectGender" data-value="男">男</view>
+					<view class="picker-option" @tap="selectGender" data-value="女">女</view>
+					<button class="close-picker" @tap="hideGenderPicker">关闭</button>
 				</view>
 			</view>
-			<view class="input_group">
-				<text class="label">服务对象年龄</text>
-				<input class="input" placeholder="请填写周岁年龄" v-model="age" />
-			</view>
-			<view class="input_group">
-				<text class="label">服务对象手机</text>
-				<input class="input" placeholder="如没有可填监护人手机号" v-model="phone" />
-			</view>
-			<view class="input_group">
-				<text class="label">与就诊人关系</text>
-				<input class="input" placeholder="请填写与就诊人关系" v-model="relationship" />
-			</view>
-			<view class="input_group">
-				<text class="label">病例信息</text>
-				<input class="input" id="patient_information" placeholder="请填写病例信息" v-model="medicalInfo" />
-				<button class="upload-button" @tap="uploadImage">上传图片</button>
-			</view>
-			<view class="input_group">
-				<text class="label">服务对象住址</text>
-				<input class="input" placeholder="请添加服务对象住址" v-model="address" @click="chooseLocation"
-					:readonly="!address" multiline auto-height />
-			</view>
-			<view class="uploaded-images">
-				<text class="label">已上传图片</text>
-				<view class="image-container" v-for="(image, index) in uploadedImages" :key="index">
-					<image :src="image" class="uploaded-image" mode="aspectFill" @tap="viewImage(image)" />
-					<button class="delete-image-button" @tap="deleteImage(index)">×</button>
-				</view>
-			</view>
-			<view class="button-container">
-				<button class="object_confirm" @tap="submitData"><text>确认保存</text></button>
-			</view>
-		</view>
-		<!-- 自定义底部弹出框 -->
-		<view v-if="showPicker" class="picker-overlay" @tap="hideGenderPicker">
-			<view class="picker-content" @tap="stopPropagation">
-				<view class="picker-option" @tap="selectGender" data-value="男">男</view>
-				<view class="picker-option" @tap="selectGender" data-value="女">女</view>
-				<button class="close-picker" @tap="hideGenderPicker">关闭</button>
-			</view>
-		</view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -81,6 +79,7 @@
 		data() {
 			return {
 				name: '', // 服务对象姓名
+				isSubmitting: false,
 				selectedGender: '',
 				age: '', // 服务对象年龄
 				phone: '', // 服务对象手机
@@ -112,78 +111,178 @@
 				event.stopPropagation();
 			},
 			submitData() {
-				console.log('提交数据前的字段值:', {
-					name: this.name,
-					selectedGender: this.selectedGender,
-					age: this.age,
-					phone: this.phone,
-					relationship: this.relationship,
-					medicalInfo: this.medicalInfo,
-					user_id: this.userInfo.user_id,
-					uploadedImages: this.uploadedImages,
-					address: this.address,
-				});
-
-				// 定义手机号正则表达式
-				const phoneReg = /^1[3-9]\d{9}$/;
-
-				// 修复后的完整验证条件
-				if (
-					!this.name ||
-					!this.selectedGender ||
-					isNaN(Number(this.age)) ||
-					!phoneReg.test(this.phone) ||
-					!this.relationship ||
-					!this.userInfo.user_id ||
-					!this.address
-				) {
-					let errorMsg = '请填写';
-					if (!this.name) errorMsg += '姓名';
-					if (!this.selectedGender) errorMsg += '性别';
-					if (isNaN(Number(this.age))) errorMsg += '有效年龄';
-					if (!phoneReg.test(this.phone)) errorMsg += '正确手机号';
-					if (!this.relationship) errorMsg += '关系';
-					if (!this.userInfo.user_id) errorMsg += '用户ID';
-					if (!this.address) errorMsg += '地址';
-
+				// 检查是否正在提交
+				if (this.isSubmitting) {
 					uni.showToast({
-						title: errorMsg,
-						icon: 'none'
+						title: '正在提交中，请稍候...',
+						icon: 'none',
+						duration: 2000
 					});
 					return;
 				}
 
-				// 检查 medicalInfo 和 uploadedImages 是否为空
-				if (!this.medicalInfo || this.uploadedImages.length === 0) {
-					uni.showModal({
-						title: '提示',
-						content: '还未填写病史信息，是否确认提交？',
-						success: (res) => {
-							if (res.confirm) {
-								this.submitDataWithImages();
-							} else {
-								console.log('用户取消提交');
-							}
-						}
+				// 开始提交，设置状态
+				this.isSubmitting = true;
+				uni.showLoading({
+					title: '提交中...',
+					mask: true
+				});
+
+				// 表单验证
+				const validation = this.validateForm();
+				if (!validation.valid) {
+					this.isSubmitting = false;
+					uni.hideLoading();
+					uni.showToast({
+						title: validation.message,
+						icon: 'none',
+						duration: 3000
 					});
-				} else {
-					this.submitDataWithImages();
+					return;
 				}
+
+				// 检查病史信息
+				this.checkMedicalInfo().then(shouldSubmit => {
+					if (shouldSubmit) {
+						this.submitDataWithImages();
+					} else {
+						this.isSubmitting = false;
+						uni.hideLoading();
+					}
+				}).catch(err => {
+					this.isSubmitting = false;
+					uni.hideLoading();
+					console.error('检查病史信息出错:', err);
+				});
 			},
+			validateForm() {
+				// 必填字段检查
+				const requiredFields = [{
+						field: this.name,
+						name: '姓名'
+					},
+					{
+						field: this.selectedGender,
+						name: '性别'
+					},
+					{
+						field: this.age,
+						name: '年龄'
+					},
+					{
+						field: this.phone,
+						name: '手机号'
+					},
+					{
+						field: this.relationship,
+						name: '关系'
+					},
+					{
+						field: this.address,
+						name: '住址'
+					}
+				];
+
+				for (let item of requiredFields) {
+					if (!item.field || item.field.toString().trim() === '') {
+						return {
+							valid: false,
+							message: `请填写${item.name}`
+						};
+					}
+				}
+
+				// 年龄验证
+				if (isNaN(Number(this.age)) || Number(this.age) <= 0 || Number(this.age) > 120) {
+					return {
+						valid: false,
+						message: '请输入有效的年龄(1-120岁)'
+					};
+				}
+
+				// 手机号验证
+				const phoneReg = /^1[3-9]\d{9}$/;
+				if (!phoneReg.test(this.phone)) {
+					return {
+						valid: false,
+						message: '请输入正确的手机号码'
+					};
+				}
+
+				return {
+					valid: true
+				};
+			},
+			checkMedicalInfo() {
+				return new Promise((resolve) => {
+					// 两种情况都未填写
+					if (!this.medicalInfo && this.uploadedImages.length === 0) {
+						uni.showModal({
+							title: '提示',
+							content: '您尚未填写任何病史信息，是否确认提交？',
+							confirmText: '确认提交',
+							cancelText: '返回填写',
+							success: (res) => {
+								resolve(res.confirm);
+							}
+						});
+					}
+					// 仅缺少文字描述
+					else if (!this.medicalInfo) {
+						uni.showModal({
+							title: '提示',
+							content: '您尚未填写病史文字描述，是否确认提交？',
+							confirmText: '确认提交',
+							cancelText: '返回填写',
+							success: (res) => {
+								resolve(res.confirm);
+							}
+						});
+					}
+					// 仅缺少图片
+					else if (this.uploadedImages.length === 0) {
+						uni.showModal({
+							title: '提示',
+							content: '您尚未上传任何病史图片，是否确认提交？',
+							confirmText: '确认提交',
+							cancelText: '返回填写',
+							success: (res) => {
+								resolve(res.confirm);
+							}
+						});
+					}
+					// 信息完整
+					else {
+						resolve(true);
+					}
+				});
+			},
+			resetForm() {
+			    this.name = '';
+			    this.selectedGender = '';
+			    this.age = '';
+			    this.phone = '';
+			    this.relationship = '';
+			    this.medicalInfo = '';
+			    this.uploadedImages = [];
+			    this.address = '';
+			    this.photoUrl = '';
+			  },
 			submitDataWithImages() {
-				const randomId = Math.random().toString(36).substr(2, 9); // 生成随机服务对象ID
+				const randomId = Math.random().toString(36).substr(2, 9);
 				const dataToSubmit = {
 					server_id: randomId,
-					name: this.name,
+					name: this.name.trim(),
 					gender: this.selectedGender,
 					age: parseInt(this.age),
-					phone: this.phone,
-					relationship: this.relationship,
-					medicalInfo: this.medicalInfo,
-					uploadedImages: this.uploadedImages, // 保存的是永久路径
+					phone: this.phone.trim(),
+					relationship: this.relationship.trim(),
+					medicalInfo: this.medicalInfo ? this.medicalInfo.trim() : '',
+					uploadedImages: this.uploadedImages,
 					userid: this.userInfo.user_id,
-					photo: this.photoUrl, // 保存的是永久路径
-					address: this.address
+					photo: this.photoUrl,
+					address: this.address.trim(),
+					submitTime: new Date().toISOString()
 				};
 
 				uniCloud.callFunction({
@@ -193,19 +292,30 @@
 					if (res.result.code === 0) {
 						uni.showToast({
 							title: '提交成功',
-							icon: 'success'
+							icon: 'success',
+							duration: 1500
 						});
+
+						// 提交成功后重置表单
+						setTimeout(() => {
+							this.resetForm();
+							  uni.navigateBack({
+							          delta: 1  // 返回上一页
+							        });
+						}, 1500);
 					} else {
-						uni.showToast({
-							title: '提交失败: ' + (res.result.message || '未知错误'),
-							icon: 'none'
-						});
+						throw new Error(res.result.message || '提交失败');
 					}
 				}).catch(err => {
+					console.error('提交出错:', err);
 					uni.showToast({
-						title: '提交失败: ' + (err.message || '未知错误'),
-						icon: 'none'
+						title: `提交失败: ${err.message}`,
+						icon: 'none',
+						duration: 3000
 					});
+				}).finally(() => {
+					this.isSubmitting = false;
+					uni.hideLoading();
 				});
 			},
 			uploadImage() {
@@ -397,15 +507,27 @@
 <style scoped>
 	/* pages/object.wxss */
 
+	.content-container {
+		flex: 1;
+		margin-top: 180rpx;
+		/* 与导航栏高度一致 */
+		height: calc(100vh - 180rpx);
+		overflow: hidden;
+	}
+
 	.page {
-		margin: 0;
-		/* 确保没有外边距 */
-		padding: 0;
-		/* 确保没有内边距 */
-		width: 100%;
-		/* 确保宽度为100% */
-		height: 100%;
-		background: linear-gradient(#18d1c2, #F2F3F9, white);
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	.custom-nav {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 9999;
 	}
 
 	.object_info {
@@ -420,6 +542,7 @@
 		/* 仅保留顶部间距 */
 		width: 93%;
 		/* 允许宽度自适应 */
+		height: calc(100vh - 160rpx);
 	}
 
 	.add_object {
@@ -441,7 +564,7 @@
 		height: 100rpx;
 		font-size: 35rpx;
 		font-weight: 500;
-		background-color: #1c8a1c;
+		background-color: #00aaff;
 		color: #ffffff;
 		margin: 20rpx;
 		line-height: 100rpx;
@@ -522,7 +645,7 @@
 	}
 
 	.gender-select.active {
-		background-color: #1c8a1c;
+		background-color: #00aaff;
 		color: #fff;
 	}
 
@@ -620,7 +743,7 @@
 	.upload-button {
 		margin-left: 10rpx;
 		font-size: 30rpx;
-		background-color: #1c8a1c;
+		background-color: #00aaff;
 		color: white;
 		padding: 10rpx 20rpx;
 		border-radius: 5rpx;

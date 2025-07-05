@@ -8,7 +8,7 @@
 		<view class="container">
 			<view class="userinfo">
 				<view class="appointment-info">
-					<image src="../../static/images/order/icon_1.png" class="icon" /> 
+					<image src="../../static/images/order/icon_1.png" class="icon" />
 					<text class="title">预约信息</text>
 				</view>
 				<!-- 输入框错误状态 -->
@@ -20,7 +20,7 @@
 
 				<view class="input-group" :class="{ 'error-field': fieldErrors.hospital }">
 					<text class="label">服务医院<span class="required">*</span></text>
-					<input class="input" placeholder="请选择医院":value="selectedHospital"  @click="goToSelectHospitals" />
+					<input class="input" placeholder="请选择医院" :value="selectedHospital" @click="goToSelectHospitals" />
 				</view>
 
 				<view class="input-group" :class="{ 'error-field': fieldErrors.datetime }">
@@ -274,29 +274,50 @@
 				missingOptionalFields: []
 			};
 		},
+		onShow() {
+			// 恢复服务数据
+			const savedService = uni.getStorageSync('current_service');
+			if (savedService) {
+				console.log("获取缓存的服务数据", savedService);
+				this.serviceData = savedService;
+				this.service_price = savedService.service_price;
+			}
 
+
+			this.loadDoctorInfo();
+			this.loadPatientInfo();
+			this.loadSavedPhotos();
+			this.restoreFormData();
+		},
 		onLoad(options) {
 			this.loadSavedPhotos();
 			this.initDateTimeList();
+
+			// 解析并存储服务数据
 			const serviceDataString = options.service;
 			if (serviceDataString) {
 				try {
 					this.serviceData = JSON.parse(decodeURIComponent(serviceDataString));
-					console.log(this.serviceData);
+					console.log("初始服务数据:", this.serviceData);
 					this.service_price = this.serviceData.service_price;
+					// 立即存储服务数据
+					uni.setStorageSync('current_service', this.serviceData);
 				} catch (error) {
-					this.serviceData = decodeURIComponent(serviceDataString);
+					console.error('解析服务数据失败:', error);
 				}
 			}
-			this.include_transport = this.serviceData.include_transport;
-			this.service_price = this.serviceData.service_price;
-			this.service_id = this.serviceData.service_id;
+
+			this.include_transport = this.serviceData?.include_transport || '';
+			this.service_price = this.serviceData?.service_price || '';
+			this.service_id = this.serviceData?.service_id || '';
+
 			this.loadPatientInfo();
 			this.loadDoctorInfo();
+
 			const address = uni.getStorageSync('selectedAddress');
-			console.log("获取地址是：" + address)
+			console.log("获取地址:", address);
 			if (address) {
-				this.selectAddress = address.district + address.detail || '';
+				this.selectAddress = (address.district || '') + (address.detail || '');
 			}
 		},
 
@@ -489,7 +510,7 @@
 				if (patient) {
 					this.selectedPatientPhone = patient.phone;
 					this.selectedPatientName = patient.name || '';
-					console.log("病人是" + this.selectedPatientName + "电话为"+this.selectedPatientPhone)
+					console.log("病人是" + this.selectedPatientName + "电话为" + this.selectedPatientPhone)
 				}
 			},
 
@@ -509,36 +530,44 @@
 					.selectedDateTime;
 			},
 
-			saveFormData() {
-				const formData = {
-					selectedDepartment: this.selectedDepartment,
-					selectedCheckboxes: this.selectedCheckboxes,
-					photoList: this.photoList,
-					selectedDateTime: this.selectedDateTime,
-					selectedPatientName: this.selectedPatientName,
-					selectedDoctorName: this.selectedDoctorName,
-					selectAddress: this.selectAddress,
-					customRequirements: this.customRequirements,
-					timestamp: new Date().getTime()
-				};
-				uni.setStorageSync(this.STORAGE_KEY, formData);
-			},
+		saveFormData() {
+		    const formData = {
+		        selectedDepartment: this.selectedDepartment,
+		        selectedCheckboxes: this.selectedCheckboxes,
+		        photoList: this.photoList,
+		        selectedDateTime: this.selectedDateTime,
+		        selectedPatientName: this.selectedPatientName,
+		        selectedDoctorName: this.selectedDoctorName,
+		        selectAddress: this.selectAddress,
+		        customRequirements: this.customRequirements,
+		        serviceData: this.serviceData, // 新增服务数据保存
+		        service_price: this.service_price, // 新增价格保存
+		        timestamp: new Date().getTime()
+		    };
+		    uni.setStorageSync(this.STORAGE_KEY, formData);
+		},
 
 			restoreFormData() {
-				const savedData = uni.getStorageSync(this.STORAGE_KEY);
-				if (savedData && !this.isDataExpired(savedData.timestamp)) {
-					if (!this.selectedDepartment) this.selectedDepartment = savedData.selectedDepartment;
-					if (!this.selectedCheckboxes) this.selectedCheckboxes = savedData.selectedCheckboxes;
-					if (!this.photoList) this.photoList = savedData.photoList;
-					if (!this.selectedDateTime) this.selectedDateTime = savedData.selectedDateTime;
-					if (!this.selectedPatientName) this.selectedPatientName = savedData.selectedPatientName;
-					if (!this.selectedDoctorName) this.selectedDoctorName = savedData.selectedDoctorName;
-					if (!this.selectAddress) this.selectAddress = savedData.selectAddress;
-					if (!this.customRequirements) this.customRequirements = savedData.customRequirements ||
-						'';
-				} else {
-					uni.removeStorageSync(this.STORAGE_KEY);
-				}
+			    const savedData = uni.getStorageSync(this.STORAGE_KEY);
+			    if (savedData && !this.isDataExpired(savedData.timestamp)) {
+			        // 恢复表单数据
+			        if (!this.selectedDepartment) this.selectedDepartment = savedData.selectedDepartment;
+			        if (!this.selectedCheckboxes) this.selectedCheckboxes = savedData.selectedCheckboxes;
+			        if (!this.photoList) this.photoList = savedData.photoList;
+			        if (!this.selectedDateTime) this.selectedDateTime = savedData.selectedDateTime;
+			        if (!this.selectedPatientName) this.selectedPatientName = savedData.selectedPatientName;
+			        if (!this.selectedDoctorName) this.selectedDoctorName = savedData.selectedDoctorName;
+			        if (!this.selectAddress) this.selectAddress = savedData.selectAddress;
+			        if (!this.customRequirements) this.customRequirements = savedData.customRequirements || '';
+			        
+			        // 恢复服务数据
+			        if (savedData.serviceData) {
+			            this.serviceData = savedData.serviceData;
+			            this.service_price = savedData.service_price;
+			        }
+			    } else {
+			        uni.removeStorageSync(this.STORAGE_KEY);
+			    }
 			},
 
 			isDataExpired(timestamp) {
@@ -717,16 +746,23 @@
 			},
 
 			goToPatientManagement() {
-				uni.navigateTo({
-					url: '/pages/patientManagement/patientManagement'
-				});
+			    // 跳转前保存所有数据
+			    this.saveFormData();
+			    uni.setStorageSync('current_service', this.serviceData);
+			    
+			    uni.navigateTo({
+			        url: '/pages/patientManagement/patientManagement'
+			    });
 			},
 
-			goToDoctorList() {
-				uni.navigateTo({
-					url: `/pages/doctorlist/doctorlist?from=order`
-				});
-			},
+		goToDoctorList() {
+		    this.saveFormData();
+		    uni.setStorageSync('current_service', this.serviceData);
+		    
+		    uni.navigateTo({
+		        url: `/pages/doctorlist/doctorlist?from=order`
+		    });
+		},
 
 			goToAddressList() {
 				uni.navigateTo({

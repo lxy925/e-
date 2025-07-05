@@ -1,34 +1,30 @@
 <template>
-	<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{
-	      paddingTop: navHeight + 'px',
-	      height: 'calc(100vh - ' + navHeight + 'px)'
-	    }" :scroll-top="scrollTop">
+	<scroll-view scroll-y class="page-container" @scroll="handleScroll"
+		:style="{ paddingTop: navHeight + 'px',height: 'calc(100vh - ' + navHeight + 'px)'}" :scroll-top="scrollTop">
 		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
-		
-			<view class="content" >
-				<view class="header" @click="handleHeaderClick">
-					<img class="headerimg" :src="
+		<view class="content">
+			<view class="header" @click="handleHeaderClick">
+				<img class="headerimg" :src="
           userInfo.moreInfo.avatarUrl || '../../static/images/mine/avatar.png'
         " v-if="userInfo.type == '陪诊师'" alt="" />
-					<img class="headerimg" :src="userInfo.avatar || '../../static/images/mine/avatar.png'" v-else
-						alt="" />
+				<img class="headerimg" :src="userInfo.avatar || '../../static/images/mine/avatar.png'" v-else alt="" />
 
-					<text class="username">{{ userInfo.nickName || "登录" }}</text>
-					<text class="user-info" v-if="userInfo.type == '陪诊师'">
-						{{ userInfo.moreInfo.is_certified ? "已认证" : "未认证" }}</text>
-					<view class="state-box" v-if="userInfo.type == '陪诊师'">
-						<text class="state">接单状态:</text>
-						<switch class="switch" :checked="userInfo.moreInfo.is_bookable" @change="onSwitchChange"
-							color="#ff94da" />
-					</view>
-
-					<img class="sao" src="../../static/images/mine/sao.png" v-if="userInfo.type == '陪诊师'" alt="扫描图标"
-						@click="showQRCode" />
-
-
+				<text class="username">{{ userInfo.nickName || "登录" }}</text>
+				<text class="user-info" v-if="userInfo.type == '陪诊师'">
+					{{ userInfo.moreInfo.is_certified ? "已认证" : "未认证" }}</text>
+				<view class="state-box" v-if="userInfo.type == '陪诊师'">
+					<text class="state">接单状态:</text>
+					<switch class="switch" :checked="userInfo.moreInfo.is_bookable" @change="onSwitchChange"
+						color="#ff94da" />
 				</view>
 
-				<!-- 		弹窗内容
+				<img class="sao" src="../../static/images/mine/sao.png" v-if="userInfo.type == '陪诊师'" alt="扫描图标"
+					@click="showQRCode" />
+
+
+			</view>
+
+			<!-- 		弹窗内容
 		<view class="modal-dialog" v-if="isShowModal">
 			<img :src="modalImage" class="modal-image" />
 			<text class="modal-text">{{modalText}}</text>
@@ -39,175 +35,187 @@
 			</view>
 
 		</view> -->
-				<view class="account-box" v-if="userInfo.type == '陪诊师'">
-					<view class="account" @click="toApply">
-						<view class="account-header">
-							<text class="account-title">我的账户</text>
-						</view>
-						<view class="account-info">
-							<view class="account-item">
-								<text class="account-value">{{(userInfo.accountInfo.withdrawable_amount / 100).toFixed(2)}}</text>
-								<text class="account-label">可提取金额</text>
-							</view>
-							<view class="account-item">
-								<text class="account-value">{{(userInfo.accountInfo.pending_amount / 100).toFixed(2)}}</text>
-								<text class="account-label">待结算金额</text>
-							</view>
-							<view class="account-item">
-								<text class="account-value">{{(userInfo.accountInfo.balance / 100).toFixed(2)}}</text>
-								<text class="account-label">累计已结算金额</text>
-							</view>
-						</view>
+			<view class="account-box" v-if="userInfo.type == '陪诊师'">
+				<view class="account" @click="toApply">
+					<view class="account-header">
+						<text class="account-title">我的账户</text>
 					</view>
-					<!-- 新增时间选项 -->
-					<view class="time-options">
-					  <view class="time-option" :class="{'selected': selectedTime === 'today'}" @click="selectTime('today')">今日</view>
-					  <view class="time-option" :class="{'selected': selectedTime === 'week'}" @click="selectTime('week')">本周</view>
-					  <view class="time-option" :class="{'selected': selectedTime === 'month'}" @click="selectTime('month')">本月</view>
-					  <view class="time-option" :class="{'selected': selectedTime === 'year'}" @click="selectTime('year')">今年</view>
-					</view>
-
-					<!-- 数据展示 -->
-					<view class="data-display">
-						<view class="data-item">
-							<text class="data-item-item">{{ orderCount }}</text>
-							<text>订单量</text>
-
+					<view class="account-info">
+						<view class="account-item">
+							<text
+								class="account-value">{{(userInfo.accountInfo.withdrawable_amount / 100).toFixed(2)}}</text>
+							<text class="account-label">可提取金额</text>
 						</view>
-						<view class="data-item">
-							<text class="data-item-item">{{ salesAmount }}</text>
-							<text>销售额</text>
-
+						<view class="account-item">
+							<text
+								class="account-value">{{(userInfo.accountInfo.pending_amount / 100).toFixed(2)}}</text>
+							<text class="account-label">待结算金额</text>
 						</view>
-						<view class="data-item">
-							<text class="data-item-item">{{ pendingAmount }}</text>
-							<text>已提现金额</text>
-
-						</view>
-						<view class="data-item">
-							<text class="data-item-item">{{ settledAmount }}</text>
-							<text>已结算金额</text>
-
+						<view class="account-item">
+							<text class="account-value">{{(userInfo.accountInfo.balance / 100).toFixed(2)}}</text>
+							<text class="account-label">累计已结算金额</text>
 						</view>
 					</view>
 				</view>
-
-				<view class="info-box" v-else>
-					<view class="money">
-						<text class="money-num"> 1</text>
-						<view class="money-box">
-							<image src="../../static/images/index/money (2).png" alt=""></image>
-							<text class="money-title"> 当前余额(元)</text>
-						</view>
-					</view>
-					<view class="benefit">
-						<text class="benefit-num"> 0</text>
-						<view class="benefit-box">
-							<image src="../../static/images/index/card.png" alt=""></image>
-							<text class="benefit-title">优惠券</text>
-						</view>
-					</view>
+				<!-- 新增时间选项 -->
+				<view class="time-options">
+					<view class="time-option" :class="{'selected': selectedTime === 'today'}"
+						@click="selectTime('today')">今日</view>
+					<view class="time-option" :class="{'selected': selectedTime === 'week'}"
+						@click="selectTime('week')">本周</view>
+					<view class="time-option" :class="{'selected': selectedTime === 'month'}"
+						@click="selectTime('month')">本月</view>
+					<view class="time-option" :class="{'selected': selectedTime === 'year'}"
+						@click="selectTime('year')">今年</view>
 				</view>
 
-				<view class="order-box">
-					<text class="order-title">订单管理</text>
-					<view class="order-item" v-if="userInfo.type == '陪诊师'">
-						<view class="box" style="margin-left: 0">
-							<image src="../../static/images/mine/willdo.png" alt=""></image>
-							<text class="box-title">待完成</text>
-						</view>
-						<view class="box">
-							<image src="../../static/images/mine/ordering.png" alt=""></image>
-							<text class="box-title">进行中</text>
-						</view>
-						<view class="box">
-							<image src="../../static/images/mine/finish.png" alt=""></image>
-							<text class="box-title">已完成</text>
-						</view>
-						<view class="box">
-							<image src="../../static/images/mine/cancel.png" alt=""></image>
-							<text class="box-title">已取消</text>
-						</view>
+				<!-- 数据展示 -->
+				<view class="data-display">
+					<view class="data-item">
+						<text class="data-item-item">{{ orderCount }}</text>
+						<text>订单量</text>
+
 					</view>
-					<view class="order-item" v-else>
-						<view class="box" style="margin-left: 0">
-							<image src="../../static/images/mine/pay.png" alt=""></image>
-							<text class="box-title">待付款</text>
-						</view>
-						<view class="box">
-							<image src="../../static/images/mine/ordering.png" alt=""></image>
-							<text class="box-title">进行中</text>
-						</view>
-						<view class="box">
-							<image src="../../static/images/mine/finish.png" alt=""></image>
-							<text class="box-title">已完成</text>
-						</view>
-						<view class="box">
-							<image src="../../static/images/mine/cancel.png" alt=""></image>
-							<text class="box-title">已取消</text>
-						</view>
+					<view class="data-item">
+						<text class="data-item-item">{{ salesAmount }}</text>
+						<text>销售额</text>
+
+					</view>
+					<view class="data-item">
+						<text class="data-item-item">{{ pendingAmount }}</text>
+						<text>已提现金额</text>
+
+					</view>
+					<view class="data-item">
+						<text class="data-item-item">{{ settledAmount }}</text>
+						<text>已结算金额</text>
+
 					</view>
 				</view>
-				<view class="order-box">
-					<text class="order-title">
-						我的工具</text>
-					<view class="order-item" v-if="userInfo.type == '陪诊师'">
-						<view class="boxed" @click="doctorRegister">
-							<image src="../../static/images/mine/patient.png" alt=""></image>
-							<text class="box-title">个人信息管理</text>
-						</view>
-						<view class="boxed" @click="goToSetTime">
-							<image src="../../static/images/mine/advice.png" alt=""></image>
-							<text class="box-title">查看用户评价</text>
-						</view>
-						<view class="boxed" @click="goSetting">
-							<image src="../../static/images/mine/setting.png" alt=""></image>
-							<text class="box-title">设置中心</text>
-						</view>
-						<!-- <view class="boxed">
+			</view>
+
+			<view class="info-box" v-else>
+				<view class="money">
+					<text class="money-num"> 1</text>
+					<view class="money-box">
+						<image src="../../static/images/index/money (2).png" alt=""></image>
+						<text class="money-title"> 当前余额(元)</text>
+					</view>
+				</view>
+				<view class="benefit">
+					<text class="benefit-num"> 0</text>
+					<view class="benefit-box">
+						<image src="../../static/images/index/card.png" alt=""></image>
+						<text class="benefit-title">优惠券</text>
+					</view>
+				</view>
+			</view>
+
+			<view class="order-box">
+				<text class="order-title">订单管理</text>
+				<view class="order-item" v-if="userInfo.type == '陪诊师'">
+					<view class="box" style="margin-left: 0">
+						<image src="../../static/images/mine/willdo.png" alt=""></image>
+						<text class="box-title">待完成</text>
+					</view>
+					<view class="box">
+						<image src="../../static/images/mine/ordering.png" alt=""></image>
+						<text class="box-title">进行中</text>
+					</view>
+					<view class="box">
+						<image src="../../static/images/mine/finish.png" alt=""></image>
+						<text class="box-title">已完成</text>
+					</view>
+					<view class="box">
+						<image src="../../static/images/mine/cancel.png" alt=""></image>
+						<text class="box-title">已取消</text>
+					</view>
+				</view>
+				<view class="order-item" v-else>
+					<view class="box" style="margin-left: 0">
+						<image src="../../static/images/mine/pay.png" alt=""></image>
+						<text class="box-title">待付款</text>
+					</view>
+					<view class="box">
+						<image src="../../static/images/mine/ordering.png" alt=""></image>
+						<text class="box-title">进行中</text>
+					</view>
+					<view class="box">
+						<image src="../../static/images/mine/finish.png" alt=""></image>
+						<text class="box-title">已完成</text>
+					</view>
+					<view class="box">
+						<image src="../../static/images/mine/cancel.png" alt=""></image>
+						<text class="box-title">已取消</text>
+					</view>
+				</view>
+			</view>
+			<view class="order-box">
+				<text class="order-title">
+					我的工具</text>
+				<view class="order-item" v-if="userInfo.type == '陪诊师'">
+					<view class="boxed" @click="doctorRegister">
+						<image src="../../static/images/mine/patient.png" alt=""></image>
+						<text class="box-title">个人信息管理</text>
+					</view>
+					<view class="boxed" @click="goToSetTime">
+						<image src="../../static/images/mine/advice.png" alt=""></image>
+						<text class="box-title">查看用户评价</text>
+					</view>
+					<view class="box" @click="goToChat">
+						<image src="../../static/images/mine/chat1.png" alt=""></image>
+						<text class="box-title">聊天</text>
+					</view>
+					<view class="boxed" @click="goSetting">
+						<image src="../../static/images/mine/setting.png" alt=""></image>
+						<text class="box-title">设置中心</text>
+					</view>
+					<!-- <view class="boxed">
 			<image src="../../static/images/mine/location.png" alt=""></image>
 			<text class="box-title">地址设置</text>
 		</view> -->
+				</view>
+				<view class="order-item" v-else>
+					<view class="box" id="box1" style="margin-left: 0">
+						<image src="../../static/images/mine/location.png" alt=""></image>
+						<text class="box-title">地址管理</text>
 					</view>
-					<view class="order-item" v-else>
-						<view class="box" id="box1" style="margin-left: 0">
-							<image src="../../static/images/mine/location.png" alt=""></image>
-							<text class="box-title">地址管理</text>
-						</view>
-						<view class="box" @click="goPationManager">
-							<image src="../../static/images/mine/patient.png" alt=""></image>
-							<text class="box-title">就诊人管理</text>
-						</view>
-						<!-- <view class="box">
+					<view class="box" @click="goPationManager">
+						<image src="../../static/images/mine/patient.png" alt=""></image>
+						<text class="box-title">就诊人管理</text>
+					</view>
+					<view class="box" @click="goToChat">
+						<image src="../../static/images/mine/chat1.png" alt=""></image>
+						<text class="box-title">聊天</text>
+					</view>
+					<!-- <view class="box">
           <image src="../../static/images/mine/doctor.png" alt=""></image>
           <text class="box-title">我的陪诊师</text>
         </view> -->
-						<view class="box">
-							<image src="../../static/images/mine/advice.png" alt=""></image>
-							<text class="box-title">投诉建议</text>
-						</view>
-						<view class="box" style="margin-left: 0" @click="doctorRegister">
-							<image src="../../static/images/mine/help.png" alt=""></image>
-							<text class="box-title">陪诊师入驻</text>
-						</view>
-						<view class="box" @click="goSetting">
-							<image src="../../static/images/mine/setting.png" alt=""></image>
-							<text class="box-title">设置中心</text>
-						</view>
+					<view class="box">
+						<image src="../../static/images/mine/advice.png" alt=""></image>
+						<text class="box-title">投诉建议</text>
+					</view>
+					<view class="box" style="margin-left: 0" @click="doctorRegister">
+						<image src="../../static/images/mine/help.png" alt=""></image>
+						<text class="box-title">陪诊师入驻</text>
+					</view>
+					<view class="box" @click="goSetting">
+						<image src="../../static/images/mine/setting.png" alt=""></image>
+						<text class="box-title">设置中心</text>
 					</view>
 				</view>
-				<view class="logout-box">
-					<image src="../../static/images/mine/logout.png" alt=""></image>
-					<button class="logout" @click="logout" v-if="userInfo.user_id">
-						退出登录
-					</button>
-				</view>
 			</view>
-		
+			<view class="logout-box">
+				<image src="../../static/images/mine/logout.png" alt=""></image>
+				<button class="logout" @click="logout" v-if="userInfo.user_id">
+					退出登录
+				</button>
+			</view>
+		</view>
 	</scroll-view>
 </template>
 
-// pages/mine/mine.js
 <script>
 	export default {
 		data() {
@@ -218,21 +226,22 @@
 				lastScrollTop: 0,
 				pageScrollTop: 0, // 在父组件中管理滚动位置
 				userInfo: {
-					user_id: '',
-					nickName: '',
-					realName: '',
-					idCard: '',
-					phoneNumber: '',
+					session_key: '',
 					avatar: '',
-					type:'',
-					moreInfo: {}
-
+					nickName: '',
+					is_certified: '',
+					user_id: '',
+					phone: '',
+					idNumber: '',
+					type: '',
+					moreInfo: {},
 				},
 				settledAmount: 0.00,
 				pendingAmount: 0.00,
 				salesAmount: 0.00,
 				orderCount: 0,
 				selectedTime: 'today', // 默认选择今日
+
 			};
 		},
 		onLoad() {
@@ -240,14 +249,14 @@
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
 			this.initUserInfo();
-			if(this.userInfo!=''&&this.userInfo.type=="陪诊师"){
+			if (this.userInfo != '' && this.userInfo.type == "陪诊师") {
 				this.selectTime('today');
 			}
-			
+
 		},
 		onShow() {
 			this.initUserInfo();
-			if(this.userInfo!=''&&this.userInfo.type=="陪诊师"){
+			if (this.userInfo != '' && this.userInfo.type == "陪诊师") {
 				this.selectTime('today');
 			}
 		},
@@ -255,55 +264,47 @@
 			handleScroll(e) {
 				this.scrollTop = e.detail.scrollTop
 			},
-				
-			goToSetTime(){
+			goToSetTime() {
 				uni.navigateTo({
 					url: `/pages/time/time`
 				});
 			},
 			selectTime(time) {
-			    this.selectedTime = time; // 更新选择的时间选项
-			    if (time === "today") {
-			      this.pendingAmount = this.userInfo.withdrawStats.dayAmount;
-			    } else if (time === "month") {
-			      this.pendingAmount = this.userInfo.withdrawStats.monthAmount;
-			    } else if (time === "week") {
-			      this.pendingAmount = this.userInfo.withdrawStats.weekAmount;
-			    } else if (time === "year") {
-			      this.pendingAmount = this.userInfo.withdrawStats.yearAmount;
-			    }
-			  
+				this.selectedTime = time; // 更新选择的时间选项
+				if (time === "today") {
+					this.pendingAmount = this.userInfo.withdrawStats.dayAmount;
+				} else if (time === "month") {
+					this.pendingAmount = this.userInfo.withdrawStats.monthAmount;
+				} else if (time === "week") {
+					this.pendingAmount = this.userInfo.withdrawStats.weekAmount;
+				} else if (time === "year") {
+					this.pendingAmount = this.userInfo.withdrawStats.yearAmount;
+				}
+
 			},
 			//跳转到二维码页面
 			showQRCode() {
 				const data = this.userInfo.user_id;
-				// 将数据转换为查询字符串
 				const query = Object.keys(data)
 					.map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
 					.join('&');
-				// 跳转到目标页面
 				uni.navigateTo({
 					url: `/pages/RQcode/RQcode?${query}`,
 				});
 			},
-			// 初始化用户信息
 			initUserInfo() {
 				const userInfo = uni.getStorageSync("userInfo");
-				
 				console.log("初始化后的值：", userInfo);
-
 				if (userInfo) {
 					this.userInfo = userInfo;
 					this.getUser();
 				}
-			
-			},
 
-			// 获取用户信息
+			},
 			async getUser() {
 				console.log("调取前检查", this.userInfo);
-				
-				const userInfo=this.userInfo;
+
+				const userInfo = this.userInfo;
 				try {
 					uni.showLoading({
 						title: "加载中",
@@ -314,28 +315,28 @@
 						name: "getUser",
 						data: {
 							userInfo,
-							
+
 						}
 					});
-					
+
 					if (result.code == 200) {
 						console.log(result.data);
-						this.userInfo=result.data;
-						
+						this.userInfo = result.data;
+
 						console.log("调取后检查", this.userInfo);
 						uni.setStorageSync("userInfo", this.userInfo);
 						console.log(this.userInfo.type)
-					} else if(result.code == 401){
+					} else if (result.code == 401) {
 						uni.showToast({
-							title: '登录状态已过期，请重新登录' ,
+							title: '登录状态已过期，请重新登录',
 							icon: "none",
 						});
 						this.logout();
 						uni.navigateTo({
 							url: `/pages/userInfoDetail/userInfoDetail`,
 						});
-						 // uni.redirectTo({ url: '/pages/userInfoDetail/userInfoDetail' })
-					}else {
+						// uni.redirectTo({ url: '/pages/userInfoDetail/userInfoDetail' })
+					} else {
 						uni.showToast({
 							title: result.msg || "获取用户数据失败",
 							icon: "none",
@@ -350,15 +351,10 @@
 					uni.hideLoading();
 				}
 			},
-
-		
-
-			// 退出登录
 			logout() {
 				uni.removeStorageSync("userInfo");
-				
-				
-				
+				uni.removeStorageSync("token");
+				uni.removeStorageSync("refreshToken");
 				this.userInfo = {
 					user_id: '',
 					nickName: '',
@@ -366,20 +362,16 @@
 					idCard: '',
 					phoneNumber: '',
 					avatar: '',
-					type:'',
+					type: '',
 					moreInfo: {}
 				};
-				// console.log("头像？", this.userInfo.moreInfo.avatarUrl);
-				
+
 				uni.showToast({
 					title: "退出登录成功",
 					icon: "success",
 					duration: 2000,
 				});
 			},
-
-			
-
 			// 处理头部点击事件
 			handleHeaderClick() {
 				if (this.userInfo.user_id) {
@@ -390,17 +382,14 @@
 					uni.navigateTo({
 						url: "/pages/userInfoDetail/userInfoDetail",
 					});
-				} 
+				}
 			},
-
 			doctorRegister() {
-				
-					uni.navigateTo({
-						url: "/pages/escortRegistration/escortRegistration",
-					});
-				
+				uni.navigateTo({
+					url: "/pages/escortRegistration/escortRegistration",
+				});
+
 			},
-			// 切换陪诊状态
 			async onSwitchChange() {
 				console.log("改变之前的值", this.userInfo.moreInfo.is_bookable);
 				try {
@@ -430,25 +419,69 @@
 					}
 				} catch (e) {
 					uni.showToast({
-						title: "修改失败",
-						icon: "none",
+						title: '获取用户数据失败',
+						icon: 'none'
 					});
+				} finally {
+					uni.hideLoading();
 				}
 			},
-		toApply() {
-			const accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));
-			uni.navigateTo({
-			  url: `/pages/getMoney/getMoney?accountInfo=${accountInfo}`
-			});
-			
-		},
+
+			toApply() {
+				const accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));
+				uni.navigateTo({
+					url: `/pages/getMoney/getMoney?accountInfo=${accountInfo}`
+				});
+
+			},
 			//跳转到就诊人管理页面
-		goPationManager(){
-			uni.navigateTo({
-			  url: "/pages/patientManagement/patientManagement"
-			});
-		}
-		}
+			goPationManager() {
+				uni.navigateTo({
+					url: "/pages/patientManagement/patientManagement"
+				});
+			},
+			toAccount() {
+				uni.navigateTo({
+					url: '/pages/account/account'
+				})
+			},
+			goToChat() {
+				
+				if (!this.userInfo._id) {
+					uni.showToast({
+						title: '请先登录',
+						icon: 'none'
+					});
+					return;
+				}
+
+				// const currentUserInfo = {
+				// 	_id: this.userInfo._id,
+				// 	user_id: this.userInfo.user_id,
+				// 	type: this.userInfo.type,
+				// 	nickName: this.userInfo.nickName,
+				// 	realName: this.userInfo.realName,
+				// 	avatar: this.userInfo.avatar,
+				// 	phone: this.userInfo.phone
+				// };
+
+				// console.log('准备存储的用户信息：', currentUserInfo);
+				// uni.setStorageSync('currentUserInfo', currentUserInfo);
+				uni.navigateTo({
+					url: '/pages/chatList/chatList',
+					fail: (err) => {
+						console.error('页面跳转失败:', err);
+						uni.showToast({
+							title: '页面跳转失败',
+							icon: 'none'
+						});
+					}
+				});
+			},
+			goBack() {
+				uni.navigateBack();
+			}
+		},
 	};
 </script>
 
@@ -462,49 +495,54 @@
 		padding-right: 25rpx;
 		margin: 0;
 		width: 100%;
-		box-sizing: border-box; /* 关键：让 width 包含 padding */		
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
 	}
-	
+
 	.content {
 		width: 100%;
-		  max-width: 100%; /* 限制最大宽度（可选） */
-		  margin: 0 ; /* 水平居中 */
-		  padding:0;
-		  box-sizing: border-box;
+		max-width: 100%;
+		/* 限制最大宽度（可选） */
+		margin: 0;
+		/* 水平居中 */
+		padding: 0;
+		box-sizing: border-box;
+		padding-top: 50rpx;
 	}
 
 	.header {
 		display: flex;
 		align-items: center;
-		/* background-color: #a5d63f; */
-		width: 100%;
-		margin-top: 50rpx;
+	}
 
+	.header img {
+		width: 180rpx;
+		height: 180rpx;
+		border-radius: 50%;
+		margin-left: 50rpx;
+		margin-top: 50rpx;
 	}
 
 	.headerimg {
 		width: 180rpx;
 		height: 180rpx;
 		border-radius: 50%;
-		/* background-color: #18d681; */
-
 	}
-
-
 
 	.username {
 		font-size: 25px;
 		font-weight: bold;
 		margin-left: 50rpx;
+		margin-top: 10rpx;
 		margin-top: -50rpx;
-		/* background-color: #ddf5f4; */
 	}
 
 	.user-info {
 		font-size: 13px;
 		font-weight: bold;
 		margin-left: 30rpx;
-		/* margin-top: 10rpx; */
+		margin-top: 10rpx;
+		background-color: #a5d63f;
 		margin-top: -50rpx;
 		background-color: #1c9bd6;
 		padding: 10rpx;
@@ -513,17 +551,12 @@
 	}
 
 	.sao {
-		/* background-color: aqua; */
 		margin-left: 150rpx;
 		margin-top: -50rpx;
 		border-radius: 0;
 		height: 50rpx;
 		width: 50rpx;
-		/* background-color: aqua; */
 	}
-
-
-
 
 	.state-box {
 		margin-top: 100rpx;
@@ -567,7 +600,6 @@
 	.header-title {
 		font-size: 13px;
 		font-weight: bold;
-		/* color: #fff; */
 		margin-top: 0;
 	}
 
@@ -578,10 +610,7 @@
 		background-color: #fff;
 		border-radius: 15rpx;
 		padding: 20rpx;
-		/* margin-left: 50rpx;
-		margin-right: 50rpx; */
 		color: #333;
-		/* width: 100%; */
 	}
 
 	.money {
@@ -664,9 +693,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		/* margin-left: 50rpx;
-		margin-right: 50rpx;
-		margin-top: 20rpx; */
 		margin-top: 20rpx;
 		width: 250rpx;
 		gap: 10rpx;
@@ -697,6 +723,7 @@
 		margin-top: 40rpx;
 		background-color: #fff;
 		border-radius: 15rpx;
+		padding: 20rpx;
 		padding: 20 0rpx;
 		width: 100%;
 	}
@@ -706,15 +733,12 @@
 		font-weight: bold;
 		color: #333;
 		margin-left: 20rpx;
-		
 	}
 
 	.order-item {
 		margin-top: 20rpx;
 		display: flex;
-
 		flex-wrap: wrap;
-		/* justify-content: space-a; */
 	}
 
 	.boxed {
@@ -771,9 +795,45 @@
 		width: 50rpx;
 		height: 50rpx;
 		position: absolute;
-		/* 使用绝对定位 */
 		left: calc(50% - 120rpx);
-		/* 调整图标位置 */
+		z-index: 1;
+	}
+
+	.logout-box button {
+		width: 400rpx;
+		height: 80rpx;
+		background-color: #54c69a;
+		color: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-left: 50rpx;
+	}
+
+	.box image {
+		width: 75rpx;
+		height: 75rpx;
+		margin-bottom: 10rpx;
+	}
+
+	.box-title {
+		font-size: 13px;
+		font-weight: bold;
+		margin-top: 10rpx;
+	}
+
+	.logout-box {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 40rpx;
+	}
+
+	.logout-box image {
+		width: 50rpx;
+		height: 50rpx;
+		position: absolute;
+		left: calc(50% - 120rpx);
 		z-index: 1;
 	}
 
@@ -788,7 +848,6 @@
 		padding-left: 50rpx;
 	}
 
-	/* 新增陪诊师账户模块样式 */
 	.account-box {
 		background-color: #fff;
 		border-radius: 15rpx;
@@ -851,20 +910,19 @@
 	.time-option {
 		padding: 8rpx 25rpx;
 		border: 1px solid #1fc7d6;
-
 		border-radius: 30rpx;
 		color: #1fc7d6;
 		cursor: pointer;
 	}
 
 	.time-option:hover {
-	  background-color: #1fc7d6;
-	  color: white;
+		background-color: #1fc7d6;
+		color: white;
 	}
-	
+
 	.time-option.selected {
-	  background-color: #1fc7d6;
-	  color: white;
+		background-color: #1fc7d6;
+		color: white;
 	}
 
 	.data-display {
@@ -882,7 +940,6 @@
 		justify-content: center;
 		align-items: center;
 		font-size: 25rpx;
-		/* background-color: #a5d63f; */
 		width: 200rpx;
 	}
 
@@ -890,5 +947,21 @@
 		margin-bottom: 20rpx;
 		font-weight: bold;
 		font-size: 30rpx;
+	}
+
+	.back-btn {
+		position: absolute;
+		top: 20rpx;
+		left: 20rpx;
+		width: 80rpx;
+		height: 80rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.back-icon {
+		width: 40rpx;
+		height: 40rpx;
 	}
 </style>

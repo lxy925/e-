@@ -43,7 +43,8 @@
 
 
 <script>
-	import WXBizDataCrypt from "../../utils/aes-sample.eae1f364/aes-sample.eae1f364/Node/WXBizDataCrypt";
+	import WXBizDataCrypt from '../../utils/WXBizDataCrypt.js'
+	//import jwt from '../../uniCloud/cloudfunctions/commom/jwt.js'
 	export default {
 		data() {
 			return {

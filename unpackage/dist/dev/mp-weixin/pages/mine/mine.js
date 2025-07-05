@@ -405,6 +405,14 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   data: function data() {
     return {
@@ -416,12 +424,13 @@ var _default = {
       pageScrollTop: 0,
       // 在父组件中管理滚动位置
       userInfo: {
-        user_id: '',
-        nickName: '',
-        realName: '',
-        idCard: '',
-        phoneNumber: '',
+        session_key: '',
         avatar: '',
+        nickName: '',
+        is_certified: '',
+        user_id: '',
+        phone: '',
+        idNumber: '',
         type: '',
         moreInfo: {}
       },
@@ -471,16 +480,13 @@ var _default = {
     //跳转到二维码页面
     showQRCode: function showQRCode() {
       var data = this.userInfo.user_id;
-      // 将数据转换为查询字符串
       var query = Object.keys(data).map(function (key) {
         return "".concat(encodeURIComponent(key), "=").concat(encodeURIComponent(data[key]));
       }).join('&');
-      // 跳转到目标页面
       uni.navigateTo({
         url: "/pages/RQcode/RQcode?".concat(query)
       });
     },
-    // 初始化用户信息
     initUserInfo: function initUserInfo() {
       var userInfo = uni.getStorageSync("userInfo");
       console.log("初始化后的值：", userInfo);
@@ -489,7 +495,6 @@ var _default = {
         this.getUser();
       }
     },
-    // 获取用户信息
     getUser: function getUser() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
@@ -557,9 +562,10 @@ var _default = {
         }, _callee, null, [[2, 11, 14, 17]]);
       }))();
     },
-    // 退出登录
     logout: function logout() {
       uni.removeStorageSync("userInfo");
+      uni.removeStorageSync("token");
+      uni.removeStorageSync("refreshToken");
       this.userInfo = {
         user_id: '',
         nickName: '',
@@ -570,8 +576,6 @@ var _default = {
         type: '',
         moreInfo: {}
       };
-      // console.log("头像？", this.userInfo.moreInfo.avatarUrl);
-
       uni.showToast({
         title: "退出登录成功",
         icon: "success",
@@ -595,7 +599,6 @@ var _default = {
         url: "/pages/escortRegistration/escortRegistration"
       });
     },
-    // 切换陪诊状态
     onSwitchChange: function onSwitchChange() {
       var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
@@ -636,15 +639,19 @@ var _default = {
                 _context2.prev = 9;
                 _context2.t0 = _context2["catch"](1);
                 uni.showToast({
-                  title: "修改失败",
-                  icon: "none"
+                  title: '获取用户数据失败',
+                  icon: 'none'
                 });
               case 12:
+                _context2.prev = 12;
+                uni.hideLoading();
+                return _context2.finish(12);
+              case 15:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[1, 9]]);
+        }, _callee2, null, [[1, 9, 12, 15]]);
       }))();
     },
     toApply: function toApply() {
@@ -658,6 +665,46 @@ var _default = {
       uni.navigateTo({
         url: "/pages/patientManagement/patientManagement"
       });
+    },
+    toAccount: function toAccount() {
+      uni.navigateTo({
+        url: '/pages/account/account'
+      });
+    },
+    goToChat: function goToChat() {
+      if (!this.userInfo._id) {
+        uni.showToast({
+          title: '请先登录',
+          icon: 'none'
+        });
+        return;
+      }
+
+      // const currentUserInfo = {
+      // 	_id: this.userInfo._id,
+      // 	user_id: this.userInfo.user_id,
+      // 	type: this.userInfo.type,
+      // 	nickName: this.userInfo.nickName,
+      // 	realName: this.userInfo.realName,
+      // 	avatar: this.userInfo.avatar,
+      // 	phone: this.userInfo.phone
+      // };
+
+      // console.log('准备存储的用户信息：', currentUserInfo);
+      // uni.setStorageSync('currentUserInfo', currentUserInfo);
+      uni.navigateTo({
+        url: '/pages/chatList/chatList',
+        fail: function fail(err) {
+          console.error('页面跳转失败:', err);
+          uni.showToast({
+            title: '页面跳转失败',
+            icon: 'none'
+          });
+        }
+      });
+    },
+    goBack: function goBack() {
+      uni.navigateBack();
     }
   }
 };

@@ -254,12 +254,9 @@
 
 					//为初始化用户数据做准备
 					uni.setStorageSync('userInfo', result.data.userInfo);
-					//缓存token
-					// uni.setStorageSync('token', result.data.token);
-					// uni.setStorageSync('refreshToken', result.data.refreshToken)
+					// 缓存token
+					uni.setStorageSync('token', result.data.token);
 					console.log(uni.getStorageSync('userInfo'))
-					// const isLoggedIn = true;
-					// uni.setStorageSync('isLoggedIn', isLoggedIn);
 					uni.setStorageSync('userInfoForm', result.data.userInfo);
 					uni.navigateBack();
 				} else {

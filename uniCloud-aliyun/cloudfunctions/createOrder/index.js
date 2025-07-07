@@ -113,7 +113,7 @@ async function createOrder(event, openid) {
 	const order_no = `ORD${timestamp}${random}`;
 	const input_doctor_id = event.doctor_id;  // 从event获取的doctor_id
 		// 1. 查询 escorts 表，获取陪诊师信息
-	const escortRes = await db.collection('escorts').doc(input_doctor_id).get();
+	const escortRes = await db.collection('escorts').where({user_id:input_doctor_id}).get();
 	if (!escortRes.data || escortRes.data.length === 0) {
 		return {
 			code: 404,

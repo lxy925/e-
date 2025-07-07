@@ -1,7 +1,28 @@
 
 .page {
-	padding: 0 50rpx;
-	padding-top: 200rpx;
+	height: 100hv;
+}
+.page-container {
+	min-height: 100vh;
+	position: relative;
+
+	padding-left: 25rpx;
+	padding-right: 25rpx;
+	margin: 0;
+	width: 100%;
+	box-sizing: border-box;
+	/* 关键：让 width 包含 padding */
+	-webkit-overflow-scrolling: touch;
+	/* 平滑滚动 */
+	scrollbar-width: none;
+	/* Firefox */
+}
+.page-container ::-webkit-scrollbar {
+	display: none;
+	/* Chrome/Safari */
+	width: 0 !important;
+	/* 微信小程序可能需要 */
+	height: 0 !important;
 }
 .search-box {
 	flex: 1;

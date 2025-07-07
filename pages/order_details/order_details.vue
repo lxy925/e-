@@ -1,7 +1,11 @@
 <template>
 	<view class="page">
-		<custom-nav title="e陪无忧" :isHomePage="false" class="fixed-nav"></custom-nav>
-		<!--pages/order_details/order_details.wxml-->
+		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+			<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+		  paddingTop: navHeight + 'px',
+		  height: 'calc(100vh - ' + navHeight + 'px)'
+		}" :scroll-top="scrollTop" :show-scrollbar="false">
+		
 		<view class="container">
 			<scroll-view scroll-y="true" class="scroll-content">
 				<view class="accompany-service">
@@ -67,6 +71,7 @@
 				</button>
 			</view>
 		</view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -75,6 +80,9 @@
 		name: 'OrderComponent',
 		data() {
 			return {
+				navHeight: 0, // 添加导航栏高度存储
+				pageTitle: '服务详情',
+				scrollTop: 0,
 				// Define your data properties here
 				details: [],
 				serviceData: null, // 用于存储接收到的数据
@@ -82,8 +90,18 @@
 				include_transport: false,
 			};
 		},
+		onLoad(){
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
+		},
 		methods: {
-			// Define your methods here
+			//监视页面滚动情况
+			handleScroll(e) {
+				if (this.scrollTimer) clearTimeout(this.scrollTimer)
+				this.scrollTimer = setTimeout(() => {
+					this.scrollTop = e.detail.scrollTop
+				}, 16) // 约60fps
+			},
 			goToOrder() {
 				const service = encodeURIComponent(JSON.stringify(this.serviceData));
 				console.log("传递的 service 参数:", service);
@@ -149,11 +167,31 @@
 	/**index.wxss**/
 	/* pages/order_details/order_details.wxss */
 	page {
-		/* background: linear-gradient(#18d1c2, #F2F3F9, white); */
-		padding: 0 20rpx;
-		padding-top: 200rpx;
+			height: 100vh;
 	}
-
+.page-container {
+		min-height: 100vh;
+		position: relative;
+		
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
+	}
+	
+	.page-container ::-webkit-scrollbar {
+		display: none;
+		/* Chrome/Safari */
+		width: 0 !important;
+		/* 微信小程序可能需要 */
+		height: 0 !important;
+	}
 .container {
 		margin-top: 200rpx; /* 根据导航栏高度调整 */
 		padding-bottom: 120rpx; /* 避免底部按钮遮挡内容 */

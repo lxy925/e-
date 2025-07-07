@@ -1,9 +1,7 @@
 'use strict';
-const jwt = require('./jwt.js');
 exports.main = async (event, context) => {
 	const db = uniCloud.database()
-	 let user_id = jwt.verifyToken(event.user_id).userId;
-	 console.log("user_id",jwt.verifyToken(event.user_id))
+	 let user_id = event.user_id
 	  const longTermData  = event.longTermData
 	  
 	  try {

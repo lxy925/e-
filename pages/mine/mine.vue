@@ -1,30 +1,30 @@
 <template>
-	<scroll-view scroll-y class="page-container" @scroll="handleScroll"
-		:style="{ paddingTop: navHeight + 'px',height: 'calc(100vh - ' + navHeight + 'px)'}" :scroll-top="scrollTop">
-		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
-		<view class="content">
-			<view class="header" @click="handleHeaderClick">
-				<img class="headerimg" :src="
+	<view class="page">
+		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" ref="customNav" />
+		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+	  paddingTop: navHeight + 'px',
+	  height: 'calc(100vh - ' + navHeight + 'px)'
+	}" :scroll-top="scrollTop" :show-scrollbar="false">
+
+			<view class="content">
+				<view class="header" @click="handleHeaderClick">
+					<image class="headerimg" :src="
           userInfo.moreInfo.avatarUrl || '../../static/images/mine/avatar.png'
         " v-if="userInfo.type == '陪诊师'" alt="" />
-				<img class="headerimg" :src="userInfo.avatar || '../../static/images/mine/avatar.png'" v-else alt="" />
+					<image class="headerimg" :src="userInfo.avatar || '../../static/images/mine/avatar.png'" v-else
+						alt="" />
 
-				<text class="username">{{ userInfo.nickName || "登录" }}</text>
-				<text class="user-info" v-if="userInfo.type == '陪诊师'">
-					{{ userInfo.moreInfo.is_certified ? "已认证" : "未认证" }}</text>
-				<view class="state-box" v-if="userInfo.type == '陪诊师'">
-					<text class="state">接单状态:</text>
-					<switch class="switch" :checked="userInfo.moreInfo.is_bookable" @change="onSwitchChange"
-						color="#ff94da" />
+					<text class="username">{{ userInfo.nickName || "登录" }}</text>
+					<text class="user-info" v-if="userInfo.type == '陪诊师'">
+						{{ userInfo.moreInfo.is_certified ? "已认证" : "未认证" }}
+					</text>
+					<image class="sao" src="../../static/images/mine/sao.png" v-if="userInfo.type == '陪诊师'" alt="扫描图标"
+						@click="showQRCode" />
+
+
 				</view>
 
-				<img class="sao" src="../../static/images/mine/sao.png" v-if="userInfo.type == '陪诊师'" alt="扫描图标"
-					@click="showQRCode" />
-
-
-			</view>
-
-			<!-- 		弹窗内容
+				<!-- 		弹窗内容
 		<view class="modal-dialog" v-if="isShowModal">
 			<img :src="modalImage" class="modal-image" />
 			<text class="modal-text">{{modalText}}</text>
@@ -35,185 +35,181 @@
 			</view>
 
 		</view> -->
-			<view class="account-box" v-if="userInfo.type == '陪诊师'">
-				<view class="account" @click="toApply">
-					<view class="account-header">
-						<text class="account-title">我的账户</text>
-					</view>
-					<view class="account-info">
-						<view class="account-item">
-							<text
-								class="account-value">{{(userInfo.accountInfo.withdrawable_amount / 100).toFixed(2)}}</text>
-							<text class="account-label">可提取金额</text>
+				<view class="account-box" v-if="userInfo.type == '陪诊师'">
+					<view class="account" @click="toApply">
+						<view class="account-header">
+							<text class="account-title">我的账户</text>
 						</view>
-						<view class="account-item">
-							<text
-								class="account-value">{{(userInfo.accountInfo.pending_amount / 100).toFixed(2)}}</text>
-							<text class="account-label">待结算金额</text>
+						<view class="account-info">
+							<view class="account-item">
+								<text
+									class="account-value">{{(userInfo.accountInfo.withdrawable_amount / 100).toFixed(2)}}</text>
+								<text class="account-label">可提取金额</text>
+							</view>
+							<view class="account-item">
+								<text
+									class="account-value">{{(userInfo.accountInfo.pending_amount / 100).toFixed(2)}}</text>
+								<text class="account-label">待结算金额</text>
+							</view>
+							<view class="account-item">
+								<text class="account-value">{{(userInfo.accountInfo.balance / 100).toFixed(2)}}</text>
+								<text class="account-label">累计已结算金额</text>
+							</view>
 						</view>
-						<view class="account-item">
-							<text class="account-value">{{(userInfo.accountInfo.balance / 100).toFixed(2)}}</text>
-							<text class="account-label">累计已结算金额</text>
+					</view>
+					<!-- 新增时间选项 -->
+					<view class="time-options">
+						<view class="time-option" :class="{'selected': selectedTime === 'today'}"
+							@click="selectTime('today')">今日</view>
+						<view class="time-option" :class="{'selected': selectedTime === 'week'}"
+							@click="selectTime('week')">本周</view>
+						<view class="time-option" :class="{'selected': selectedTime === 'month'}"
+							@click="selectTime('month')">本月</view>
+						<view class="time-option" :class="{'selected': selectedTime === 'year'}"
+							@click="selectTime('year')">今年</view>
+					</view>
+
+					<!-- 数据展示 -->
+					<view class="data-display">
+						<view class="data-item">
+							<text class="data-item-item">{{ orderCount }}</text>
+							<text>订单量</text>
+
+						</view>
+						<view class="data-item">
+							<text class="data-item-item">{{ salesAmount }}</text>
+							<text>销售额</text>
+
+						</view>
+						<view class="data-item">
+							<text class="data-item-item">{{ pendingAmount }}</text>
+							<text>已提现金额</text>
+
+						</view>
+						<view class="data-item">
+							<text class="data-item-item">{{ settledAmount }}</text>
+							<text>已结算金额</text>
+
 						</view>
 					</view>
 				</view>
-				<!-- 新增时间选项 -->
-				<view class="time-options">
-					<view class="time-option" :class="{'selected': selectedTime === 'today'}"
-						@click="selectTime('today')">今日</view>
-					<view class="time-option" :class="{'selected': selectedTime === 'week'}"
-						@click="selectTime('week')">本周</view>
-					<view class="time-option" :class="{'selected': selectedTime === 'month'}"
-						@click="selectTime('month')">本月</view>
-					<view class="time-option" :class="{'selected': selectedTime === 'year'}"
-						@click="selectTime('year')">今年</view>
+
+				<view class="info-box" v-else>
+					<view class="money">
+						<text class="money-num"> 1</text>
+						<view class="money-box">
+							<image src="../../static/images/index/money (2).png" alt=""></image>
+							<text class="money-title"> 当前余额(元)</text>
+						</view>
+					</view>
+					<view class="benefit">
+						<text class="benefit-num"> 0</text>
+						<view class="benefit-box">
+							<image src="../../static/images/index/card.png" alt=""></image>
+							<text class="benefit-title">优惠券</text>
+						</view>
+					</view>
 				</view>
 
-				<!-- 数据展示 -->
-				<view class="data-display">
-					<view class="data-item">
-						<text class="data-item-item">{{ orderCount }}</text>
-						<text>订单量</text>
+				<view class="order-box">
+					<text class="order-title">订单管理</text>
+					<view class="order-item" v-if="userInfo.type == '陪诊师'">
+						<view class="box" style="margin-left: 0">
+							<image src="../../static/images/mine/willdo.png" alt=""></image>
+							<text class="box-title">待完成</text>
+						</view>
+						<view class="box">
+							<image src="../../static/images/mine/ordering.png" alt=""></image>
+							<text class="box-title">进行中</text>
+						</view>
+						<view class="box">
+							<image src="../../static/images/mine/finish.png" alt=""></image>
+							<text class="box-title">已完成</text>
+						</view>
+						<view class="box">
+							<image src="../../static/images/mine/cancel.png" alt=""></image>
+							<text class="box-title">已取消</text>
+						</view>
+					</view>
+					<view class="order-item" v-else>
+						<view class="box" style="margin-left: 0">
+							<image src="../../static/images/mine/pay.png" alt=""></image>
+							<text class="box-title">待付款</text>
+						</view>
+						<view class="box">
+							<image src="../../static/images/mine/ordering.png" alt=""></image>
+							<text class="box-title">进行中</text>
+						</view>
+						<view class="box">
+							<image src="../../static/images/mine/finish.png" alt=""></image>
+							<text class="box-title">已完成</text>
+						</view>
+						<view class="box">
+							<image src="../../static/images/mine/cancel.png" alt=""></image>
+							<text class="box-title">已取消</text>
+						</view>
+					</view>
+				</view>
+				<view class="order-box">
+					<text class="order-title">
+						我的工具</text>
+					<view class="order-item" v-if="userInfo.type == '陪诊师'">
+						<view class="boxed" @click="doctorRegister">
+							<image src="../../static/images/mine/patient.png" alt=""></image>
+							<text class="box-title">个人信息管理</text>
+						</view>
+						<view class="boxed" @click="goToSetTime">
+							<image src="../../static/images/mine/advice.png" alt=""></image>
+							<text class="box-title">查看用户评价</text>
+						</view>
+						<view class="box" @click="goToChat">
+							<image src="../../static/images/mine/chat1.png" alt=""></image>
+							<text class="box-title">聊天</text>
+						</view>
+						<view class="boxed" @click="goSetting">
+							<image src="../../static/images/mine/setting.png" alt=""></image>
+							<text class="box-title">设置中心</text>
+						</view>
 
 					</view>
-					<view class="data-item">
-						<text class="data-item-item">{{ salesAmount }}</text>
-						<text>销售额</text>
+					<view class="order-item" v-else>
+						<view class="box" id="box1" style="margin-left: 0">
+							<image src="../../static/images/mine/location.png" alt=""></image>
+							<text class="box-title">地址管理</text>
+						</view>
+						<view class="box" @click="goPationManager">
+							<image src="../../static/images/mine/patient.png" alt=""></image>
+							<text class="box-title">就诊人管理</text>
+						</view>
+						<view class="box" @click="goToChat">
+							<image src="../../static/images/mine/chat1.png" alt=""></image>
+							<text class="box-title">聊天</text>
+						</view>
 
+						<view class="box">
+							<image src="../../static/images/mine/advice.png" alt=""></image>
+							<text class="box-title">投诉建议</text>
+						</view>
+						<view class="box" style="margin-left: 0" @click="doctorRegister">
+							<image src="../../static/images/mine/help.png" alt=""></image>
+							<text class="box-title">陪诊师入驻</text>
+						</view>
+						<view class="box" @click="goSetting">
+							<image src="../../static/images/mine/setting.png" alt=""></image>
+							<text class="box-title">设置中心</text>
+						</view>
 					</view>
-					<view class="data-item">
-						<text class="data-item-item">{{ pendingAmount }}</text>
-						<text>已提现金额</text>
-
-					</view>
-					<view class="data-item">
-						<text class="data-item-item">{{ settledAmount }}</text>
-						<text>已结算金额</text>
-
-					</view>
+				</view>
+				<view class="logout-box">
+					<image src="../../static/images/mine/logout.png" alt=""></image>
+					<button class="logout" @click="logout" v-if="userInfo.user_id">
+						退出登录
+					</button>
 				</view>
 			</view>
 
-			<view class="info-box" v-else>
-				<view class="money">
-					<text class="money-num"> 1</text>
-					<view class="money-box">
-						<image src="../../static/images/index/money (2).png" alt=""></image>
-						<text class="money-title"> 当前余额(元)</text>
-					</view>
-				</view>
-				<view class="benefit">
-					<text class="benefit-num"> 0</text>
-					<view class="benefit-box">
-						<image src="../../static/images/index/card.png" alt=""></image>
-						<text class="benefit-title">优惠券</text>
-					</view>
-				</view>
-			</view>
-
-			<view class="order-box">
-				<text class="order-title">订单管理</text>
-				<view class="order-item" v-if="userInfo.type == '陪诊师'">
-					<view class="box" style="margin-left: 0">
-						<image src="../../static/images/mine/willdo.png" alt=""></image>
-						<text class="box-title">待完成</text>
-					</view>
-					<view class="box">
-						<image src="../../static/images/mine/ordering.png" alt=""></image>
-						<text class="box-title">进行中</text>
-					</view>
-					<view class="box">
-						<image src="../../static/images/mine/finish.png" alt=""></image>
-						<text class="box-title">已完成</text>
-					</view>
-					<view class="box">
-						<image src="../../static/images/mine/cancel.png" alt=""></image>
-						<text class="box-title">已取消</text>
-					</view>
-				</view>
-				<view class="order-item" v-else>
-					<view class="box" style="margin-left: 0">
-						<image src="../../static/images/mine/pay.png" alt=""></image>
-						<text class="box-title">待付款</text>
-					</view>
-					<view class="box">
-						<image src="../../static/images/mine/ordering.png" alt=""></image>
-						<text class="box-title">进行中</text>
-					</view>
-					<view class="box">
-						<image src="../../static/images/mine/finish.png" alt=""></image>
-						<text class="box-title">已完成</text>
-					</view>
-					<view class="box">
-						<image src="../../static/images/mine/cancel.png" alt=""></image>
-						<text class="box-title">已取消</text>
-					</view>
-				</view>
-			</view>
-			<view class="order-box">
-				<text class="order-title">
-					我的工具</text>
-				<view class="order-item" v-if="userInfo.type == '陪诊师'">
-					<view class="boxed" @click="doctorRegister">
-						<image src="../../static/images/mine/patient.png" alt=""></image>
-						<text class="box-title">个人信息管理</text>
-					</view>
-					<view class="boxed" @click="goToSetTime">
-						<image src="../../static/images/mine/advice.png" alt=""></image>
-						<text class="box-title">查看用户评价</text>
-					</view>
-					<view class="box" @click="goToChat">
-						<image src="../../static/images/mine/chat1.png" alt=""></image>
-						<text class="box-title">聊天</text>
-					</view>
-					<view class="boxed" @click="goSetting">
-						<image src="../../static/images/mine/setting.png" alt=""></image>
-						<text class="box-title">设置中心</text>
-					</view>
-					<!-- <view class="boxed">
-			<image src="../../static/images/mine/location.png" alt=""></image>
-			<text class="box-title">地址设置</text>
-		</view> -->
-				</view>
-				<view class="order-item" v-else>
-					<view class="box" id="box1" style="margin-left: 0">
-						<image src="../../static/images/mine/location.png" alt=""></image>
-						<text class="box-title">地址管理</text>
-					</view>
-					<view class="box" @click="goPationManager">
-						<image src="../../static/images/mine/patient.png" alt=""></image>
-						<text class="box-title">就诊人管理</text>
-					</view>
-					<view class="box" @click="goToChat">
-						<image src="../../static/images/mine/chat1.png" alt=""></image>
-						<text class="box-title">聊天</text>
-					</view>
-					<!-- <view class="box">
-          <image src="../../static/images/mine/doctor.png" alt=""></image>
-          <text class="box-title">我的陪诊师</text>
-        </view> -->
-					<view class="box">
-						<image src="../../static/images/mine/advice.png" alt=""></image>
-						<text class="box-title">投诉建议</text>
-					</view>
-					<view class="box" style="margin-left: 0" @click="doctorRegister">
-						<image src="../../static/images/mine/help.png" alt=""></image>
-						<text class="box-title">陪诊师入驻</text>
-					</view>
-					<view class="box" @click="goSetting">
-						<image src="../../static/images/mine/setting.png" alt=""></image>
-						<text class="box-title">设置中心</text>
-					</view>
-				</view>
-			</view>
-			<view class="logout-box">
-				<image src="../../static/images/mine/logout.png" alt=""></image>
-				<button class="logout" @click="logout" v-if="userInfo.user_id">
-					退出登录
-				</button>
-			</view>
-		</view>
-	</scroll-view>
+		</scroll-view>
+	</view>
 </template>
 
 <script>
@@ -223,18 +219,20 @@
 				navHeight: 0, // 添加导航栏高度存储
 				pageTitle: '个人中心',
 				scrollTop: 0,
-				lastScrollTop: 0,
-				pageScrollTop: 0, // 在父组件中管理滚动位置
 				userInfo: {
-					session_key: '',
+					accountInfo: {},
 					avatar: '',
-					nickName: '',
-					is_certified: '',
-					user_id: '',
-					phone: '',
+					create_time: '',
 					idNumber: '',
+					moreInfo: '',
+					nickName: '',
+					phone: '',
+					realName: '',
 					type: '',
-					moreInfo: {},
+					update_time: '',
+					user_id: '',
+					withdrawStats: {},
+					_id: ''
 				},
 				settledAmount: 0.00,
 				pendingAmount: 0.00,
@@ -261,8 +259,12 @@
 			}
 		},
 		methods: {
+			//监视页面滚动情况
 			handleScroll(e) {
-				this.scrollTop = e.detail.scrollTop
+				if (this.scrollTimer) clearTimeout(this.scrollTimer)
+				this.scrollTimer = setTimeout(() => {
+					this.scrollTop = e.detail.scrollTop
+				}, 16) // 约60fps
 			},
 			goToSetTime() {
 				uni.navigateTo({
@@ -446,7 +448,7 @@
 				})
 			},
 			goToChat() {
-				
+
 				if (!this.userInfo._id) {
 					uni.showToast({
 						title: '请先登录',
@@ -486,17 +488,34 @@
 </script>
 
 <style>
-	/* pages/mine/mine.wxss */
+	.page {
+		height: 100vh;
+		/* background-color: #2ecc71; */
+
+	}
+
 	.page-container {
 		min-height: 100vh;
 		position: relative;
-		padding: 0 rpx;
+
 		padding-left: 25rpx;
 		padding-right: 25rpx;
 		margin: 0;
 		width: 100%;
 		box-sizing: border-box;
 		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
+	}
+
+	.page-container ::-webkit-scrollbar {
+		display: none;
+		/* Chrome/Safari */
+		width: 0 !important;
+		/* 微信小程序可能需要 */
+		height: 0 !important;
 	}
 
 	.content {

@@ -117,8 +117,8 @@
 				// 将整个 patient 对象存储到本地
 				uni.setStorageSync('selectedPatient', patient);
 				// 跳转到 order 页面
-				uni.navigateTo({
-					url: '/pages/order/order'
+				uni.navigateBack({
+					
 				});
 			},
 			previewImage(images, currentIndex) {

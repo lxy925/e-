@@ -1,45 +1,52 @@
 <template>
 	<view class="page">
-		<custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
-		<view class="search-box">
-			<image class="search-icon" src="../../static/images/icons/search.png"></image>
-			<input type="text" placeholder="搜索陪诊师的名字" placeholder-class="placeholder-style" />
-		</view>
-		<view class="doctor-list">
-			<view class="doctor-card" v-for="(doctor, index) in doctors" :key="index"
-				@click="goToDoctorDetailPage(doctor)">
-				<view class="doctor-avatar">
-					<image :src="doctor.avatarUrl" mode="aspectFill"></image>
-				</view>
-				<view class="doctor-info">
-					<view class="doctor-first">
-						<view class="doctor-name">{{ doctor.name }}</view>
-						<view class="doctor-gender">{{ doctor.gender }}</view>
+		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+		<!-- 内容区域 -->
+		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+		      paddingTop: navHeight + 'px',
+		      height: 'calc(100vh - ' + navHeight + 'px)'
+		    }" :scroll-top="scrollTop" :show-scrollbar="false">
+			<view class="search-box">
+				<image class="search-icon" src="../../static/images/icons/search.png" ></image>
+				<input type="text" v-model="searchKeyword" placeholder="搜索陪诊师的名字" placeholder-class="placeholder-style" @input="handleSearch" />
+			</view>
+			<view class="doctor-list">
+				<view class="doctor-card" v-for="(doctor, index) in doctors" :key="index"
+					@click="goToDoctorDetailPage(doctor)">
+					<view class="doctor-avatar">
+						<image :src="doctor.avatarUrl" mode="aspectFill"></image>
 					</view>
-					<view class="doctor-location">{{doctor.address.cityName}}&nbsp;{{doctor.address.areaName}}</view>
-					<view class="doctor-department">
-						<img class="value-icon" src="../../static/images/index/value.png" alt="" />
-						{{ doctor.moreInfo.rating }} &nbsp; | &nbsp;
-						<img class="order-icon" src="../../static/images/doctor/order.png" alt="" />
-						{{ doctor.moreInfo.order }}
+					<view class="doctor-info">
+						<view class="doctor-first">
+							<view class="doctor-name">{{ doctor.name }}</view>
+							<view class="doctor-gender">{{ doctor.gender }}</view>
+						</view>
+						<view class="doctor-location">{{doctor.address.cityName}}&nbsp;{{doctor.address.areaName}}
+						</view>
+						<view class="doctor-department">
+							<img class="value-icon" src="../../static/images/index/value.png" alt="" />
+							{{ doctor.moreInfo.rating }} &nbsp; | &nbsp;
+							<img class="order-icon" src="../../static/images/doctor/order.png" alt="" />
+							{{ doctor.moreInfo.order }}
+						</view>
+						<view class="doctor-tags">
+							<text :class="['doctor-certification', doctor.is_certified ? 'certified' : 'uncertified']">
+								{{ doctor.is_certified ? '已认证' : '未认证' }}
+							</text>
+							<text :class="['doctor-availability', doctor.is_bookable ? 'available' : 'unavailable']">
+								{{ doctor.is_bookable ? '可预约' : '不可预约' }}
+							</text>
+						</view>
 					</view>
-					<view class="doctor-tags">
-						<text :class="['doctor-certification', doctor.is_certified ? 'certified' : 'uncertified']">
-							{{ doctor.is_certified ? '已认证' : '未认证' }}
-						</text>
-						<text :class="['doctor-availability', doctor.is_bookable ? 'available' : 'unavailable']">
-							{{ doctor.is_bookable ? '可预约' : '不可预约' }}
-						</text>
-					</view>
-				</view>
-				<view class="doctor-need">
-					<view class="doctor-need-item">
-						<view class="doctor-need-item-text">最近咨询</view>
-						<image src="../../static/images/index/star.png" alt=""></image>
+					<view class="doctor-need">
+						<view class="doctor-need-item">
+							<view class="doctor-need-item-text">最近咨询</view>
+							<image src="../../static/images/index/star.png" alt=""></image>
+						</view>
 					</view>
 				</view>
 			</view>
-		</view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -48,76 +55,145 @@
 	export default {
 		data() {
 			return {
+				pageTitle: "陪诊师列表",
+				scrollTop: 0,
+				navHeight: 0, // 存储导航栏高度
+				timeObj: '', //简化传入的时间参数
+				searchKeyword: '', // 新增搜索关键词
 				doctors: [],
 				Location: {},
 				fromOrder: false
 			};
 		},
 		onLoad(options) {
-			this.fetchDoctors();
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
+
 			// 检查是否从order页面跳转过来
-			if (options.from === 'order') {
+			if (options.from === 'order' && options.selectedTime) {
 				this.fromOrder = true;
+				console.log("传过来的时间参数", options.selectedTime)
+				const selectedTime = options.selectedTime;
+				this.timeObj = this.convertTimeToValue(selectedTime);
+				console.log(this.timeObj);
+				console.log("传过来的时间参数", selectedTime)
 				console.log('从order页面跳转过来，点击医生卡片将返回order页面');
 			}
+			this.fetchDoctors();
 		},
 		methods: {
+			//监视页面滚动情况
+			handleScroll(e) {
+				if (this.scrollTimer) clearTimeout(this.scrollTimer)
+				this.scrollTimer = setTimeout(() => {
+					this.scrollTop = e.detail.scrollTop
+				}, 16) // 约60fps
+			},
+			convertTimeToValue(timeStr) {
+				if (!timeStr) return null;
+
+				// 解析字符串
+				const parts = timeStr.split(' ');
+				if (parts.length < 3) return null;
+
+				const weekDay = parts[1]; // 获取周几
+				const time = parts[2]; // 获取时间
+
+				// 周几映射
+				const weekMap = {
+					'周一': 0,
+					'周二': 1,
+					'周三': 2,
+					'周四': 3,
+					'周五': 4,
+					'周六': 5,
+					'周日': 6
+				};
+
+				// 判断上午/下午
+				const hour = parseInt(time.split(':')[0]);
+				const isAfternoon = hour >= 12;
+
+				// 计算值
+				const weekValue = weekMap[weekDay] || 0;
+				return isAfternoon ? weekValue + 7 : weekValue;
+			},
 			async fetchDoctors() {
 				try {
-					const cityName = uni.getStorageSync('cityName');
-					const provinceName = uni.getStorageSync('provinceName');
-					const areaName = uni.getStorageSync('areaName');
-					this.Location = {
-						provinceName,
-						cityName,
-						areaName
-					};
-					console.log("地址", this.Location);
-					if (!this.Location) {
-						console.error('未找到缓存的位置信息');
+					let timeObj;
+					if (this.fromOrder && this.timeObj !== undefined) {
+						timeObj = this.timeObj;
 					}
+					console.log("timeObj", timeObj)
+					console.log("searchKeyword", this.searchKeyword)
 					const res = await uniCloud.callFunction({
-						name: 'getEscorts',
-						data: {
-							location: this.Location
-						}
-					});
-					if (res.result.success) {
-						console.log('获取陪诊师数据成功:', res.result.data);
-						this.doctors = res.result.data.data;
-					} else {
-						console.error('获取陪诊师数据失败:', res.result.error);
-					}
-				} catch (err) {
-					console.error('调用云函数失败:', err);
-				}
-			},
-			goToDoctorDetailPage(doctor) {
-				if (this.fromOrder) {
-					// 从order页面跳转过来，将医生信息存入缓存
-					uni.setStorageSync('selectedDoctor', doctor);
-					console.log('已将医生信息存入缓存:', doctor.name);
+							name: 'getEscorts',
+							data: {
+								timeObj,
+								isFromOrder: this.fromOrder,
+								searchKeyword: this.searchKeyword
+								}// 新增参数，标识是否来自order页面}
+							});
 
-					// 返回order页面
-					uni.navigateTo({
-						url: '/pages/order/order'
-					});
-				} else {
-					// 正常跳转到医生详情页，也使用缓存存储医生信息
-					uni.setStorageSync('selectedDoctor', doctor);
-					uni.navigateTo({
-						url: `/pages/doctordetail/doctordetail`
-					});
+						if (res.result.success) {
+							this.doctors = res.result.data;
+						} else {
+							console.error('获取陪诊师数据失败:', res.result.error);
+						}
+					}
+					catch (err) {
+						console.error('调用云函数失败:', err);
+					}
+				},
+				goToDoctorDetailPage(doctor) {
+					if (this.fromOrder) {
+						// 从order页面跳转过来，将医生信息存入缓存
+						uni.setStorageSync('selectedDoctor', doctor);
+						console.log('已将医生信息存入缓存:', doctor.name);
+
+						// 返回order页面
+						uni.navigateBack({});
+					} else {
+						uni.navigateTo({
+							url: `/pages/doctordetail/doctordetail?doctor=${encodeURIComponent(JSON.stringify(doctor))}`
+						});
+					}
+				},
+				handleSearch() {
+				  // 触发云函数重新获取数据
+				  this.fetchDoctors();
 				}
 			}
-		}
-	};
+		};
 </script>
 
 <style>
 	.page {
-		padding: 0 50rpx;
-		padding-top: 200rpx;
+		height: 100hv;
+	}
+
+	.page-container {
+		min-height: 100vh;
+		position: relative;
+
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
+	}
+
+	.page-container ::-webkit-scrollbar {
+		display: none;
+		/* Chrome/Safari */
+		width: 0 !important;
+		/* 微信小程序可能需要 */
+		height: 0 !important;
 	}
 
 	.search-box {

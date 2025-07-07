@@ -1,6 +1,11 @@
 <template>
 	<view class="page">
-		<custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
+		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+			<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+		  paddingTop: navHeight + 'px',
+		  height: 'calc(100vh - ' + navHeight + 'px)'
+		}" :scroll-top="scrollTop" :show-scrollbar="false">
+		
 
 		<!-- 服务须知弹窗 -->
 		<service-notice-popup ref="serviceNoticePopup" @confirm="onNoticeConfirm"></service-notice-popup>
@@ -183,6 +188,7 @@
 				</scroll-view>
 			</view>
 		</view>
+			</scroll-view>
 	</view>
 </template>
 
@@ -197,6 +203,9 @@
 		},
 		data() {
 			return {
+				navHeight: 0, // 添加导航栏高度存储
+				pageTitle: '服务信息',
+				scrollTop: 0,
 				// 选择科室
 				selectedDepartment: null,
 				// 就诊人特点&需求
@@ -216,6 +225,7 @@
 				selectedDateIndex: 0,
 				selectedTimeIndex: -1,
 				selectedDateTime: '',
+				selectedTime: null,
 				selectedPatientName: '',
 				selectedPatientPhone: '',
 				selectedDoctorName: '',
@@ -290,6 +300,8 @@
 			this.restoreFormData();
 		},
 		onLoad(options) {
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
 			this.loadSavedPhotos();
 			this.initDateTimeList();
 
@@ -355,7 +367,6 @@
 		},
 
 		onUnload() {
-			// 可选：保存数据
 		},
 
 		onBackPress() {
@@ -385,6 +396,13 @@
 		},
 
 		methods: {
+			//监视页面滚动情况
+			handleScroll(e) {
+				if (this.scrollTimer) clearTimeout(this.scrollTimer)
+				this.scrollTimer = setTimeout(() => {
+					this.scrollTop = e.detail.scrollTop
+				}, 16) // 约60fps
+			},
 			// 提交订单处理函数
 			handleSubmitOrder() {
 				console.log('提交订单事件触发，开始验证表单');
@@ -497,9 +515,9 @@
 
 			loadDoctorInfo() {
 				const doctor = uni.getStorageSync('selectedDoctor');
-				console.log("获取医生信息：" + doctor._id);
+				console.log("获取医生信息：" + doctor.user_id);
 				if (doctor) {
-					this.selectDoctorId = doctor._id;
+					this.selectDoctorId = doctor.user_id;
 					this.selectedDoctorName = doctor.name || '';
 				}
 			},
@@ -575,12 +593,28 @@
 			},
 
 			clearFormData() {
-				uni.removeStorageSync(this.STORAGE_KEY);
 				this.selectedDepartment = null;
-				this.selectedCheckboxes = [];
-				this.photoList = [];
-				this.selectedDateTime = '';
-				this.customRequirements = '';
+				        this.selectedCheckboxes = [];
+				        this.photoList = [];
+				        this.selectedDateTime = '';
+				        this.selectedPatientName = '';
+				        this.selectedPatientPhone = '';
+				        this.selectedDoctorName = '';
+				        this.selectDoctorId = '';
+				        this.selectedHospital = '';
+				        this.selectAddress = '';
+				        this.customRequirements = '';
+				        
+				        // 清除本地存储的表单数据
+				        uni.removeStorageSync(this.STORAGE_KEY);
+				        // 清除图片缓存
+				        uni.removeStorageSync('photoList');
+				        // 清除地址缓存
+				        uni.removeStorageSync('selectedAddress');
+				        // 清除医生缓存
+				        uni.removeStorageSync('selectedDoctor');
+				        // 清除就诊人缓存
+				        uni.removeStorageSync('selectedPatient');
 			},
 
 			goToDepartmentPage() {
@@ -742,6 +776,7 @@
 				const date = this.dateList[this.selectedDateIndex];
 				const time = this.timeList[this.selectedTimeIndex];
 				this.selectedDateTime = `${date.day} ${date.week} ${time}`;
+				// this.selectedTime={date,time}
 				this.hideDateTimePicker();
 			},
 
@@ -756,11 +791,18 @@
 			},
 
 		goToDoctorList() {
+			if(this.selectedDateTime==''){
+				uni.showToast({
+					title: '请先选择时间',
+					icon: 'none'
+				});
+				return;
+			}
 		    this.saveFormData();
 		    uni.setStorageSync('current_service', this.serviceData);
-		    
+		    const selectedTime = this.selectedDateTime;
 		    uni.navigateTo({
-		        url: `/pages/doctorlist/doctorlist?from=order`
+		        url: `/pages/doctorlist/doctorlist?from=order&selectedTime=${selectedTime}`
 		    });
 		},
 
@@ -803,17 +845,31 @@
 	}
 
 	.page {
-		z-index: 1;
-		overflow-y: auto;
-		-webkit-overflow-scrolling: touch;
-		padding-bottom: 50rpx;
-		margin-top: 140rpx;
-		height: 100vh;
-		display: flex;
-		flex-direction: column;
-		background: linear-gradient(#18d1c2, #f2f3f9, white);
+			height: 100vh;
 	}
-
+.page-container {
+		min-height: 100vh;
+		position: relative;
+		
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
+	}
+	
+	.page-container ::-webkit-scrollbar {
+		display: none;
+		/* Chrome/Safari */
+		width: 0 !important;
+		/* 微信小程序可能需要 */
+		height: 0 !important;
+	}
 	.container {
 		height: auto;
 		margin: 0 20rpx;

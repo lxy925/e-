@@ -27,7 +27,6 @@
     "pages/setting/setting",
     "pages/about/about",
     "pages/withdraw/withdraw",
-    "pages/addPatient/addPatient",
     "pages/study/study",
     "pages/showerror/showerror",
     "pages/time/time",

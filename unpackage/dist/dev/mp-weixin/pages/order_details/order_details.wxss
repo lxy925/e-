@@ -146,12 +146,50 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/**index.wxss**/
 	/* pages/order_details/order_details.wxss */
 page.data-v-8cff30ac {
-		/* background: linear-gradient(#18d1c2, #F2F3F9, white); */
-		padding: 0 20rpx;
-		padding-top: 200rpx;
+			height: 100vh;
+}
+.page-container.data-v-8cff30ac {
+		min-height: 100vh;
+		position: relative;
+		
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
+}
+.page-container.data-v-8cff30ac ::-webkit-scrollbar {
+		display: none;
+		/* Chrome/Safari */
+		width: 0 !important;
+		/* 微信小程序可能需要 */
+		height: 0 !important;
 }
 .container.data-v-8cff30ac {
 		margin-top: 200rpx; /* 根据导航栏高度调整 */

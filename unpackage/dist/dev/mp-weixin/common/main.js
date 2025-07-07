@@ -28,7 +28,7 @@ if (typeof globalThis.resolveUniTypeScript === 'undefined') {
 }
 var CustomNav = function CustomNav() {
   __webpack_require__.e(/*! require.ensure | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then((function () {
-    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 530));
+    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 529));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 _vue.default.use(_uviewUi.default);

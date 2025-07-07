@@ -1,9 +1,8 @@
 'use strict';
-const jwt = require('./jwt.js');
 exports.main = async (event, context) => {
 	try {
 		const db = uniCloud.database()
-		let user_id = jwt.verifyToken(event.user_id).userId;
+		let user_id =event.user_id
 		const tempData = event.tempData
 		// 获取本周一的日期
 		const currentDate = new Date()

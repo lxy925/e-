@@ -1,6 +1,4 @@
 'use strict';
-
-const jwt = require('./jwt.js');
 const db = uniCloud.database();
 const _ = db.command;
 const $ = db.command.aggregate; // 确保 $ 是聚合查询操作符
@@ -10,30 +8,14 @@ exports.main = async (event, context) => {
   const { user_id, type } = event.userInfo;
   // const refreshToken = event.refreshToken;
   console.log(event.userInfo)
-console.log(user_id)
-  if (!user_id) {
-    return { code: 401, msg: '未提供Token' };
-  }
-
   try {
-    // 1. 验证主token
-    let decoded = jwt.verifyToken(user_id);
-    let openid = decoded.userId;
-	console.log(decoded);
-    console.log(openid, type);
-    
-    if (!openid) {
-      return { code: 403, msg: 'Token无效' };
-    }
 
     // 2. 获取用户数据
-    let userInfo = await getUserFromDB(openid, type, user_id);
+    let userInfo = await getUserFromDB(user_id, type);
 	userInfo.userInfo.user_id=user_id;
 	if(type=="陪诊师"){
-		const withdrawStats = await getWithdrawStats(openid);
+		const withdrawStats = await getWithdrawStats(user_id);
 		userInfo.userInfo.withdrawStats = withdrawStats;
-		userInfo.userInfo.moreInfo.user_id=user_id;
-		userInfo.userInfo.accountInfo.user_id=user_id;
 	}
 	
 	console.log("userInfo",userInfo.userInfo)

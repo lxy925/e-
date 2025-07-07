@@ -176,12 +176,6 @@
 			}
 		},
 		{
-			"path": "pages/addPatient/addPatient",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
 			"path": "pages/study/study",
 			"style": {
 				"navigationBarTitleText": "考证题库"

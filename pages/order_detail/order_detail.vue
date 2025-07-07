@@ -1,10 +1,11 @@
 <template>
 	<view class="order-detail">
-		<!-- 顶部导航栏 -->
-		<custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
-
-		<!-- 导航栏占位元素，防止内容被固定导航栏遮挡 -->
-		<view class="nav-placeholder" style="height: 88rpx;"></view>
+		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+			<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+		  paddingTop: navHeight + 'px',
+		  height: 'calc(100vh - ' + navHeight + 'px)'
+		}" :scroll-top="scrollTop" :show-scrollbar="false">
+		
 
 		<view class="content">
 			<!-- 支付组件 -->
@@ -137,6 +138,7 @@
 				</div>
 			</view>
 		</view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -147,6 +149,9 @@
 		},
 		data() {
 			return {
+				navHeight: 0, // 添加导航栏高度存储
+				pageTitle: '服务详情',
+				scrollTop: 0,
 				orderId: '684b07d055b33785618444cc',
 				orderInfo: {
 					order_no: 'ORD1749747664843887',
@@ -190,6 +195,8 @@
 			}
 		},
 		onLoad(options) {
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
 			console.log('接收到的订单参数:', options);
 
 			if (options && options.orderId) {
@@ -216,6 +223,13 @@
 			this.clearTimer();
 		},
 		methods: {
+			//监视页面滚动情况
+			handleScroll(e) {
+				if (this.scrollTimer) clearTimeout(this.scrollTimer)
+				this.scrollTimer = setTimeout(() => {
+					this.scrollTop = e.detail.scrollTop
+				}, 16) // 约60fps
+			},
 			// 统一的订单数据加载方法
 			async loadOrderData() {
 				try {
@@ -559,26 +573,34 @@
 </script>
 
 <style>
-	/* 导航栏样式 */
-	.custom-nav {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		z-index: 999;
-		transition: all 0.3s ease;
-		background-color: #15cbbc;
-		height: 88rpx;
-		/* 明确设置高度 */
+
+	.page-container {
+		min-height: 100vh;
+		position: relative;
+		
+		
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
 	}
+	
+	.page-container ::-webkit-scrollbar {
+		display: none;
+		/* Chrome/Safari */
+		width: 0 !important;
+		/* 微信小程序可能需要 */
+		height: 0 !important;
+	}
+	
 
 	/* 基础布局样式 */
 	.order-detail {
-		display: block;
-		min-height: 100vh;
-		margin-top: 88rpx;
-		/* 移除过大的顶部边距 */
-		padding-bottom: 30rpx;
+		height: 100vh;
 	}
 
 	/* 导航栏占位元素 */

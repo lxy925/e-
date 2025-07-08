@@ -1,194 +1,195 @@
 <template>
 	<view class="page">
 		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
-			<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
 		  paddingTop: navHeight + 'px',
 		  height: 'calc(100vh - ' + navHeight + 'px)'
 		}" :scroll-top="scrollTop" :show-scrollbar="false">
-		
 
-		<!-- 服务须知弹窗 -->
-		<service-notice-popup ref="serviceNoticePopup" @confirm="onNoticeConfirm"></service-notice-popup>
 
-		<view class="container">
-			<view class="userinfo">
-				<view class="appointment-info">
-					<image src="../../static/images/order/icon_1.png" class="icon" />
-					<text class="title">预约信息</text>
-				</view>
-				<!-- 输入框错误状态 -->
-				<view class="input-group" :class="{ 'error-field': fieldErrors.patient }">
-					<text class="label">就诊人<span class="required">*</span></text>
-					<input class="input" placeholder="请选择就诊人" :value="selectedPatientName"
-						@click="goToPatientManagement" />
+			<!-- 服务须知弹窗 -->
+			<service-notice-popup ref="serviceNoticePopup" @confirm="onNoticeConfirm"></service-notice-popup>
+
+			<view class="container">
+				<view class="userinfo">
+					<view class="appointment-info">
+						<image src="../../static/images/order/icon_1.png" class="icon" />
+						<text class="title">预约信息</text>
+					</view>
+					<!-- 输入框错误状态 -->
+					<view class="input-group" :class="{ 'error-field': fieldErrors.patient }">
+						<text class="label">就诊人<span class="required">*</span></text>
+						<input class="input" placeholder="请选择就诊人" :value="selectedPatientName"
+							@click="goToPatientManagement" />
+					</view>
+
+					<view class="input-group" :class="{ 'error-field': fieldErrors.hospital }">
+						<text class="label">服务医院<span class="required">*</span></text>
+						<input class="input" placeholder="请选择医院" :value="selectedHospital"
+							@click="goToSelectHospitals" />
+					</view>
+
+					<view class="input-group" :class="{ 'error-field': fieldErrors.datetime }">
+						<text class="label">服务时间<span class="required">*</span></text>
+						<input class="input" placeholder="请选择服务时间" :value="selectedDateTime" @tap="showDateTimePicker"
+							disabled />
+					</view>
+
+					<view class="input-group">
+						<text class="label">陪诊师</text>
+						<input class="input" disabled placeholder="请选择陪诊师" :value="selectedDoctorName"
+							@click="goToDoctorList" />
+					</view>
+					<view class="input-group" v-if="include_transport" :class="{ 'error-field': fieldErrors.address }">
+						<text class="label">接送地点<span class="required">*</span></text>
+						<input class="input" placeholder="请选择地址" :value="selectAddress" @click="goToAddressList" />
+					</view>
+					<view class="note-info">
+						<image src="../../static/images/order/icon_2.png" class="icon" />
+						<text class="note">若不填陪诊师，我们将为您自动匹配优秀陪诊师</text>
+					</view>
 				</view>
 
-				<view class="input-group" :class="{ 'error-field': fieldErrors.hospital }">
-					<text class="label">服务医院<span class="required">*</span></text>
-					<input class="input" placeholder="请选择医院" :value="selectedHospital" @click="goToSelectHospitals" />
+				<view class="department">
+					<text class="label_1">科室</text>
+					<text class="more" @tap="goToDepartmentPage">更多>></text>
+					<view class="department-list">
+						<view v-if="selectedDepartment" class="selected-department">{{ selectedDepartment }}</view>
+						<button :class="['department-item', 'top-margin', { selected: selectedDepartment === '儿科' }]"
+							data-department="儿科" @tap="selectDepartment">儿科</button>
+						<button :class="['department-item', 'top-margin', { selected: selectedDepartment === '妇产科' }]"
+							data-department="妇产科" @tap="selectDepartment">妇产科</button>
+						<button :class="['department-item', 'top-margin', { selected: selectedDepartment === '内科' }]"
+							data-department="内科" @tap="selectDepartment">内科</button>
+						<button :class="['department-item', { selected: selectedDepartment === '外科' }]"
+							data-department="外科" @tap="selectDepartment">外科</button>
+						<button :class="['department-item', { selected: selectedDepartment === '精神科' }]"
+							data-department="精神科" @tap="selectDepartment">精神科</button>
+						<button :class="['department-item', { selected: selectedDepartment === '心胸外科' }]"
+							data-department="心胸外科" @tap="selectDepartment">心胸外科</button>
+						<button :class="['department-item', { selected: selectedDepartment === '耳鼻喉科' }]"
+							data-department="耳鼻喉科" @tap="selectDepartment">耳鼻喉科</button>
+						<button :class="['department-item', { selected: selectedDepartment === '中医科' }]"
+							data-department="中医科" @tap="selectDepartment">中医科</button>
+						<button :class="['department-item', { selected: selectedDepartment === '眼科' }]"
+							data-department="眼科" @tap="selectDepartment">眼科</button>
+					</view>
 				</view>
 
-				<view class="input-group" :class="{ 'error-field': fieldErrors.datetime }">
-					<text class="label">服务时间<span class="required">*</span></text>
-					<input class="input" placeholder="请选择服务时间" :value="selectedDateTime" @tap="showDateTimePicker"
-						disabled />
+				<view class="upload-section">
+					<view class="upload-labels">
+						<text class="label_1">上传材料</text>
+						<text class="label_2">(就诊卡、病例、挂号记录等)</text>
+					</view>
+					<button class="upload-button" @tap="chooseImage">
+						<image src="../../static/images/order/icon_3.png" class="upload-icon" />
+						<text class="upload-text">添加图片</text>
+					</button>
+					<view class="photo-list">
+						<view v-for="(item, index) in photoList" :key="index" class="photo-container">
+							<image class="photo" :src="item" mode="aspectFit" />
+							<image src="../../static/images/order/icon_8.png" class="delete-button" @tap="deletePhoto"
+								:data-index="index" />
+						</view>
+					</view>
 				</view>
 
-				<view class="input-group">
-					<text class="label">陪诊师</text>
-					<input class="input" disabled placeholder="请选择陪诊师" :value="selectedDoctorName"
-						@click="goToDoctorList" />
-				</view>
-				<view class="input-group" v-if="include_transport" :class="{ 'error-field': fieldErrors.address }">
-					<text class="label">接送地点<span class="required">*</span></text>
-					<input class="input" placeholder="请选择地址" :value="selectAddress" @click="goToAddressList" />
-				</view>
-				<view class="note-info">
-					<image src="../../static/images/order/icon_2.png" class="icon" />
-					<text class="note">若不填陪诊师，我们将为您自动匹配优秀陪诊师</text>
-				</view>
-			</view>
+				<view class="requirements">
+					<text class="label_1">就诊人特点及陪诊需求</text>
 
-			<view class="department">
-				<text class="label_1">科室</text>
-				<text class="more" @tap="goToDepartmentPage">更多>></text>
-				<view class="department-list">
-					<view v-if="selectedDepartment" class="selected-department">{{ selectedDepartment }}</view>
-					<button :class="['department-item', 'top-margin', { selected: selectedDepartment === '儿科' }]"
-						data-department="儿科" @tap="selectDepartment">儿科</button>
-					<button :class="['department-item', 'top-margin', { selected: selectedDepartment === '妇产科' }]"
-						data-department="妇产科" @tap="selectDepartment">妇产科</button>
-					<button :class="['department-item', 'top-margin', { selected: selectedDepartment === '内科' }]"
-						data-department="内科" @tap="selectDepartment">内科</button>
-					<button :class="['department-item', { selected: selectedDepartment === '外科' }]" data-department="外科"
-						@tap="selectDepartment">外科</button>
-					<button :class="['department-item', { selected: selectedDepartment === '精神科' }]"
-						data-department="精神科" @tap="selectDepartment">精神科</button>
-					<button :class="['department-item', { selected: selectedDepartment === '心胸外科' }]"
-						data-department="心胸外科" @tap="selectDepartment">心胸外科</button>
-					<button :class="['department-item', { selected: selectedDepartment === '耳鼻喉科' }]"
-						data-department="耳鼻喉科" @tap="selectDepartment">耳鼻喉科</button>
-					<button :class="['department-item', { selected: selectedDepartment === '中医科' }]"
-						data-department="中医科" @tap="selectDepartment">中医科</button>
-					<button :class="['department-item', { selected: selectedDepartment === '眼科' }]" data-department="眼科"
-						@tap="selectDepartment">眼科</button>
-				</view>
-			</view>
+					<!-- 就诊人特点分组 -->
+					<view class="requirements-group">
+						<text class="group-title">就诊人特点</text>
+						<view class="requirements-list">
+							<label v-for="item in patientFeatures" :key="item.value" class="custom-checkbox"
+								:class="{ selected: selectedCheckboxes.includes(item.value) }" @tap="toggleCheckbox"
+								:data-value="item.value">
+								<text class="checkbox-text">{{ item.label }}</text>
+								<checkbox :value="item.value" class="hidden-checkbox" />
+							</label>
+						</view>
+					</view>
 
-			<view class="upload-section">
-				<view class="upload-labels">
-					<text class="label_1">上传材料</text>
-					<text class="label_2">(就诊卡、病例、挂号记录等)</text>
-				</view>
-				<button class="upload-button" @tap="chooseImage">
-					<image src="../../static/images/order/icon_3.png" class="upload-icon" />
-					<text class="upload-text">添加图片</text>
-				</button>
-				<view class="photo-list">
-					<view v-for="(item, index) in photoList" :key="index" class="photo-container">
-						<image class="photo" :src="item" mode="aspectFit" />
-						<image src="../../static/images/order/icon_8.png" class="delete-button" @tap="deletePhoto"
-							:data-index="index" />
+					<!-- 沟通需求分组 -->
+					<view class="requirements-group">
+						<text class="group-title">沟通需求</text>
+						<view class="requirements-list">
+							<label v-for="item in communicationNeeds" :key="item.value" class="custom-checkbox"
+								:class="{ selected: selectedCheckboxes.includes(item.value) }" @tap="toggleCheckbox"
+								:data-value="item.value">
+								<text class="checkbox-text">{{ item.label }}</text>
+								<checkbox :value="item.value" class="hidden-checkbox" />
+							</label>
+						</view>
+					</view>
+
+					<!-- 陪诊师偏好分组 -->
+					<view class="requirements-group">
+						<text class="group-title">陪诊师偏好</text>
+						<view class="requirements-list">
+							<label v-for="item in doctorPreferences" :key="item.value" class="custom-checkbox"
+								:class="{ selected: selectedCheckboxes.includes(item.value) }" @tap="toggleCheckbox"
+								:data-value="item.value">
+								<text class="checkbox-text">{{ item.label }}</text>
+								<checkbox :value="item.value" class="hidden-checkbox" />
+							</label>
+						</view>
+					</view>
+
+					<!-- 自定义需求描述 -->
+					<view class="requirements-textarea">
+						<text class="textarea-label">其他特殊需求描述</text>
+						<textarea v-model="customRequirements" placeholder="请输入您的特殊需求（如：需要轮椅服务、语言翻译等）"
+							placeholder-class="textarea-placeholder" auto-height maxlength="500"
+							@input="onCustomRequirementsInput"></textarea>
+						<text class="char-count">{{ customRequirements.length }}/500</text>
 					</view>
 				</view>
 			</view>
 
-			<view class="requirements">
-				<text class="label_1">就诊人特点及陪诊需求</text>
-
-				<!-- 就诊人特点分组 -->
-				<view class="requirements-group">
-					<text class="group-title">就诊人特点</text>
-					<view class="requirements-list">
-						<label v-for="item in patientFeatures" :key="item.value" class="custom-checkbox"
-							:class="{ selected: selectedCheckboxes.includes(item.value) }" @tap="toggleCheckbox"
-							:data-value="item.value">
-							<text class="checkbox-text">{{ item.label }}</text>
-							<checkbox :value="item.value" class="hidden-checkbox" />
-						</label>
+			<view class="submit">
+				<view class="total">
+					<view class="total-info">
+						<text class="total-label">总额</text>
+						<text class="currency" style="color: black;">¥</text>
+						<span class="total-amount" style="color:#DD5858;">{{ service_price }}</span>
 					</view>
 				</view>
+				<!-- 修改支付组件调用 -->
+				<template>
+					<!-- 主页面模板中支付组件的调用 -->
+					<payment-component :buttonText="buttonText" :orderInfo="orderInfo" :servicePrice="service_price"
+						:serviceId="serviceData.service_id" :serviceName="serviceData.service_name"
+						:serviceDesc="serviceData.service_desc" :formValid="formValid" :requiredErrors="fieldErrors"
+						buttonText="提交订单" :missingOptional="missingOptionalFields" ref="paymentComponent" />
+				</template>
+			</view>
 
-				<!-- 沟通需求分组 -->
-				<view class="requirements-group">
-					<text class="group-title">沟通需求</text>
-					<view class="requirements-list">
-						<label v-for="item in communicationNeeds" :key="item.value" class="custom-checkbox"
-							:class="{ selected: selectedCheckboxes.includes(item.value) }" @tap="toggleCheckbox"
-							:data-value="item.value">
-							<text class="checkbox-text">{{ item.label }}</text>
-							<checkbox :value="item.value" class="hidden-checkbox" />
-						</label>
-					</view>
+			<!-- 日期时间选择器 -->
+			<view class="datetime-picker-mask" v-if="showPicker" @tap="hideDateTimePicker"></view>
+			<view class="datetime-picker" :class="{ 'picker-show': showPicker }">
+				<view class="picker-header">
+					<text @tap="hideDateTimePicker">取消</text>
+					<text>选择服务时间</text>
+					<text @tap="confirmDateTime">确定</text>
 				</view>
-
-				<!-- 陪诊师偏好分组 -->
-				<view class="requirements-group">
-					<text class="group-title">陪诊师偏好</text>
-					<view class="requirements-list">
-						<label v-for="item in doctorPreferences" :key="item.value" class="custom-checkbox"
-							:class="{ selected: selectedCheckboxes.includes(item.value) }" @tap="toggleCheckbox"
-							:data-value="item.value">
-							<text class="checkbox-text">{{ item.label }}</text>
-							<checkbox :value="item.value" class="hidden-checkbox" />
-						</label>
-					</view>
-				</view>
-
-				<!-- 自定义需求描述 -->
-				<view class="requirements-textarea">
-					<text class="textarea-label">其他特殊需求描述</text>
-					<textarea v-model="customRequirements" placeholder="请输入您的特殊需求（如：需要轮椅服务、语言翻译等）"
-						placeholder-class="textarea-placeholder" auto-height maxlength="500"
-						@input="onCustomRequirementsInput"></textarea>
-					<text class="char-count">{{ customRequirements.length }}/500</text>
+				<view class="picker-content">
+					<scroll-view class="date-list" scroll-y>
+						<view v-for="(date, index) in dateList" :key="index"
+							:class="['date-item', { active: selectedDateIndex === index }]" @tap="selectDate(index)">
+							<text class="day">{{ date.day }}</text>
+							<text class="week">{{ date.week }}</text>
+						</view>
+					</scroll-view>
+					<scroll-view class="time-list" scroll-y>
+						<view v-for="(time, index) in timeList" :key="index"
+							:class="['time-item', { active: selectedTimeIndex === index }]" @tap="selectTime(index)">
+							{{ time }}
+						</view>
+					</scroll-view>
 				</view>
 			</view>
-		</view>
-
-		<view class="submit">
-			<view class="total">
-				<view class="total-info">
-					<text class="total-label">总额</text>
-					<text class="currency" style="color: black;">¥</text>
-					<span class="total-amount" style="color:#DD5858;">{{ service_price }}</span>
-				</view>
-			</view>
-			<!-- 修改支付组件调用 -->
-			<template>
-				<!-- 主页面模板中支付组件的调用 -->
-				<payment-component :buttonText="buttonText" :orderInfo="orderInfo" :servicePrice="service_price"
-					:serviceId="serviceData.service_id" :serviceName="serviceData.service_name"
-					:serviceDesc="serviceData.service_desc" :formValid="formValid" :requiredErrors="fieldErrors"
-					buttonText="提交订单" :missingOptional="missingOptionalFields" ref="paymentComponent" />
-			</template>
-		</view>
-
-		<!-- 日期时间选择器 -->
-		<view class="datetime-picker-mask" v-if="showPicker" @tap="hideDateTimePicker"></view>
-		<view class="datetime-picker" :class="{ 'picker-show': showPicker }">
-			<view class="picker-header">
-				<text @tap="hideDateTimePicker">取消</text>
-				<text>选择服务时间</text>
-				<text @tap="confirmDateTime">确定</text>
-			</view>
-			<view class="picker-content">
-				<scroll-view class="date-list" scroll-y>
-					<view v-for="(date, index) in dateList" :key="index"
-						:class="['date-item', { active: selectedDateIndex === index }]" @tap="selectDate(index)">
-						<text class="day">{{ date.day }}</text>
-						<text class="week">{{ date.week }}</text>
-					</view>
-				</scroll-view>
-				<scroll-view class="time-list" scroll-y>
-					<view v-for="(time, index) in timeList" :key="index"
-						:class="['time-item', { active: selectedTimeIndex === index }]" @tap="selectTime(index)">
-						{{ time }}
-					</view>
-				</scroll-view>
-			</view>
-		</view>
-			</scroll-view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -300,6 +301,7 @@
 			this.restoreFormData();
 		},
 		onLoad(options) {
+			uni.$on('clear-order-form-data', this.clearFormData);
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
 			this.loadSavedPhotos();
@@ -367,6 +369,8 @@
 		},
 
 		onUnload() {
+			// 移除监听，避免内存泄漏
+			uni.$off('clear-order-form-data', this.clearFormData);
 		},
 
 		onBackPress() {
@@ -548,44 +552,44 @@
 					.selectedDateTime;
 			},
 
-		saveFormData() {
-		    const formData = {
-		        selectedDepartment: this.selectedDepartment,
-		        selectedCheckboxes: this.selectedCheckboxes,
-		        photoList: this.photoList,
-		        selectedDateTime: this.selectedDateTime,
-		        selectedPatientName: this.selectedPatientName,
-		        selectedDoctorName: this.selectedDoctorName,
-		        selectAddress: this.selectAddress,
-		        customRequirements: this.customRequirements,
-		        serviceData: this.serviceData, // 新增服务数据保存
-		        service_price: this.service_price, // 新增价格保存
-		        timestamp: new Date().getTime()
-		    };
-		    uni.setStorageSync(this.STORAGE_KEY, formData);
-		},
+			saveFormData() {
+				const formData = {
+					selectedDepartment: this.selectedDepartment,
+					selectedCheckboxes: this.selectedCheckboxes,
+					photoList: this.photoList,
+					selectedDateTime: this.selectedDateTime,
+					selectedPatientName: this.selectedPatientName,
+					selectedDoctorName: this.selectedDoctorName,
+					selectAddress: this.selectAddress,
+					customRequirements: this.customRequirements,
+					serviceData: this.serviceData, // 新增服务数据保存
+					service_price: this.service_price, // 新增价格保存
+					timestamp: new Date().getTime()
+				};
+				uni.setStorageSync(this.STORAGE_KEY, formData);
+			},
 
 			restoreFormData() {
-			    const savedData = uni.getStorageSync(this.STORAGE_KEY);
-			    if (savedData && !this.isDataExpired(savedData.timestamp)) {
-			        // 恢复表单数据
-			        if (!this.selectedDepartment) this.selectedDepartment = savedData.selectedDepartment;
-			        if (!this.selectedCheckboxes) this.selectedCheckboxes = savedData.selectedCheckboxes;
-			        if (!this.photoList) this.photoList = savedData.photoList;
-			        if (!this.selectedDateTime) this.selectedDateTime = savedData.selectedDateTime;
-			        if (!this.selectedPatientName) this.selectedPatientName = savedData.selectedPatientName;
-			        if (!this.selectedDoctorName) this.selectedDoctorName = savedData.selectedDoctorName;
-			        if (!this.selectAddress) this.selectAddress = savedData.selectAddress;
-			        if (!this.customRequirements) this.customRequirements = savedData.customRequirements || '';
-			        
-			        // 恢复服务数据
-			        if (savedData.serviceData) {
-			            this.serviceData = savedData.serviceData;
-			            this.service_price = savedData.service_price;
-			        }
-			    } else {
-			        uni.removeStorageSync(this.STORAGE_KEY);
-			    }
+				const savedData = uni.getStorageSync(this.STORAGE_KEY);
+				if (savedData && !this.isDataExpired(savedData.timestamp)) {
+					// 恢复表单数据
+					if (!this.selectedDepartment) this.selectedDepartment = savedData.selectedDepartment;
+					if (!this.selectedCheckboxes) this.selectedCheckboxes = savedData.selectedCheckboxes;
+					if (!this.photoList) this.photoList = savedData.photoList;
+					if (!this.selectedDateTime) this.selectedDateTime = savedData.selectedDateTime;
+					if (!this.selectedPatientName) this.selectedPatientName = savedData.selectedPatientName;
+					if (!this.selectedDoctorName) this.selectedDoctorName = savedData.selectedDoctorName;
+					if (!this.selectAddress) this.selectAddress = savedData.selectAddress;
+					if (!this.customRequirements) this.customRequirements = savedData.customRequirements || '';
+
+					// 恢复服务数据
+					if (savedData.serviceData) {
+						this.serviceData = savedData.serviceData;
+						this.service_price = savedData.service_price;
+					}
+				} else {
+					uni.removeStorageSync(this.STORAGE_KEY);
+				}
 			},
 
 			isDataExpired(timestamp) {
@@ -593,28 +597,41 @@
 			},
 
 			clearFormData() {
+				// 重置所有表单数据
 				this.selectedDepartment = null;
-				        this.selectedCheckboxes = [];
-				        this.photoList = [];
-				        this.selectedDateTime = '';
-				        this.selectedPatientName = '';
-				        this.selectedPatientPhone = '';
-				        this.selectedDoctorName = '';
-				        this.selectDoctorId = '';
-				        this.selectedHospital = '';
-				        this.selectAddress = '';
-				        this.customRequirements = '';
-				        
-				        // 清除本地存储的表单数据
-				        uni.removeStorageSync(this.STORAGE_KEY);
-				        // 清除图片缓存
-				        uni.removeStorageSync('photoList');
-				        // 清除地址缓存
-				        uni.removeStorageSync('selectedAddress');
-				        // 清除医生缓存
-				        uni.removeStorageSync('selectedDoctor');
-				        // 清除就诊人缓存
-				        uni.removeStorageSync('selectedPatient');
+				this.selectedCheckboxes = [];
+				this.photoList = [];
+				this.selectedDateTime = '';
+				this.selectedPatientName = '';
+				this.selectedPatientPhone = '';
+				this.selectedDoctorName = '';
+				this.selectDoctorId = '';
+				this.selectedHospital = '';
+				this.selectAddress = '';
+				this.customRequirements = '';
+
+				// 清除本地缓存
+				uni.removeStorageSync('selectedAddress');
+				uni.removeStorageSync('selectedDoctor');
+				uni.removeStorageSync('selectedPatient');
+				uni.removeStorageSync('photoList');
+
+				// 删除已上传的图片文件（如果有）
+				this.clearPhotoCache();
+			},
+
+			clearPhotoCache() {
+				if (this.photoList && this.photoList.length > 0) {
+					const fs = uni.getFileSystemManager();
+					this.photoList.forEach(path => {
+						try {
+							fs.unlinkSync(path); // 删除物理文件
+						} catch (e) {
+							console.error('删除文件失败:', e);
+						}
+					});
+					this.photoList = [];
+				}
 			},
 
 			goToDepartmentPage() {
@@ -781,30 +798,30 @@
 			},
 
 			goToPatientManagement() {
-			    // 跳转前保存所有数据
-			    this.saveFormData();
-			    uni.setStorageSync('current_service', this.serviceData);
-			    
-			    uni.navigateTo({
-			        url: '/pages/patientManagement/patientManagement'
-			    });
+				// 跳转前保存所有数据
+				this.saveFormData();
+				uni.setStorageSync('current_service', this.serviceData);
+
+				uni.navigateTo({
+					url: '/pages/patientManagement/patientManagement'
+				});
 			},
 
-		goToDoctorList() {
-			if(this.selectedDateTime==''){
-				uni.showToast({
-					title: '请先选择时间',
-					icon: 'none'
+			goToDoctorList() {
+				if (this.selectedDateTime == '') {
+					uni.showToast({
+						title: '请先选择时间',
+						icon: 'none'
+					});
+					return;
+				}
+				this.saveFormData();
+				uni.setStorageSync('current_service', this.serviceData);
+				const selectedTime = this.selectedDateTime;
+				uni.navigateTo({
+					url: `/pages/doctorlist/doctorlist?from=order&selectedTime=${selectedTime}`
 				});
-				return;
-			}
-		    this.saveFormData();
-		    uni.setStorageSync('current_service', this.serviceData);
-		    const selectedTime = this.selectedDateTime;
-		    uni.navigateTo({
-		        url: `/pages/doctorlist/doctorlist?from=order&selectedTime=${selectedTime}`
-		    });
-		},
+			},
 
 			goToAddressList() {
 				uni.navigateTo({
@@ -845,12 +862,13 @@
 	}
 
 	.page {
-			height: 100vh;
+		height: 100vh;
 	}
-.page-container {
+
+	.page-container {
 		min-height: 100vh;
 		position: relative;
-		
+
 		padding-left: 25rpx;
 		padding-right: 25rpx;
 		margin: 0;
@@ -862,7 +880,7 @@
 		scrollbar-width: none;
 		/* Firefox */
 	}
-	
+
 	.page-container ::-webkit-scrollbar {
 		display: none;
 		/* Chrome/Safari */
@@ -870,6 +888,7 @@
 		/* 微信小程序可能需要 */
 		height: 0 !important;
 	}
+
 	.container {
 		height: auto;
 		margin: 0 20rpx;

@@ -388,22 +388,6 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 var _default = {
   data: function data() {
     return {
@@ -448,6 +432,7 @@ var _default = {
       this.selectTime('today');
     }
   },
+  onUnload: function onUnload() {},
   methods: {
     //监视页面滚动情况
     handleScroll: function handleScroll(e) {
@@ -456,6 +441,11 @@ var _default = {
       this.scrollTimer = setTimeout(function () {
         _this.scrollTop = e.detail.scrollTop;
       }, 16); // 约60fps
+    },
+    goSetting: function goSetting() {
+      uni.navigateTo({
+        url: "/pages/install/install"
+      });
     },
     goToSetTime: function goToSetTime() {
       uni.navigateTo({
@@ -486,11 +476,8 @@ var _default = {
     },
     initUserInfo: function initUserInfo() {
       var userInfo = uni.getStorageSync("userInfo");
-      console.log("初始化后的值：", userInfo);
-      if (userInfo) {
-        this.userInfo = userInfo;
-        this.getUser();
-      }
+      this.userInfo = userInfo;
+      this.getUser();
     },
     getUser: function getUser() {
       var _this2 = this;
@@ -558,26 +545,6 @@ var _default = {
           }
         }, _callee, null, [[2, 11, 14, 17]]);
       }))();
-    },
-    logout: function logout() {
-      uni.removeStorageSync("userInfo");
-      uni.removeStorageSync("token");
-      uni.removeStorageSync("refreshToken");
-      this.userInfo = {
-        user_id: '',
-        nickName: '',
-        realName: '',
-        idCard: '',
-        phoneNumber: '',
-        avatar: '',
-        type: '',
-        moreInfo: {}
-      };
-      uni.showToast({
-        title: "退出登录成功",
-        icon: "success",
-        duration: 2000
-      });
     },
     // 处理头部点击事件
     handleHeaderClick: function handleHeaderClick() {
@@ -676,19 +643,6 @@ var _default = {
         });
         return;
       }
-
-      // const currentUserInfo = {
-      // 	_id: this.userInfo._id,
-      // 	user_id: this.userInfo.user_id,
-      // 	type: this.userInfo.type,
-      // 	nickName: this.userInfo.nickName,
-      // 	realName: this.userInfo.realName,
-      // 	avatar: this.userInfo.avatar,
-      // 	phone: this.userInfo.phone
-      // };
-
-      // console.log('准备存储的用户信息：', currentUserInfo);
-      // uni.setStorageSync('currentUserInfo', currentUserInfo);
       uni.navigateTo({
         url: '/pages/chatList/chatList',
         fail: function fail(err) {
@@ -698,6 +652,11 @@ var _default = {
             icon: 'none'
           });
         }
+      });
+    },
+    goMyAddress: function goMyAddress() {
+      uni.navigateTo({
+        url: '/pages/myAddress/myAddress'
       });
     },
     goBack: function goBack() {

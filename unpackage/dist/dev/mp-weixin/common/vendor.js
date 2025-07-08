@@ -18698,6 +18698,11 @@ var _default = {
     "style": {
       "navigationBarTitleText": ""
     }
+  }, {
+    "path": "pages/help/help",
+    "style": {
+      "navigationBarTitleText": ""
+    }
   }],
   "globalStyle": {
     "backgroundColor": "#0bd6c8",
@@ -60889,7 +60894,15 @@ exports.default = _default;
 /* 679 */,
 /* 680 */,
 /* 681 */,
-/* 682 */
+/* 682 */,
+/* 683 */,
+/* 684 */,
+/* 685 */,
+/* 686 */,
+/* 687 */,
+/* 688 */,
+/* 689 */,
+/* 690 */
 /*!************************************************************!*\
   !*** D:/陪诊小程序/e-/uni_modules/vk-uni-pay/js_sdk/vk-util.js ***!
   \************************************************************/
@@ -61232,12 +61245,12 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27)["uniCloud"]))
 
 /***/ }),
-/* 683 */,
-/* 684 */,
-/* 685 */,
-/* 686 */,
-/* 687 */,
-/* 688 */
+/* 691 */,
+/* 692 */,
+/* 693 */,
+/* 694 */,
+/* 695 */,
+/* 696 */
 /*!*****************************************************************************!*\
   !*** D:/陪诊小程序/e-/uni_modules/vk-uni-pay/components/vk-uni-qrcode/qrcode.js ***!
   \*****************************************************************************/
@@ -62248,14 +62261,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 689 */,
-/* 690 */,
-/* 691 */,
-/* 692 */,
-/* 693 */,
-/* 694 */,
-/* 695 */,
-/* 696 */
+/* 697 */,
+/* 698 */,
+/* 699 */,
+/* 700 */,
+/* 701 */,
+/* 702 */,
+/* 703 */,
+/* 704 */
 /*!************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-icons/uniicons_file_vue.js ***!
   \************************************************************************************/
@@ -62758,14 +62771,14 @@ var fontData = [{
 exports.fontData = fontData;
 
 /***/ }),
-/* 697 */,
-/* 698 */,
-/* 699 */,
-/* 700 */,
-/* 701 */,
-/* 702 */,
-/* 703 */,
-/* 704 */
+/* 705 */,
+/* 706 */,
+/* 707 */,
+/* 708 */,
+/* 709 */,
+/* 710 */,
+/* 711 */,
+/* 712 */
 /*!*********************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/index.js ***!
   \*********************************************************************************/
@@ -62780,9 +62793,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 705));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 706));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 707));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 713));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 714));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 715));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -62791,7 +62804,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 705 */
+/* 713 */
 /*!********************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/en.json ***!
   \********************************************************************************/
@@ -62801,7 +62814,7 @@ exports.default = _default;
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show more\",\"uni-load-more.contentrefresh\":\"loading...\",\"uni-load-more.contentnomore\":\"No more data\"}");
 
 /***/ }),
-/* 706 */
+/* 714 */
 /*!*************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hans.json ***!
   \*************************************************************************************/
@@ -62811,7 +62824,7 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show mo
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多\",\"uni-load-more.contentrefresh\":\"正在加载...\",\"uni-load-more.contentnomore\":\"没有更多数据了\"}");
 
 /***/ }),
-/* 707 */
+/* 715 */
 /*!*************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hant.json ***!
   \*************************************************************************************/
@@ -62821,21 +62834,21 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉顯示更多\",\"uni-load-more.contentrefresh\":\"正在加載...\",\"uni-load-more.contentnomore\":\"沒有更多數據了\"}");
 
 /***/ }),
-/* 708 */,
-/* 709 */,
-/* 710 */,
-/* 711 */,
-/* 712 */,
-/* 713 */,
-/* 714 */,
-/* 715 */,
 /* 716 */,
 /* 717 */,
 /* 718 */,
 /* 719 */,
 /* 720 */,
 /* 721 */,
-/* 722 */
+/* 722 */,
+/* 723 */,
+/* 724 */,
+/* 725 */,
+/* 726 */,
+/* 727 */,
+/* 728 */,
+/* 729 */,
+/* 730 */
 /*!***************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-transition/createAnimation.js ***!
   \***************************************************************************************/

@@ -3,7 +3,7 @@
 	      paddingTop: navHeight + 'px',
 	      height: 'calc(100vh - ' + navHeight + 'px)'
 	    }" :scroll-top="scrollTop">
-		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
+		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" />
 		<view class="content" >
 		<!-- 顶部搜索和切换区域 -->
 		<view class="header">
@@ -329,7 +329,7 @@
 			handleScroll(e) {
 				// 直接赋值scrollTop（不需要节流，因为custom-nav内部已经做了立即切换的处理）
 				this.scrollTop = e.detail.scrollTop;
-				console.log("scrollTop")
+				// console.log("scrollTop")
 			},
 						},
 	

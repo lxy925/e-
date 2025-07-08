@@ -1,96 +1,103 @@
 <template>
 	<view class="root-container">
-		<custom-nav title="我的地址" :isHomePage="false" class="nav"></custom-nav>
-		<view class="container">
-			<!-- 地址列表 -->
-			<view class="address-list" v-if="addresses.length > 0">
-				<view class="address-item" v-for="(address, index) in addresses" :key="address._id || index"
-					:class="{ 'default-address': address.isDefault }">
+		<custom-nav :title="title" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+		  paddingTop: navHeight + 'px',
+		  height: 'calc(100vh - ' + navHeight + 'px)'
+		}" :scroll-top="scrollTop" :show-scrollbar="false">
+			<view class="container">
+				<!-- 地址列表 -->
+				<view class="address-list" v-if="addresses.length > 0">
+					<view class="address-item" v-for="(address, index) in addresses" :key="address._id ? address._id : index"
+						:class="{ 'default-address': address.isDefault }">
 
-					<!-- 编辑按钮 -->
-					<image src="../../static/images/address/edit.png" class="edit-btn"
-						@click.stop="editAddress(index)" />
+						<!-- 编辑按钮 -->
+						<image src="../../static/images/address/edit.png" class="edit-btn"
+							@click.stop="editAddress(index)" />
 
-					<!-- 地址内容 -->
-					<view class="address-content" @click="() => selectAddress(address)">
-						<view class="address-district">{{ address.district || '未选择地区' }}</view>
-					<view class="address-detail">{{ address.detail || '未填写详细地址' }}</view>
-						<view class="addressNameAndNumber">{{ address.name || '未填写姓名' }} {{ address.phone || '未填写电话' }}
-						</view>
-					</view>
-				</view>
-			</view>
-			<!-- 无地址提示 -->
-			<view class="no-address" v-else>
-				<view class="image-item" v-if="displayImage">
-					<image :src="displayImage.image" mode="aspectFit" />
-				</view>
-				暂时还没有任何地址
-			</view>
-			<!-- 添加地址按钮 -->
-			<button class="add-address-btn" @click="showAddAddressModal">新增地址</button>
-		</view>
-
-		<!-- 弹出层 -->
-		<view class="modal" :class="{ show: showModal }" @click="hideAddAddressModal">
-			<view class="modal-content" @click.stop>
-				<scroll-view class="scroll-content" scroll-y>
-					<!-- 地图 -->
-					<map id="map" :longitude="longitude" :latitude="latitude" :markers="markers" scale="16"></map>
-
-					<!-- 搜索框 -->
-					<view class="search-box">
-						<button @click="chooseLocation">
-							<img src="../../static/images/address/search.png" class="search-icon"
-								style="width: 50rpx;height: 50rpx; justify-content: center;" />搜索地址，更快填写
-						</button>
-					</view>
-
-					<view class="modal-body">
-						<view class="input-group">
-							<picker mode="region" @change="handleRegionChange">
-								<view class="street">{{ location.province }} {{ location.city }} {{ location.district }}
-								</view>
-							</picker>
-						</view>
-
-						<view class="input-group">
-							<text class="label">详细地址：</text>
-							<input class="input-field" type="text" v-model="newAddress.detail" placeholder="请输入详细地址"
-								@input="validateDetail" @blur="validateDetail" />
-							<text v-if="errors.detail" class="error-text">{{ errors.detail }}</text>
-						</view>
-
-						<view class="input-group">
-							<text class="label">姓名：</text>
-							<!-- 修改所有input绑定方式，添加.value -->
-							<input class="input-field" type="text" :value="newAddress.name"
-								@input="newAddress.name = $event.detail.value" @blur="validateName"
-								placeholder="请输入姓名" />
-							<text v-if="errors.name" class="error-text">{{ errors.name }}</text>
-						</view>
-
-						<view class="input-group">
-							<text class="label">手机号：</text>
-							<input class="input-field" type="text" v-model="newAddress.phone" placeholder="请输入手机号"
-								@input="validatePhone" @blur="validatePhone" />
-							<text v-if="errors.phone" class="error-text">{{ errors.phone }}</text>
-						</view>
-
-						<view class="input-group">
-							<view class="default-address">
-								<text>设为默认地址</text>
-								<switch v-model="isDefaultAddress" color="#4066b3" />
+						<!-- 地址内容 -->
+						<view class="address-content" @click="() => selectAddress(address)">
+							<view class="address-district">{{ address.district || '未选择地区' }}</view>
+							<view class="address-detail">{{ address.detail || '未填写详细地址' }}</view>
+							<view class="addressNameAndNumber">{{ address.name || '未填写姓名' }}
+								{{ address.phone || '未填写电话' }}
 							</view>
 						</view>
 					</view>
-				</scroll-view>
+				</view>
+				<!-- 无地址提示 -->
+				<view class="no-address" v-else>
+					<view class="image-item" v-if="displayImage">
+						<image :src="displayImage.image" mode="aspectFit" />
+					</view>
+					暂时还没有任何地址
+				</view>
+				<!-- 添加地址按钮 -->
+				<button class="add-address-btn" @click="showAddAddressModal">新增地址</button>
+			</view>
 
-				<view class="modal-footer">
-					<button @click="saveAddress">{{ currentEditIndex !== null ? '保存修改' : '保存地址' }}</button>
+			<!-- 弹出层 -->
+			<view class="modal" :class="{ show: showModal }" @click="hideAddAddressModal">
+				<view class="modal-content" @click.stop>
+					<scroll-view class="scroll-content" scroll-y>
+						<!-- 地图 -->
+						<map id="map" :longitude="longitude" :latitude="latitude" :markers="markers" scale="16"></map>
+
+						<!-- 搜索框 -->
+						<view class="search-box">
+							<button @click="chooseLocation">
+								<img src="../../static/images/address/search.png" class="search-icon"
+									style="width: 50rpx;height: 50rpx; justify-content: center;" />搜索地址，更快填写
+							</button>
+						</view>
+
+						<view class="modal-body">
+							<view class="input-group">
+								<picker mode="region" @change="handleRegionChange">
+									<view class="street">{{ location.province }} {{ location.city }}
+										{{ location.district }}
+									</view>
+								</picker>
+							</view>
+
+							<view class="input-group">
+								<text class="label">详细地址：</text>
+								<input class="input-field" type="text" v-model="newAddress.detail" placeholder="请输入详细地址"
+									@input="validateDetail" @blur="validateDetail" />
+								<text v-if="errors.detail" class="error-text">{{ errors.detail }}</text>
+							</view>
+
+							<view class="input-group">
+								<text class="label">姓名：</text>
+								<!-- 修改所有input绑定方式，添加.value -->
+								<input class="input-field" type="text" :value="newAddress.name"
+									@input="newAddress.name = $event.detail.value" @blur="validateName"
+									placeholder="请输入姓名" />
+								<text v-if="errors.name" class="error-text">{{ errors.name }}</text>
+							</view>
+
+							<view class="input-group">
+								<text class="label">手机号：</text>
+								<input class="input-field" type="text" v-model="newAddress.phone" placeholder="请输入手机号"
+									@input="validatePhone" @blur="validatePhone" />
+								<text v-if="errors.phone" class="error-text">{{ errors.phone }}</text>
+							</view>
+
+							<view class="input-group">
+								<view class="default-address">
+									<text>设为默认地址</text>
+									<switch v-model="isDefaultAddress" color="#4066b3" />
+								</view>
+							</view>
+						</view>
+					</scroll-view>
+
+					<view class="modal-footer">
+						<button @click="saveAddress">{{ currentEditIndex !== null ? '保存修改' : '保存地址' }}</button>
+					</view>
 				</view>
 			</view>
-		</view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -98,6 +105,9 @@
 	export default {
 		data() {
 			return {
+				title:"我的地址",
+				scrollTop: 0,
+				navHeight: 0, // 存储导航栏高度
 				currentEditIndex: null,
 				isManualLocation: false,
 				allImages: [],
@@ -156,12 +166,21 @@
 		onLoad() {
 			console.log('[页面] onLoad钩子执行');
 			this.fetchUserAddresses();
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
 		},
 		onShow() {
 			console.log('[页面] onShow钩子执行');
 			this.getLocationInfo();
 		},
 		methods: {
+			//监视页面滚动情况
+			handleScroll(e) {
+				if (this.scrollTimer) clearTimeout(this.scrollTimer)
+				this.scrollTimer = setTimeout(() => {
+					this.scrollTop = e.detail.scrollTop
+				}, 16) // 约60fps
+			},
 			// 获取用户地址列表
 			async fetchUserAddresses() {
 				try {
@@ -323,30 +342,30 @@
 				}
 
 				try {
-				    // 1. 构建完整地区字符串
-				    const fullDistrict = `${this.location.province} ${this.location.city} ${this.location.district}`;
-				    
-				    // 2. 从详细地址中彻底移除所有地区信息
-				    const cleanDetail = this.newAddress.detail.trim()
-				      .replace(new RegExp(`^${this.location.province}\\s*`, 'i'), '')  // 移除开头的省
-				      .replace(new RegExp(`^${this.location.city}\\s*`, 'i'), '')     // 移除开头的市
-				      .replace(new RegExp(`^${this.location.district}\\s*`, 'i'), '') // 移除开头的区
-				      .replace(new RegExp(`\\s*${this.location.province}$`, 'i'), '') // 移除结尾的省
-				      .replace(new RegExp(`\\s*${this.location.city}$`, 'i'), '')      // 移除结尾的市
-				      .replace(new RegExp(`\\s*${this.location.district}$`, 'i'), '') // 移除结尾的区
-				      .replace(/\s+/g, ' ')  // 合并多余空格
-				      .trim();
+					// 1. 构建完整地区字符串
+					const fullDistrict = `${this.location.province} ${this.location.city} ${this.location.district}`;
+
+					// 2. 从详细地址中彻底移除所有地区信息
+					const cleanDetail = this.newAddress.detail.trim()
+						.replace(new RegExp(`^${this.location.province}\\s*`, 'i'), '') // 移除开头的省
+						.replace(new RegExp(`^${this.location.city}\\s*`, 'i'), '') // 移除开头的市
+						.replace(new RegExp(`^${this.location.district}\\s*`, 'i'), '') // 移除开头的区
+						.replace(new RegExp(`\\s*${this.location.province}$`, 'i'), '') // 移除结尾的省
+						.replace(new RegExp(`\\s*${this.location.city}$`, 'i'), '') // 移除结尾的市
+						.replace(new RegExp(`\\s*${this.location.district}$`, 'i'), '') // 移除结尾的区
+						.replace(/\s+/g, ' ') // 合并多余空格
+						.trim();
 					const addressData = {
-					      name: this.newAddress.name,
-					      phone: this.newAddress.phone,
-					      detail: cleanDetail || '未填写详细地址',  // 确保不为空
-					      district: fullDistrict,
-					      latitude: this.latitude,
-					      longitude: this.longitude,
-					      isDefault: this.isDefaultAddress,
-					      updateTime: new Date()
-					    };
-					    console.log('处理后地址数据:', addressData);
+						name: this.newAddress.name,
+						phone: this.newAddress.phone,
+						detail: cleanDetail || '未填写详细地址', // 确保不为空
+						district: fullDistrict,
+						latitude: this.latitude,
+						longitude: this.longitude,
+						isDefault: this.isDefaultAddress,
+						updateTime: new Date()
+					};
+					console.log('处理后地址数据:', addressData);
 					let res;
 					if (this.currentEditIndex !== null) {
 						addressData._id = this.addresses[this.currentEditIndex]._id;
@@ -502,12 +521,12 @@
 						this.getCityFromCoordinates(res.latitude, res.longitude)
 							.then(region => {
 								this.location = region;
-								  this.newAddress.detail = res.address
-								            .replace(new RegExp(region.province, 'ig'), '')
-								            .replace(new RegExp(region.city, 'ig'), '')
-								            .replace(new RegExp(region.district, 'ig'), '')
-								            .replace(/\s+/g, ' ')
-								            .trim();
+								this.newAddress.detail = res.address
+									.replace(new RegExp(region.province, 'ig'), '')
+									.replace(new RegExp(region.city, 'ig'), '')
+									.replace(new RegExp(region.district, 'ig'), '')
+									.replace(/\s+/g, ' ')
+									.trim();
 							})
 							.catch(() => {
 								this.parseAddressString(res.address);
@@ -560,22 +579,22 @@
 			},
 
 			// 解析地址字符串
-		parseAddressString(address) {
-		  const regex = /^(.*?省|.*?市)?(.*?市|.*?州|.*?区|.*?县)?(.*?区|.*?市|.*?县|.*?镇)?/;
-		  const matches = address.match(regex);
-		
-		  this.location.province = matches[1] || '';
-		  this.location.city = matches[2] || this.location.province;
-		  this.location.district = matches[3] || '';
-		
-		  // 彻底移除所有地区信息
-		  this.newAddress.detail = address
-		    .replace(new RegExp(this.location.province, 'ig'), '')
-		    .replace(new RegExp(this.location.city, 'ig'), '')
-		    .replace(new RegExp(this.location.district, 'ig'), '')
-		    .replace(/\s+/g, ' ')
-		    .trim();
-		},
+			parseAddressString(address) {
+				const regex = /^(.*?省|.*?市)?(.*?市|.*?州|.*?区|.*?县)?(.*?区|.*?市|.*?县|.*?镇)?/;
+				const matches = address.match(regex);
+
+				this.location.province = matches[1] || '';
+				this.location.city = matches[2] || this.location.province;
+				this.location.district = matches[3] || '';
+
+				// 彻底移除所有地区信息
+				this.newAddress.detail = address
+					.replace(new RegExp(this.location.province, 'ig'), '')
+					.replace(new RegExp(this.location.city, 'ig'), '')
+					.replace(new RegExp(this.location.district, 'ig'), '')
+					.replace(/\s+/g, ' ')
+					.trim();
+			},
 
 			// 选择地址
 			selectAddress(address) {
@@ -607,16 +626,39 @@
 </script>
 <style scoped>
 	.root-container {
+		height: 100vh;
+	}
+
+	.page-container {
+		min-height: 100vh;
+		position: relative;
+
+
+		margin: 0;
 		width: 100%;
-		height: 100%;
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
+	}
+
+	.page-container ::-webkit-scrollbar {
+		display: none;
+		/* Chrome/Safari */
+		width: 0 !important;
+		/* 微信小程序可能需要 */
+		height: 0 !important;
 	}
 
 	.container {
 		width: 100%;
+		padding: 0 20px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin-top: 200rpx;
+		/* margin-top: 200rpx; */
 		box-sizing: border-box;
 	}
 
@@ -636,9 +678,10 @@
 		position: relative;
 		background-color: white;
 		border-radius: 8px;
-		width: 90%;
+		width: 100%;
 		padding: 34rpx 40rpx;
-		margin: 20rpx auto;
+		box-sizing: border-box;
+		margin: 20rpx 0;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 		border-left: 4rpx solid #4066b3;
 		transition: transform 0.2s;

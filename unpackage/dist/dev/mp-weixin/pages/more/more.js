@@ -530,7 +530,7 @@ var _default = {
     handleScroll: function handleScroll(e) {
       // 直接赋值scrollTop（不需要节流，因为custom-nav内部已经做了立即切换的处理）
       this.scrollTop = e.detail.scrollTop;
-      console.log("scrollTop");
+      // console.log("scrollTop")
     }
   },
   onLoad: function onLoad(options) {

@@ -11,6 +11,10 @@
 /* WEBPACK VAR INJECTION */(function(wx, createApp) {
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EventBus = void 0;
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
 __webpack_require__(/*! uni-pages */ 26);
 __webpack_require__(/*! @dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27);
@@ -26,6 +30,8 @@ wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 if (typeof globalThis.resolveUniTypeScript === 'undefined') {
   globalThis.resolveUniTypeScript = function () {};
 }
+var EventBus = new _vue.default();
+exports.EventBus = EventBus;
 var CustomNav = function CustomNav() {
   __webpack_require__.e(/*! require.ensure | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then((function () {
     return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 529));
@@ -33,6 +39,7 @@ var CustomNav = function CustomNav() {
 };
 _vue.default.use(_uviewUi.default);
 _vue.default.use(_index2.default);
+_vue.default.prototype.$EventBus = EventBus;
 _vue.default.config.productionTip = false;
 _App.default.mpType = 'app';
 // Vue.prototype.$api = api

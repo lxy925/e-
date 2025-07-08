@@ -674,7 +674,7 @@
 		padding-bottom: 50rpx;
 		border-radius: 50rpx;
 		height: min-content;
-
+		background-color: #ffff;
 	}
 
 	.custom-field {

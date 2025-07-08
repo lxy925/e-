@@ -3,5 +3,18 @@
     "projectname": "e-",
     "setting": {
         "compileHotReLoad": true
+    },
+    "condition": {
+        "miniprogram": {
+            "list": [
+                {
+                    "name": "pages/patientManagement/patientManagement",
+                    "pathName": "pages/patientManagement/patientManagement",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                }
+            ]
+        }
     }
 }

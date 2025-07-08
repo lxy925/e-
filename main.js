@@ -5,6 +5,8 @@ if (typeof globalThis.resolveUniTypeScript === 'undefined') {
 
 import App from './App'
 import Vue from 'vue'
+export const EventBus = new Vue();
+
 import CustomNav from '@/components/custom-nav/custom-nav.vue'
 
 // 全局mixins，用于实现setData等功能，请勿删除！
@@ -15,7 +17,7 @@ import uView from 'uview-ui'
 // #ifndef VUE3
 Vue.use(uView)
 Vue.use(zpMixins)
-
+Vue.prototype.$EventBus = EventBus;
 Vue.config.productionTip = false
 App.mpType = 'app'
 // Vue.prototype.$api = api

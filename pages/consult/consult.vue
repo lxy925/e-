@@ -302,6 +302,7 @@ export default {
       messageList: [],
       sessionId: '',
       userId: '',
+      userUserId: '',
       showMediaOptions: false,
       chatPartner: null,
       userType: '',
@@ -363,6 +364,18 @@ export default {
 
       this.userId = currentUserInfo._id;
       this.userType = currentUserInfo.type;
+      this.userUserId = currentUserInfo.user_id;
+
+      if (!this.userUserId) {
+        // 兜底查库
+        let collection = this.userType === '普通用户'
+          ? db.collection('users')
+          : db.collection('escorts');
+        const { result } = await collection.doc(this.userId).get();
+        if (result.data && result.data.length > 0) {
+          this.userUserId = result.data[0].user_id;
+        }
+      }
       
       console.log('初始化用户信息：', {
         userId: this.userId,
@@ -462,7 +475,8 @@ export default {
             data: {
               userId: this.userId,
               chatPartnerId: this.chatPartner._id,
-              pageSize: this.pageSize
+              pageSize: this.pageSize,
+              sender_type: this.userType
             }
           }
         });
@@ -498,7 +512,8 @@ export default {
               userId: this.userId,
               chatPartnerId: this.chatPartner._id,
               lastMessageTime: lastMessage.time,
-              pageSize: this.pageSize
+              pageSize: this.pageSize,
+              sender_type: this.userType
             }
           }
         });
@@ -532,7 +547,8 @@ export default {
             action: 'startMessageListener',
             data: {
               userId: this.userId,
-              chatPartnerId: this.chatPartner._id
+              chatPartnerId: this.chatPartner._id,
+              sender_type: this.userType
             }
           }
         });
@@ -548,7 +564,8 @@ export default {
                   data: {
                     userId: this.userId,
                     chatPartnerId: this.chatPartner._id,
-                    lastMessageTime: this.messageList.length > 0 ? this.messageList[this.messageList.length - 1].time : '0'
+                    lastMessageTime: this.messageList.length > 0 ? this.messageList[this.messageList.length - 1].time : '0',
+                    sender_type: this.userType
                   }
                 }
               });
@@ -570,7 +587,7 @@ export default {
             } catch (e) {
               console.error('获取新消息失败:', e);
             }
-          }, 3000); // 每3秒检查一次新消息
+          }, 30000000); // 每3秒检查一次新消息
         } else {
           throw new Error(result.msg || '启动消息监听失败');
         }
@@ -589,8 +606,8 @@ export default {
         }
         
         const message = {
-          user_id: this.userId,
-          escort_id: this.chatPartner._id,
+          user_id: this.userUserId,
+          escort_id: this.chatPartner.user_id,
           content: this.messageText,
           message_type: 'text',
           time: Date.now().toString(),
@@ -607,7 +624,12 @@ export default {
           name: 'chatMessage',
           data: {
             action: 'sendMessage',
-            data: message
+            data: {
+              ...message,
+              userId: this.userId,
+              chatPartnerId: this.chatPartner._id,
+              sender_type: this.userType
+            }
           }
         });
         
@@ -829,7 +851,7 @@ export default {
     
     // 判断是否是自己的消息
     isSelfMessage(message) {
-      return message.user_id === this.userId;
+      return message.user_id === this.userUserId;
     },
     
     // 获取自己的头像
@@ -891,8 +913,8 @@ export default {
         
         // 显示发送中的消息
         const tempMessage = {
-          user_id: this.userId,
-          escort_id: this.chatPartner._id,
+          user_id: this.userUserId,
+          escort_id: this.chatPartner.user_id,
           content: tempFilePath,
           message_type: 'image',
           time: currentTime,
@@ -975,8 +997,8 @@ export default {
         
         // 显示发送中的消息
         const tempMessage = {
-          user_id: this.userId,
-          escort_id: this.chatPartner._id,
+          user_id: this.userUserId,
+          escort_id: this.chatPartner.user_id,
           content: tempFilePath,
           message_type: 'video',
           time: currentTime,
@@ -1063,8 +1085,8 @@ export default {
         
         // 显示发送中的消息
         const tempMessage = {
-          user_id: this.userId,
-          escort_id: this.chatPartner._id,
+          user_id: this.userUserId,
+          escort_id: this.chatPartner.user_id,
           content: JSON.stringify({
             name: file.name,
             size: file.size,
@@ -1194,8 +1216,8 @@ export default {
         
         // 显示发送中的消息
         const tempMessage = {
-          user_id: this.userId,
-          escort_id: this.chatPartner._id,
+          user_id: this.userUserId,
+          escort_id: this.chatPartner.user_id,
           content: JSON.stringify({
             latitude: res.latitude,
             longitude: res.longitude,

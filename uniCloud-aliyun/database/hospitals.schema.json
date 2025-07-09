@@ -1,4 +1,4 @@
-// 医院
+// 在弹出的窗口中输入表名：hospitals
 {
   "bsonType": "object",
   "required": ["name", "level", "type", "phone", "address", "status"],

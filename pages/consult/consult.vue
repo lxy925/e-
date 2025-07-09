@@ -350,7 +350,7 @@ export default {
         throw new Error('用户信息不存在');
       }
 
-      if (!currentUserInfo._id) {
+      if (!currentUserInfo.user_id) {
         throw new Error('用户ID不存在');
       }
 
@@ -362,7 +362,7 @@ export default {
         throw new Error('聊天对象ID不存在');
       }
 
-      this.userId = currentUserInfo._id;
+      this.userId = currentUserInfo.user_id;
       this.userType = currentUserInfo.type;
       this.userUserId = currentUserInfo.user_id;
 
@@ -425,24 +425,13 @@ export default {
       try {
         console.log('开始获取聊天对象信息，用户类型：', this.userType);
         console.log('当前用户ID：', this.userId);
-        
         const currentUserInfo = uni.getStorageSync('currentUserInfo');
         if (!currentUserInfo || !currentUserInfo.partner_id) {
           throw new Error('未找到聊天对象信息');
         }
-        
         let partnerId = currentUserInfo.partner_id;
-        let collection;
-        
-        if (this.userType === '普通用户') {
-          collection = db.collection('escorts');
-        } else {
-          collection = db.collection('users');
-        }
-        
-        console.log('开始查询聊天对象信息，ID：', partnerId);
-        const { result } = await collection.doc(partnerId).get();
-        
+        // 直接查users表
+        const { result } = await uniCloud.database().collection('users').where({user_id: partnerId}).get();
         if (result.data && result.data.length > 0) {
           this.chatPartner = result.data[0];
           console.log('获取到的聊天对象信息：', this.chatPartner);
@@ -464,23 +453,21 @@ export default {
     // 加载历史消息
     async loadMessages() {
       try {
-        if (!this.userId || !this.chatPartner || !this.chatPartner._id) {
+        if (!this.userId || !this.chatPartner || !this.chatPartner.user_id) {
           throw new Error('用户信息不完整');
         }
-        
         const { result } = await uniCloud.callFunction({
           name: 'chatMessage',
           data: {
             action: 'getMessages',
             data: {
               userId: this.userId,
-              chatPartnerId: this.chatPartner._id,
+              chatPartnerId: this.chatPartner.user_id,
               pageSize: this.pageSize,
               sender_type: this.userType
             }
           }
         });
-        
         if (result.code === 200) {
           this.messageList = result.data;
           this.$nextTick(() => {
@@ -599,40 +586,34 @@ export default {
     // 发送消息
     async sendMessage() {
       if (!this.messageText.trim()) return;
-      
       try {
-        if (!this.userId || !this.chatPartner || !this.chatPartner._id) {
+        if (!this.userId || !this.chatPartner || !this.chatPartner.user_id) {
           throw new Error('用户信息不完整');
         }
-        
         const message = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
           content: this.messageText,
           message_type: 'text',
-          time: Date.now().toString(),
-          status: 'sending',
           sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
         // 先显示消息
-        this.messageList.push(message);
+        this.messageList.push({
+          ...message,
+          user_id: this.userId,
+          escort_id: this.chatPartner.user_id,
+          time: Date.now().toString(),
+          status: 'sending'
+        });
         this.scrollToBottom();
-        
         const { result } = await uniCloud.callFunction({
           name: 'chatMessage',
           data: {
             action: 'sendMessage',
-            data: {
-              ...message,
-              userId: this.userId,
-              chatPartnerId: this.chatPartner._id,
-              sender_type: this.userType
-            }
+            data: message
           }
         });
-        
         if (result.code === 200) {
           const index = this.messageList.findIndex(msg => msg.status === 'sending');
           if (index !== -1) {
@@ -642,7 +623,6 @@ export default {
         } else {
           throw new Error(result.msg || '发送消息失败');
         }
-        
         this.messageText = '';
         this.showMediaOptions = false;
       } catch (e) {
@@ -1290,25 +1270,13 @@ export default {
     // 获取聊天对象头像
     getPartnerAvatar() {
       if (!this.chatPartner) return '/static/service-default.png';
-      if (this.userType === '普通用户') {
-        // 当前用户是普通用户，聊天对象是陪诊师
-        return this.chatPartner.avatarUrl || '/static/service-default.png';
-      } else {
-        // 当前用户是陪诊师，聊天对象是普通用户
-        return this.chatPartner.avatar || '/static/service-default.png';
-      }
+      return this.chatPartner.avatar || '/static/service-default.png';
     },
     
     // 获取聊天对象名称
     getPartnerName() {
       if (!this.chatPartner) return '未知用户';
-      if (this.userType === '普通用户') {
-        // 当前用户是普通用户，聊天对象是陪诊师
-        return this.chatPartner.name || '未知用户';
-      } else {
-        // 当前用户是陪诊师，聊天对象是普通用户
-        return this.chatPartner.realName || '未知用户';
-      }
+      return this.chatPartner.realName || this.chatPartner.nickName || '未知用户';
     },
 
     // 预览图片

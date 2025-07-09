@@ -1,65 +1,121 @@
 'use strict';
-// const jwt = require('../common/jwt.js');
-const crypto = require('crypto');
-const db = uniCloud.database()
+const db = uniCloud.database();
 
 exports.main = async (event, context) => {
-    const location = event // 从传入参数中获取 location 字符串
-	// console.log("传入的省份",location.provinceName)
-  try {
-    console.log('开始获取陪诊师数据')
+	console.log('event',event)
+    const { timeObj, isFromOrder , searchKeyword} = event;
+    const currentDate = new Date();
+    const currentWeekStart = getWeekStartDate(currentDate);
     
-    const res = await db.collection('escorts')
-	
-    .aggregate()
-    .match({
-        address: {
-          
-			provinceName:location.provinceName,
-            cityName: location.cityName, // 假设 location 是一个对象数组，取第一个元素的 city 字段
-            areaName: location.areaName // 假设 location 是一个对象数组，取第一个元素的 district 字段
-          
-        }
-    })
-    .lookup({
-      from: 'escorts_more', // 关联的表名
-      localField: 'user_id', // escorts 表中的字段
-      foreignField: 'user_id', // escorts_more 表中的字段
-      as: 'moreInfo' // 输出的字段名
-    })
-    .unwind('$moreInfo') // 展开 moreInfo 数组
-    .sort({
-      'moreInfo.rating': -1 // 按照 rating 从大到小排序
-    })
-    .end()
-	//给数据加密
-	console.log(res.data)
-    res.data.forEach(item => {
-	
-      item.user_id = encryptData(item.user_id);
-	item.moreInfo.user_id= encryptData(item.moreInfo.user_id);
-	  // item.card_id= encryptData(item.card_id);
-	//   item.phone= encryptData(item.phone);
-	  
-    });
-    // console.log(userInfo)
-    console.log('查询结果：', res)
-    
-    return {
-        success: true,
-        data: res
+    try {
+        console.log('开始获取陪诊师数据');
+       // 1. 构建基础查询条件
+           let query = db.collection('escorts').aggregate()
+             .lookup({
+               from: 'escorts_more',
+               localField: 'user_id',
+               foreignField: 'user_id',
+               as: 'moreInfo'
+             })
+             .unwind('$moreInfo');
+       
+           // 2. 添加姓名搜索条件（如果有搜索关键词）
+           if (searchKeyword && searchKeyword.trim()) {
+             query = query.match({
+               name: new RegExp(searchKeyword, 'i') // 不区分大小写的模糊搜索
+             });
+           }
+       
+           // 3. 如果不是从order页面进入，直接返回所有陪诊师
+           if (!isFromOrder) {
+             const escortsRes = await query.end();
+             return {
+               success: true,
+               data: escortsRes.data.sort((a, b) => b.moreInfo.rating - a.moreInfo.rating)
+             };
+           }
+       
+           // 4. 从order页面进入的逻辑（按时间筛选）
+           const escortsRes = await query.end();
+           if (!escortsRes.data || escortsRes.data.length === 0) {
+             return {
+               success: true,
+               data: [],
+               msg: "没找到陪诊师"
+             };
+           }
+        const escortIds = escortsRes.data.map(escort => escort.user_id);
+		console.log("timeObj",timeObj)
+        const dayOfWeek = timeObj < 7 ? timeObj + 1 : (timeObj - 6);
+        const timePeriod = timeObj < 7 ? 1 : 2;
+        console.log("dayOfWeek,timePeriod",dayOfWeek,timePeriod)
+        // 2. 查询临时安排
+        const tempRes = await db.collection('time_temporary')
+            .where({
+                user_id: db.command.in(escortIds),
+               
+            })
+            .get();
+        
+        // 3. 查询长期安排
+        const longTermRes = await db.collection('time_base')
+            .where({
+                user_id: db.command.in(escortIds)
+            })
+            .get();
+        
+        // 4. 处理可用陪诊师ID
+        const availableEscortIds = new Set();
+        console.log("tempRes",tempRes)
+        // 处理临时安排
+        tempRes.data.forEach(tempRecord => {
+            const matchedTempData = tempRecord.tempData.find(item => 
+                item.day_of_week === dayOfWeek && 
+                item.time_period === timePeriod
+            );
+            console.log("找到的第一个matchedTempData",matchedTempData)
+            if (matchedTempData && matchedTempData.status === 1) {
+                availableEscortIds.add(tempRecord.user_id);
+            }
+        });
+		 console.log("availableEscortIds",availableEscortIds)
+         console.log("longTermRes",longTermRes)
+        // 处理长期安排（只处理没有临时安排的陪诊师）
+        const escortsWithoutTemp = escortIds.filter(id => !availableEscortIds.has(id));
+        longTermRes.data.forEach(longTermRecord => {
+            if (!escortsWithoutTemp.includes(longTermRecord.user_id)) return;
+            
+            const matchedLongTermData = longTermRecord.longTermData.find(item =>
+                item.day_of_week === dayOfWeek && 
+                item.time_period === timePeriod
+            );
+            
+            if (matchedLongTermData && matchedLongTermData.status === 1) {
+                availableEscortIds.add(longTermRecord.user_id);
+            }
+        });
+        
+        // 5. 筛选出符合条件的陪诊师
+        const availableEscorts = escortsRes.data.filter(escort => 
+            availableEscortIds.has(escort.user_id))
+            .sort((a, b) => b.moreInfo.rating - a.moreInfo.rating);
+        
+        return {
+            success: true,
+            data: availableEscorts
+        };
+    } catch (e) {
+        console.error('错误：', e);
+        return {
+            code: -1,
+            msg: e.message || '获取陪诊师集合失败'
+        };
     }
-  } catch (e) {
-    console.error('错误：', e)
-    return {
-      code: -1,
-      msg: e.message || '获取陪诊师集合失败'
-    }
-  }
-  
-  // 数据加密
-  function encryptData(text) {
-    return crypto.createHash('sha256').update(text).digest('hex');
-  }
-  
+};
+
+function getWeekStartDate(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff)).setHours(0, 0, 0, 0);
 }

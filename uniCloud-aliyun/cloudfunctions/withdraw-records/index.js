@@ -15,24 +15,8 @@ exports.main = async (event, context) => {
     };
   }
 
-  let openid;
+  const openid=accountInfo.user_id;
   try {
-    let decoded = jwt.verifyToken(accountInfo.user_id);
-    openid = decoded.userId;
-	console.log(openid)
-    if (!openid) {
-      return {
-        code: 403,
-        msg: 'Token无效'
-      };
-    }
-  } catch (err) {
-    return {
-      code: 401,
-      msg: err
-    };
-  }
-
   // 构建查询条件 - 修改为180天
   const queryCondition = {
     openid: openid,

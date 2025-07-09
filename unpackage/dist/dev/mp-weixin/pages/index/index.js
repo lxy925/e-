@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 467))
+      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 411))
     },
   }
 } catch (e) {
@@ -261,11 +261,28 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // pages/index/index.js
 var _default = {
   data: function data() {
     return {
       pageTitle: '首页',
+      scrollTimer: null,
       scrollTop: 0,
       navHeight: 0,
       // 添加导航栏高度存储
@@ -377,8 +394,12 @@ var _default = {
   methods: {
     //监视页面滚动情况
     handleScroll: function handleScroll(e) {
-      // 直接赋值scrollTop（不需要节流，因为custom-nav内部已经做了立即切换的处理）
-      this.scrollTop = e.detail.scrollTop;
+      var _this = this;
+      // 使用节流减少更新频率
+      if (this.scrollTimer) clearTimeout(this.scrollTimer);
+      this.scrollTimer = setTimeout(function () {
+        _this.scrollTop = e.detail.scrollTop;
+      }, 16); // 约60fps
     },
     handleNavClick: function handleNavClick(path) {
       uni.navigateTo({
@@ -443,7 +464,7 @@ var _default = {
     },
     // 获取轮播图数据
     getBanners: function getBanners() {
-      var _this = this;
+      var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
         var _yield$uniCloud$callF, result;
         return _regenerator.default.wrap(function _callee$(_context) {
@@ -463,7 +484,7 @@ var _default = {
                 result = _yield$uniCloud$callF.result;
                 console.log(result);
                 if (result.code === 0) {
-                  _this.banners = result.data;
+                  _this2.banners = result.data;
                   console.log(result.data);
                 } else {
                   uni.showToast({

@@ -55,7 +55,7 @@ export default {
       try {
         console.log('chatList');
         // 获取当前用户信息
-        const currentUserInfo = uni.getStorageSync('currentUserInfo');
+        const currentUserInfo = uni.getStorageSync('userInfo');
         console.log('获取到的用户信息：', currentUserInfo);
         if (!currentUserInfo) {
           uni.showToast({
@@ -109,11 +109,11 @@ export default {
     startChat(partner) {
       // 存储聊天对象信息
       uni.setStorageSync('currentUserInfo', {
-        _id: this.currentUser._id,
+        user_id: this.currentUser.user_id,
         type: this.currentUser.type,
         nickName: this.currentUser.nickName,
         avatar: this.currentUser.avatar,
-        partner_id: partner._id
+        partner_id: partner.user_id
       });
       
       // 跳转到聊天页面

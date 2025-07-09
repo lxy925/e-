@@ -1,0 +1,7 @@
+{
+  "name": "pay-callback",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 467))
+      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 411))
     },
   }
 } catch (e) {
@@ -302,6 +302,9 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
+//
+//
 // pages/doctor/doctor.js
 var _default = {
   data: function data() {
@@ -366,58 +369,52 @@ var _default = {
   methods: {
     //监视页面滚动情况
     handleScroll: function handleScroll(e) {
-      this.scrollTop = e.detail.scrollTop;
+      var _this = this;
+      if (this.scrollTimer) clearTimeout(this.scrollTimer);
+      this.scrollTimer = setTimeout(function () {
+        _this.scrollTop = e.detail.scrollTop;
+      }, 16); // 约60fps
     },
     fetchDoctors: function fetchDoctors() {
-      var _this = this;
+      var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var cityName, provinceName, areaName, location, res;
+        var timeObj, res;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                cityName = uni.getStorageSync('cityName');
-                provinceName = uni.getStorageSync('provinceName');
-                areaName = uni.getStorageSync('areaName');
-                _this.Location = {
-                  provinceName: provinceName,
-                  cityName: cityName,
-                  areaName: areaName
-                };
-                location = _this.Location;
-                console.log("地址", _this.Location);
-                if (!location) {
-                  console.error('未找到缓存的位置信息');
+                if (_this2.fromOrder && _this2.timeObj !== undefined) {
+                  timeObj = _this2.timeObj;
                 }
-                _context.next = 10;
+                console.log("timeObj", timeObj);
+                _context.next = 5;
                 return uniCloud.callFunction({
                   name: 'getEscorts',
-                  // 云函数名称
                   data: {
-                    location: location
-                  }
+                    timeObj: timeObj,
+                    isFromOrder: _this2.fromOrder
+                  } // 新增参数，标识是否来自order页面}
                 });
-              case 10:
+              case 5:
                 res = _context.sent;
                 if (res.result.success) {
-                  console.log('获取陪诊师数据成功:', res.result.data);
-                  _this.doctors = res.result.data.data;
+                  _this2.doctors = res.result.data;
                 } else {
                   console.error('获取陪诊师数据失败:', res.result.error);
                 }
-                _context.next = 17;
+                _context.next = 12;
                 break;
-              case 14:
-                _context.prev = 14;
+              case 9:
+                _context.prev = 9;
                 _context.t0 = _context["catch"](0);
                 console.error('调用云函数失败:', _context.t0);
-              case 17:
+              case 12:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 14]]);
+        }, _callee, null, [[0, 9]]);
       }))();
     },
     goToDoctorDetailPage: function goToDoctorDetailPage(doctor) {
@@ -432,7 +429,7 @@ var _default = {
       });
     },
     getBanners: function getBanners() {
-      var _this2 = this;
+      var _this3 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
         var _yield$uniCloud$callF, result;
         return _regenerator.default.wrap(function _callee2$(_context2) {
@@ -454,7 +451,7 @@ var _default = {
                   _context2.next = 10;
                   break;
                 }
-                _this2.banners = result.data;
+                _this3.banners = result.data;
                 _context2.next = 11;
                 break;
               case 10:

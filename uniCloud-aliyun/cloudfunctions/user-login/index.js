@@ -130,14 +130,14 @@ exports.main = async (event, context) => {
 		data: {
 			
 
-			
+			token:token,
 			userInfo: {
-				user_id: token,
+				user_id: openid,
 				avatar,
 				nickName,
 				realName,
-				idNumber: encryptData(idCard),
-				phone: encryptData(decryptedPhone),
+				idNumber: idCard,
+				phone: decryptedPhone,
 				type:type
 
 			}

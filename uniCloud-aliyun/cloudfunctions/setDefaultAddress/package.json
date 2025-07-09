@@ -1,0 +1,7 @@
+{
+  "name": "setDefaultAddress",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

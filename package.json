@@ -1,5 +1,5 @@
 {
-	"name": "quickstart-wx-cloud",
+	"name": "e-",
 	"version": "1.0.0",
 	"description": "",
 	"main": "main.js",
@@ -8,19 +8,18 @@
 	},
 	"author": "",
 	"dependencies": {
+		"@dcloudio/uni-ui": "^1.5.8",
 		"@dcloudio/vue-cli-plugin-uni": "^2.0.2-4040520250103001",
 		"axios": "^1.8.3",
 		"crypto-browserify": "^3.12.1",
 		"jsonwebtoken": "^9.0.2",
 		"pinia": "^3.0.1",
 		"qrcode": "^1.5.4",
+		"uview-ui": "^2.0.38",
+		"vite": "^2.9.18",
 		"vue-loader": "^17.4.2",
 		"vuex": "^4.1.0",
 		"wx-server-sdk": "^3.0.1"
 	},
-	"license": "ISC",
-	"devDependencies": {
-		"@dcloudio/vite-plugin-uni": "^3.0.0-alpha-3000020210521001",
-		"vite": "^2.9.18"
-	}
+	"license": "ISC"
 }

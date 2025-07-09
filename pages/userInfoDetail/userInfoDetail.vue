@@ -67,7 +67,7 @@
 		onLoad(options) {
 			// 获取来源页面参数
 			this.fromPage = options.from || 'mine';
-			this.userInfo=uni.getStorageSync('userInfoForm');
+			this.userInfo = uni.getStorageSync('userInfoForm');
 
 		},
 		/**
@@ -114,10 +114,10 @@
 				const cloudPath = `avatar/${fileName}`; // 例如：avatarList/1741500000000_abc123.jpg
 				// 上传图片到云存储
 				uniCloud.uploadFile({
-					
+
 					filePath: avatar, // 本地临时文件路径
 					cloudPath, // 云存储路径
-					 cloudPathAsRealPath: true,
+					cloudPathAsRealPath: true,
 					onUploadProgress: (progressEvent) => {
 						// 上传进度回调
 						const percentCompleted = Math.round(
@@ -160,46 +160,51 @@
 			},
 			//获取电话号码
 			async getPhoneNumber(e) {
-			  if (e.detail.errMsg !== 'getPhoneNumber:ok') return;
-			
-			  try {
-			    // 1. 先获取code（await确保完成）
-			    const code = await new Promise((resolve, reject) => {
-			      uni.login({
-			        provider: 'weixin',
-			        success: (res) => resolve(res.code),
-			        fail: reject
-			      });
-			    });
-			    console.log("获取的code:", code);
-				
-			    // 2. 再用code调用云函数
-			    const { result } = await uniCloud.callFunction({
-			      name: 'user-login',
-			      data: {
-			        code: code, // 使用已获取的code
-			        encryptedData: e.detail.encryptedData,
-			        iv: e.detail.iv
-			      }
-			    });
-			
-			    // 3. 处理结果
-			    if (result.code==200) {
-					// console.log(result)
-			      this.phoneNumber = result.data;
-				  // console.log( this.phoneNumber)
-			    } else {
-			      throw new Error('未获取到手机号');
-			    }
-			  } catch (err) {
-			    console.error('流程错误:', err);
-			    uni.showToast({ title: '获取手机号失败', icon: 'none' });
-			  }
+				if (e.detail.errMsg !== 'getPhoneNumber:ok') return;
+
+				try {
+					// 1. 先获取code（await确保完成）
+					const code = await new Promise((resolve, reject) => {
+						uni.login({
+							provider: 'weixin',
+							success: (res) => resolve(res.code),
+							fail: reject
+						});
+					});
+					console.log("获取的code:", code);
+
+					// 2. 再用code调用云函数
+					const {
+						result
+					} = await uniCloud.callFunction({
+						name: 'user-login',
+						data: {
+							code: code, // 使用已获取的code
+							encryptedData: e.detail.encryptedData,
+							iv: e.detail.iv
+						}
+					});
+
+					// 3. 处理结果
+					if (result.code == 200) {
+						// console.log(result)
+						this.phoneNumber = result.data;
+						// console.log( this.phoneNumber)
+					} else {
+						throw new Error('未获取到手机号');
+					}
+				} catch (err) {
+					console.error('流程错误:', err);
+					uni.showToast({
+						title: '获取手机号失败',
+						icon: 'none'
+					});
+				}
 			},
 
 
 
-			
+
 
 			async submitUserInfo() {
 				// 保存用户信息到本地存储
@@ -217,14 +222,14 @@
 				}
 
 
-  // 1. 先获取code（await确保完成）
-			    const code = await new Promise((resolve, reject) => {
-			      uni.login({
-			        provider: 'weixin',
-			        success: (res) => resolve(res.code),
-			        fail: reject
-			      });
-			    });
+				// 1. 先获取code（await确保完成）
+				const code = await new Promise((resolve, reject) => {
+					uni.login({
+						provider: 'weixin',
+						success: (res) => resolve(res.code),
+						fail: reject
+					});
+				});
 				const {
 					result
 				} = await uniCloud.callFunction({
@@ -246,15 +251,12 @@
 						duration: 2000,
 					});
 
-					
-				//为初始化用户数据做准备
+
+					//为初始化用户数据做准备
 					uni.setStorageSync('userInfo', result.data.userInfo);
-					//缓存token
-					// uni.setStorageSync('token', result.data.token);
-					  // uni.setStorageSync('refreshToken', result.data.refreshToken)
+					// 缓存token
+					uni.setStorageSync('token', result.data.token);
 					console.log(uni.getStorageSync('userInfo'))
-					// const isLoggedIn = true;
-					// uni.setStorageSync('isLoggedIn', isLoggedIn);
 					uni.setStorageSync('userInfoForm', result.data.userInfo);
 					uni.navigateBack();
 				} else {
@@ -267,7 +269,7 @@
 
 				// 返回上一页
 				uni.navigateTo({
-				  url: '/pages/index/index'
+					url: '/pages/index/index'
 				});
 			},
 			validateFormData() {

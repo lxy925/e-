@@ -1,6 +1,18 @@
 <template>
   <view class="container">
-    <custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
+    <custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+    <!-- 内容区域 -->
+        <scroll-view 
+        scroll-y
+        class="page-container" 
+        @scroll="handleScroll"
+        :style="{ 
+          paddingTop: navHeight + 'px',
+          height: 'calc(100vh - ' + navHeight + 'px)'
+        }" 
+        :scroll-top="scrollTop"
+        :show-scrollbar="false"
+        >
     <view class="doctor-card">
       <view class="doctor-info">
         <view class="name">{{ doctor.name }}</view>
@@ -100,6 +112,7 @@
 	    </view>
 	  </view>
 	</view>
+	</scroll-view >
   </view>
 </template>
 
@@ -107,6 +120,9 @@
 export default {
   data() {
     return {
+		pageTitle: "陪诊师详情",
+		scrollTop: 0,
+		navHeight: 0, // 存储导航栏高度
       doctor: {}
       
     };
@@ -115,6 +131,8 @@ export default {
   /**
    * 生命周期函数--监听页面加载
    */ onLoad(options) {
+	   const systemInfo = uni.getSystemInfoSync();
+	   this.navHeight = systemInfo.statusBarHeight + 44;
     if (options.doctor) {
       this.doctor = JSON.parse(decodeURIComponent(options.doctor));
     }
@@ -151,17 +169,46 @@ export default {
    * 用户点击右上角分享
    */
   onShareAppMessage() {},
-  methods: {},
+  methods: {
+	  //监视页面滚动情况
+	  handleScroll(e) {
+	  	if (this.scrollTimer) clearTimeout(this.scrollTimer)
+	  	this.scrollTimer = setTimeout(() => {
+	  		this.scrollTop = e.detail.scrollTop
+	  	}, 16) // 约60fps
+	  },
+  },
 };
 </script>
 
 <style>
 .container {
-    padding: 50rpx 20rpx;
-  padding-top: 200rpx;
-  height: min-content;
-  background: linear-gradient(to bottom, #0bd6c8, #99efe9, #ddf5f4, rgb(226, 226, 226));
+   height: 100hv;
 }
+.page-container {
+		min-height: 100vh;
+		position: relative;
+		
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
+	}
+	
+	.page-container ::-webkit-scrollbar {
+		display: none;
+		/* Chrome/Safari */
+		width: 0 !important;
+		/* 微信小程序可能需要 */
+		height: 0 !important;
+	}
+
 .doctor-card {
   display: flex;
   flex-direction: row;

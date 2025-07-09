@@ -1,210 +1,1087 @@
 <template>
 	<view class="page">
- <view class="container">
-  <custom-nav title="e陪无忧" :isHomePage="false"></custom-nav>
+		<custom-nav title="e陪无忧" :isHomePage="false" class="nav"></custom-nav>
+		<view class="container">
+			<!-- 固定头部区域 -->
+			<view class="fixed-header">
+				<!-- 搜索、筛选等 -->
+				<view class="header">
+					<view class="search-container">
+						<input class="search-input" placeholder="请输入交易名称" v-model="searchQuery"
+							@confirm="handleSearch" />
+						<image src="../../static/images/order/icon_4.png" class="search-icon" />
+					</view>
+					<!-- <view class="filter-container" @click="showFilter = true">
+						<image src="../../static/images/order/icon_5.png" class="filter-icon" />
+						<text class="filter-text">筛选</text>
+						<view class="notification" v-if="filterCount > 0">{{ filterCount }}</view>
+					</view> -->
+				</view>
 
-   <view class="header">
-     <view class="search-container">
-       <input class="search-input" placeholder="请输入交易名称" />
-       <image src="../../static/images/icons/order/icon_4.png" class="search-icon" />
-     </view>
-     <view class="filter-container">
-       <image src="../../static/images/icons/order/icon_5.png" class="filter-icon" />
-       <text class="filter-text">筛选</text>
-       <view class="notification">12</view>
-     </view>
-   </view>
- <view class="tabs">
- <text :class="{'tab': true, 'active': currentTab == 0}" bindtap="selectTab" data-index="0">全部</text>
- <text :class="{'tab': true, 'active': currentTab == 1}" bindtap="selectTab" data-index="1">待服务</text>
- <text :class="{'tab': true, 'active': currentTab == 2}" bindtap="selectTab" data-index="2">进行中</text>
- <text :class="{'tab': true, 'active': currentTab == 3}" bindtap="selectTab" data-index="3">已完成</text>
- <text :class="{'tab': true, 'active': currentTab == 4}" bindtap="selectTab" data-index="4">已取消</text>
- </view>
- <view class="content">
-    <view class="trade-container">
-     <text class="trade-info">全部：共0件交易</text>
-     <view class="bulk-operation">批量操作</view>
-    </view>
-     <image src="../../static/images/order/img_1.png" class="empty-image" />
-     <text class="empty-text">暂无数据~</text>
- </view>
- </view>
+				<!-- 标签切换 -->
+				<view class="tabs">
+					<text v-for="(tab, index) in tabs" :key="index"
+						:class="{'tab': true, 'active': currentTab === index}"
+						@click="selectTab(index)">{{ tab.label }}</text>
+				</view>
+			</view>
+
+			<!-- 可滚动内容区域 -->
+			<scroll-view class="content" scroll-y :style="{height: scrollHeight + 'px'}" @scrolltolower="loadMore"
+				:scroll-with-animation="true">
+				<!-- 有数据时展示订单列表 -->
+				<view v-if="filteredOrders.length > 0">
+					<view class="order-card" v-for="(order, index) in filteredOrders" :key="order.order_no"
+						@click="viewOrderDetail(order)">
+						<view class="card-header">
+							<text class="order-no">订单号：{{ order.order_no }}</text>
+							<text :class="['order-status', getStatusClass(order)]">
+								{{ formatStatus(order) }}
+							</text>
+						</view>
+
+						<view class="card-body">
+							<view class="service-info">
+								<view class="service-icon">
+									<image src="../../static/images/order/service-icon.png" mode="aspectFit" />
+								</view>
+								<view class="service-details">
+									<text class="service-name">{{ order.service_name || '未命名服务' }}</text>
+									<text class="service-id">服务ID: {{ order.service_id }}</text>
+								</view>
+							</view>
+
+							<view class="order-meta">
+								<view class="meta-item">
+									<text class="meta-label">金额</text>
+									<text class="meta-value price-value">¥{{ order.total_price }}</text>
+								</view>
+								<view class="meta-item">
+									<text class="meta-label">服务时长</text>
+									<text class="meta-value">{{ order.duration || '2小时' }}</text>
+								</view>
+								<!-- 新增退款金额显示 -->
+								<view class="meta-item" v-if="order.refund_amount">
+									<text class="meta-label">退款金额</text>
+									<text class="meta-value refund-value">¥{{ order.refund_amount }}</text>
+								</view>
+							</view>
+						</view>
+
+						<view class="card-footer">
+							<!-- 支付成功的订单显示退款按钮 -->
+							<button class="action-btn btn-refund" @click.stop="applyRefund(order)"
+								v-if="order.status === 'paid'">
+								申请退款
+							</button>
+
+							<!-- 非支付成功的订单显示删除按钮 -->
+							<button class="action-btn btn-delete" @click.stop="deleteOrder(order)"
+								v-if="order.status !== 'paid'">
+								删除订单
+							</button>
+
+							<!-- 所有订单都显示详情按钮 -->
+							<button class="action-btn btn-detail" @click.stop="viewOrderDetail(order)">
+								查看详情
+							</button>
+						</view>
+					</view>
+
+					<!-- 加载更多提示 -->
+					<view class="load-more" v-if="hasMore">
+						<text>{{ loading ? '加载中...' : '上拉加载更多' }}</text>
+					</view>
+					<view class="no-more" v-else>
+						<text>没有更多数据了</text>
+					</view>
+				</view>
+
+				<!-- 无数据时展示空状态 -->
+				<view v-else class="empty-state">
+					<image src="../../static/images/order/img_1.png" class="empty-image" />
+					<text class="empty-text">暂无订单数据~</text>
+				</view>
+			</scroll-view>
+		</view>
+
+		<!-- 自定义筛选弹窗 -->
+		<view class="custom-popup-mask" v-if="showFilter" @click="showFilter = false" @touchmove.stop.prevent>
+			<view class="custom-popup-container" @click.stop>
+				<view class="custom-popup-header">
+					<text class="custom-popup-title">筛选订单</text>
+					<text class="custom-popup-close" @click="showFilter = false">×</text>
+				</view>
+
+				<view class="custom-popup-body">
+					<view class="filter-section">
+						<text class="section-title">订单状态</text>
+						<view class="filter-tags">
+							<text v-for="(tab, index) in tabs" :key="index"
+								:class="['filter-tag', {'active': activeStatus === tab.value}]"
+								@click="activeStatus = tab.value">
+								{{ tab.label }}
+							</text>
+						</view>
+					</view>
+				</view>
+
+				<view class="custom-popup-footer">
+					<button class="custom-reset-btn" @click="resetFilter">重置</button>
+					<button class="custom-confirm-btn" @click="confirmFilter">确定</button>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
-export default {
-  name: 'OrderComponent',
-  data() {
-    return {
-      // Define your data properties here
-	  currentTab: 0,
-    };
-  },
-  methods: {
-    // Define your methods here
-	selectTab(event) {
-    const index = event.currentTarget.dataset.index; // 获取点击的 tab 索引
-    console.log('Clicked tab index:', index); // 调试信息
-    this.setData({
-      currentTab: index // 更新当前选中的 tab
-    });
-    console.log('Updated currentTab:', this.data.currentTab); // 确认 currentTab 的值是否更新
-  }
-  }
-}
+	export default {
+		name: 'OrderList',
+		data() {
+			return {
+				currentTab: 0,
+				tabs: [{
+						label: '全部',
+						value: 'all'
+					},
+					{
+						label: '待服务',
+						value: 'pending'
+					},
+					{
+						label: '进行中',
+						value: 'processing'
+					},
+					{
+						label: '已完成',
+						value: 'completed'
+					},
+					{
+						label: '已取消',
+						value: 'canceled'
+					}
+				],
+				orderList: [],
+				scrollHeight: 0,
+				searchQuery: '',
+				showFilter: false,
+				filterCount: 0,
+				activeStatus: 'all',
+				pageSize: 10,
+				currentPage: 1,
+				hasMore: true,
+				loading: false
+			};
+		},
+		computed: {
+			filteredOrders() {
+				let result = [...this.orderList];
+
+				// 根据标签页筛选
+				if (this.currentTab > 0) {
+					const tabValue = this.tabs[this.currentTab].value;
+
+					if (tabValue === 'pending') {
+						result = result.filter(order =>
+							order.status === 'paid' && order.service_status === 'pending'
+						);
+					} else if (tabValue === 'processing') {
+						result = result.filter(order =>
+							order.status === 'paid' && order.service_status === 'processing'
+						);
+					} else if (tabValue === 'completed') {
+						result = result.filter(order =>
+							order.status === 'paid' && order.service_status === 'completed'
+						);
+					} else if (tabValue === 'canceled') {
+						result = result.filter(order =>
+							(order.status === 'paid' && order.service_status === 'cancelled') ||
+							order.status === 'pay_fail' || status.status === 'refunded'
+						);
+					}
+				}
+
+				// 根据搜索关键词筛选
+				if (this.searchQuery) {
+					const query = this.searchQuery.toLowerCase();
+					result = result.filter(order =>
+						(order.service_name && order.service_name.toLowerCase().includes(query)) ||
+						(order.order_no && order.order_no.toLowerCase().includes(query)));
+				}
+
+				// 应用筛选条件
+				if (this.activeStatus && this.activeStatus !== 'all') {
+					result = result.filter(order => {
+						if (this.activeStatus === 'canceled') {
+							return (order.status === 'paid' && order.service_status === 'cancelled') ||
+								order.status === 'pay_fail';
+						}
+						return order.status === this.activeStatus;
+					});
+				}
+
+				return result;
+			}
+		},
+		onLoad() {
+			this.getOrderList(); // 全局错误捕获（定位隐藏的异常）
+			uni.onError((err) => {
+				console.error('全局错误捕获:', err);
+				uni.showToast({
+					title: '操作异常，请稍后重试',
+					icon: 'none'
+				});
+			});
+		},
+		onReady() {
+			this.calculateScrollHeight();
+		},
+		onShow() {
+			setTimeout(() => this.calculateScrollHeight(), 100);
+		},
+		methods: {
+			getStatusClass(order) {
+				if (order.service_status) {
+					return `status-${order.service_status}`;
+				}
+				if (order.status === 'pay_fail') {
+					return 'status-canceled';
+				}
+				return `status-${order.status}`;
+			},
+			// 删除订单方法
+			deleteOrder(order) {
+				uni.showModal({
+					title: '删除订单',
+					content: `确定要删除订单 ${order.order_no} 吗？`,
+					success: async (res) => {
+						if (res.confirm) {
+							uni.showLoading({
+								title: '删除中...'
+							});
+							try {
+								const db = uniCloud.database();
+								await db.collection('orders').doc(order._id).remove();
+
+								// 从本地列表移除
+								this.orderList = this.orderList.filter(item => item._id !== order._id);
+
+								uni.showToast({
+									title: '删除成功',
+									icon: 'success'
+								});
+							} catch (e) {
+								uni.showToast({
+									title: '删除失败',
+									icon: 'none'
+								});
+							} finally {
+								uni.hideLoading();
+							}
+						}
+					}
+				});
+			},
+
+			// 退款方法（仅限paid状态）
+			applyRefund(order) {
+				// 严格检查退款条件：已支付且待服务状态
+				if (order.status !== 'paid' || order.service_status !== 'pending') {
+					uni.showToast({
+						title: order.status !== 'paid' ? '订单未支付，无法退款' : '订单已服务，无法退款',
+						icon: 'none',
+						duration: 2000
+					});
+					return;
+				}
+				// 跳转到退款页面并传递订单数据
+				uni.navigateTo({
+					url: `/pages/refund/refund?orderInfo=${encodeURIComponent(JSON.stringify(order))}`
+				});
+			},
+
+
+			// 处理退款逻辑
+			// async processRefund(order) {
+			// 	uni.showLoading({
+			// 		title: '处理中...'
+			// 	});
+			// 	try {
+			// 		const db = uniCloud.database();
+			// 		await db.collection('orders').doc(order._id).update({
+			// 			status: 'refunding',
+			// 			refund_apply_time: Date.now()
+			// 		});
+
+			// 		// 更新本地数据
+			// 		const index = this.orderList.findIndex(item => item._id === order._id);
+			// 		if (index !== -1) {
+			// 			this.$set(this.orderList[index], 'status', 'refunding');
+			// 		}
+
+			// 		uni.showToast({
+			// 			title: '退款申请已提交',
+			// 			icon: 'success'
+			// 		});
+			// 	} catch (e) {
+			// 		uni.showToast({
+			// 			title: '退款申请失败',
+			// 			icon: 'none'
+			// 		});
+			// 	} finally {
+			// 		uni.hideLoading();
+			// 	}
+			// },
+			formatStatus(order) {
+				// 优先显示service_status
+				if (order.service_status) {
+					const statusMap = {
+						'pending': '待服务',
+						'processing': '进行中',
+						'completed': '已完成',
+						'cancelled': '已取消'
+					};
+					return statusMap[order.service_status] || order.service_status;
+				}
+
+				// 没有service_status时显示status
+				const statusMap = {
+					'paid': '已完成',
+					'unpaid': '未支付',
+					'pay_fail': '已取消'
+				};
+				return statusMap[order.status] || order.status;
+			},
+			selectTab(index) {
+				this.currentTab = index;
+				this.currentPage = 1; // 切换标签时重置页码
+				this.getOrderList();
+			},
+			async getOrderList() {
+				if (this.loading) return;
+
+				this.loading = true;
+				uni.showLoading({
+					title: '加载中...'
+				});
+
+				try {
+					const db = uniCloud.database();
+					let query = db.collection('orders');
+
+					// 调试：打印当前查询条件
+					console.log('当前标签值:', this.tabs[this.currentTab].value);
+					// 根据当前标签添加筛选条件
+					if (this.currentTab > 0) {
+						const tabValue = this.tabs[this.currentTab].value;
+
+						if (tabValue === 'pending') {
+							console.log('执行待服务查询条件');
+							query = query.where({
+								status: 'paid',
+								service_status: 'pending'
+							});
+						} else if (tabValue === 'processing') {
+							query = query.where({
+								status: 'paid',
+								service_status: 'processing'
+							});
+						} else if (tabValue === 'completed') {
+							query = query.where({
+								status: 'paid',
+								service_status: 'completed'
+							});
+						} else if (tabValue === 'canceled') {
+							// 修正后的已取消查询条件
+							query = query.where({
+								'$or': [{
+										'$and': [{
+												status: 'paid'
+											},
+											{
+												service_status: 'cancelled'
+											}
+										]
+									},
+									{
+										status: 'pay_fail'
+									}
+								]
+							});
+						}
+					}
+
+					// 添加排序，最新订单在前
+					query = query.orderBy('create_time', 'desc');
+					console.log('最终查询命令:', JSON.stringify(query.getParam(), null, 2));
+					const res = await query
+						.orderBy('create_time', 'desc')
+						.skip((this.currentPage - 1) * this.pageSize)
+						.limit(this.pageSize)
+						.get();
+
+					console.log('原始查询结果:', res); // 调试日志
+
+					if (res.result.data && res.result.data.length > 0) {
+						// 关键修复：直接使用res.result.data而不是processedData
+						const dataToRender = res.result.data.map(item => ({
+							...item,
+							// 确保字段兼容
+							service_status: item.service_status || null,
+							// 添加服务时长默认值
+							duration: item.duration || '2小时'
+						}));
+
+						console.log('渲染数据:', dataToRender); // 调试日志
+
+						if (this.currentPage === 1) {
+							this.orderList = dataToRender;
+						} else {
+							this.orderList = [...this.orderList, ...dataToRender];
+						}
+						this.hasMore = res.result.data.length >= this.pageSize;
+					} else {
+						this.hasMore = false;
+						if (this.currentPage === 1) {
+							this.orderList = [];
+						}
+					}
+
+					// 获取服务信息（确保不覆盖已有数据）
+					await this.fetchServiceInfo(false);
+
+				} catch (error) {
+					console.error('查询订单异常:', error);
+					uni.showToast({
+						title: '查询订单异常，请稍后重试',
+						icon: 'none'
+					});
+				} finally {
+					this.loading = false;
+					uni.hideLoading();
+				}
+			},
+			async fetchServiceInfo(overwrite = true) {
+				try {
+					const serviceIds = [...new Set(
+						this.orderList
+						.filter(order => order.service_id)
+						.map(order => order.service_id)
+					)];
+
+					if (serviceIds.length === 0) return;
+
+					const db = uniCloud.database();
+					const servicesRes = await db.collection('services')
+						.where({
+							service_id: db.command.in(serviceIds)
+						})
+						.get();
+
+					if (servicesRes.result.data) {
+						const servicesMap = {};
+						servicesRes.result.data.forEach(s => {
+							servicesMap[s.service_id] = s;
+						});
+
+						// 关键修改：不覆盖已有数据
+						this.orderList = this.orderList.map(order => {
+							const service = servicesMap[order.service_id] || {};
+							return {
+								...order, // 保留原始数据
+								service_name: order.service_name || service.service_name || '未知服务',
+								service_price: order.service_price || service.service_price || 0
+							};
+						});
+					}
+				} catch (e) {
+					console.error('获取服务信息失败:', e);
+				}
+			},
+			calculateScrollHeight() {
+				const query = uni.createSelectorQuery().in(this);
+				query.select('.fixed-header').boundingClientRect(data => {
+					const systemInfo = uni.getSystemInfoSync();
+					this.scrollHeight = systemInfo.windowHeight - (data ? data.height : 180);
+				}).exec();
+			},
+			processRefund(orderNo) {
+				const index = this.orderList.findIndex(order => order.order_no === orderNo);
+				if (index !== -1) {
+					const refundAmount = (this.orderList[index].service_price * 0.8).toFixed(2);
+					this.$set(this.orderList[index], 'refund_amount', refundAmount);
+					this.$set(this.orderList[index], 'refund_status', 'processing');
+					this.$set(this.orderList[index], 'status', 'canceled');
+				}
+			},
+			viewRefundDetail(order) {
+				uni.navigateTo({
+					url: `/pages/order/refundDetail?id=${order.order_no}`
+				});
+			},
+			viewOrderDetail(order) {
+				// 校验订单数据完整性
+				if (!order.order_no) {
+					uni.showToast({
+						title: '订单信息异常',
+						icon: 'none'
+					});
+					return;
+				}
+
+				console.log('查看订单详情，订单号:', order.order_no);
+				uni.navigateTo({
+					url: `/pages/order/detail?id=${order.order_no}`
+				});
+			},
+			goToHome() {
+				uni.switchTab({
+					url: '/pages/home/index'
+				});
+			},
+			resetFilter() {
+				this.activeStatus = 'all';
+			},
+			confirmFilter() {
+				this.showFilter = false;
+				this.filterCount = this.activeStatus !== 'all' ? 1 : 0;
+			},
+			handleSearch() {
+				this.currentPage = 1;
+				this.getOrderList();
+			},
+			loadMore() {
+				if (this.hasMore && !this.loading) {
+					this.currentPage += 1;
+					this.getOrderList();
+				}
+			}
+		}
+	};
 </script>
 
 <style scoped>
-.container {
-  margin: 0; /* 重置外边距 */
-  padding: 0; /* 重置内边距 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100vh;
-  /* background-color: #ffffff; 背景颜色 */
-  background: linear-gradient(to bottom, #0bd6c8, #99efe9,#ddf5f4,rgb(226, 226, 226));
-  padding-top: 200rpx;
-}
+	/* 新增退款金额样式 */
+	.refund-value {
+		color: #ff6a00;
+		font-weight: 600;
+	}
 
-.header {
-  margin: 0; /* 重置外边距 */
-  padding: 10rpx; /* 添加内边距 */
-  display: flex;
-  justify-content: space-between; /* 使输入框和通知图标分开 */
-  align-items: center; /* 垂直居中 */
-  width: 100%; /* 使头部占满宽度 */
-  background-color: #ffffff; /* 背景颜色 */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
-}
+	/* 新增查看退款按钮样式 */
+	.btn-refund-detail {
+		color: #ff6a00;
+		border-color: #ff9c6e;
+		background: linear-gradient(to right, #fff7e6, #fff2e8);
+		margin-left: 10px;
+	}
 
-.title {
-  font-size: 28px; /* 增大标题字体大小 */
-  font-weight: bold;
-  color: #333;
-}
+	/* 调整按钮间距 */
+	.card-footer {
+		display: flex;
+		justify-content: flex-end;
+		padding: 12px 15px;
+		border-top: 1px solid #f5f5f5;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
 
-.search-container {
-  position: relative; /* 使子元素可以绝对定位 */
-  width: 80%; /* 容器宽度 */
-}
+	.action-btn {
+		height: 32px;
+		min-width: 90px;
+		border-radius: 16px;
+		font-size: 13px;
+		font-weight: 500;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #ddd;
+		background: white;
+		padding: 0 15px;
+		margin: 0;
+	}
 
-.search-icon {
-  position: absolute; /* 绝对定位 */
-  left: 60rpx; /* 距离左边的距离 */
-  top: 50%; /* 垂直居中 */
-  transform: translateY(-50%); /* 使图标垂直居中 */
-  width: 45rpx; /* 图标宽度 */
-  height: 45rpx; /* 图标高度 */
-}
+	@media (max-width: 350px) {
+		.action-btn {
+			min-width: 80px;
+			font-size: 12px;
+			padding: 0 8px;
+		}
+	}
 
-.search-input {
-  margin-left: 40rpx;
-  width: 80%; /* 输入框宽度 */
-  padding: 20rpx 10rpx 20rpx 80rpx; /* 内边距，左边留出空间给图标 */
-  border: none; /* 边框 */
-  background-color: #F5F5F5;
-  border-radius: 15px; /* 圆角 */
-}
 
-.notification {
-  border: none;
-  background-color:#D64444; /* 红色背景 */
-  color: #fff; /* 字体颜色 */
-  border-radius: 40%; /* 圆形 */
-  width: 60rpx; /* 宽度 */
-  height: 38rpx; /* 高度 */
-  display: flex; /* 使用 flex 布局 */
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  position: absolute; /* 绝对定位 */
-  top: -25rpx; /* 调整位置 */
-  right: -20rpx; /* 调整位置 */
-}
+	.page {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 100vh;
+		position: relative;
+	}
 
-.tabs {
-  background-color: #ffffff;
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  margin-bottom: 20rpx;
-}
+	.container {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		overflow: hidden;
+	}
 
-.tab {
-  font-size: 18px; /* 字体大小 */
-  color: #383838; /* 默认字体颜色 */
-  padding: 10rpx; /* 增加内边距 */
-  position: relative; /* 使横线相对定位 */
-}
+	.nav {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 1000;
+		height: 44px;
+	}
 
-.active {
-  color: #568EFF !important; /* 选中时字体颜色 */
-  border-bottom: 2rpx solid #568EFF !important; /* 选中时下方横线 */
-}
+	.fixed-header {
+		margin-top: 90rpx;
+		/* 恢复原来的上边距 */
+		width: 100%;
+		position: fixed;
+		top: 44px;
+		left: 0;
+		z-index: 999;
+		background-color: #fff;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
 
-.content {
-  background-color: #F5F5F5;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}
+	.header {
+		width: 100%;
+		padding: 10px 15px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 
-.trade-container {
-  display: flex; /* 使用 Flexbox 布局 */
-  justify-content: space-between; /* 左右对齐 */
-  width: calc(100% - 20rpx); /* 减去内边距 */
-  box-sizing: border-box; /* 包括内边距和边框在内 */
-  padding: 10rpx; /* 添加内边距 */
-  margin-top: 20rpx;
-}
+	.search-container {
+		position: relative;
+		flex: 1;
+		margin-right: 15px;
+	}
 
-.trade-info {
-  margin-left: 20rpx;
-  color: #383838; /* 默认字体颜色 */
-  font-size: 16px; /* 字体大小 */
-}
+	.search-input {
+		width: 100%;
+		padding: 8px 15px 8px 35px;
+		border: none;
+		background-color: #f5f5f5;
+		border-radius: 20px;
+		font-size: 14px;
+	}
 
-.bulk-operation {
-  color: #568EFF; /* 批量操作字体颜色 */
-  font-size: 16px; /* 字体大小 */
-  cursor: pointer; /* 鼠标悬停时显示为可点击 */
-}
+	.search-icon {
+		position: absolute;
+		left: 10px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 18px;
+		height: 18px;
+	}
 
-.empty-image {
-  width: 70%;
-  height: 400rpx;
-  margin: 40rpx auto;
-}
+	.filter-container {
+		display: flex;
+		align-items: center;
+		position: relative;
+	}
 
-.empty-text {
-  text-align: center;
-  margin-top: 10rpx;
-  font-size: 18px;
-  color: #26D7CF;
-}
+	.filter-icon {
+		width: 20px;
+		height: 20px;
+		margin-right: 5px;
+	}
 
-.filter-container {
-  display: flex; /* 使用 flex 布局 */
-  align-items: center; /* 垂直居中 */
-  justify-content: flex-end; /* 靠右对齐 */
-  width: 15%; /* 容器宽度 */
-  margin-top: 10rpx; /* 顶部间距 */
-  margin-right: 40rpx;
-  position: relative;
-}
+	.filter-text {
+		font-size: 14px;
+		color: #383838;
+	}
 
-.filter-icon {
-  width: 40rpx; /* 图标宽度 */
-  height: 40rpx; /* 图标高度 */
-  margin-right: 5rpx; /* 图标与文本之间的间距 */
-}
+	.notification {
+		background-color: #d64444;
+		color: #fff;
+		border-radius: 50%;
+		width: 20px;
+		height: 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		top: -8px;
+		right: -8px;
+		font-size: 12px;
+	}
 
-.filter-text {
-  font-size: 16px; /* 字体大小 */
-  color: #B9B9B9; /* 字体颜色 */
-}
+	.tabs {
+		width: 100%;
+		display: flex;
+		justify-content: space-around;
+		padding: 10px 0;
+		border-bottom: 1px solid #eee;
+	}
+
+	.tab {
+		font-size: 14px;
+		color: #383838;
+		position: relative;
+		padding: 5px 0;
+	}
+
+	.active {
+		color: #568eff !important;
+		font-weight: bold;
+	}
+
+	.active::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 2px;
+		background-color: #568eff;
+		border-radius: 1px;
+	}
+
+	.content {
+		margin-top: 400rpx;
+		/* 恢复原来的上边距 */
+
+		width: 100%;
+		padding: 10px;
+		box-sizing: border-box;
+	}
+
+	.order-card {
+		background: white;
+		border-radius: 12px;
+		margin-bottom: 12px;
+		overflow: hidden;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	}
+
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+		padding: 12px 15px;
+		border-bottom: 1px solid #f5f5f5;
+	}
+
+	.order-no {
+		color: #666;
+		font-size: 13px;
+	}
+
+	.order-status {
+		font-size: 13px;
+		font-weight: 500;
+	}
+
+	.status-pending {
+		color: #ff9c00;
+	}
+
+	.status-processing {
+		color: #568eff;
+	}
+
+	.status-completed {
+		color: #09be4f;
+	}
+
+	.status-canceled {
+		color: #999;
+	}
+
+	.card-body {
+		padding: 15px;
+	}
+
+	.service-info {
+		display: flex;
+		margin-bottom: 15px;
+	}
+
+	.service-icon {
+		width: 60px;
+		height: 60px;
+		border-radius: 8px;
+		background: linear-gradient(135deg, #6ca3ff, #3a6cd9);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 12px;
+	}
+
+	.service-icon image {
+		width: 30px;
+		height: 30px;
+	}
+
+	.service-details {
+		flex: 1;
+	}
+
+	.service-name {
+		font-size: 16px;
+		font-weight: 600;
+		margin-bottom: 5px;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.service-id {
+		color: #999;
+		font-size: 13px;
+	}
+
+	.order-meta {
+		display: flex;
+		justify-content: space-between;
+		background: #fafbfc;
+		border-radius: 8px;
+		padding: 12px;
+		margin-top: 10px;
+	}
+
+	.meta-item {
+		text-align: center;
+		flex: 1;
+	}
+
+	.meta-label {
+		color: #999;
+		font-size: 12px;
+		margin-bottom: 4px;
+	}
+
+	.meta-value {
+		font-weight: 500;
+		color: #333;
+	}
+
+	.price-value {
+		color: #ff6a00;
+		font-weight: 600;
+	}
+
+	.card-footer {
+		display: flex;
+		justify-content: flex-end;
+		padding: 12px 15px;
+		border-top: 1px solid #f5f5f5;
+	}
+
+	.action-btn {
+		height: 32px;
+		min-width: 90px;
+		margin-left: 10px;
+		border-radius: 16px;
+		font-size: 13px;
+		font-weight: 500;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #ddd;
+		background: white;
+		padding: 0 15px;
+	}
+
+	.btn-refund {
+		color: #ff6a00;
+		border-color: #ff9c6e;
+		background: linear-gradient(to right, #fff7e6, #fff2e8);
+		position: relative;
+		/* 确保按钮在层级最上方 */
+		z-index: 999;
+	}
+
+	.btn-detail {
+		color: #568eff;
+		border-color: #85a5ff;
+		background: linear-gradient(to right, #f0f7ff, #e6f4ff);
+	}
+
+	.empty-state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 60px 20px;
+		text-align: center;
+		height: 100%;
+	}
+
+	.empty-image {
+
+		margin-bottom: 120rpx;
+		width: 100%;
+		opacity: 0.6;
+	}
+
+	.empty-text {
+		font-size: 15px;
+		color: #999;
+		margin-bottom: 30px;
+	}
+
+
+	.load-more,
+	.no-more {
+		text-align: center;
+		padding: 15px;
+		color: #999;
+		font-size: 14px;
+	}
+
+	/* 自定义弹窗样式 */
+	.custom-popup-mask {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.5);
+		z-index: 999;
+		display: flex;
+		justify-content: center;
+		align-items: flex-end;
+	}
+
+	.custom-popup-container {
+		width: 100%;
+		max-height: 70vh;
+		background-color: #fff;
+		border-radius: 16px 16px 0 0;
+		overflow: hidden;
+		animation: popup-show 0.3s ease;
+	}
+
+	@keyframes popup-show {
+		from {
+			transform: translateY(100%);
+		}
+
+		to {
+			transform: translateY(0);
+		}
+	}
+
+	.custom-popup-header {
+		padding: 15px 20px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: 1px solid #f5f5f5;
+	}
+
+	.custom-popup-title {
+		font-size: 18px;
+		font-weight: bold;
+		color: #333;
+	}
+
+	.custom-popup-close {
+		font-size: 24px;
+		color: #999;
+		padding: 5px;
+	}
+
+	.custom-popup-body {
+		padding: 20px;
+		max-height: 50vh;
+		overflow-y: auto;
+	}
+
+	.filter-section {
+		margin-bottom: 20px;
+	}
+
+	.section-title {
+		display: block;
+		font-size: 16px;
+		font-weight: 500;
+		margin-bottom: 12px;
+		color: #333;
+	}
+
+	.filter-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.filter-tag {
+		padding: 6px 15px;
+		border-radius: 15px;
+		background: #f5f5f5;
+		color: #666;
+		font-size: 14px;
+	}
+
+	.filter-tag.active {
+		background: #e6f4ff;
+		color: #568eff;
+		border: 1px solid #568eff;
+	}
+
+	.time-range {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.time-picker {
+		flex: 1;
+		padding: 8px 12px;
+		border: 1px solid #eee;
+		border-radius: 4px;
+		text-align: center;
+	}
+
+	.time-separator {
+		color: #999;
+	}
+
+	.custom-popup-footer {
+		display: flex;
+		padding: 15px 20px;
+		border-top: 1px solid #f5f5f5;
+	}
+
+	.custom-reset-btn {
+		flex: 1;
+		height: 44px;
+		line-height: 44px;
+		background-color: #f5f5f5;
+		color: #333;
+		border-radius: 22px;
+		margin-right: 15px;
+		font-size: 16px;
+		border: none;
+	}
+
+	.custom-confirm-btn {
+		flex: 1;
+		height: 44px;
+		line-height: 44px;
+		background: linear-gradient(135deg, #568eff, #3a6cd9);
+		color: white;
+		border-radius: 22px;
+		font-size: 16px;
+		border: none;
+	}
+
+	@media (max-width: 350px) {
+		.action-btn {
+			min-width: 80px;
+			font-size: 12px;
+			padding: 0 8px;
+		}
+
+		.tab {
+			font-size: 12px;
+		}
+	}
 </style>

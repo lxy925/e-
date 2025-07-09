@@ -90,13 +90,7 @@
 					: '../../static/images/mine/down.png';
 			},
 		
-			toApply() {
-				const accountInfo = encodeURIComponent(JSON.stringify(this.accountInfo));
-				uni.navigateTo({
-				  url: `/pages/getMoney/getMoney?accountInfo=${accountInfo}`
-				});
-				
-			}
+			
 		}
 	}
 </script>

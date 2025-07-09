@@ -1,0 +1,7 @@
+{
+  "name": "closeOrder",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

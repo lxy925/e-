@@ -1,102 +1,106 @@
 <template>
 	<view class="page">
-		<custom-nav title="陪诊师入驻" :isHomePage="false"></custom-nav>
+		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+		  paddingTop: navHeight + 'px',
+		  height: 'calc(100vh - ' + navHeight + 'px)'
+		}" :scroll-top="scrollTop" :show-scrollbar="false">
 
-		<view class="container">
-			<!-- 头像上传 -->
-			<view class="custom-field custom-field1">
-				<text class="label">头像</text>
-				<view class="input" @click="chooseMedia('avatarList')">
-					<view v-if="!(formData.avatarList)" class="placeholder">点击上传真实头像</view>
-					<image v-else :src="formData.avatarList" class="avatar"></image>
+			<view class="container">
+				<!-- 头像上传 -->
+				<view class="custom-field custom-field1">
+					<text class="label">头像</text>
+					<view class="input" @click="chooseMedia('avatarList')">
+						<view v-if="!(formData.avatarList)" class="placeholder">点击上传真实头像</view>
+						<image v-else :src="formData.avatarList" class="avatar"></image>
+					</view>
 				</view>
-			</view>
 
-			<!-- 姓名 -->
-			<view class="custom-field">
-				<text class="label">姓名</text>
-				<input v-model="formData.name" placeholder="请输入姓名" class="input" />
-			</view>
-
-			<!-- 年龄 -->
-			<view class="custom-field">
-				<text class="label">年龄</text>
-				<input v-model="formData.age" placeholder="请输入年龄" type="number" class="input" />
-			</view>
-
-			<!-- 性别 -->
-			<view class="custom-field">
-				<text class="label">性别</text>
-				<view class="input">
-					<radio-group class="gender" @change="onGenderChange">
-						<label class="radio">
-							<radio value="男" :checked="formData.gender === '男'" />男
-						</label>
-						<label class="radio">
-							<radio value="女" :checked="formData.gender === '女'" />女
-						</label>
-					</radio-group>
+				<!-- 姓名 -->
+				<view class="custom-field">
+					<text class="label">姓名</text>
+					<input v-model="formData.name" placeholder="请输入姓名" class="input" />
 				</view>
-			</view>
 
-			<!-- 手机号 -->
-			<!-- <view class="custom-field">
+				<!-- 年龄 -->
+				<view class="custom-field">
+					<text class="label">年龄</text>
+					<input v-model="formData.age" placeholder="请输入年龄" type="number" class="input" />
+				</view>
+
+				<!-- 性别 -->
+				<view class="custom-field">
+					<text class="label">性别</text>
+					<view class="input">
+						<radio-group class="gender" @change="onGenderChange">
+							<label class="radio">
+								<radio value="男" :checked="formData.gender === '男'" />男
+							</label>
+							<label class="radio">
+								<radio value="女" :checked="formData.gender === '女'" />女
+							</label>
+						</radio-group>
+					</view>
+				</view>
+
+				<!-- 手机号 -->
+				<!-- <view class="custom-field">
 				<text class="label">手机号</text>
 				<input v-model="formData.phone" placeholder="请输入手机号" type="tel" class="input" />
 			</view> -->
 
-			<!-- 所在城市 -->
-			<view class="custom-field" @click="showCityPicker = true">
-				<text class="label">所在地区</text>
-				<view class="input">{{ selectedAddress || "请选择城市" }}</view>
-			</view>
-			<view class="action-sheet" v-if="showCityPicker">
-				<view class="picker-buttons">
-					<button @click="closeCityPicker">取消</button>
-					<button @click="confirmCityPicker" style="margin-right: 0rpx;">确定</button>
+				<!-- 所在城市 -->
+				<view class="custom-field" @click="showCityPicker = true">
+					<text class="label">所在地区</text>
+					<view class="input">{{ selectedAddress || "请选择城市" }}</view>
 				</view>
-				<picker-view class="picker-view" indicator-style="height: 50px;" @change="onCityChange">
-					<picker-view-column>
-						<view v-for="(province, index) in filteredProvinces" :key="index" class="picker-item">
-							{{ province.provinceName }}
-						</view>
-					</picker-view-column>
-					<picker-view-column>
-						<view v-for="(city, index) in currentCityList" :key="index" class="picker-item">
-							{{ city.cityName }}
-						</view>
-					</picker-view-column>
-					<picker-view-column>
-						<view v-for="(area, index) in currentAreaList" :key="index" class="picker-item">
-							{{ area.areaName }}
-						</view>
-					</picker-view-column>
-				</picker-view>
-			</view>
-			<!-- 身份证号码 -->
-			<!-- <view class="custom-field">
+				<view class="action-sheet" v-if="showCityPicker">
+					<view class="picker-buttons">
+						<button @click="closeCityPicker">取消</button>
+						<button @click="confirmCityPicker" style="margin-right: 0rpx;">确定</button>
+					</view>
+					<picker-view class="picker-view" indicator-style="height: 50px;" @change="onCityChange">
+						<picker-view-column>
+							<view v-for="(province, index) in filteredProvinces" :key="index" class="picker-item">
+								{{ province.provinceName }}
+							</view>
+						</picker-view-column>
+						<picker-view-column>
+							<view v-for="(city, index) in currentCityList" :key="index" class="picker-item">
+								{{ city.cityName }}
+							</view>
+						</picker-view-column>
+						<picker-view-column>
+							<view v-for="(area, index) in currentAreaList" :key="index" class="picker-item">
+								{{ area.areaName }}
+							</view>
+						</picker-view-column>
+					</picker-view>
+				</view>
+				<!-- 身份证号码 -->
+				<!-- <view class="custom-field">
 				<text class="label">身份证号码</text>
 				<input v-model="formData.idNumber" placeholder="请输入身份证号码" type="idcard" class="input" />
 			</view> -->
-			<!-- 资格证号 -->
-		<!-- 	<view class="custom-field">
+				<!-- 资格证号 -->
+				<!-- 	<view class="custom-field">
 				<text class="label">资格证号 (选填)</text>
 				<input v-model="formData.qualificationNumber" placeholder="请输入资格证号" class="input" />
 			</view> -->
 
-			<!-- 证书上传 -->
-			<view class="custom-field custom-field1">
-				<text class="label">证书 (选填)</text>
-				<view class="input" @click="chooseMedia('certificateList')">
-					<view v-if="!(formData.certificateList)" class="placeholder">点击上传证书</view>
-					<image v-else :src="formData.certificateList" class="book"></image>
+				<!-- 证书上传 -->
+				<view class="custom-field custom-field1">
+					<text class="label">证书 (选填)</text>
+					<view class="input" @click="chooseMedia('certificateList')">
+						<view v-if="!(formData.certificateList)" class="placeholder">点击上传证书</view>
+						<image v-else :src="formData.certificateList" class="book"></image>
+					</view>
 				</view>
-			</view>
 
 
 
-			<!-- 身份证正反面图片上传 -->
-			<!-- 	<view class="custom-field custom-field1">
+				<!-- 身份证正反面图片上传 -->
+				<!-- 	<view class="custom-field custom-field1">
 				<text class="label">身份证正面</text>
 				<view class="input" @click="chooseMedia('idCardFrontList')">
 					<view v-if="!(formData.idCardFrontList)" class="placeholder">点击上传身份证正面</view>
@@ -110,73 +114,74 @@
 					<image v-else :src="formData.idCardBackList" class="book"></image>
 				</view>
 			</view> -->
-			<!-- 语言能力 -->
-			<view class="custom-field">
-				<text class="label">语言能力</text>
-				<input v-model="formData.language" placeholder="请输入语言能力" class="input" />
-			</view>
-
-			<!-- 是否提供接送 -->
-			<view class="custom-field">
-				<text class="label">是否提供接送</text>
-				<view class="input">
-					<radio-group class="provide-transport" @change="onProvideTransportChange">
-					    <label class="radio">
-					        <radio value="true" :checked="formData.provide_transport === true" />是
-					    </label>
-					    <label class="radio">
-					        <radio value="false" :checked="formData.provide_transport === false" />否
-					    </label>
-					</radio-group>
+				<!-- 语言能力 -->
+				<view class="custom-field">
+					<text class="label">语言能力</text>
+					<input v-model="formData.language" placeholder="请输入语言能力" class="input" />
 				</view>
-			</view>
 
-			<!-- 熟悉的医院 -->
-			<view class="custom-field custom-field2" @click="goToSelectHospitals" style="height: auto;">
-				<text class="label">熟悉的医院</text>
-				<view class="input input2">
-					<view class="placeholder" style="text-align: left;margin-bottom: 10rpx;">点击添加熟悉的医院</view>
-					<view class="selected-hospitals">
-						<view v-for="(hospital, index) in formData.familiar_hospitals" :key="hospital.id"
-							class="hospital-item">
-							<text>{{ hospital}}</text>
-							<view class="remove-btn" @click.stop="removeHospital(index)">×</view>
+				<!-- 是否提供接送 -->
+				<view class="custom-field">
+					<text class="label">是否提供接送</text>
+					<view class="input">
+						<radio-group class="provide-transport" @change="onProvideTransportChange">
+							<label class="radio">
+								<radio value="true" :checked="formData.provide_transport === true" />是
+							</label>
+							<label class="radio">
+								<radio value="false" :checked="formData.provide_transport === false" />否
+							</label>
+						</radio-group>
+					</view>
+				</view>
+
+				<!-- 熟悉的医院 -->
+				<view class="custom-field custom-field2" @click="goToSelectHospitals" style="height: auto;">
+					<text class="label">熟悉的医院</text>
+					<view class="input input2">
+						<view class="placeholder" style="text-align: left;margin-bottom: 10rpx;">点击添加熟悉的医院</view>
+						<view class="selected-hospitals">
+							<view v-for="(hospital, index) in formData.familiar_hospitals" :key="hospital.id"
+								class="hospital-item">
+								<text>{{ hospital}}</text>
+								<view class="remove-btn" @click.stop="removeHospital(index)">×</view>
+							</view>
 						</view>
 					</view>
 				</view>
-			</view>
 
-			<!-- 熟悉的科室 -->
-			<view class="custom-field custom-field2" style="height: 430rpx;">
-				<text class="label">熟悉的科室</text>
-				<view class="input input2">
-					<view class="tags">
-						<view v-for="(department, index) in departments" :key="index" class="tag"
-							:class="{ selected: formData.familiar_departments.includes(department) }"
-							@click="toggleDepartmentSelection(department)">
-							{{ department }}
+				<!-- 熟悉的科室 -->
+				<view class="custom-field custom-field2" style="height: 430rpx;">
+					<text class="label">熟悉的科室</text>
+					<view class="input input2">
+						<view class="tags">
+							<view v-for="(department, index) in departments" :key="index" class="tag"
+								:class="{ selected: formData.familiar_departments.includes(department) }"
+								@click="toggleDepartmentSelection(department)">
+								{{ department }}
+							</view>
 						</view>
 					</view>
 				</view>
-			</view>
 
-			<!-- 自我介绍 -->
-			<view class="custom-field custom-field2">
-				<text class="label">自我介绍</text>
-				<textarea v-model="formData.self_introduction" placeholder="请输入自我介绍" class="input input1" />
-			</view>
-			<!-- 用户协议 -->
-			<view class="deal">
-				<checkbox :checked="agreeTerms" class="checkbox" @click="onCheckboxChange" />我已阅读并同意
-				<text class="user_deal" @click="goToUser_deal">用户协议</text>和
-				<text class="service_deal" @click="goToService_deal">服务协议</text>
-			</view>
+				<!-- 自我介绍 -->
+				<view class="custom-field custom-field2">
+					<text class="label">自我介绍</text>
+					<textarea v-model="formData.self_introduction" placeholder="请输入自我介绍" class="input input1" />
+				</view>
+				<!-- 用户协议 -->
+				<view class="deal">
+					<checkbox :checked="agreeTerms" class="checkbox" @click="onCheckboxChange" />我已阅读并同意
+					<text class="user_deal" @click="goToUser_deal">用户协议</text>和
+					<text class="service_deal" @click="goToService_deal">服务协议</text>
+				</view>
 
-			<!-- 注册按钮 -->
-			<button type="primary" block @click="submitForm" :disabled="!agreeTerms" class="button">
-				注册陪诊师
-			</button>
-		</view>
+				<!-- 注册按钮 -->
+				<button type="primary" block @click="submitForm" :disabled="!agreeTerms" class="button">
+					注册陪诊师
+				</button>
+			</view>
+		</scroll-view>
 	</view>
 </template>
 
@@ -189,6 +194,9 @@
 	export default {
 		data() {
 			return {
+				pageTitle: "陪诊师信息",
+				navHeight: 0, // 添加导航栏高度存储
+				scrollTop: 0,
 				formData: {
 					user_id: "",
 					name: "",
@@ -207,10 +215,10 @@
 					certificateList: "",
 					self_introduction: "", // 自我介绍
 					language: "", // 语言能力
-					provide_transport:false, // 是否提供接送
+					provide_transport: false, // 是否提供接送
 					familiar_hospitals: "", // 熟悉的医院
 					familiar_departments: [], // 熟悉的科室（改为数组存储）
-					parentId:"1"//上级陪诊师
+					parentId: "1" //上级陪诊师
 				},
 				selectedHospital: null, // 用于存储选中的医院信息
 				selectedHospitalList: [],
@@ -237,43 +245,49 @@
 			};
 		},
 		onLoad(options) {
-			
+			// 获取导航栏高度
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
+			if (this.userInfo != '' && this.userInfo.type == "陪诊师") {
+				this.selectTime('today');
+			}
 			//检查是否登陆过
 			// const userInfo =uni.getStorageSync('userInfo');
-			this.userInfo=uni.getStorageSync('userInfo');
-			const userInfo=this.userInfo
-				if (userInfo==null) {
-					
-				
-					uni.showToast({
-						title: '请先登录',
-						icon: 'none',
-						duration: 2000,
-					});
-					uni.navigateTo({
-						url: '/pages/userInfoDetail/userInfoDetail?from=mine'
-					});
-			}else{
-				console.log("登录后的用户userInfo",userInfo)
-				this.formData.user_id=userInfo.user_id;
+			this.userInfo = uni.getStorageSync('userInfo');
+			const userInfo = this.userInfo
+			if (userInfo == null) {
+
+
+				uni.showToast({
+					title: '请先登录',
+					icon: 'none',
+					duration: 2000,
+				});
+				uni.navigateTo({
+					url: '/pages/userInfoDetail/userInfoDetail?from=mine'
+				});
+			} else {
+				console.log("登录后的用户userInfo", userInfo)
+				this.formData.user_id = userInfo.user_id;
 				// this.formData.type=userInfo.type;
-				this.formData.name=userInfo.name;
-				
-				
+				this.formData.name = userInfo.name;
+
+
 			}
-			
+
 			//如果填过陪诊师信息则调用填充
-			 const formData= uni.getStorageSync('formData');
-			if(formData){
-				this.formData=formData;
-				this.selectedAddress = `${this.formData.city.provinceName} ${this.formData.city.cityName} ${this.formData.city.areaName}`;
-				console.log("缓存过的表格值",this.formData)
+			const formData = uni.getStorageSync('formData');
+			if (formData) {
+				this.formData = formData;
+				this.selectedAddress =
+					`${this.formData.city.provinceName} ${this.formData.city.cityName} ${this.formData.city.areaName}`;
+				console.log("缓存过的表格值", this.formData)
 			}
 			// 若扫码入驻的则解析 scene 参数（陪诊师的 user_id）
-			    const scene = decodeURIComponent(options.scene);
-			    this.formData. parentId= scene; // 保存上级陪诊师的 user_id
-		
-	
+			const scene = decodeURIComponent(options.scene);
+			this.formData.parentId = scene; // 保存上级陪诊师的 user_id
+
+
 			if (options.familiarHospitals) {
 				try {
 					// 确保传入的是数组
@@ -333,94 +347,103 @@
 			},
 		},
 		methods: {
+			//监视页面滚动情况
+			handleScroll(e) {
+				// if (this.scrollTimer) clearTimeout(this.scrollTimer)
+				// this.scrollTimer = setTimeout(() => {
+				// 	this.scrollTop = e.detail.scrollTop
+				// }, 16) // 约60fps
+			},
 			onCheckboxChange(event) {
 				// 更新 agreeTerms 的值
 				this.agreeTerms = !this.agreeTerms;
 				console.log('Checkbox changed:', this.agreeTerms);
 			},
-				
+
 			chooseMedia(listName) {
-			  // 选择图片
-			  uni.chooseImage({
-			    count: 1, // 选择一张图片
-			    success: (res) => { // 使用箭头函数确保 this 指向正确
-			      console.log("选择图片后的结果：", res);
-			
-			      if (res.tempFilePaths.length > 0) {
-			        const filePath = res.tempFilePaths[0]; // 获取临时文件路径
-			        console.log("临时文件路径：", filePath);
-			console.log("文件类型：", listName);
-			        // 生成唯一的文件名
-			        const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
-			
-			        // 指定云存储路径
-			        const cloudPath = `${listName}/${fileName}`; // 例如：avatarList/1741500000000_abc123.jpg
-			
-			        // 上传图片到云存储
-			        uniCloud.uploadFile({
-			          filePath, // 本地临时文件路径
-			          cloudPath, // 云存储路径
-					  cloudPathAsRealPath: true,
-			          onUploadProgress: (progressEvent) => {
-			            // 上传进度回调
-			            const percentCompleted = Math.round(
-			              (progressEvent.loaded * 100) / progressEvent.total
-			            );
-			            console.log(`上传进度：${percentCompleted}%`);
-			          },
-			          success: (uploadRes) => {
-			            // 上传成功回调
-			            console.log("上传成功：", uploadRes);
-			
-			            // 获取云存储的文件 ID
-			            const fileID = uploadRes.fileID;
-			
-			            // 更新前端数据
-			            this.formData[listName] = fileID; // 将 fileID 赋值给 this.formData[listName]
-			            uni.showToast({
-			              title: '上传成功',
-			              icon: 'success',
-			              duration: 2000,
-			            });
-			          },
-			          fail: (err) => {
-			            // 上传失败回调
-			            console.error("上传失败：", err);
-			            uni.showToast({
-			              title: '上传失败',
-			              icon: 'none',
-			              duration: 2000,
-			            });
-			          },
-			          complete: () => {
-			            // 上传完成回调
-			            console.log("上传完成");
-			          },
-			        });
-			      } else {
-			        console.error("未选择文件或文件选择失败");
-			        uni.showToast({
-			          title: '未选择文件',
-			          icon: 'none',
-			          duration: 2000,
-			        });
-			      }
-			    },
-			    fail: (err) => {
-			      // 选择图片失败回调
-			      console.error("选择图片失败：", err);
-			      uni.showToast({
-			        title: '选择图片失败',
-			        icon: 'none',
-			        duration: 2000,
-			      });
-			    },
-			  });
+				// 选择图片
+				uni.chooseImage({
+					count: 1, // 选择一张图片
+					success: (res) => { // 使用箭头函数确保 this 指向正确
+						console.log("选择图片后的结果：", res);
+
+						if (res.tempFilePaths.length > 0) {
+							const filePath = res.tempFilePaths[0]; // 获取临时文件路径
+							console.log("临时文件路径：", filePath);
+							console.log("文件类型：", listName);
+							// 生成唯一的文件名
+							const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
+
+							// 指定云存储路径
+							const cloudPath =
+								`${listName}/${fileName}`; // 例如：avatarList/1741500000000_abc123.jpg
+
+							// 上传图片到云存储
+							uniCloud.uploadFile({
+								filePath, // 本地临时文件路径
+								cloudPath, // 云存储路径
+								cloudPathAsRealPath: true,
+								onUploadProgress: (progressEvent) => {
+									// 上传进度回调
+									const percentCompleted = Math.round(
+										(progressEvent.loaded * 100) / progressEvent.total
+									);
+									console.log(`上传进度：${percentCompleted}%`);
+								},
+								success: (uploadRes) => {
+									// 上传成功回调
+									console.log("上传成功：", uploadRes);
+
+									// 获取云存储的文件 ID
+									const fileID = uploadRes.fileID;
+
+									// 更新前端数据
+									this.formData[listName] =
+										fileID; // 将 fileID 赋值给 this.formData[listName]
+									uni.showToast({
+										title: '上传成功',
+										icon: 'success',
+										duration: 2000,
+									});
+								},
+								fail: (err) => {
+									// 上传失败回调
+									console.error("上传失败：", err);
+									uni.showToast({
+										title: '上传失败',
+										icon: 'none',
+										duration: 2000,
+									});
+								},
+								complete: () => {
+									// 上传完成回调
+									console.log("上传完成");
+								},
+							});
+						} else {
+							console.error("未选择文件或文件选择失败");
+							uni.showToast({
+								title: '未选择文件',
+								icon: 'none',
+								duration: 2000,
+							});
+						}
+					},
+					fail: (err) => {
+						// 选择图片失败回调
+						console.error("选择图片失败：", err);
+						uni.showToast({
+							title: '选择图片失败',
+							icon: 'none',
+							duration: 2000,
+						});
+					},
+				});
 			},
-			
 
 
-		
+
+
 			onCityChange(event) {
 				const [provinceIndex, cityIndex, areaIndex] = event.detail.value;
 
@@ -506,7 +529,7 @@
 					errors.push('证书不能为空');
 					return errors;
 				}
-			
+
 				return errors;
 			},
 			async submitForm() {
@@ -545,9 +568,9 @@
 						icon: 'success',
 						duration: 2000,
 					});
-					
+
 					// this.userInfo.type = "陪诊师",
-					uni.setStorageSync('formData', this.formData);// 更新缓存中的 formData
+					uni.setStorageSync('formData', this.formData); // 更新缓存中的 formData
 					uni.setStorageSync('userInfo', this.userInfo); // 更新缓存中的 userInfo,用于转换mine页面
 					// uni.setStorageSync('type', "陪诊师"); 
 					console.log("userInfo", uni.getStorageSync('userInfo'))
@@ -581,8 +604,8 @@
 				}
 			},
 			onProvideTransportChange(event) {
-				 const value = event.detail.value;
-				            // 将字符串转换为布尔值
+				const value = event.detail.value;
+				// 将字符串转换为布尔值
 				this.formData.provide_transport = value === 'true';
 				// this.formData.provide_transport = event.detail.value;
 			},
@@ -615,14 +638,36 @@
 
 <style>
 	.page {
-		padding-top: 190rpx;
-		height: 100%;
+		height: 100vh;
+		/* background-color: #2ecc71; */
 
-		background: linear-gradient(to bottom, #0bd6c8, #99efe9, #ddf5f4, rgb(226, 226, 226));
+	}
+
+	.page-container {
+		min-height: 100vh;
+		position: relative;
+
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
+	}
+
+	.page-container ::-webkit-scrollbar {
+		display: none;
+		/* Chrome/Safari */
+		width: 0 !important;
+		/* 微信小程序可能需要 */
+		height: 0 !important;
 	}
 
 	.container {
-		background-color: #fff;
 		margin: 25rpx;
 		margin-top: 0rpx;
 		padding: 20rpx 30rpx;

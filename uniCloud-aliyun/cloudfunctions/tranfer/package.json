@@ -1,0 +1,7 @@
+{
+  "name": "tranfer",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

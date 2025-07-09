@@ -77,5 +77,8 @@
         "enable" : false
     },
     "vueVersion" : "2",
-    "locale" : "zh-Hans"
+    "locale" : "zh-Hans",
+	"uts": {
+	    "enabled": false
+	  }
 }

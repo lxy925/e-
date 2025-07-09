@@ -1,0 +1,7 @@
+{
+  "name": "jscode2session",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

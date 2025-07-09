@@ -102,7 +102,7 @@ var components
 try {
   components = {
     customNav: function () {
-      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 467))
+      return __webpack_require__.e(/*! import() | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then(__webpack_require__.bind(null, /*! @/components/custom-nav/custom-nav.vue */ 411))
     },
   }
 } catch (e) {
@@ -192,7 +192,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(uni) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -282,15 +282,26 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
 // pages/health/health.js
 var _default = {
   data: function data() {
-    return {};
+    return {
+      pageTitle: "健康管理",
+      scrollTop: 0,
+      navHeight: 0 // 存储导航栏高度
+    };
   },
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function onLoad(options) {},
+  onLoad: function onLoad(options) {
+    // 获取导航栏高度（需与 custom-nav 组件一致）
+    var systemInfo = uni.getSystemInfoSync();
+    this.navHeight = systemInfo.statusBarHeight + 44;
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -319,9 +330,19 @@ var _default = {
    * 用户点击右上角分享
    */
   onShareAppMessage: function onShareAppMessage() {},
-  methods: {}
+  methods: {
+    //监视页面滚动情况
+    handleScroll: function handleScroll(e) {
+      var _this = this;
+      if (this.scrollTimer) clearTimeout(this.scrollTimer);
+      this.scrollTimer = setTimeout(function () {
+        _this.scrollTop = e.detail.scrollTop;
+      }, 16); // 约60fps
+    }
+  }
 };
 exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 

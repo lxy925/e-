@@ -206,12 +206,12 @@ var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/run
 var _components$data$onSh;
 var PaymentComponent = function PaymentComponent() {
   __webpack_require__.e(/*! require.ensure | components/PaymentComponent */ "components/PaymentComponent").then((function () {
-    return resolve(__webpack_require__(/*! @/components/PaymentComponent.vue */ 664));
+    return resolve(__webpack_require__(/*! @/components/PaymentComponent.vue */ 672));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var ServiceNoticePopup = function ServiceNoticePopup() {
   __webpack_require__.e(/*! require.ensure | components/service-notice-popup */ "components/service-notice-popup").then((function () {
-    return resolve(__webpack_require__(/*! @/components/service-notice-popup.vue */ 671));
+    return resolve(__webpack_require__(/*! @/components/service-notice-popup.vue */ 679));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var _default = (_components$data$onSh = {

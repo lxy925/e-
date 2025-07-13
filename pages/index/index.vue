@@ -1,92 +1,91 @@
 <template>
-  <!-- 主容器 -->
-  <view>
-    <!-- 自定义导航栏 -->
-    <custom-nav 
-      :title="pageTitle" 
-      :isHomePage="true" 
-      :scrollTop="scrollTop" 
-    />
-    
-    <!-- 内容滚动区域 -->
-    <scroll-view 
-      scroll-y 
-      class="page-container" 
-      @scroll="handleScroll"
-      :style="{ 
+	<!-- 主容器 -->
+	<view>
+		<!-- 自定义导航栏 -->
+		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
+
+		<!-- 内容滚动区域 -->
+		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
         paddingTop: navHeight + 'px',
         height: 'calc(100vh - ' + navHeight + 'px)'
-      }" 
-      :scroll-top="scrollTop"
-      :show-scrollbar="false"
-    >
-      <!-- 顶部欢迎语 -->
-      <view class="textTop">祝您有一个健康的一天</view>
-      
-      <!-- 轮播图区域 -->
-      <view class="uni-margin-wrap">
-        <swiper class="swiper" circular :indicator-dots="true" :autoplay="true" :interval="3000" :duration="500">
-          <swiper-item v-for="banner in banners" :key="banner._id" @tap="handleBannerClick(banner)">
-            <image :src="banner.image" mode="aspectFill" style="width: 100%;"></image>
-          </swiper-item>
-        </swiper>
+      }" :scroll-top="scrollTop" :show-scrollbar="false">
+			<view class="content">
+				<view class="textTop"> 祝您有一个健康的一天 </view>
+				<view class="uni-margin-wrap">
+					<swiper class="swiper" circular :indicator-dots="true" :autoplay="true" :interval="3000"
+						:duration="500">
+						<swiper-item v-for="banner in banners" :key="banner._id" @tap="handleBannerClick(banner)">
+							<image :src="banner.image" mode="aspectFill" style="width: 100%;"></image>
+						</swiper-item>
+					</swiper>
 
-        <!-- AI悬浮按钮 -->
-        <view class="ai-float-btn" 
-          @touchstart="touchStart" 
-          @touchmove="touchMove" 
-          @touchend="touchEnd"
-          :style="{ left: buttonX + 'px', top: buttonY + 'px' }"
-          @tap="navigateToAI">
-          <text>AI咨询</text>
-        </view>
+					<!-- 新增的图标导航栏 -->
+					<view class="icon-nav">
+						<view class="icon-item" v-for="(item, index) in navItems" :key="index"
+							@tap="handleNavClick(item.path)">
+							<image :src="item.icon" mode="aspectFit" class="nav-icon"></image>
+							<text class="nav-text">{{ item.text }}</text>
+						</view>
+						<!-- AI悬浮按钮 -->
+						<view class="ai-float-btn" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
+							:style="{ left: buttonX + 'px', top: buttonY + 'px' }" @tap="navigateToAI">
+							<text>AI咨询</text>
+						</view>
 
-        <!-- 图标导航栏 -->
-        <view class="icon-nav">
-          <view class="icon-item" v-for="(item, index) in navItems" :key="index" @tap="handleNavClick(item.path)">
-            <image :src="item.icon" mode="aspectFit" class="nav-icon"></image>
-            <text class="nav-text">{{ item.text }}</text>
-          </view>
-        </view>
-      </view>
+						<!-- 新增的图标导航栏 -->
+						<!-- <view class="icon-nav">
+						<view class="icon-item" v-for="(item, index) in navItems" :key="index"
+							@tap="handleNavClick(item.path)">
+							<image :src="item.icon" mode="aspectFit" class="nav-icon"></image>
+							<text class="nav-text">{{ item.text }}</text>
+						</view>
+					</view> -->
+					</view>
 
-      <!-- 热门医院推荐 -->
-      <view class="hospital-section">
-        <view class="section-header">
-          <text class="section-title">热门医院推荐</text>
-          <view class="more-link" @tap="navigateToMore">
-            更多<text class="arrow">></text>
-          </view>
-        </view>
+				</view>
 
-        <view class="hospital-list">
-          <view class="hospital-item" v-for="hospital in hospitals" :key="hospital.id" @tap="navigateToHospital(hospital.id)">
-            <image :src="hospital.image" mode="aspectFill" class="hospital-image"></image>
-            <view class="hospital-info">
-              <view class="hospital-header">
-                <text class="hospital-name">{{ hospital.name }}</text>
-                <text class="hospital-level">{{ hospital.level }}</text>
-              </view>
-              <view class="hospital-detail">
-                <view class="detail-item">
-                  <text class="label">类型：</text>
-                  <text class="value">{{ hospital.type }}</text>
-                </view>
-                <view class="detail-item">
-                  <text class="label">电话：</text>
-                  <text class="value">{{ hospital.phone }}</text>
-                </view>
-                <view class="detail-item address">
-                  <text class="label">地址：</text>
-                  <text class="value">{{ hospital.address }}</text>
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </scroll-view>
-  </view>
+				<!-- 热门医院推荐 -->
+				<view class="hospital-section">
+				
+								<view class="section-header">
+									<text class="section-title">热门医院推荐</text>
+									<view class="more-link" @tap="navigateToMore">
+										更多<text class="arrow">></text>
+									</view>
+								</view>
+				<!-- 修改医院列表部分 -->
+				<view class="hospital-list">
+					<view class="hospital-item" v-for="hospital in hospitals" :key="hospital._id"
+						@tap="navigateToHospital(hospital)">
+						<image :src="hospital.image || '/static/images/hospital1.jpg'" mode="aspectFill"
+							class="hospital-image"></image>
+						<view class="hospital-info">
+							<view class="hospital-header">
+								<text class="hospital-name">{{ hospital.name }}</text>
+								<text class="hospital-level">{{ hospital.level }}</text>
+							</view>
+							<view class="hospital-detail">
+								<view class="detail-item">
+									<text class="label">类型：</text>
+									<text class="value">{{ hospital.type }}</text>
+								</view>
+								<view class="detail-item">
+									<text class="label">电话：</text>
+									<text class="value">{{ hospital.phone || '暂无' }}</text>
+								</view>
+								<view class="detail-item address">
+									<text class="label">地址：</text>
+									<text class="value">{{ hospital.address.city }}{{ hospital.address.detail }}</text>
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+				</view>
+			</view>
+		</scroll-view>
+	</view>
+
 </template>
 
 <script>
@@ -97,7 +96,7 @@
 				pageTitle: '首页',
 				scrollTimer: null,
 				scrollTop: 0,
-				navHeight: 0,
+				navHeight: 0, // 添加导航栏高度存储
 				buttonX: 30, // 按钮初始X坐标
 				buttonY: 200, // 按钮初始Y坐标
 				startX: 0, // 触摸开始X坐标
@@ -130,43 +129,7 @@
 						path: "/pages/test/test",
 					},
 				],
-				hospitals: [{
-						id: 1,
-						name: "北京协和医院",
-						level: "三级甲等",
-						type: "综合医院",
-						phone: "010-69156114",
-						address: "北京市东城区帅府园一号",
-						image: "/static/images/hospital1.jpg",
-					},
-					{
-						id: 2,
-						name: "北京大学第一医院",
-						level: "三级甲等",
-						type: "综合医院",
-						phone: "010-83572211",
-						address: "北京市西城区西什库大街8号",
-						image: "/static/images/hospital1.jpg",
-					},
-					{
-						id: 3,
-						name: "中国医学科学院肿瘤医院",
-						level: "三级甲等",
-						type: "综合医院",
-						phone: "010-65156114",
-						address: "北京市朝阳区潘家园南里17号",
-						image: "/static/images/hospital1.jpg",
-					},
-					{
-						id: 4,
-						name: "北京友谊医院",
-						level: "三级甲等",
-						type: "综合医院",
-						phone: "010-65156114",
-						address: "北京市西城区永安路95号",
-						image: "/static/images/hospital1.jpg",
-					},
-				],
+				hospitals: [], // 清空原有的模拟数据
 			};
 		},
 		/**
@@ -176,7 +139,9 @@
 			// 获取导航栏高度
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
-			this.getBanners()
+			
+			this.getBanners();
+			this.getHospitalList(); // 新增调用获取医院数据
 		},
 		/**
 		 * 生命周期函数--监听页面初次渲染完成
@@ -209,121 +174,184 @@
 		methods: {
 			//监视页面滚动情况
 			handleScroll(e) {
-			    // 使用节流减少更新频率
-			    if (this.scrollTimer) clearTimeout(this.scrollTimer);
-			    this.scrollTimer = setTimeout(() => {
-			      this.scrollTop = e.detail.scrollTop;
-			    }, 16); // 约60fps
-			  },
-
-			handleNavClick(path) {
-				uni.navigateTo({
-					url: path,
-				});
+				// 使用节流减少更新频率
+				if (this.scrollTimer) clearTimeout(this.scrollTimer);
+				this.scrollTimer = setTimeout(() => {
+					this.scrollTop = e.detail.scrollTop;
+				}, 16); // 约60fps
 			},
-
-			navigateToMore() {
-				uni.navigateTo({
-					url: '/pages/more/more?from=index'
-				})
-			},
-			navigateToHospital(id) {
-				uni.navigateTo({
-					url: `/pages/hospital/detail?id=${id}`,
-				});
-			},
-			// 跳转到AI问答页面
-			navigateToAI() {
-				if (!this.isDragging) { // 只有在非拖拽状态才触发跳转
-					uni.navigateTo({
-						url: '/pages/AI/AI'
-					});
-				}
-			},
-			// 触摸开始
-			touchStart(e) {
-				this.startX = e.touches[0].clientX;
-				this.startY = e.touches[0].clientY;
-				this.isDragging = false;
-			},
-			// 触摸移动
-			touchMove(e) {
-				const moveX = e.touches[0].clientX - this.startX;
-				const moveY = e.touches[0].clientY - this.startY;
-
-				// 如果移动距离超过10px，认为是拖拽
-				if (Math.abs(moveX) > 10 || Math.abs(moveY) > 10) {
-					this.isDragging = true;
-				}
-
-				// 计算新的位置
-				let newX = this.buttonX + moveX;
-				let newY = this.buttonY + moveY;
-
-				// 获取屏幕尺寸
-				const systemInfo = uni.getSystemInfoSync();
-				const screenWidth = systemInfo.windowWidth;
-				const screenHeight = systemInfo.windowHeight;
-
-				// 限制按钮在屏幕范围内
-				newX = Math.max(0, Math.min(newX, screenWidth - 100));
-				newY = Math.max(0, Math.min(newY, screenHeight - 100));
-
-				this.buttonX = newX;
-				this.buttonY = newY;
-				this.startX = e.touches[0].clientX;
-				this.startY = e.touches[0].clientY;
-			},
-			// 触摸结束
-			touchEnd() {
-				this.isDragging = false;
-			},
-			// 获取轮播图数据
-			async getBanners() {
+			// 新增获取医院数据的方法
+			async getHospitalList() {
 				try {
 					uni.showLoading({
-						title: '加载中'
-					})
+						title: '加载中...'
+					});
+					const res = await uniCloud.callFunction({
+						name: 'getHospitals',
+						data: {
+							page: 1,
+							pageSize: 6 // 限制获取6条数据
+						}
+					});
 
-					const {
-						result
-					} = await uniCloud.callFunction({
-						name: 'getBanners'
-					})
-					console.log(result)
-					if (result.code === 0) {
-						this.banners = result.data
-						console.log(result.data)
+					if (res.result.code === 0) {
+						this.hospitals = res.result.data.list;
 					} else {
 						uni.showToast({
-							title: result.msg || '获取轮播图失败',
+							title: `获取数据失败：${res.result.msg}`,
 							icon: 'none'
-						})
+						});
 					}
 				} catch (e) {
 					uni.showToast({
-						title: '获取轮播图失败',
+						title: '获取医院列表失败',
+						icon: 'none'
+					});
+					console.error("获取医院列表失败：", e);
+				} finally {
+					uni.hideLoading();
+				}
+			},
+
+			// 修改医院点击事件
+			navigateToHospital(hospital) {
+				if (!hospital.website || hospital.website === "") {
+					uni.showToast({
+						title: '暂无医院官网信息',
+						icon: 'none',
+						duration: 2000
+					});
+					return;
+				}
+
+				try {
+					let url = hospital.website;
+					if (!url.startsWith('http://') && !url.startsWith('https://')) {
+						url = 'http://' + url;
+					}
+
+					uni.navigateTo({
+						url: `/pages/web-view/web-view?url=${encodeURIComponent(url)}`,
+						fail: (err) => {
+							console.error('跳转失败:', err);
+							uni.showToast({
+								title: '打开网页失败',
+								icon: 'none'
+							});
+						}
+					});
+				} catch (error) {
+					console.error('打开网页错误:', error);
+					uni.showToast({
+						title: '打开网页失败',
+						icon: 'none'
+					});
+				}
+		},
+		handleNavClick(path) {
+			uni.navigateTo({
+				url: path,
+			});
+		},
+
+		navigateToMore() {
+			uni.navigateTo({
+				url: '/pages/more/more?from=index'
+			})
+		},
+		// 跳转到AI问答页面
+		navigateToAI() {
+			if (!this.isDragging) { // 只有在非拖拽状态才触发跳转
+				uni.navigateTo({
+					url: '/pages/AI/AI'
+				});
+			}
+		},
+		// 触摸开始
+		touchStart(e) {
+			this.startX = e.touches[0].clientX;
+			this.startY = e.touches[0].clientY;
+			this.isDragging = false;
+		},
+		// 触摸移动
+		touchMove(e) {
+			const moveX = e.touches[0].clientX - this.startX;
+			const moveY = e.touches[0].clientY - this.startY;
+
+			// 如果移动距离超过10px，认为是拖拽
+			if (Math.abs(moveX) > 10 || Math.abs(moveY) > 10) {
+				this.isDragging = true;
+			}
+
+			// 计算新的位置
+			let newX = this.buttonX + moveX;
+			let newY = this.buttonY + moveY;
+
+			// 获取屏幕尺寸
+			const systemInfo = uni.getSystemInfoSync();
+			const screenWidth = systemInfo.windowWidth;
+			const screenHeight = systemInfo.windowHeight;
+
+			// 限制按钮在屏幕范围内
+			newX = Math.max(0, Math.min(newX, screenWidth - 100));
+			newY = Math.max(0, Math.min(newY, screenHeight - 100));
+
+			this.buttonX = newX;
+			this.buttonY = newY;
+			this.startX = e.touches[0].clientX;
+			this.startY = e.touches[0].clientY;
+		},
+		// 触摸结束
+		touchEnd() {
+			this.isDragging = false;
+		},
+		// 获取轮播图数据
+		async getBanners() {
+			try {
+				uni.showLoading({
+					title: '加载中'
+				})
+
+				const {
+					result
+				} = await uniCloud.callFunction({
+					name: 'getBanners'
+				})
+				console.log(result)
+				if (result.code === 0) {
+					this.banners = result.data
+					console.log(result.data)
+				} else {
+					uni.showToast({
+						title: result.msg || '获取轮播图失败',
 						icon: 'none'
 					})
-				} finally {
-					uni.hideLoading()
 				}
-			},
-			// 处理轮播图点击
-			handleBannerClick(banner) {
-				if (banner.url) {
-					uni.navigateTo({
-						url: banner.url,
-						fail() {
-							uni.showToast({
-								title: '页面跳转失败',
-								icon: 'none'
-							})
-						}
-					})
-				}
-			},
+			} catch (e) {
+				uni.showToast({
+					title: '获取轮播图失败',
+					icon: 'none'
+				})
+			} finally {
+				uni.hideLoading()
+			}
 		},
+		// 处理轮播图点击
+		handleBannerClick(banner) {
+			if (banner.url) {
+				uni.navigateTo({
+					url: banner.url,
+					fail() {
+						uni.showToast({
+							title: '页面跳转失败',
+							icon: 'none'
+						})
+					}
+				})
+			}
+		},
+		}
+
 	};
 </script>
 <style>

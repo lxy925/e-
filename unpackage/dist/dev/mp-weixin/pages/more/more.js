@@ -286,6 +286,7 @@ var _default = {
       navHeight: 0,
       // 添加导航栏高度存储
       currentType: 'hospital',
+      pageTitle: "医院列表",
       searchText: '',
       hospitals: [],
       filteredHospitals: [],

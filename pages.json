@@ -217,6 +217,14 @@
 				"navigationBarTitleText": ""
 			}
 		},
+
+        {
+             "path": "uni_modules/uni-pay/pages/pay-desk/pay-desk",
+             "style": {
+             "backgroundColor": "#F8F8F8",
+             "navigationBarTitleText": "收银台"
+            }
+		},
 		{
 			"path": "uni_modules/uni-pay/pages/success/success",
 			"style": {
@@ -259,7 +267,6 @@
 		"navigationBarTextStyle": "white",
 		"navigationStyle": "custom"
 	},
-
 	"sitemapLocation": "sitemap.json",
 	"style": "v2",
 	"lazyCodeLoading": "requiredComponents",
@@ -298,6 +305,7 @@
 	"easycom": {
 		"autoscan": true,
 		"custom": {
+			"^uni-pay$": "@/uni_modules/uni-pay/components/uni-pay/uni-pay.vue",
 			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
 			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 		}

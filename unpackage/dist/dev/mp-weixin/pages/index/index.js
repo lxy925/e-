@@ -258,7 +258,6 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
-//
 // pages/index/index.js
 var _default = {
   data: function data() {
@@ -267,6 +266,7 @@ var _default = {
       scrollTimer: null,
       scrollTop: 0,
       navHeight: 0,
+      // 添加导航栏高度存储
       buttonX: 30,
       // 按钮初始X坐标
       buttonY: 200,
@@ -300,39 +300,7 @@ var _default = {
         text: "陪诊师考题",
         path: "/pages/test/test"
       }],
-      hospitals: [{
-        id: 1,
-        name: "北京协和医院",
-        level: "三级甲等",
-        type: "综合医院",
-        phone: "010-69156114",
-        address: "北京市东城区帅府园一号",
-        image: "/static/images/hospital1.jpg"
-      }, {
-        id: 2,
-        name: "北京大学第一医院",
-        level: "三级甲等",
-        type: "综合医院",
-        phone: "010-83572211",
-        address: "北京市西城区西什库大街8号",
-        image: "/static/images/hospital1.jpg"
-      }, {
-        id: 3,
-        name: "中国医学科学院肿瘤医院",
-        level: "三级甲等",
-        type: "综合医院",
-        phone: "010-65156114",
-        address: "北京市朝阳区潘家园南里17号",
-        image: "/static/images/hospital1.jpg"
-      }, {
-        id: 4,
-        name: "北京友谊医院",
-        level: "三级甲等",
-        type: "综合医院",
-        phone: "010-65156114",
-        address: "北京市西城区永安路95号",
-        image: "/static/images/hospital1.jpg"
-      }]
+      hospitals: [] // 清空原有的模拟数据
     };
   },
   /**
@@ -343,6 +311,7 @@ var _default = {
     var systemInfo = uni.getSystemInfoSync();
     this.navHeight = systemInfo.statusBarHeight + 44;
     this.getBanners();
+    this.getHospitalList(); // 新增调用获取医院数据
   },
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -382,6 +351,92 @@ var _default = {
         _this.scrollTop = e.detail.scrollTop;
       }, 16); // 约60fps
     },
+    // 新增获取医院数据的方法
+    getHospitalList: function getHospitalList() {
+      var _this2 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var res;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                uni.showLoading({
+                  title: '加载中...'
+                });
+                _context.next = 4;
+                return uniCloud.callFunction({
+                  name: 'getHospitals',
+                  data: {
+                    page: 1,
+                    pageSize: 6 // 限制获取6条数据
+                  }
+                });
+              case 4:
+                res = _context.sent;
+                if (res.result.code === 0) {
+                  _this2.hospitals = res.result.data.list;
+                } else {
+                  uni.showToast({
+                    title: "\u83B7\u53D6\u6570\u636E\u5931\u8D25\uFF1A".concat(res.result.msg),
+                    icon: 'none'
+                  });
+                }
+                _context.next = 12;
+                break;
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](0);
+                uni.showToast({
+                  title: '获取医院列表失败',
+                  icon: 'none'
+                });
+                console.error("获取医院列表失败：", _context.t0);
+              case 12:
+                _context.prev = 12;
+                uni.hideLoading();
+                return _context.finish(12);
+              case 15:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 8, 12, 15]]);
+      }))();
+    },
+    // 修改医院点击事件
+    navigateToHospital: function navigateToHospital(hospital) {
+      if (!hospital.website || hospital.website === "") {
+        uni.showToast({
+          title: '暂无医院官网信息',
+          icon: 'none',
+          duration: 2000
+        });
+        return;
+      }
+      try {
+        var url = hospital.website;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'http://' + url;
+        }
+        uni.navigateTo({
+          url: "/pages/web-view/web-view?url=".concat(encodeURIComponent(url)),
+          fail: function fail(err) {
+            console.error('跳转失败:', err);
+            uni.showToast({
+              title: '打开网页失败',
+              icon: 'none'
+            });
+          }
+        });
+      } catch (error) {
+        console.error('打开网页错误:', error);
+        uni.showToast({
+          title: '打开网页失败',
+          icon: 'none'
+        });
+      }
+    },
     handleNavClick: function handleNavClick(path) {
       uni.navigateTo({
         url: path
@@ -390,11 +445,6 @@ var _default = {
     navigateToMore: function navigateToMore() {
       uni.navigateTo({
         url: '/pages/more/more?from=index'
-      });
-    },
-    navigateToHospital: function navigateToHospital(id) {
-      uni.navigateTo({
-        url: "/pages/hospital/detail?id=".concat(id)
       });
     },
     // 跳转到AI问答页面
@@ -445,27 +495,27 @@ var _default = {
     },
     // 获取轮播图数据
     getBanners: function getBanners() {
-      var _this2 = this;
-      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      var _this3 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
         var _yield$uniCloud$callF, result;
-        return _regenerator.default.wrap(function _callee$(_context) {
+        return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.prev = 0;
+                _context2.prev = 0;
                 uni.showLoading({
                   title: '加载中'
                 });
-                _context.next = 4;
+                _context2.next = 4;
                 return uniCloud.callFunction({
                   name: 'getBanners'
                 });
               case 4:
-                _yield$uniCloud$callF = _context.sent;
+                _yield$uniCloud$callF = _context2.sent;
                 result = _yield$uniCloud$callF.result;
                 console.log(result);
                 if (result.code === 0) {
-                  _this2.banners = result.data;
+                  _this3.banners = result.data;
                   console.log(result.data);
                 } else {
                   uni.showToast({
@@ -473,25 +523,25 @@ var _default = {
                     icon: 'none'
                   });
                 }
-                _context.next = 13;
+                _context2.next = 13;
                 break;
               case 10:
-                _context.prev = 10;
-                _context.t0 = _context["catch"](0);
+                _context2.prev = 10;
+                _context2.t0 = _context2["catch"](0);
                 uni.showToast({
                   title: '获取轮播图失败',
                   icon: 'none'
                 });
               case 13:
-                _context.prev = 13;
+                _context2.prev = 13;
                 uni.hideLoading();
-                return _context.finish(13);
+                return _context2.finish(13);
               case 16:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, null, [[0, 10, 13, 16]]);
+        }, _callee2, null, [[0, 10, 13, 16]]);
       }))();
     },
     // 处理轮播图点击

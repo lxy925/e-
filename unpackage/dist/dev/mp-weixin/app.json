@@ -34,6 +34,7 @@
     "pages/vkPayTest/vkPayTest",
     "pages/refund/refund",
     "pages/getMoney/getMoney",
+    "uni_modules/uni-pay/pages/pay-desk/pay-desk",
     "uni_modules/uni-pay/pages/success/success",
     "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview",
     "pages/chatList/chatList",

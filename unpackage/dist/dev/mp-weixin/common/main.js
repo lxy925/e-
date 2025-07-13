@@ -26,23 +26,22 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 // @ts-ignore
 wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
-// 临时修复 UTS 报错（添加在文件最顶部）
-if (typeof globalThis.resolveUniTypeScript === 'undefined') {
-  globalThis.resolveUniTypeScript = function () {};
-}
-var EventBus = new _vue.default();
-exports.EventBus = EventBus;
 var CustomNav = function CustomNav() {
   __webpack_require__.e(/*! require.ensure | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then((function () {
     return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 529));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
+var EventBus = new _vue.default();
+
+// 全局mixins，用于实现setData等功能，请勿删除！
+exports.EventBus = EventBus;
 _vue.default.use(_uviewUi.default);
 _vue.default.use(_index2.default);
 _vue.default.prototype.$EventBus = EventBus;
 _vue.default.config.productionTip = false;
 _App.default.mpType = 'app';
 // Vue.prototype.$api = api
+// 全局mixins，用于实现setData等功能，请勿删除！';
 
 // 全局注册 custom-nav 组件
 _vue.default.component('custom-nav', CustomNav);

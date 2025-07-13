@@ -540,19 +540,6 @@
 					});
 					return;
 				}
-				// const errors = this.validateFormData();
-				// if (errors.length > 0) {
-				// 	// 如果有错误，显示错误提示
-				// 	errors.forEach(error => {
-				// 		uni.showToast({
-				// 			title: error,
-				// 			icon: 'none',
-				// 			duration: 2000,
-				// 		});
-				// 	});
-				// 	return;
-				// }
-
 
 				console.log("提交的表单数据：", this.formData);
 				const {

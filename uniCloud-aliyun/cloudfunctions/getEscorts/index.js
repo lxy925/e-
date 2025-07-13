@@ -29,6 +29,7 @@ exports.main = async (event, context) => {
            // 3. 如果不是从order页面进入，直接返回所有陪诊师
            if (!isFromOrder) {
              const escortsRes = await query.end();
+			 console.log("按名字查询",escortsRes)
              return {
                success: true,
                data: escortsRes.data.sort((a, b) => b.moreInfo.rating - a.moreInfo.rating)

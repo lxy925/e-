@@ -1,143 +1,143 @@
 <template>
 	<view class="order-detail">
 		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
-			<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
 		  paddingTop: navHeight + 'px',
 		  height: 'calc(100vh - ' + navHeight + 'px)'
 		}" :scroll-top="scrollTop" :show-scrollbar="false">
-		
 
-		<view class="content">
-			<!-- 支付组件 -->
-			<vk-uni-pay ref="vkPay" :query-payment-action="vkPay.queryPaymentAction" :status.sync="vkPay.status"
-				:code-url.sync="vkPay.codeUrl" :page-show="vkPay.pageShow" :polling="vkPay.polling"></vk-uni-pay>
 
-			<!-- 状态显示区域 -->
-			<view v-if="orderStatus === 'paid'" class="status-card success-card">
-				<div class="status-icon success-icon">✔</div>
-				<h3 class="status-title">支付成功</h3>
-				<p class="status-message">您的订单已支付完成</p>
-			</view>
+			<view class="content">
+				<!-- 支付组件 -->
+				<vk-uni-pay ref="vkPay" :query-payment-action="vkPay.queryPaymentAction" :status.sync="vkPay.status"
+					:code-url.sync="vkPay.codeUrl" :page-show="vkPay.pageShow" :polling="vkPay.polling"></vk-uni-pay>
 
-			<view v-if="orderStatus === 'paying' && !isOrderExpired" class="status-card pending-card">
-				<div class="status-icon pending-icon">⏳</div>
-				<h3 class="status-title">订单待支付</h3>
-				<p class="status-message">请在{{timeLeft}}内进行支付，超时将取消</p>
-				<div class="timer-progress">
-					<div class="timer-bar" :style="{width: timeProgress + '%'}"></div>
-				</div>
-				<div class="action-buttons">
-					<button class="btn cancel-btn" @click="cancelOrder">取消订单</button>
-					<button class="btn pay-btn" @click="proceedPayment">立即支付</button>
-				</div>
-			</view>
-
-			<view v-if="orderStatus === 'cancelled' && isOrderExpired" class="status-card expired-card">
-				<div class="status-icon expired-icon">✖</div>
-				<h3 class="status-title">订单已取消</h3>
-				<p class="status-message">支付超时，订单已自动取消</p>
-			</view>
-
-			<view v-if="orderStatus === 'pay_fail'" class="status-card failed-card">
-				<div class="status-icon failed-icon">✖</div>
-				<h3 class="status-title">支付失败</h3>
-				<p class="status-message">请重试或联系客服</p>
-				<view class="status-illustration">
-					<image src="/static/failed.svg" mode="aspectFit" class="illustration-image"></image>
+				<!-- 状态显示区域 -->
+				<view v-if="orderStatus === 'paid'" class="status-card success-card">
+					<div class="status-icon success-icon">✔</div>
+					<h3 class="status-title">支付成功</h3>
+					<p class="status-message">您的订单已支付完成</p>
 				</view>
-				<button class="btn retry-btn" @click="retryPayment">重试支付</button>
-			</view>
 
-			<!-- 服务信息 -->
-			<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
-				<h2 class="section-title">服务详情</h2>
-				<div class="service-card">
-					<image :src="serviceImage" mode="aspectFill" class="service-image"></image>
-					<div class="service-details">
-						<h3 class="service-name">{{orderInfo.service_name || '未获取到服务名称'}}</h3>
-						<p class="service-desc">{{orderInfo.service_desc || '暂无服务描述'}}</p>
-						<div class="service-meta">
-							<span class="service-price">¥{{orderInfo.service_price || '0.00'}}</span>
-							<span class="service-quantity">x{{quantity}}</span>
+				<view v-if="orderStatus === 'paying' && !isOrderExpired" class="status-card pending-card">
+					<div class="status-icon pending-icon">⏳</div>
+					<h3 class="status-title">订单待支付</h3>
+					<p class="status-message">请在{{timeLeft}}内进行支付，超时将取消</p>
+					<div class="timer-progress">
+						<div class="timer-bar" :style="{width: timeProgress + '%'}"></div>
+					</div>
+					<div class="action-buttons">
+						<button class="btn cancel-btn" @click="cancelOrder">取消订单</button>
+						<button class="btn pay-btn" @click="proceedPayment">立即支付</button>
+					</div>
+				</view>
+
+				<view v-if="orderStatus === 'cancelled' && isOrderExpired" class="status-card expired-card">
+					<div class="status-icon expired-icon">✖</div>
+					<h3 class="status-title">订单已取消</h3>
+					<p class="status-message">支付超时，订单已自动取消</p>
+				</view>
+
+				<view v-if="orderStatus === 'pay_fail'" class="status-card failed-card">
+					<div class="status-icon failed-icon">✖</div>
+					<h3 class="status-title">支付失败</h3>
+					<p class="status-message">请重试或联系客服</p>
+					<view class="status-illustration">
+						<image src="/static/failed.svg" mode="aspectFit" class="illustration-image"></image>
+					</view>
+					<button class="btn retry-btn" @click="retryPayment">重试支付</button>
+				</view>
+
+				<!-- 服务信息 -->
+				<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
+					<h2 class="section-title">服务详情</h2>
+					<div class="service-card">
+						<image :src="serviceImage" mode="aspectFill" class="service-image"></image>
+						<div class="service-details">
+							<h3 class="service-name">{{orderInfo.service_name || '未获取到服务名称'}}</h3>
+							<p class="service-desc">{{orderInfo.service_desc || '暂无服务描述'}}</p>
+							<div class="service-meta">
+								<span class="service-price">¥{{orderInfo.service_price || '0.00'}}</span>
+								<span class="service-quantity">x{{quantity}}</span>
+							</div>
 						</div>
 					</div>
-				</div>
-			</view>
+				</view>
 
-			<!-- 订单信息 -->
-			<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
-				<h2 class="section-title">订单信息</h2>
-				<div class="order-card">
-					<div class="order-item">
-						<span class="item-label">预约时间</span>
-						<span class="item-value">{{formatDate(orderInfo.service_time) || '未设置'}}</span>
+				<!-- 订单信息 -->
+				<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
+					<h2 class="section-title">订单信息</h2>
+					<div class="order-card">
+						<div class="order-item">
+							<span class="item-label">预约时间</span>
+							<span class="item-value">{{formatDate(orderInfo.service_time) || '未设置'}}</span>
+						</div>
+						<div class="order-item">
+							<span class="item-label">订单编号</span>
+							<span class="item-value">{{orderInfo.order_no || '未获取'}}</span>
+						</div>
+						<div class="order-item">
+							<span class="item-label">下单时间</span>
+							<span class="item-value">{{formatDate(orderInfo.create_time) || '未获取'}}</span>
+						</div>
+						<div class="order-item" v-if="orderInfo.payment_time && orderStatus === 'paid'">
+							<span class="item-label">支付时间</span>
+							<span class="item-value">{{formatDate(orderInfo.payment_time)}}</span>
+						</div>
+						<div class="order-item">
+							<span class="item-label">支付状态</span>
+							<span class="item-value">
+								<text v-if="orderInfo.status === 'paid'" class="text-success">已支付</text>
+								<text v-else-if="orderInfo.status === 'paying'" class="text-warning">待支付</text>
+								<text v-else-if="orderInfo.status === 'cancelled'" class="text-danger">已取消</text>
+								<text v-else>{{orderInfo.status || '未知'}}</text>
+							</span>
+						</div>
+						<div class="order-item" v-if="orderInfo.remark">
+							<span class="item-label">备注信息</span>
+							<span class="item-value">{{orderInfo.remark}}</span>
+						</div>
+						<div class="order-item">
+							<span class="item-label">支付单号</span>
+							<span class="item-value">{{orderInfo.out_trade_no || '未生成'}}</span>
+						</div>
+						<div class="order-item">
+							<span class="item-label">服务名称</span>
+							<span class="item-value">{{orderInfo.service_name||'未获取'}}</span>
+						</div>
 					</div>
-					<div class="order-item">
-						<span class="item-label">订单编号</span>
-						<span class="item-value">{{orderInfo.order_no || '未获取'}}</span>
-					</div>
-					<div class="order-item">
-						<span class="item-label">下单时间</span>
-						<span class="item-value">{{formatDate(orderInfo.create_time) || '未获取'}}</span>
-					</div>
-					<div class="order-item" v-if="orderInfo.payment_time && orderStatus === 'paid'">
-						<span class="item-label">支付时间</span>
-						<span class="item-value">{{formatDate(orderInfo.payment_time)}}</span>
-					</div>
-					<div class="order-item">
-						<span class="item-label">支付状态</span>
-						<span class="item-value">
-							<text v-if="orderInfo.status === 'paid'" class="text-success">已支付</text>
-							<text v-else-if="orderInfo.status === 'paying'" class="text-warning">待支付</text>
-							<text v-else-if="orderInfo.status === 'cancelled'" class="text-danger">已取消</text>
-							<text v-else>{{orderInfo.status || '未知'}}</text>
-						</span>
-					</div>
-					<div class="order-item" v-if="orderInfo.remark">
-						<span class="item-label">备注信息</span>
-						<span class="item-value">{{orderInfo.remark}}</span>
-					</div>
-					<div class="order-item">
-						<span class="item-label">支付单号</span>
-						<span class="item-value">{{orderInfo.out_trade_no || '未生成'}}</span>
-					</div>
-					<div class="order-item">
-						<span class="item-label">服务名称</span>
-						<span class="item-value">{{orderInfo.service_name||'未获取'}}</span>
-					</div>
-				</div>
-			</view>
+				</view>
 
-			<!-- 收货地址信息 -->
-			<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
-				<h2 class="section-title">收货地址</h2>
-				<div class="address-card">
-					<view class="address-item">
-						<text class="address-text">{{deliveryAddress || '未设置地址'}}</text>
-					</view>
-				</div>
-			</view>
+				<!-- 收货地址信息 -->
+				<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
+					<h2 class="section-title">收货地址</h2>
+					<div class="address-card">
+						<view class="address-item">
+							<text class="address-text">{{deliveryAddress || '未设置地址'}}</text>
+						</view>
+					</div>
+				</view>
 
-			<!-- 费用明细 -->
-			<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
-				<h2 class="section-title">费用明细</h2>
-				<div class="fee-card">
-					<div class="fee-item">
-						<span class="fee-label">服务费用</span>
-						<span class="fee-value">¥{{orderInfo.service_price || '0.00'}}</span>
+				<!-- 费用明细 -->
+				<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
+					<h2 class="section-title">费用明细</h2>
+					<div class="fee-card">
+						<div class="fee-item">
+							<span class="fee-label">服务费用</span>
+							<span class="fee-value">¥{{orderInfo.service_price || '0.00'}}</span>
+						</div>
+						<div class="fee-item">
+							<span class="fee-label">数量</span>
+							<span class="fee-value">{{quantity}}件</span>
+						</div>
+						<div class="fee-divider"></div>
+						<div class="fee-item total-fee">
+							<span class="fee-label">实付总计</span>
+							<span class="fee-value total-price">¥{{totalAmount || '0.00'}}</span>
+						</div>
 					</div>
-					<div class="fee-item">
-						<span class="fee-label">数量</span>
-						<span class="fee-value">{{quantity}}件</span>
-					</div>
-					<div class="fee-divider"></div>
-					<div class="fee-item total-fee">
-						<span class="fee-label">实付总计</span>
-						<span class="fee-value total-price">¥{{totalAmount || '0.00'}}</span>
-					</div>
-				</div>
+				</view>
 			</view>
-		</view>
 		</scroll-view>
 	</view>
 </template>
@@ -543,6 +543,7 @@
 					title: '支付成功',
 					icon: 'success'
 				});
+				uni.$emit('clear-order-form-data');
 				await this.updateOrderStatus('paid');
 			},
 
@@ -573,12 +574,11 @@
 </script>
 
 <style>
-
 	.page-container {
 		min-height: 100vh;
 		position: relative;
-		
-		
+
+
 		margin: 0;
 		width: 100%;
 		box-sizing: border-box;
@@ -588,7 +588,7 @@
 		scrollbar-width: none;
 		/* Firefox */
 	}
-	
+
 	.page-container ::-webkit-scrollbar {
 		display: none;
 		/* Chrome/Safari */
@@ -596,7 +596,7 @@
 		/* 微信小程序可能需要 */
 		height: 0 !important;
 	}
-	
+
 
 	/* 基础布局样式 */
 	.order-detail {

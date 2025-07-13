@@ -18581,8 +18581,7 @@ var _default = {
   }, {
     "path": "pages/userInfoDetail/userInfoDetail",
     "style": {
-      "navigationBarTitleText": "完善用户信息",
-      "usingComponents": {}
+      "navigationBarTitleText": "完善用户信息"
     }
   }, {
     "path": "pages/doctorlogin/doctorlogin",

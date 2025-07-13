@@ -178,27 +178,47 @@
 			filteredOrders() {
 				let result = [...this.orderList];
 
-				// 根据标签页筛选
+				// 简化标签页筛选逻辑
 				if (this.currentTab > 0) {
 					const tabValue = this.tabs[this.currentTab].value;
 
-					if (tabValue === 'pending') {
-						result = result.filter(order =>
-							order.status === 'paid' && order.service_status === 'pending'
-						);
-					} else if (tabValue === 'processing') {
-						result = result.filter(order =>
-							order.status === 'paid' && order.service_status === 'processing'
-						);
-					} else if (tabValue === 'completed') {
-						result = result.filter(order =>
-							order.status === 'paid' && order.service_status === 'completed'
-						);
-					} else if (tabValue === 'canceled') {
-						result = result.filter(order =>
-							(order.status === 'paid' && order.service_status === 'cancelled') ||
-							order.status === 'pay_fail' || status.status === 'refunded'
-						);
+					switch (tabValue) {
+						case 'pending':
+							result = result.filter(order =>
+								order.status === 'paid' &&
+								order.service_status === 'pending'
+							);
+							break;
+
+						case 'processing':
+							result = result.filter(order =>
+								order.status === 'paid' &&
+								order.service_status === 'processing'
+							);
+							break;
+
+						case 'completed':
+							result = result.filter(order =>
+								order.service_status === 'completed'
+							);
+							break;
+
+						case 'canceled':
+							result = result.filter(order =>
+								// 支付失败
+								order.status === 'pay_fail' ||
+
+								// 服务被取消
+								order.service_status === 'cancelled' ||
+
+								// 订单被取消
+								order.status === 'cancelled' ||
+
+								// 退款中或已退款
+								order.status === 'refunding' ||
+								order.status === 'refunded'
+							);
+							break;
 					}
 				}
 
@@ -241,15 +261,7 @@
 			setTimeout(() => this.calculateScrollHeight(), 100);
 		},
 		methods: {
-			getStatusClass(order) {
-				if (order.service_status) {
-					return `status-${order.service_status}`;
-				}
-				if (order.status === 'pay_fail') {
-					return 'status-canceled';
-				}
-				return `status-${order.status}`;
-			},
+
 			// 删除订单方法
 			deleteOrder(order) {
 				uni.showModal({
@@ -333,26 +345,58 @@
 			// 		uni.hideLoading();
 			// 	}
 			// },
+			// 修改状态格式化方法
 			formatStatus(order) {
-				// 优先显示service_status
-				if (order.service_status) {
-					const statusMap = {
+				// 1. 服务完成时显示审核状态
+				if (order.service_status === "completed" && order.audit_status) {
+					const auditMap = {
+						'unreviewed': '未审核',
+						'pending_review': '审核中',
+						'approved': '审核通过',
+						'rejected': '审核拒绝'
+					};
+					return auditMap[order.audit_status] || order.audit_status;
+				}
+
+				// 2. 已支付订单显示服务状态
+				if (order.status === "paid" && order.service_status) {
+					const serviceMap = {
 						'pending': '待服务',
 						'processing': '进行中',
 						'completed': '已完成',
-						'cancelled': '已取消'
+						'cancelled': '已取消' // 修正服务状态取消的显示
 					};
-					return statusMap[order.service_status] || order.service_status;
+					return serviceMap[order.service_status] || order.service_status;
 				}
 
-				// 没有service_status时显示status
-				const statusMap = {
-					'paid': '已完成',
+				// 3. 其他情况显示支付状态
+				const paymentMap = {
+					'paid': '已支付', // 修改为"已支付"更准确
 					'unpaid': '未支付',
-					'pay_fail': '已取消'
+					'paying': '支付中',
+					'pay_fail': '支付失败',
+					'cancelled': '已取消', // 添加取消状态
+					'refunding': '退款中',
+					'refunded': '已退款'
 				};
-				return statusMap[order.status] || order.status;
+				return paymentMap[order.status] || order.status;
 			},
+
+			getStatusClass(order) {
+				// 1. 服务完成时显示审核状态
+				if (order.service_status === "completed" && order.audit_status) {
+					return `audit-${order.audit_status}`;
+				}
+
+				// 2. 已支付订单显示服务状态
+				if (order.status === "paid" && order.service_status) {
+					return `service-${order.service_status}`;
+				}
+
+				// 3. 其他情况显示支付状态
+				return `payment-${order.status}`;
+			},
+
 			selectTab(index) {
 				this.currentTab = index;
 				this.currentPage = 1; // 切换标签时重置页码
@@ -370,45 +414,64 @@
 					const db = uniCloud.database();
 					let query = db.collection('orders');
 
-					// 调试：打印当前查询条件
-					console.log('当前标签值:', this.tabs[this.currentTab].value);
-					// 根据当前标签添加筛选条件
+					// 重构查询逻辑 - 更灵活的标签分类
 					if (this.currentTab > 0) {
 						const tabValue = this.tabs[this.currentTab].value;
 
-						if (tabValue === 'pending') {
-							console.log('执行待服务查询条件');
-							query = query.where({
-								status: 'paid',
-								service_status: 'pending'
-							});
-						} else if (tabValue === 'processing') {
-							query = query.where({
-								status: 'paid',
-								service_status: 'processing'
-							});
-						} else if (tabValue === 'completed') {
-							query = query.where({
-								status: 'paid',
-								service_status: 'completed'
-							});
-						} else if (tabValue === 'canceled') {
-							// 修正后的已取消查询条件
-							query = query.where({
-								'$or': [{
-										'$and': [{
-												status: 'paid'
-											},
-											{
-												service_status: 'cancelled'
-											}
-										]
-									},
-									{
-										status: 'pay_fail'
-									}
-								]
-							});
+						// 使用更灵活的查询条件
+						switch (tabValue) {
+							case 'pending':
+								// 待服务：已支付且服务状态为待服务
+								query = query.where({
+									status: 'paid',
+									service_status: 'pending'
+								});
+								break;
+
+							case 'processing':
+								// 进行中：已支付且服务状态为进行中
+								query = query.where({
+									status: 'paid',
+									service_status: 'processing'
+								});
+								break;
+
+							case 'completed':
+								// 已完成：服务状态为已完成（无论审核状态如何）
+								query = query.where({
+									service_status: 'completed'
+								});
+								break;
+
+							case 'canceled':
+								// 已取消：更广泛的取消状态定义
+								query = query.where({
+									'$or': [
+										// 支付失败
+										{
+											status: 'pay_fail'
+										},
+
+										// 服务被取消
+										{
+											service_status: 'cancelled'
+										},
+
+										// 订单被取消
+										{
+											status: 'cancelled'
+										},
+
+										// 退款中或已退款
+										{
+											status: 'refunding'
+										},
+										{
+											status: 'refunded'
+										}
+									]
+								});
+								break;
 						}
 					}
 

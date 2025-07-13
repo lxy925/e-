@@ -313,6 +313,7 @@ var _default = (_components$data$onSh = {
   },
   onLoad: function onLoad(options) {
     var _this$serviceData, _this$serviceData2, _this$serviceData3;
+    uni.$on('clear-order-form-data', this.clearFormData);
     var systemInfo = uni.getSystemInfoSync();
     this.navHeight = systemInfo.statusBarHeight + 44;
     this.loadSavedPhotos();
@@ -370,7 +371,10 @@ var _default = (_components$data$onSh = {
   this.restoreFormData();
 }), (0, _defineProperty2.default)(_components$data$onSh, "onHide", function onHide() {
   this.saveFormData();
-}), (0, _defineProperty2.default)(_components$data$onSh, "onUnload", function onUnload() {}), (0, _defineProperty2.default)(_components$data$onSh, "onBackPress", function onBackPress() {
+}), (0, _defineProperty2.default)(_components$data$onSh, "onUnload", function onUnload() {
+  // 移除监听，避免内存泄漏
+  uni.$off('clear-order-form-data', this.clearFormData);
+}), (0, _defineProperty2.default)(_components$data$onSh, "onBackPress", function onBackPress() {
   var _this = this;
   if (this.hasFormData()) {
     uni.showModal({
@@ -586,6 +590,7 @@ var _default = (_components$data$onSh = {
     return new Date().getTime() - timestamp > this.STORAGE_EXPIRE;
   },
   clearFormData: function clearFormData() {
+    // 重置所有表单数据
     this.selectedDepartment = null;
     this.selectedCheckboxes = [];
     this.photoList = [];
@@ -598,16 +603,27 @@ var _default = (_components$data$onSh = {
     this.selectAddress = '';
     this.customRequirements = '';
 
-    // 清除本地存储的表单数据
-    uni.removeStorageSync(this.STORAGE_KEY);
-    // 清除图片缓存
-    uni.removeStorageSync('photoList');
-    // 清除地址缓存
+    // 清除本地缓存
     uni.removeStorageSync('selectedAddress');
-    // 清除医生缓存
     uni.removeStorageSync('selectedDoctor');
-    // 清除就诊人缓存
     uni.removeStorageSync('selectedPatient');
+    uni.removeStorageSync('photoList');
+
+    // 删除已上传的图片文件（如果有）
+    this.clearPhotoCache();
+  },
+  clearPhotoCache: function clearPhotoCache() {
+    if (this.photoList && this.photoList.length > 0) {
+      var fs = uni.getFileSystemManager();
+      this.photoList.forEach(function (path) {
+        try {
+          fs.unlinkSync(path); // 删除物理文件
+        } catch (e) {
+          console.error('删除文件失败:', e);
+        }
+      });
+      this.photoList = [];
+    }
   },
   goToDepartmentPage: function goToDepartmentPage() {
     uni.navigateTo({

@@ -73,7 +73,8 @@
 					<!-- <scroll-view> -->
 					<view class="hospital-item" v-for="hospital in hospitals" :key="hospital.id"
 						@tap="navigateToHospital(hospital.id)">
-						<image :src="hospital.image" mode="aspectFill" class="hospital-image"></image>
+						<!--<image :src="hospital.image" mode="aspectFill" class="hospital-image"></image>-->
+						<image src="/static/images/hospital.png" mode="aspectFill" class="hospital-image"></image>
 						<view class="hospital-info">
 							<view class="hospital-header">
 								<text class="hospital-name">{{ hospital.name }}</text>

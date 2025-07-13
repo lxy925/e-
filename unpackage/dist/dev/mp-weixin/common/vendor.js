@@ -430,7 +430,7 @@ function promisify(name, api) {
       params[_key2 - 1] = arguments[_key2];
     }
     if (isFn(options.success) || isFn(options.fail) || isFn(options.complete)) {
-      return wrapperReturnValue(name, invokeApi.apply(void 0, [name, api, options].concat(params)));
+      return wrapperReturnValue(name, invokeApi.apply(void 0, [name, api, Object.assign({}, options)].concat(params)));
     }
     return wrapperReturnValue(name, handlePromise(new Promise(function (resolve, reject) {
       invokeApi.apply(void 0, [name, api, Object.assign({}, options, {
@@ -840,9 +840,9 @@ function populateParameters(result) {
     appVersion: "1.0.0",
     appVersionCode: "100",
     appLanguage: getAppLanguage(hostLanguage),
-    uniCompileVersion: "4.66",
-    uniCompilerVersion: "4.66",
-    uniRuntimeVersion: "4.66",
+    uniCompileVersion: "4.75",
+    uniCompilerVersion: "4.75",
+    uniRuntimeVersion: "4.75",
     uniPlatform: undefined || "mp-weixin",
     deviceBrand: deviceBrand,
     deviceModel: model,
@@ -948,9 +948,9 @@ var getAppBaseInfo = {
       hostTheme: theme,
       isUniAppX: false,
       uniPlatform: undefined || "mp-weixin",
-      uniCompileVersion: "4.66",
-      uniCompilerVersion: "4.66",
-      uniRuntimeVersion: "4.66"
+      uniCompileVersion: "4.75",
+      uniCompilerVersion: "4.75",
+      uniRuntimeVersion: "4.75"
     }));
   }
 };
@@ -9834,18 +9834,18 @@ var s = n(function (e, t) {
             y = e[t + 6],
             _ = e[t + 7],
             w = e[t + 8],
-            v = e[t + 9],
-            I = e[t + 10],
+            I = e[t + 9],
+            v = e[t + 10],
             S = e[t + 11],
             T = e[t + 12],
             b = e[t + 13],
             E = e[t + 14],
             k = e[t + 15],
-            P = i[0],
-            C = i[1],
-            A = i[2],
+            A = i[0],
+            P = i[1],
+            C = i[2],
             O = i[3];
-          P = u(P, C, A, O, o, 7, a[0]), O = u(O, P, C, A, c, 12, a[1]), A = u(A, O, P, C, p, 17, a[2]), C = u(C, A, O, P, f, 22, a[3]), P = u(P, C, A, O, g, 7, a[4]), O = u(O, P, C, A, m, 12, a[5]), A = u(A, O, P, C, y, 17, a[6]), C = u(C, A, O, P, _, 22, a[7]), P = u(P, C, A, O, w, 7, a[8]), O = u(O, P, C, A, v, 12, a[9]), A = u(A, O, P, C, I, 17, a[10]), C = u(C, A, O, P, S, 22, a[11]), P = u(P, C, A, O, T, 7, a[12]), O = u(O, P, C, A, b, 12, a[13]), A = u(A, O, P, C, E, 17, a[14]), P = h(P, C = u(C, A, O, P, k, 22, a[15]), A, O, c, 5, a[16]), O = h(O, P, C, A, y, 9, a[17]), A = h(A, O, P, C, S, 14, a[18]), C = h(C, A, O, P, o, 20, a[19]), P = h(P, C, A, O, m, 5, a[20]), O = h(O, P, C, A, I, 9, a[21]), A = h(A, O, P, C, k, 14, a[22]), C = h(C, A, O, P, g, 20, a[23]), P = h(P, C, A, O, v, 5, a[24]), O = h(O, P, C, A, E, 9, a[25]), A = h(A, O, P, C, f, 14, a[26]), C = h(C, A, O, P, w, 20, a[27]), P = h(P, C, A, O, b, 5, a[28]), O = h(O, P, C, A, p, 9, a[29]), A = h(A, O, P, C, _, 14, a[30]), P = l(P, C = h(C, A, O, P, T, 20, a[31]), A, O, m, 4, a[32]), O = l(O, P, C, A, w, 11, a[33]), A = l(A, O, P, C, S, 16, a[34]), C = l(C, A, O, P, E, 23, a[35]), P = l(P, C, A, O, c, 4, a[36]), O = l(O, P, C, A, g, 11, a[37]), A = l(A, O, P, C, _, 16, a[38]), C = l(C, A, O, P, I, 23, a[39]), P = l(P, C, A, O, b, 4, a[40]), O = l(O, P, C, A, o, 11, a[41]), A = l(A, O, P, C, f, 16, a[42]), C = l(C, A, O, P, y, 23, a[43]), P = l(P, C, A, O, v, 4, a[44]), O = l(O, P, C, A, T, 11, a[45]), A = l(A, O, P, C, k, 16, a[46]), P = d(P, C = l(C, A, O, P, p, 23, a[47]), A, O, o, 6, a[48]), O = d(O, P, C, A, _, 10, a[49]), A = d(A, O, P, C, E, 15, a[50]), C = d(C, A, O, P, m, 21, a[51]), P = d(P, C, A, O, T, 6, a[52]), O = d(O, P, C, A, f, 10, a[53]), A = d(A, O, P, C, I, 15, a[54]), C = d(C, A, O, P, c, 21, a[55]), P = d(P, C, A, O, w, 6, a[56]), O = d(O, P, C, A, k, 10, a[57]), A = d(A, O, P, C, y, 15, a[58]), C = d(C, A, O, P, b, 21, a[59]), P = d(P, C, A, O, g, 6, a[60]), O = d(O, P, C, A, S, 10, a[61]), A = d(A, O, P, C, p, 15, a[62]), C = d(C, A, O, P, v, 21, a[63]), i[0] = i[0] + P | 0, i[1] = i[1] + C | 0, i[2] = i[2] + A | 0, i[3] = i[3] + O | 0;
+          A = u(A, P, C, O, o, 7, a[0]), O = u(O, A, P, C, c, 12, a[1]), C = u(C, O, A, P, p, 17, a[2]), P = u(P, C, O, A, f, 22, a[3]), A = u(A, P, C, O, g, 7, a[4]), O = u(O, A, P, C, m, 12, a[5]), C = u(C, O, A, P, y, 17, a[6]), P = u(P, C, O, A, _, 22, a[7]), A = u(A, P, C, O, w, 7, a[8]), O = u(O, A, P, C, I, 12, a[9]), C = u(C, O, A, P, v, 17, a[10]), P = u(P, C, O, A, S, 22, a[11]), A = u(A, P, C, O, T, 7, a[12]), O = u(O, A, P, C, b, 12, a[13]), C = u(C, O, A, P, E, 17, a[14]), A = h(A, P = u(P, C, O, A, k, 22, a[15]), C, O, c, 5, a[16]), O = h(O, A, P, C, y, 9, a[17]), C = h(C, O, A, P, S, 14, a[18]), P = h(P, C, O, A, o, 20, a[19]), A = h(A, P, C, O, m, 5, a[20]), O = h(O, A, P, C, v, 9, a[21]), C = h(C, O, A, P, k, 14, a[22]), P = h(P, C, O, A, g, 20, a[23]), A = h(A, P, C, O, I, 5, a[24]), O = h(O, A, P, C, E, 9, a[25]), C = h(C, O, A, P, f, 14, a[26]), P = h(P, C, O, A, w, 20, a[27]), A = h(A, P, C, O, b, 5, a[28]), O = h(O, A, P, C, p, 9, a[29]), C = h(C, O, A, P, _, 14, a[30]), A = l(A, P = h(P, C, O, A, T, 20, a[31]), C, O, m, 4, a[32]), O = l(O, A, P, C, w, 11, a[33]), C = l(C, O, A, P, S, 16, a[34]), P = l(P, C, O, A, E, 23, a[35]), A = l(A, P, C, O, c, 4, a[36]), O = l(O, A, P, C, g, 11, a[37]), C = l(C, O, A, P, _, 16, a[38]), P = l(P, C, O, A, v, 23, a[39]), A = l(A, P, C, O, b, 4, a[40]), O = l(O, A, P, C, o, 11, a[41]), C = l(C, O, A, P, f, 16, a[42]), P = l(P, C, O, A, y, 23, a[43]), A = l(A, P, C, O, I, 4, a[44]), O = l(O, A, P, C, T, 11, a[45]), C = l(C, O, A, P, k, 16, a[46]), A = d(A, P = l(P, C, O, A, p, 23, a[47]), C, O, o, 6, a[48]), O = d(O, A, P, C, _, 10, a[49]), C = d(C, O, A, P, E, 15, a[50]), P = d(P, C, O, A, m, 21, a[51]), A = d(A, P, C, O, T, 6, a[52]), O = d(O, A, P, C, f, 10, a[53]), C = d(C, O, A, P, v, 15, a[54]), P = d(P, C, O, A, c, 21, a[55]), A = d(A, P, C, O, w, 6, a[56]), O = d(O, A, P, C, k, 10, a[57]), C = d(C, O, A, P, y, 15, a[58]), P = d(P, C, O, A, b, 21, a[59]), A = d(A, P, C, O, g, 6, a[60]), O = d(O, A, P, C, S, 10, a[61]), C = d(C, O, A, P, p, 15, a[62]), P = d(P, C, O, A, I, 21, a[63]), i[0] = i[0] + A | 0, i[1] = i[1] + P | 0, i[2] = i[2] + C | 0, i[3] = i[3] + O | 0;
         },
         _doFinalize: function _doFinalize() {
           var t = this._data,
@@ -10006,24 +10006,24 @@ function _(e) {
   };
 }
 var w = "REJECTED",
-  v = "NOT_PENDING";
-var I = /*#__PURE__*/function () {
-  function I() {
+  I = "NOT_PENDING";
+var v = /*#__PURE__*/function () {
+  function v() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       e = _ref.createPromise,
       _ref$retryRule = _ref.retryRule,
       t = _ref$retryRule === void 0 ? w : _ref$retryRule;
-    (0, _classCallCheck2.default)(this, I);
+    (0, _classCallCheck2.default)(this, v);
     this.createPromise = e, this.status = null, this.promise = null, this.retryRule = t;
   }
-  (0, _createClass2.default)(I, [{
+  (0, _createClass2.default)(v, [{
     key: "needRetry",
     get: function get() {
       if (!this.status) return !0;
       switch (this.retryRule) {
         case w:
           return this.status === f;
-        case v:
+        case I:
           return this.status !== d;
       }
     }
@@ -10038,7 +10038,7 @@ var I = /*#__PURE__*/function () {
       }), this.promise) : this.promise;
     }
   }]);
-  return I;
+  return v;
 }();
 var S = /*#__PURE__*/function () {
   function S() {
@@ -10099,9 +10099,9 @@ function T(e) {
 var b = "development" === "development",
   E = "mp-weixin",
   k = "true" === undefined || !0 === undefined,
-  P = T([]),
-  C = "h5" === E ? "web" : "app-plus" === E || "app-harmony" === E ? "app" : E,
-  A = T({"address":["127.0.0.1","192.168.5.1","192.168.139.1","192.168.0.102"],"servePort":7000,"debugPort":9000,"initialLaunchType":"remote","skipFiles":["<node_internals>/**","D:/Web-Install/HBuilderX/HBuilderX/plugins/unicloud/**/*.js"]}),
+  A = T([]),
+  P = "h5" === E ? "web" : "app-plus" === E || "app-harmony" === E ? "app" : E,
+  C = T({"address":["127.0.0.1","192.168.5.1","192.168.139.1","192.168.0.103"],"servePort":7000,"debugPort":9000,"initialLaunchType":"remote","skipFiles":["<node_internals>/**","D:/Web-Install/HBuilderX/HBuilderX/plugins/unicloud/**/*.js"]}),
   O = T([{"provider":"aliyun","spaceName":"e-space","spaceId":"mp-f5303e3c-7928-482e-b2e2-0cf6877289c6","clientSecret":"j5ZFeQnRUa4zMdq7m0bSnQ==","endpoint":"https://api.next.bspapp.com"}]) || [],
   x = true;
 var N = "";
@@ -10126,7 +10126,7 @@ function D() {
     return void 0 !== e() ? e() : new Function("return this")();
   }(), R);
 }
-"app" === C && (L = uni._globalUniCloudObj ? uni._globalUniCloudObj : uni._globalUniCloudObj = {});
+"app" === P && (L = uni._globalUniCloudObj ? uni._globalUniCloudObj : uni._globalUniCloudObj = {});
 var M = ["invoke", "success", "fail", "complete"],
   q = U("_globalUniCloudInterceptor");
 function F(e, t) {
@@ -10218,7 +10218,8 @@ var te = /*#__PURE__*/function (_Error) {
   function te(e) {
     var _this2;
     (0, _classCallCheck2.default)(this, te);
-    _this2 = _super.call(this, e.message), _this2.errMsg = e.message || e.errMsg || "unknown system error", _this2.code = _this2.errCode = e.code || e.errCode || "SYSTEM_ERROR", _this2.errSubject = _this2.subject = e.subject || e.errSubject, _this2.cause = e.cause, _this2.requestId = e.requestId;
+    var t = e.message || e.errMsg || "unknown system error";
+    _this2 = _super.call(this, t), _this2.errMsg = t, _this2.code = _this2.errCode = e.code || e.errCode || "SYSTEM_ERROR", _this2.errSubject = _this2.subject = e.subject || e.errSubject, _this2.cause = e.cause, _this2.requestId = e.requestId;
     return _this2;
   }
   (0, _createClass2.default)(te, [{
@@ -10273,7 +10274,7 @@ function re() {
 }
 var ie, oe;
 function ae() {
-  return ie || (ie = uni.getSystemInfoSync()), ie;
+  return ie || (ie = "mp-weixin" === P && wx.canIUse("getAppBaseInfo") && wx.canIUse("getDeviceInfo") ? _objectSpread(_objectSpread({}, uni.getAppBaseInfo()), uni.getDeviceInfo()) : uni.getSystemInfoSync()), ie;
 }
 function ce() {
   var e, t;
@@ -10328,7 +10329,7 @@ var le = {
     return new Promise(function (n, s) {
       t(Object.assign(e, {
         complete: function complete(e) {
-          e || (e = {}), b && "web" === C && e.errMsg && 0 === e.errMsg.indexOf("request:fail") && console.warn("发布H5，需要在uniCloud后台操作，绑定安全域名，否则会因为跨域问题而无法访问。教程参考：https://uniapp.dcloud.io/uniCloud/quickstart?id=useinh5");
+          e || (e = {}), b && "web" === P && e.errMsg && 0 === e.errMsg.indexOf("request:fail") && console.warn("发布H5，需要在uniCloud后台操作，绑定安全域名，否则会因为跨域问题而无法访问。教程参考：https://uniapp.dcloud.io/uniCloud/quickstart?id=useinh5");
           var t = e.data && e.data.header && e.data.header["x-serverless-request-id"] || e.header && e.header["request-id"];
           if (!e.statusCode || e.statusCode >= 400) {
             var _n5 = e.data && e.data.error && e.data.error.code || "SYS_ERR",
@@ -10362,7 +10363,7 @@ var de = /*#__PURE__*/function () {
       if (!Object.prototype.hasOwnProperty.call(e, t)) throw new Error("".concat(t, " required"));
     }), this.config = Object.assign({}, {
       endpoint: 0 === e.spaceId.indexOf("mp-") ? "https://api.next.bspapp.com" : "https://api.bspapp.com"
-    }, e), this.config.provider = "aliyun", this.config.requestUrl = this.config.endpoint + "/client", this.config.envType = this.config.envType || "public", this.config.accessTokenKey = "access_token_" + this.config.spaceId, this.adapter = ne, this._getAccessTokenPromiseHub = new I({
+    }, e), this.config.provider = "aliyun", this.config.requestUrl = this.config.endpoint + "/client", this.config.envType = this.config.envType || "public", this.config.accessTokenKey = "access_token_" + this.config.spaceId, this.adapter = ne, this._getAccessTokenPromiseHub = new v({
       createPromise: function createPromise() {
         return _this3.requestAuth(_this3.setupRequest({
           method: "serverless.auth.user.anonymousAuthorize",
@@ -10375,7 +10376,7 @@ var de = /*#__PURE__*/function () {
           _this3.setAccessToken(e.result.accessToken);
         });
       },
-      retryRule: v
+      retryRule: I
     });
   }
   (0, _createClass2.default)(de, [{
@@ -10685,19 +10686,25 @@ var de = /*#__PURE__*/function () {
   }, {
     key: "getTempFileURL",
     value: function getTempFileURL() {
+      var _this6 = this;
       var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         e = _ref5.fileList;
       return new Promise(function (t, n) {
         Array.isArray(e) && 0 !== e.length || n(new te({
           code: "INVALID_PARAM",
           message: "fileList的元素必须是非空的字符串"
-        })), t({
-          fileList: e.map(function (e) {
-            return {
-              fileID: e,
-              tempFileURL: e
-            };
-          })
+        })), _this6.getFileInfo({
+          fileList: e
+        }).then(function (n) {
+          t({
+            fileList: e.map(function (e, t) {
+              var s = n.fileList[t];
+              return {
+                fileID: e,
+                tempFileURL: s && s.url || e
+              };
+            })
+          });
         });
       });
     }
@@ -10815,8 +10822,8 @@ var me = function me() {},
               }
               var _ = s & r ^ s & i ^ r & i,
                 w = (s << 30 | s >>> 2) ^ (s << 19 | s >>> 13) ^ (s << 10 | s >>> 22),
-                v = d + ((a << 26 | a >>> 6) ^ (a << 21 | a >>> 11) ^ (a << 7 | a >>> 25)) + (a & h ^ ~a & l) + c[p] + u[p];
-              d = l, l = h, h = a, a = o + v | 0, o = i, i = r, r = s, s = v + (w + _) | 0;
+                I = d + ((a << 26 | a >>> 6) ^ (a << 21 | a >>> 11) ^ (a << 7 | a >>> 25)) + (a & h ^ ~a & l) + c[p] + u[p];
+              d = l, l = h, h = a, a = o + I | 0, o = i, i = r, r = s, s = I + (w + _) | 0;
             }
             n[0] = n[0] + s | 0, n[1] = n[1] + r | 0, n[2] = n[2] + i | 0, n[3] = n[3] + o | 0, n[4] = n[4] + a | 0, n[5] = n[5] + h | 0, n[6] = n[6] + l | 0, n[7] = n[7] + d | 0;
           },
@@ -10839,7 +10846,7 @@ var me = function me() {},
   we = n(function (e, t) {
     e.exports = r.HmacSHA256;
   });
-var ve = function ve() {
+var Ie = function Ie() {
   var e;
   if (!Promise) {
     e = function e() {}, e.promise = {};
@@ -10861,7 +10868,7 @@ var ve = function ve() {
   });
   return e.promise = t, e;
 };
-function Ie(e) {
+function ve(e) {
   return void 0 === e;
 }
 function Se(e) {
@@ -10906,58 +10913,58 @@ function ke(e) {
 !function (e) {
   e.WEB = "web", e.WX_MP = "wx_mp";
 }(Ee || (Ee = {}));
-var Pe = {
+var Ae = {
     adapter: null,
     runtime: void 0
   },
-  Ce = ["anonymousUuidKey"];
-var Ae = /*#__PURE__*/function (_me) {
-  (0, _inherits2.default)(Ae, _me);
-  var _super2 = _createSuper(Ae);
-  function Ae() {
-    var _this6;
-    (0, _classCallCheck2.default)(this, Ae);
-    _this6 = _super2.call(this), Pe.adapter.root.tcbObject || (Pe.adapter.root.tcbObject = {});
-    return _this6;
+  Pe = ["anonymousUuidKey"];
+var Ce = /*#__PURE__*/function (_me) {
+  (0, _inherits2.default)(Ce, _me);
+  var _super2 = _createSuper(Ce);
+  function Ce() {
+    var _this7;
+    (0, _classCallCheck2.default)(this, Ce);
+    _this7 = _super2.call(this), Ae.adapter.root.tcbObject || (Ae.adapter.root.tcbObject = {});
+    return _this7;
   }
-  (0, _createClass2.default)(Ae, [{
+  (0, _createClass2.default)(Ce, [{
     key: "setItem",
     value: function setItem(e, t) {
-      Pe.adapter.root.tcbObject[e] = t;
+      Ae.adapter.root.tcbObject[e] = t;
     }
   }, {
     key: "getItem",
     value: function getItem(e) {
-      return Pe.adapter.root.tcbObject[e];
+      return Ae.adapter.root.tcbObject[e];
     }
   }, {
     key: "removeItem",
     value: function removeItem(e) {
-      delete Pe.adapter.root.tcbObject[e];
+      delete Ae.adapter.root.tcbObject[e];
     }
   }, {
     key: "clear",
     value: function clear() {
-      delete Pe.adapter.root.tcbObject;
+      delete Ae.adapter.root.tcbObject;
     }
   }]);
-  return Ae;
+  return Ce;
 }(me);
 function Oe(e, t) {
   switch (e) {
     case "local":
-      return t.localStorage || new Ae();
+      return t.localStorage || new Ce();
     case "none":
-      return new Ae();
+      return new Ce();
     default:
-      return t.sessionStorage || new Ae();
+      return t.sessionStorage || new Ce();
   }
 }
 var xe = /*#__PURE__*/function () {
   function xe(e) {
     (0, _classCallCheck2.default)(this, xe);
     if (!this._storage) {
-      this._persistence = Pe.adapter.primaryStorage || e.persistence, this._storage = Oe(this._persistence, Pe.adapter);
+      this._persistence = Ae.adapter.primaryStorage || e.persistence, this._storage = Oe(this._persistence, Ae.adapter);
       var _t5 = "access_token_".concat(e.env),
         _n7 = "access_token_expire_".concat(e.env),
         _s6 = "refresh_token_".concat(e.env),
@@ -10984,12 +10991,12 @@ var xe = /*#__PURE__*/function () {
       if (e === this._persistence) return;
       var t = "local" === this._persistence;
       this._persistence = e;
-      var n = Oe(e, Pe.adapter);
+      var n = Oe(e, Ae.adapter);
       for (var _e8 in this.keys) {
         var _s7 = this.keys[_e8];
-        if (t && Ce.includes(_e8)) continue;
+        if (t && Pe.includes(_e8)) continue;
         var _r3 = this._storage.getItem(_s7);
-        Ie(_r3) || Se(_r3) || (n.setItem(_s7, _r3), this._storage.removeItem(_s7));
+        ve(_r3) || Se(_r3) || (n.setItem(_s7, _r3), this._storage.removeItem(_s7));
       }
       this._storage = n;
     }
@@ -11045,13 +11052,13 @@ var De = /*#__PURE__*/function (_Ue) {
   (0, _inherits2.default)(De, _Ue);
   var _super3 = _createSuper(De);
   function De(e, t) {
-    var _this7;
+    var _this8;
     (0, _classCallCheck2.default)(this, De);
-    _this7 = _super3.call(this, "error", {
+    _this8 = _super3.call(this, "error", {
       error: e,
       data: t
-    }), _this7.error = e;
-    return _this7;
+    }), _this8.error = e;
+    return _this8;
   }
   return (0, _createClass2.default)(De);
 }(Ue);
@@ -11137,7 +11144,7 @@ var ze = /*#__PURE__*/function () {
     key: "run",
     value: function () {
       var _run = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee5(e, t) {
-        var _this8 = this;
+        var _this9 = this;
         var n;
         return _regenerator.default.wrap(function _callee5$(_context5) {
           while (1) {
@@ -11153,7 +11160,7 @@ var ze = /*#__PURE__*/function () {
                           case 0:
                             _context4.prev = 0;
                             _context4.next = 3;
-                            return _this8._runIdlePromise();
+                            return _this9._runIdlePromise();
                           case 3:
                             _e10 = t();
                             _context4.t0 = n;
@@ -11170,7 +11177,7 @@ var ze = /*#__PURE__*/function () {
                             s(_context4.t2);
                           case 14:
                             _context4.prev = 14;
-                            _this8._fnPromiseMap.delete(e);
+                            _this9._fnPromiseMap.delete(e);
                             return _context4.finish(14);
                           case 17:
                           case "end":
@@ -11206,7 +11213,7 @@ var ze = /*#__PURE__*/function () {
 var Ve = /*#__PURE__*/function () {
   function Ve(e) {
     (0, _classCallCheck2.default)(this, Ve);
-    this._singlePromise = new ze(), this._cache = Le(e.env), this._baseURL = "https://".concat(e.env, ".ap-shanghai.tcb-api.tencentcloudapi.com"), this._reqClass = new Pe.adapter.reqClass({
+    this._singlePromise = new ze(), this._cache = Le(e.env), this._baseURL = "https://".concat(e.env, ".ap-shanghai.tcb-api.tencentcloudapi.com"), this._reqClass = new Ae.adapter.reqClass({
       timeout: e.timeout,
       timeoutMsg: "\u8BF7\u6C42\u5728".concat(e.timeout / 1e3, "s\u5185\u672A\u5B8C\u6210\uFF0C\u5DF2\u4E2D\u65AD"),
       restrictedMethods: ["post"]
@@ -11272,7 +11279,7 @@ var Ve = /*#__PURE__*/function () {
     key: "_fetchAccessToken",
     value: function () {
       var _fetchAccessToken2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee8() {
-        var _this9 = this;
+        var _this10 = this;
         var _this$_cache$keys, e, t, n, s, r, i, o, a, c;
         return _regenerator.default.wrap(function _callee8$(_context8) {
           while (1) {
@@ -11295,7 +11302,7 @@ var Ve = /*#__PURE__*/function () {
                       switch (_context7.prev = _context7.next) {
                         case 0:
                           _context7.next = 2;
-                          return _this9._request("/auth/v1/signin/anonymously", {}, {
+                          return _this10._request("/auth/v1/signin/anonymously", {}, {
                             method: "post"
                           });
                         case 2:
@@ -11381,7 +11388,7 @@ var Ve = /*#__PURE__*/function () {
     key: "getUserInfo",
     value: function () {
       var _getUserInfo = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee12() {
-        var _this10 = this;
+        var _this11 = this;
         return _regenerator.default.wrap(function _callee12$(_context12) {
           while (1) {
             switch (_context12.prev = _context12.next) {
@@ -11392,7 +11399,7 @@ var Ve = /*#__PURE__*/function () {
                       switch (_context11.prev = _context11.next) {
                         case 0:
                           _context11.next = 2;
-                          return _this10._request("/auth/v1/user/me", {}, {
+                          return _this11._request("/auth/v1/user/me", {}, {
                             withAccessToken: !0,
                             method: "get"
                           });
@@ -11460,7 +11467,7 @@ var Ze = /*#__PURE__*/function () {
     var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     (0, _classCallCheck2.default)(this, Ze);
     var t;
-    this.config = e, this._reqClass = new Pe.adapter.reqClass({
+    this.config = e, this._reqClass = new Ae.adapter.reqClass({
       timeout: this.config.timeout,
       timeoutMsg: "\u8BF7\u6C42\u5728".concat(this.config.timeout / 1e3, "s\u5185\u672A\u5B8C\u6210\uFF0C\u5DF2\u4E2D\u65AD"),
       restrictedMethods: ["post"]
@@ -12117,11 +12124,11 @@ var st = /*#__PURE__*/function () {
   }, {
     key: "setUserInfo",
     value: function setUserInfo() {
-      var _this11 = this;
+      var _this12 = this;
       var e = this._cache.keys.userInfoKey,
         t = this._cache.getStore(e);
       ["uid", "loginType", "openid", "wxOpenId", "wxPublicId", "unionId", "qqMiniOpenId", "email", "hasPassword", "customUserId", "nickName", "gender", "avatarUrl"].forEach(function (e) {
-        _this11[e] = t[e];
+        _this12[e] = t[e];
       }), this.location = {
         country: t.country,
         province: t.province,
@@ -12794,10 +12801,10 @@ var ut = /*#__PURE__*/function () {
   }, {
     key: "onLoginStateChanged",
     value: function onLoginStateChanged(e) {
-      var _this12 = this;
+      var _this13 = this;
       qe(je, function () {
-        var t = _this12.hasLoginState();
-        e.call(_this12, t);
+        var t = _this13.hasLoginState();
+        e.call(_this13, t);
       });
       var t = this.hasLoginState();
       e.call(this, t);
@@ -12820,10 +12827,10 @@ var ut = /*#__PURE__*/function () {
   }, {
     key: "onLoginTypeChanged",
     value: function onLoginTypeChanged(e) {
-      var _this13 = this;
+      var _this14 = this;
       qe(Be, function () {
-        var t = _this13.hasLoginState();
-        e.call(_this13, t);
+        var t = _this14.hasLoginState();
+        e.call(_this14, t);
       });
     }
   }, {
@@ -12973,7 +12980,7 @@ var ut = /*#__PURE__*/function () {
   return ut;
 }();
 var ht = function ht(e, t) {
-    t = t || ve();
+    t = t || Ie();
     var n = tt(this.config.env),
       s = e.cloudPath,
       r = e.filePath,
@@ -13020,7 +13027,7 @@ var ht = function ht(e, t) {
     }), t.promise;
   },
   lt = function lt(e, t) {
-    t = t || ve();
+    t = t || Ie();
     var n = tt(this.config.env),
       s = e.cloudPath;
     return n.send("storage.getUploadMetadata", {
@@ -13033,7 +13040,7 @@ var ht = function ht(e, t) {
   },
   dt = function dt(_ref10, t) {
     var e = _ref10.fileList;
-    if (t = t || ve(), !e || !Array.isArray(e)) return {
+    if (t = t || Ie(), !e || !Array.isArray(e)) return {
       code: "INVALID_PARAM",
       message: "fileList必须是非空的数组"
     };
@@ -13066,7 +13073,7 @@ var ht = function ht(e, t) {
   },
   pt = function pt(_ref11, t) {
     var e = _ref11.fileList;
-    t = t || ve(), e && Array.isArray(e) || t(null, {
+    t = t || Ie(), e && Array.isArray(e) || t(null, {
       code: "INVALID_PARAM",
       message: "fileList必须是非空的数组"
     });
@@ -13167,7 +13174,7 @@ var ht = function ht(e, t) {
       s = _ref14.parse,
       r = _ref14.search,
       i = _ref14.timeout;
-    var a = o || ve();
+    var a = o || Ie();
     var c;
     try {
       c = t ? JSON.stringify(t) : "";
@@ -13223,7 +13230,7 @@ var wt = /*#__PURE__*/function () {
   (0, _createClass2.default)(wt, [{
     key: "init",
     value: function init(e) {
-      switch (Pe.adapter || (this.requestClient = new Pe.adapter.reqClass({
+      switch (Ae.adapter || (this.requestClient = new Ae.adapter.reqClass({
         timeout: e.timeout || 5e3,
         timeoutMsg: "\u8BF7\u6C42\u5728".concat((e.timeout || 5e3) / 1e3, "s\u5185\u672A\u5B8C\u6210\uFF0C\u5DF2\u4E2D\u65AD")
       })), this.config = _objectSpread(_objectSpread({}, mt), e), !0) {
@@ -13241,7 +13248,7 @@ var wt = /*#__PURE__*/function () {
       var _ref15 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         e = _ref15.persistence;
       if (this.authObj) return this.authObj;
-      var t = e || Pe.adapter.primaryStorage || mt.persistence;
+      var t = e || Ae.adapter.primaryStorage || mt.persistence;
       var n;
       return t !== this.config.persistence && (this.config.persistence = t), function (e) {
         var t = e.env;
@@ -13335,13 +13342,13 @@ var wt = /*#__PURE__*/function () {
       var _ref16 = ke(e) || {},
         t = _ref16.adapter,
         n = _ref16.runtime;
-      t && (Pe.adapter = t), n && (Pe.runtime = n);
+      t && (Ae.adapter = t), n && (Ae.runtime = n);
     }
   }]);
   return wt;
 }();
-var vt = new wt();
-function It(e, t, n) {
+var It = new wt();
+function vt(e, t, n) {
   void 0 === n && (n = {});
   var s = /\?/.test(t),
     r = "";
@@ -13363,7 +13370,7 @@ var St = /*#__PURE__*/function () {
         r = e.timeout;
       return new Promise(function (e, i) {
         ne.request({
-          url: It("https:", t),
+          url: vt("https:", t),
           data: n,
           method: "GET",
           header: s,
@@ -13386,7 +13393,7 @@ var St = /*#__PURE__*/function () {
         r = e.timeout;
       return new Promise(function (e, i) {
         ne.request({
-          url: It("https:", t),
+          url: vt("https:", t),
           data: n,
           method: "POST",
           header: s,
@@ -13410,7 +13417,7 @@ var St = /*#__PURE__*/function () {
           o = e.headers,
           a = e.fileType,
           c = ne.uploadFile({
-            url: It("https:", s),
+            url: vt("https:", s),
             name: "file",
             formData: Object.assign({}, i),
             filePath: r,
@@ -13466,8 +13473,8 @@ var bt = {
   },
   runtime: "uni_app"
 };
-vt.useAdapters(bt);
-var Et = vt,
+It.useAdapters(bt);
+var Et = It,
   kt = Et.init;
 Et.init = function (e) {
   e.env = e.spaceId;
@@ -13494,12 +13501,12 @@ Et.init = function (e) {
     }), t;
   }, t.customAuth = t.auth, t;
 };
-var Pt = Et;
-function Ct(_x37, _x38) {
-  return _Ct.apply(this, arguments);
+var At = Et;
+function Pt(_x37, _x38) {
+  return _Pt.apply(this, arguments);
 }
-function _Ct() {
-  _Ct = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee68(e, t) {
+function _Pt() {
+  _Pt = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee68(e, t) {
     var n, _e31, s;
     return _regenerator.default.wrap(function _callee68$(_context68) {
       while (1) {
@@ -13535,13 +13542,13 @@ function _Ct() {
       }
     }, _callee68, null, [[1, 8]]);
   }));
+  return _Pt.apply(this, arguments);
+}
+function Ct(_x39, _x40) {
   return _Ct.apply(this, arguments);
 }
-function At(_x39, _x40) {
-  return _At.apply(this, arguments);
-}
-function _At() {
-  _At = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee69(e, t) {
+function _Ct() {
+  _Ct = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee69(e, t) {
     var n, s, _r10;
     return _regenerator.default.wrap(function _callee69$(_context69) {
       while (1) {
@@ -13555,7 +13562,7 @@ function _At() {
             }
             _r10 = e[s];
             _context69.next = 5;
-            return Ct(_r10, t);
+            return Pt(_r10, t);
           case 5:
             if (!_context69.sent) {
               _context69.next = 8;
@@ -13579,7 +13586,7 @@ function _At() {
       }
     }, _callee69);
   }));
-  return _At.apply(this, arguments);
+  return _Ct.apply(this, arguments);
 }
 var Ot = {
   "serverless.file.resource.generateProximalSign": "storage/generate-proximal-sign",
@@ -13599,7 +13606,7 @@ var xt = /*#__PURE__*/function () {
     key: "request",
     value: function () {
       var _request4 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee43(e) {
-        var _this14 = this;
+        var _this15 = this;
         var t,
           n,
           _args43 = arguments;
@@ -13624,7 +13631,7 @@ var xt = /*#__PURE__*/function () {
               case 9:
                 e = _context43.t0;
                 return _context43.abrupt("return", Promise.resolve().then(function () {
-                  return n ? _this14.requestLocal(e) : le.wrappedRequest(e, _this14.adapter.request);
+                  return n ? _this15.requestLocal(e) : le.wrappedRequest(e, _this15.adapter.request);
                 }));
               case 11:
               case "end":
@@ -13641,9 +13648,9 @@ var xt = /*#__PURE__*/function () {
   }, {
     key: "requestLocal",
     value: function requestLocal(e) {
-      var _this15 = this;
+      var _this16 = this;
       return new Promise(function (t, n) {
-        _this15.adapter.request(Object.assign(e, {
+        _this16.adapter.request(Object.assign(e, {
           complete: function complete(e) {
             if (e || (e = {}), !e.statusCode || e.statusCode >= 400) {
               var _t11 = e.data && e.data.code || "SYS_ERR",
@@ -13688,7 +13695,7 @@ var xt = /*#__PURE__*/function () {
     key: "setupLocalRequest",
     value: function () {
       var _setupLocalRequest = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee44(e) {
-        var t, _se2, n, s, _ref17, r, i, _yield$At, o;
+        var t, _se2, n, s, _ref17, r, i, _yield$Ct, o;
         return _regenerator.default.wrap(function _callee44$(_context44) {
           while (1) {
             switch (_context44.prev = _context44.next) {
@@ -13706,10 +13713,10 @@ var xt = /*#__PURE__*/function () {
                 r = _ref17.address;
                 i = _ref17.servePort;
                 _context44.next = 9;
-                return At(r, i);
+                return Ct(r, i);
               case 9:
-                _yield$At = _context44.sent;
-                o = _yield$At.address;
+                _yield$Ct = _context44.sent;
+                o = _yield$Ct.address;
                 return _context44.abrupt("return", {
                   url: "http://".concat(o, ":").concat(i, "/").concat(Ot[e.method]),
                   method: "POST",
@@ -13764,7 +13771,7 @@ var xt = /*#__PURE__*/function () {
   }, {
     key: "uploadFile",
     value: function uploadFile(_ref18) {
-      var _this16 = this;
+      var _this17 = this;
       var e = _ref18.filePath,
         t = _ref18.cloudPath,
         _ref18$fileType = _ref18.fileType,
@@ -13783,7 +13790,7 @@ var xt = /*#__PURE__*/function () {
           o = _t$result.formData,
           a = _t$result.name;
         return r = t.result.fileUrl, new Promise(function (t, r) {
-          var c = _this16.adapter.uploadFile({
+          var c = _this17.adapter.uploadFile({
             url: i,
             formData: o,
             name: a,
@@ -13810,7 +13817,7 @@ var xt = /*#__PURE__*/function () {
           });
         });
       }).then(function () {
-        return _this16.reportUploadFile({
+        return _this17.reportUploadFile({
           cloudPath: t
         });
       }).then(function (t) {
@@ -14273,7 +14280,7 @@ var jt = /*#__PURE__*/function () {
     key: "getTempFileURL",
     value: function () {
       var _getTempFileURL = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee46(_ref27) {
-        var _this17 = this;
+        var _this18 = this;
         var e;
         return _regenerator.default.wrap(function _callee46$(_context46) {
           while (1) {
@@ -14300,7 +14307,7 @@ var jt = /*#__PURE__*/function () {
                         message: "fileList的元素必须是非空的字符串"
                       });
                       try {
-                        _e18 = qt.call(_this17, _n11);
+                        _e18 = qt.call(_this18, _n11);
                       } catch (t) {
                         console.warn(t.errCode, t.errMsg), _e18 = _n11;
                       }
@@ -14320,13 +14327,13 @@ var jt = /*#__PURE__*/function () {
                       file_list: s
                     },
                     method: "POST"
-                  }, _this17.config).then(function (e) {
+                  }, _this18.config).then(function (e) {
                     var _e$file_list = e.file_list,
                       n = _e$file_list === void 0 ? [] : _e$file_list;
                     t({
                       fileList: n.map(function (e) {
                         return {
-                          fileID: Ft.call(_this17, e.file_id),
+                          fileID: Ft.call(_this18, e.file_id),
                           tempFileURL: e.download_url
                         };
                       })
@@ -14411,7 +14418,7 @@ function Wt() {
 }
 function _Wt() {
   _Wt = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee70() {
-    var _this30 = this;
+    var _this31 = this;
     var e,
       _this$__dev__,
       t,
@@ -14441,7 +14448,7 @@ function _Wt() {
                 url: i,
                 data: {
                   name: e.name,
-                  platform: C,
+                  platform: P,
                   provider: s,
                   spaceId: r
                 },
@@ -14493,10 +14500,10 @@ function _Wt() {
                       throw console.error(_e32), new Error(_e32);
                     }
                 }
-                return _this30._callCloudFunction(e);
+                return _this31._callCloudFunction(e);
               }
               return new Promise(function (t, n) {
-                var r = Bt.call(_this30, {
+                var r = Bt.call(_this31, {
                   data: e.data
                 });
                 ne.request({
@@ -14504,7 +14511,7 @@ function _Wt() {
                   url: o,
                   data: {
                     provider: s,
-                    platform: C,
+                    platform: P,
                     param: r
                   },
                   timeout: e.timeout,
@@ -14555,13 +14562,50 @@ var Gt = {
     BOTH: "both"
   },
   Yt = "_globalUniCloudStatus",
-  Qt = "_globalUniCloudSecureNetworkCache__{spaceId}";
-var Xt = /*#__PURE__*/function () {
-  function Xt() {
-    var _ref29 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-      e = _ref29.secretType,
-      t = _ref29.uniCloudIns;
-    (0, _classCallCheck2.default)(this, Xt);
+  Qt = "_globalUniCloudSecureNetworkCache__{spaceId}",
+  Xt = "uni-secure-network",
+  Zt = {
+    SYSTEM_ERROR: {
+      code: 2e4,
+      message: "System error"
+    },
+    APP_INFO_INVALID: {
+      code: 20101,
+      message: "Invalid client"
+    },
+    GET_ENCRYPT_KEY_FAILED: {
+      code: 20102,
+      message: "Get encrypt key failed"
+    }
+  },
+  en = {
+    10001: "Secure network is not supported on current playground or unimpsdk",
+    10003: "Config missing in current app. If the problem pesist, please contact DCloud.",
+    10009: "Encrypt payload failed",
+    10010: "Decrypt response failed"
+  };
+function tn(e) {
+  var _ref29 = e || {},
+    t = _ref29.errSubject,
+    n = _ref29.subject,
+    s = _ref29.errCode,
+    r = _ref29.errMsg,
+    i = _ref29.code,
+    o = _ref29.message,
+    a = _ref29.cause;
+  return new te({
+    subject: t || n || Xt,
+    code: s || i || Zt.SYSTEM_ERROR.code,
+    message: r || o,
+    cause: a
+  });
+}
+var nn = /*#__PURE__*/function () {
+  function nn() {
+    var _ref30 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      e = _ref30.secretType,
+      t = _ref30.uniCloudIns;
+    (0, _classCallCheck2.default)(this, nn);
     this.clientType = "", this.secretType = e || Gt.NONE, this.uniCloudIns = t;
     var _this$uniCloudIns$con = this.uniCloudIns.config,
       n = _this$uniCloudIns$con.provider,
@@ -14569,7 +14613,7 @@ var Xt = /*#__PURE__*/function () {
     var r;
     this.provider = n, this.spaceId = s, this.scopedGlobalCache = (r = this.uniCloudIns, U(Qt.replace("{spaceId}", r.config.spaceId)));
   }
-  (0, _createClass2.default)(Xt, [{
+  (0, _createClass2.default)(nn, [{
     key: "getSystemInfo",
     value: function getSystemInfo() {
       return this._systemInfo || (this._systemInfo = ae()), this._systemInfo;
@@ -14609,7 +14653,7 @@ var Xt = /*#__PURE__*/function () {
     key: "decryptResult",
     value: function () {
       var _decryptResult = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee49(e) {
-        var _ref30, t, n;
+        var _ref31, t, n, s;
         return _regenerator.default.wrap(function _callee49$(_context49) {
           while (1) {
             switch (_context49.prev = _context49.next) {
@@ -14620,8 +14664,8 @@ var Xt = /*#__PURE__*/function () {
                 }
                 return _context49.abrupt("return", e);
               case 2:
-                _ref30 = e || {}, t = _ref30.errCode, n = _ref30.content;
-                return _context49.abrupt("return", t || !n ? e : this.secretType === Gt.REQUEST ? n : this.platformDecryptResult(e));
+                _ref31 = e || {}, t = _ref31.errCode, n = _ref31.errMsg, s = _ref31.content;
+                return _context49.abrupt("return", t || !s ? e : this.secretType === Gt.REQUEST ? s : this.platformDecryptResult(e));
               case 4:
               case "end":
                 return _context49.stop();
@@ -14639,9 +14683,9 @@ var Xt = /*#__PURE__*/function () {
     value: function wrapVerifyClientCallFunction(e) {
       var t = this;
       return /*#__PURE__*/(0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee50() {
-        var _ref32,
+        var _ref33,
           n,
-          _ref32$data,
+          _ref33$data,
           s,
           r,
           _args50 = arguments;
@@ -14649,7 +14693,7 @@ var Xt = /*#__PURE__*/function () {
           while (1) {
             switch (_context50.prev = _context50.next) {
               case 0:
-                _ref32 = _args50.length > 0 && _args50[0] !== undefined ? _args50[0] : {}, n = _ref32.name, _ref32$data = _ref32.data, s = _ref32$data === void 0 ? {} : _ref32$data;
+                _ref33 = _args50.length > 0 && _args50[0] !== undefined ? _args50[0] : {}, n = _ref33.name, _ref33$data = _ref33.data, s = _ref33$data === void 0 ? {} : _ref33$data;
                 _context50.next = 3;
                 return t.prepare();
               case 3:
@@ -14700,9 +14744,9 @@ var Xt = /*#__PURE__*/function () {
     value: function wrapEncryptDataCallFunction(e) {
       var t = this;
       return /*#__PURE__*/(0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee51() {
-        var _ref34,
+        var _ref35,
           n,
-          _ref34$data,
+          _ref35$data,
           s,
           r,
           i,
@@ -14712,7 +14756,7 @@ var Xt = /*#__PURE__*/function () {
           while (1) {
             switch (_context51.prev = _context51.next) {
               case 0:
-                _ref34 = _args51.length > 0 && _args51[0] !== undefined ? _args51[0] : {}, n = _ref34.name, _ref34$data = _ref34.data, s = _ref34$data === void 0 ? {} : _ref34$data;
+                _ref35 = _args51.length > 0 && _args51[0] !== undefined ? _args51[0] : {}, n = _ref35.name, _ref35$data = _ref35.data, s = _ref35$data === void 0 ? {} : _ref35$data;
                 _context51.next = 3;
                 return t.prepare();
               case 3:
@@ -14728,7 +14772,7 @@ var Xt = /*#__PURE__*/function () {
               case 8:
                 i = _context51.sent;
                 if (!t.isClientKeyNotFound(i)) {
-                  _context51.next = 21;
+                  _context51.next = 18;
                   break;
                 }
                 _context51.next = 12;
@@ -14741,23 +14785,19 @@ var Xt = /*#__PURE__*/function () {
               case 14:
                 _r5 = _context51.sent;
                 _context51.next = 17;
-                return t.platformGetSignOption();
-              case 17:
-                s._uniCloudOptions = _context51.sent;
-                _context51.next = 20;
                 return e({
                   name: n,
                   data: _r5
                 });
-              case 20:
+              case 17:
                 i = _context51.sent;
-              case 21:
-                _context51.next = 23;
+              case 18:
+                _context51.next = 20;
                 return t.decryptResult(i.result);
-              case 23:
+              case 20:
                 i.result = _context51.sent;
                 return _context51.abrupt("return", i);
-              case 25:
+              case 22:
               case "end":
                 return _context51.stop();
             }
@@ -14766,36 +14806,36 @@ var Xt = /*#__PURE__*/function () {
       }));
     }
   }]);
-  return Xt;
+  return nn;
 }();
 /*! MIT License. Copyright 2015-2018 Richard Moore <me@ricmoo.com>. See LICENSE.txt. */
-function Zt(e) {
+function sn(e) {
   return parseInt(e) === e;
 }
-function en(e) {
-  if (!Zt(e.length)) return !1;
+function rn(e) {
+  if (!sn(e.length)) return !1;
   for (var t = 0; t < e.length; t++) {
-    if (!Zt(e[t]) || e[t] < 0 || e[t] > 255) return !1;
+    if (!sn(e[t]) || e[t] < 0 || e[t] > 255) return !1;
   }
   return !0;
 }
-function tn(e, t) {
+function on(e, t) {
   if (e.buffer && "Uint8Array" === e.name) return t && (e = e.slice ? e.slice() : Array.prototype.slice.call(e)), e;
   if (Array.isArray(e)) {
-    if (!en(e)) throw new Error("Array contains invalid value: " + e);
+    if (!rn(e)) throw new Error("Array contains invalid value: " + e);
     return new Uint8Array(e);
   }
-  if (Zt(e.length) && en(e)) return new Uint8Array(e);
+  if (sn(e.length) && rn(e)) return new Uint8Array(e);
   throw new Error("unsupported array-like object");
 }
-function nn(e) {
+function an(e) {
   return new Uint8Array(e);
 }
-function sn(e, t, n, s, r) {
+function cn(e, t, n, s, r) {
   null == s && null == r || (e = e.slice ? e.slice(s, r) : Array.prototype.slice.call(e, s, r)), t.set(e, n);
 }
-var rn,
-  on = {
+var un,
+  hn = {
     toBytes: function toBytes(e) {
       var t = [],
         n = 0;
@@ -14803,7 +14843,7 @@ var rn,
         var s = e.charCodeAt(n++);
         37 === s ? (t.push(parseInt(e.substr(n, 2), 16)), n += 2) : t.push(s);
       }
-      return tn(t);
+      return on(t);
     },
     fromBytes: function fromBytes(e) {
       for (var t = [], n = 0; n < e.length;) {
@@ -14813,7 +14853,7 @@ var rn,
       return t.join("");
     }
   },
-  an = (rn = "0123456789abcdef", {
+  ln = (un = "0123456789abcdef", {
     toBytes: function toBytes(e) {
       for (var t = [], n = 0; n < e.length; n += 2) {
         t.push(parseInt(e.substr(n, 2), 16));
@@ -14823,49 +14863,49 @@ var rn,
     fromBytes: function fromBytes(e) {
       for (var t = [], n = 0; n < e.length; n++) {
         var s = e[n];
-        t.push(rn[(240 & s) >> 4] + rn[15 & s]);
+        t.push(un[(240 & s) >> 4] + un[15 & s]);
       }
       return t.join("");
     }
   }),
-  cn = {
+  dn = {
     16: 10,
     24: 12,
     32: 14
   },
-  un = [1, 2, 4, 8, 16, 32, 64, 128, 27, 54, 108, 216, 171, 77, 154, 47, 94, 188, 99, 198, 151, 53, 106, 212, 179, 125, 250, 239, 197, 145],
-  hn = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 214, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69, 249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 146, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94, 11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 228, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62, 181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223, 140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22],
-  ln = [82, 9, 106, 213, 48, 54, 165, 56, 191, 64, 163, 158, 129, 243, 215, 251, 124, 227, 57, 130, 155, 47, 255, 135, 52, 142, 67, 68, 196, 222, 233, 203, 84, 123, 148, 50, 166, 194, 35, 61, 238, 76, 149, 11, 66, 250, 195, 78, 8, 46, 161, 102, 40, 217, 36, 178, 118, 91, 162, 73, 109, 139, 209, 37, 114, 248, 246, 100, 134, 104, 152, 22, 212, 164, 92, 204, 93, 101, 182, 146, 108, 112, 72, 80, 253, 237, 185, 218, 94, 21, 70, 87, 167, 141, 157, 132, 144, 216, 171, 0, 140, 188, 211, 10, 247, 228, 88, 5, 184, 179, 69, 6, 208, 44, 30, 143, 202, 63, 15, 2, 193, 175, 189, 3, 1, 19, 138, 107, 58, 145, 17, 65, 79, 103, 220, 234, 151, 242, 207, 206, 240, 180, 230, 115, 150, 172, 116, 34, 231, 173, 53, 133, 226, 249, 55, 232, 28, 117, 223, 110, 71, 241, 26, 113, 29, 41, 197, 137, 111, 183, 98, 14, 170, 24, 190, 27, 252, 86, 62, 75, 198, 210, 121, 32, 154, 219, 192, 254, 120, 205, 90, 244, 31, 221, 168, 51, 136, 7, 199, 49, 177, 18, 16, 89, 39, 128, 236, 95, 96, 81, 127, 169, 25, 181, 74, 13, 45, 229, 122, 159, 147, 201, 156, 239, 160, 224, 59, 77, 174, 42, 245, 176, 200, 235, 187, 60, 131, 83, 153, 97, 23, 43, 4, 126, 186, 119, 214, 38, 225, 105, 20, 99, 85, 33, 12, 125],
-  dn = [3328402341, 4168907908, 4000806809, 4135287693, 4294111757, 3597364157, 3731845041, 2445657428, 1613770832, 33620227, 3462883241, 1445669757, 3892248089, 3050821474, 1303096294, 3967186586, 2412431941, 528646813, 2311702848, 4202528135, 4026202645, 2992200171, 2387036105, 4226871307, 1101901292, 3017069671, 1604494077, 1169141738, 597466303, 1403299063, 3832705686, 2613100635, 1974974402, 3791519004, 1033081774, 1277568618, 1815492186, 2118074177, 4126668546, 2211236943, 1748251740, 1369810420, 3521504564, 4193382664, 3799085459, 2883115123, 1647391059, 706024767, 134480908, 2512897874, 1176707941, 2646852446, 806885416, 932615841, 168101135, 798661301, 235341577, 605164086, 461406363, 3756188221, 3454790438, 1311188841, 2142417613, 3933566367, 302582043, 495158174, 1479289972, 874125870, 907746093, 3698224818, 3025820398, 1537253627, 2756858614, 1983593293, 3084310113, 2108928974, 1378429307, 3722699582, 1580150641, 327451799, 2790478837, 3117535592, 0, 3253595436, 1075847264, 3825007647, 2041688520, 3059440621, 3563743934, 2378943302, 1740553945, 1916352843, 2487896798, 2555137236, 2958579944, 2244988746, 3151024235, 3320835882, 1336584933, 3992714006, 2252555205, 2588757463, 1714631509, 293963156, 2319795663, 3925473552, 67240454, 4269768577, 2689618160, 2017213508, 631218106, 1269344483, 2723238387, 1571005438, 2151694528, 93294474, 1066570413, 563977660, 1882732616, 4059428100, 1673313503, 2008463041, 2950355573, 1109467491, 537923632, 3858759450, 4260623118, 3218264685, 2177748300, 403442708, 638784309, 3287084079, 3193921505, 899127202, 2286175436, 773265209, 2479146071, 1437050866, 4236148354, 2050833735, 3362022572, 3126681063, 840505643, 3866325909, 3227541664, 427917720, 2655997905, 2749160575, 1143087718, 1412049534, 999329963, 193497219, 2353415882, 3354324521, 1807268051, 672404540, 2816401017, 3160301282, 369822493, 2916866934, 3688947771, 1681011286, 1949973070, 336202270, 2454276571, 201721354, 1210328172, 3093060836, 2680341085, 3184776046, 1135389935, 3294782118, 965841320, 831886756, 3554993207, 4068047243, 3588745010, 2345191491, 1849112409, 3664604599, 26054028, 2983581028, 2622377682, 1235855840, 3630984372, 2891339514, 4092916743, 3488279077, 3395642799, 4101667470, 1202630377, 268961816, 1874508501, 4034427016, 1243948399, 1546530418, 941366308, 1470539505, 1941222599, 2546386513, 3421038627, 2715671932, 3899946140, 1042226977, 2521517021, 1639824860, 227249030, 260737669, 3765465232, 2084453954, 1907733956, 3429263018, 2420656344, 100860677, 4160157185, 470683154, 3261161891, 1781871967, 2924959737, 1773779408, 394692241, 2579611992, 974986535, 664706745, 3655459128, 3958962195, 731420851, 571543859, 3530123707, 2849626480, 126783113, 865375399, 765172662, 1008606754, 361203602, 3387549984, 2278477385, 2857719295, 1344809080, 2782912378, 59542671, 1503764984, 160008576, 437062935, 1707065306, 3622233649, 2218934982, 3496503480, 2185314755, 697932208, 1512910199, 504303377, 2075177163, 2824099068, 1841019862, 739644986],
-  pn = [2781242211, 2230877308, 2582542199, 2381740923, 234877682, 3184946027, 2984144751, 1418839493, 1348481072, 50462977, 2848876391, 2102799147, 434634494, 1656084439, 3863849899, 2599188086, 1167051466, 2636087938, 1082771913, 2281340285, 368048890, 3954334041, 3381544775, 201060592, 3963727277, 1739838676, 4250903202, 3930435503, 3206782108, 4149453988, 2531553906, 1536934080, 3262494647, 484572669, 2923271059, 1783375398, 1517041206, 1098792767, 49674231, 1334037708, 1550332980, 4098991525, 886171109, 150598129, 2481090929, 1940642008, 1398944049, 1059722517, 201851908, 1385547719, 1699095331, 1587397571, 674240536, 2704774806, 252314885, 3039795866, 151914247, 908333586, 2602270848, 1038082786, 651029483, 1766729511, 3447698098, 2682942837, 454166793, 2652734339, 1951935532, 775166490, 758520603, 3000790638, 4004797018, 4217086112, 4137964114, 1299594043, 1639438038, 3464344499, 2068982057, 1054729187, 1901997871, 2534638724, 4121318227, 1757008337, 0, 750906861, 1614815264, 535035132, 3363418545, 3988151131, 3201591914, 1183697867, 3647454910, 1265776953, 3734260298, 3566750796, 3903871064, 1250283471, 1807470800, 717615087, 3847203498, 384695291, 3313910595, 3617213773, 1432761139, 2484176261, 3481945413, 283769337, 100925954, 2180939647, 4037038160, 1148730428, 3123027871, 3813386408, 4087501137, 4267549603, 3229630528, 2315620239, 2906624658, 3156319645, 1215313976, 82966005, 3747855548, 3245848246, 1974459098, 1665278241, 807407632, 451280895, 251524083, 1841287890, 1283575245, 337120268, 891687699, 801369324, 3787349855, 2721421207, 3431482436, 959321879, 1469301956, 4065699751, 2197585534, 1199193405, 2898814052, 3887750493, 724703513, 2514908019, 2696962144, 2551808385, 3516813135, 2141445340, 1715741218, 2119445034, 2872807568, 2198571144, 3398190662, 700968686, 3547052216, 1009259540, 2041044702, 3803995742, 487983883, 1991105499, 1004265696, 1449407026, 1316239930, 504629770, 3683797321, 168560134, 1816667172, 3837287516, 1570751170, 1857934291, 4014189740, 2797888098, 2822345105, 2754712981, 936633572, 2347923833, 852879335, 1133234376, 1500395319, 3084545389, 2348912013, 1689376213, 3533459022, 3762923945, 3034082412, 4205598294, 133428468, 634383082, 2949277029, 2398386810, 3913789102, 403703816, 3580869306, 2297460856, 1867130149, 1918643758, 607656988, 4049053350, 3346248884, 1368901318, 600565992, 2090982877, 2632479860, 557719327, 3717614411, 3697393085, 2249034635, 2232388234, 2430627952, 1115438654, 3295786421, 2865522278, 3633334344, 84280067, 33027830, 303828494, 2747425121, 1600795957, 4188952407, 3496589753, 2434238086, 1486471617, 658119965, 3106381470, 953803233, 334231800, 3005978776, 857870609, 3151128937, 1890179545, 2298973838, 2805175444, 3056442267, 574365214, 2450884487, 550103529, 1233637070, 4289353045, 2018519080, 2057691103, 2399374476, 4166623649, 2148108681, 387583245, 3664101311, 836232934, 3330556482, 3100665960, 3280093505, 2955516313, 2002398509, 287182607, 3413881008, 4238890068, 3597515707, 975967766],
-  fn = [1671808611, 2089089148, 2006576759, 2072901243, 4061003762, 1807603307, 1873927791, 3310653893, 810573872, 16974337, 1739181671, 729634347, 4263110654, 3613570519, 2883997099, 1989864566, 3393556426, 2191335298, 3376449993, 2106063485, 4195741690, 1508618841, 1204391495, 4027317232, 2917941677, 3563566036, 2734514082, 2951366063, 2629772188, 2767672228, 1922491506, 3227229120, 3082974647, 4246528509, 2477669779, 644500518, 911895606, 1061256767, 4144166391, 3427763148, 878471220, 2784252325, 3845444069, 4043897329, 1905517169, 3631459288, 827548209, 356461077, 67897348, 3344078279, 593839651, 3277757891, 405286936, 2527147926, 84871685, 2595565466, 118033927, 305538066, 2157648768, 3795705826, 3945188843, 661212711, 2999812018, 1973414517, 152769033, 2208177539, 745822252, 439235610, 455947803, 1857215598, 1525593178, 2700827552, 1391895634, 994932283, 3596728278, 3016654259, 695947817, 3812548067, 795958831, 2224493444, 1408607827, 3513301457, 0, 3979133421, 543178784, 4229948412, 2982705585, 1542305371, 1790891114, 3410398667, 3201918910, 961245753, 1256100938, 1289001036, 1491644504, 3477767631, 3496721360, 4012557807, 2867154858, 4212583931, 1137018435, 1305975373, 861234739, 2241073541, 1171229253, 4178635257, 33948674, 2139225727, 1357946960, 1011120188, 2679776671, 2833468328, 1374921297, 2751356323, 1086357568, 2408187279, 2460827538, 2646352285, 944271416, 4110742005, 3168756668, 3066132406, 3665145818, 560153121, 271589392, 4279952895, 4077846003, 3530407890, 3444343245, 202643468, 322250259, 3962553324, 1608629855, 2543990167, 1154254916, 389623319, 3294073796, 2817676711, 2122513534, 1028094525, 1689045092, 1575467613, 422261273, 1939203699, 1621147744, 2174228865, 1339137615, 3699352540, 577127458, 712922154, 2427141008, 2290289544, 1187679302, 3995715566, 3100863416, 339486740, 3732514782, 1591917662, 186455563, 3681988059, 3762019296, 844522546, 978220090, 169743370, 1239126601, 101321734, 611076132, 1558493276, 3260915650, 3547250131, 2901361580, 1655096418, 2443721105, 2510565781, 3828863972, 2039214713, 3878868455, 3359869896, 928607799, 1840765549, 2374762893, 3580146133, 1322425422, 2850048425, 1823791212, 1459268694, 4094161908, 3928346602, 1706019429, 2056189050, 2934523822, 135794696, 3134549946, 2022240376, 628050469, 779246638, 472135708, 2800834470, 3032970164, 3327236038, 3894660072, 3715932637, 1956440180, 522272287, 1272813131, 3185336765, 2340818315, 2323976074, 1888542832, 1044544574, 3049550261, 1722469478, 1222152264, 50660867, 4127324150, 236067854, 1638122081, 895445557, 1475980887, 3117443513, 2257655686, 3243809217, 489110045, 2662934430, 3778599393, 4162055160, 2561878936, 288563729, 1773916777, 3648039385, 2391345038, 2493985684, 2612407707, 505560094, 2274497927, 3911240169, 3460925390, 1442818645, 678973480, 3749357023, 2358182796, 2717407649, 2306869641, 219617805, 3218761151, 3862026214, 1120306242, 1756942440, 1103331905, 2578459033, 762796589, 252780047, 2966125488, 1425844308, 3151392187, 372911126],
-  gn = [1667474886, 2088535288, 2004326894, 2071694838, 4075949567, 1802223062, 1869591006, 3318043793, 808472672, 16843522, 1734846926, 724270422, 4278065639, 3621216949, 2880169549, 1987484396, 3402253711, 2189597983, 3385409673, 2105378810, 4210693615, 1499065266, 1195886990, 4042263547, 2913856577, 3570689971, 2728590687, 2947541573, 2627518243, 2762274643, 1920112356, 3233831835, 3082273397, 4261223649, 2475929149, 640051788, 909531756, 1061110142, 4160160501, 3435941763, 875846760, 2779116625, 3857003729, 4059105529, 1903268834, 3638064043, 825316194, 353713962, 67374088, 3351728789, 589522246, 3284360861, 404236336, 2526454071, 84217610, 2593830191, 117901582, 303183396, 2155911963, 3806477791, 3958056653, 656894286, 2998062463, 1970642922, 151591698, 2206440989, 741110872, 437923380, 454765878, 1852748508, 1515908788, 2694904667, 1381168804, 993742198, 3604373943, 3014905469, 690584402, 3823320797, 791638366, 2223281939, 1398011302, 3520161977, 0, 3991743681, 538992704, 4244381667, 2981218425, 1532751286, 1785380564, 3419096717, 3200178535, 960056178, 1246420628, 1280103576, 1482221744, 3486468741, 3503319995, 4025428677, 2863326543, 4227536621, 1128514950, 1296947098, 859002214, 2240123921, 1162203018, 4193849577, 33687044, 2139062782, 1347481760, 1010582648, 2678045221, 2829640523, 1364325282, 2745433693, 1077985408, 2408548869, 2459086143, 2644360225, 943212656, 4126475505, 3166494563, 3065430391, 3671750063, 555836226, 269496352, 4294908645, 4092792573, 3537006015, 3452783745, 202118168, 320025894, 3974901699, 1600119230, 2543297077, 1145359496, 387397934, 3301201811, 2812801621, 2122220284, 1027426170, 1684319432, 1566435258, 421079858, 1936954854, 1616945344, 2172753945, 1330631070, 3705438115, 572679748, 707427924, 2425400123, 2290647819, 1179044492, 4008585671, 3099120491, 336870440, 3739122087, 1583276732, 185277718, 3688593069, 3772791771, 842159716, 976899700, 168435220, 1229577106, 101059084, 606366792, 1549591736, 3267517855, 3553849021, 2897014595, 1650632388, 2442242105, 2509612081, 3840161747, 2038008818, 3890688725, 3368567691, 926374254, 1835907034, 2374863873, 3587531953, 1313788572, 2846482505, 1819063512, 1448540844, 4109633523, 3941213647, 1701162954, 2054852340, 2930698567, 134748176, 3132806511, 2021165296, 623210314, 774795868, 471606328, 2795958615, 3031746419, 3334885783, 3907527627, 3722280097, 1953799400, 522133822, 1263263126, 3183336545, 2341176845, 2324333839, 1886425312, 1044267644, 3048588401, 1718004428, 1212733584, 50529542, 4143317495, 235803164, 1633788866, 892690282, 1465383342, 3115962473, 2256965911, 3250673817, 488449850, 2661202215, 3789633753, 4177007595, 2560144171, 286339874, 1768537042, 3654906025, 2391705863, 2492770099, 2610673197, 505291324, 2273808917, 3924369609, 3469625735, 1431699370, 673740880, 3755965093, 2358021891, 2711746649, 2307489801, 218961690, 3217021541, 3873845719, 1111672452, 1751693520, 1094828930, 2576986153, 757954394, 252645662, 2964376443, 1414855848, 3149649517, 370555436],
-  mn = [1374988112, 2118214995, 437757123, 975658646, 1001089995, 530400753, 2902087851, 1273168787, 540080725, 2910219766, 2295101073, 4110568485, 1340463100, 3307916247, 641025152, 3043140495, 3736164937, 632953703, 1172967064, 1576976609, 3274667266, 2169303058, 2370213795, 1809054150, 59727847, 361929877, 3211623147, 2505202138, 3569255213, 1484005843, 1239443753, 2395588676, 1975683434, 4102977912, 2572697195, 666464733, 3202437046, 4035489047, 3374361702, 2110667444, 1675577880, 3843699074, 2538681184, 1649639237, 2976151520, 3144396420, 4269907996, 4178062228, 1883793496, 2403728665, 2497604743, 1383856311, 2876494627, 1917518562, 3810496343, 1716890410, 3001755655, 800440835, 2261089178, 3543599269, 807962610, 599762354, 33778362, 3977675356, 2328828971, 2809771154, 4077384432, 1315562145, 1708848333, 101039829, 3509871135, 3299278474, 875451293, 2733856160, 92987698, 2767645557, 193195065, 1080094634, 1584504582, 3178106961, 1042385657, 2531067453, 3711829422, 1306967366, 2438237621, 1908694277, 67556463, 1615861247, 429456164, 3602770327, 2302690252, 1742315127, 2968011453, 126454664, 3877198648, 2043211483, 2709260871, 2084704233, 4169408201, 0, 159417987, 841739592, 504459436, 1817866830, 4245618683, 260388950, 1034867998, 908933415, 168810852, 1750902305, 2606453969, 607530554, 202008497, 2472011535, 3035535058, 463180190, 2160117071, 1641816226, 1517767529, 470948374, 3801332234, 3231722213, 1008918595, 303765277, 235474187, 4069246893, 766945465, 337553864, 1475418501, 2943682380, 4003061179, 2743034109, 4144047775, 1551037884, 1147550661, 1543208500, 2336434550, 3408119516, 3069049960, 3102011747, 3610369226, 1113818384, 328671808, 2227573024, 2236228733, 3535486456, 2935566865, 3341394285, 496906059, 3702665459, 226906860, 2009195472, 733156972, 2842737049, 294930682, 1206477858, 2835123396, 2700099354, 1451044056, 573804783, 2269728455, 3644379585, 2362090238, 2564033334, 2801107407, 2776292904, 3669462566, 1068351396, 742039012, 1350078989, 1784663195, 1417561698, 4136440770, 2430122216, 775550814, 2193862645, 2673705150, 1775276924, 1876241833, 3475313331, 3366754619, 270040487, 3902563182, 3678124923, 3441850377, 1851332852, 3969562369, 2203032232, 3868552805, 2868897406, 566021896, 4011190502, 3135740889, 1248802510, 3936291284, 699432150, 832877231, 708780849, 3332740144, 899835584, 1951317047, 4236429990, 3767586992, 866637845, 4043610186, 1106041591, 2144161806, 395441711, 1984812685, 1139781709, 3433712980, 3835036895, 2664543715, 1282050075, 3240894392, 1181045119, 2640243204, 25965917, 4203181171, 4211818798, 3009879386, 2463879762, 3910161971, 1842759443, 2597806476, 933301370, 1509430414, 3943906441, 3467192302, 3076639029, 3776767469, 2051518780, 2631065433, 1441952575, 404016761, 1942435775, 1408749034, 1610459739, 3745345300, 2017778566, 3400528769, 3110650942, 941896748, 3265478751, 371049330, 3168937228, 675039627, 4279080257, 967311729, 135050206, 3635733660, 1683407248, 2076935265, 3576870512, 1215061108, 3501741890],
-  yn = [1347548327, 1400783205, 3273267108, 2520393566, 3409685355, 4045380933, 2880240216, 2471224067, 1428173050, 4138563181, 2441661558, 636813900, 4233094615, 3620022987, 2149987652, 2411029155, 1239331162, 1730525723, 2554718734, 3781033664, 46346101, 310463728, 2743944855, 3328955385, 3875770207, 2501218972, 3955191162, 3667219033, 768917123, 3545789473, 692707433, 1150208456, 1786102409, 2029293177, 1805211710, 3710368113, 3065962831, 401639597, 1724457132, 3028143674, 409198410, 2196052529, 1620529459, 1164071807, 3769721975, 2226875310, 486441376, 2499348523, 1483753576, 428819965, 2274680428, 3075636216, 598438867, 3799141122, 1474502543, 711349675, 129166120, 53458370, 2592523643, 2782082824, 4063242375, 2988687269, 3120694122, 1559041666, 730517276, 2460449204, 4042459122, 2706270690, 3446004468, 3573941694, 533804130, 2328143614, 2637442643, 2695033685, 839224033, 1973745387, 957055980, 2856345839, 106852767, 1371368976, 4181598602, 1033297158, 2933734917, 1179510461, 3046200461, 91341917, 1862534868, 4284502037, 605657339, 2547432937, 3431546947, 2003294622, 3182487618, 2282195339, 954669403, 3682191598, 1201765386, 3917234703, 3388507166, 0, 2198438022, 1211247597, 2887651696, 1315723890, 4227665663, 1443857720, 507358933, 657861945, 1678381017, 560487590, 3516619604, 975451694, 2970356327, 261314535, 3535072918, 2652609425, 1333838021, 2724322336, 1767536459, 370938394, 182621114, 3854606378, 1128014560, 487725847, 185469197, 2918353863, 3106780840, 3356761769, 2237133081, 1286567175, 3152976349, 4255350624, 2683765030, 3160175349, 3309594171, 878443390, 1988838185, 3704300486, 1756818940, 1673061617, 3403100636, 272786309, 1075025698, 545572369, 2105887268, 4174560061, 296679730, 1841768865, 1260232239, 4091327024, 3960309330, 3497509347, 1814803222, 2578018489, 4195456072, 575138148, 3299409036, 446754879, 3629546796, 4011996048, 3347532110, 3252238545, 4270639778, 915985419, 3483825537, 681933534, 651868046, 2755636671, 3828103837, 223377554, 2607439820, 1649704518, 3270937875, 3901806776, 1580087799, 4118987695, 3198115200, 2087309459, 2842678573, 3016697106, 1003007129, 2802849917, 1860738147, 2077965243, 164439672, 4100872472, 32283319, 2827177882, 1709610350, 2125135846, 136428751, 3874428392, 3652904859, 3460984630, 3572145929, 3593056380, 2939266226, 824852259, 818324884, 3224740454, 930369212, 2801566410, 2967507152, 355706840, 1257309336, 4148292826, 243256656, 790073846, 2373340630, 1296297904, 1422699085, 3756299780, 3818836405, 457992840, 3099667487, 2135319889, 77422314, 1560382517, 1945798516, 788204353, 1521706781, 1385356242, 870912086, 325965383, 2358957921, 2050466060, 2388260884, 2313884476, 4006521127, 901210569, 3990953189, 1014646705, 1503449823, 1062597235, 2031621326, 3212035895, 3931371469, 1533017514, 350174575, 2256028891, 2177544179, 1052338372, 741876788, 1606591296, 1914052035, 213705253, 2334669897, 1107234197, 1899603969, 3725069491, 2631447780, 2422494913, 1635502980, 1893020342, 1950903388, 1120974935],
-  _n = [2807058932, 1699970625, 2764249623, 1586903591, 1808481195, 1173430173, 1487645946, 59984867, 4199882800, 1844882806, 1989249228, 1277555970, 3623636965, 3419915562, 1149249077, 2744104290, 1514790577, 459744698, 244860394, 3235995134, 1963115311, 4027744588, 2544078150, 4190530515, 1608975247, 2627016082, 2062270317, 1507497298, 2200818878, 567498868, 1764313568, 3359936201, 2305455554, 2037970062, 1047239e3, 1910319033, 1337376481, 2904027272, 2892417312, 984907214, 1243112415, 830661914, 861968209, 2135253587, 2011214180, 2927934315, 2686254721, 731183368, 1750626376, 4246310725, 1820824798, 4172763771, 3542330227, 48394827, 2404901663, 2871682645, 671593195, 3254988725, 2073724613, 145085239, 2280796200, 2779915199, 1790575107, 2187128086, 472615631, 3029510009, 4075877127, 3802222185, 4107101658, 3201631749, 1646252340, 4270507174, 1402811438, 1436590835, 3778151818, 3950355702, 3963161475, 4020912224, 2667994737, 273792366, 2331590177, 104699613, 95345982, 3175501286, 2377486676, 1560637892, 3564045318, 369057872, 4213447064, 3919042237, 1137477952, 2658625497, 1119727848, 2340947849, 1530455833, 4007360968, 172466556, 266959938, 516552836, 0, 2256734592, 3980931627, 1890328081, 1917742170, 4294704398, 945164165, 3575528878, 958871085, 3647212047, 2787207260, 1423022939, 775562294, 1739656202, 3876557655, 2530391278, 2443058075, 3310321856, 547512796, 1265195639, 437656594, 3121275539, 719700128, 3762502690, 387781147, 218828297, 3350065803, 2830708150, 2848461854, 428169201, 122466165, 3720081049, 1627235199, 648017665, 4122762354, 1002783846, 2117360635, 695634755, 3336358691, 4234721005, 4049844452, 3704280881, 2232435299, 574624663, 287343814, 612205898, 1039717051, 840019705, 2708326185, 793451934, 821288114, 1391201670, 3822090177, 376187827, 3113855344, 1224348052, 1679968233, 2361698556, 1058709744, 752375421, 2431590963, 1321699145, 3519142200, 2734591178, 188127444, 2177869557, 3727205754, 2384911031, 3215212461, 2648976442, 2450346104, 3432737375, 1180849278, 331544205, 3102249176, 4150144569, 2952102595, 2159976285, 2474404304, 766078933, 313773861, 2570832044, 2108100632, 1668212892, 3145456443, 2013908262, 418672217, 3070356634, 2594734927, 1852171925, 3867060991, 3473416636, 3907448597, 2614737639, 919489135, 164948639, 2094410160, 2997825956, 590424639, 2486224549, 1723872674, 3157750862, 3399941250, 3501252752, 3625268135, 2555048196, 3673637356, 1343127501, 4130281361, 3599595085, 2957853679, 1297403050, 81781910, 3051593425, 2283490410, 532201772, 1367295589, 3926170974, 895287692, 1953757831, 1093597963, 492483431, 3528626907, 1446242576, 1192455638, 1636604631, 209336225, 344873464, 1015671571, 669961897, 3375740769, 3857572124, 2973530695, 3747192018, 1933530610, 3464042516, 935293895, 3454686199, 2858115069, 1863638845, 3683022916, 4085369519, 3292445032, 875313188, 1080017571, 3279033885, 621591778, 1233856572, 2504130317, 24197544, 3017672716, 3835484340, 3247465558, 2220981195, 3060847922, 1551124588, 1463996600],
-  wn = [4104605777, 1097159550, 396673818, 660510266, 2875968315, 2638606623, 4200115116, 3808662347, 821712160, 1986918061, 3430322568, 38544885, 3856137295, 718002117, 893681702, 1654886325, 2975484382, 3122358053, 3926825029, 4274053469, 796197571, 1290801793, 1184342925, 3556361835, 2405426947, 2459735317, 1836772287, 1381620373, 3196267988, 1948373848, 3764988233, 3385345166, 3263785589, 2390325492, 1480485785, 3111247143, 3780097726, 2293045232, 548169417, 3459953789, 3746175075, 439452389, 1362321559, 1400849762, 1685577905, 1806599355, 2174754046, 137073913, 1214797936, 1174215055, 3731654548, 2079897426, 1943217067, 1258480242, 529487843, 1437280870, 3945269170, 3049390895, 3313212038, 923313619, 679998e3, 3215307299, 57326082, 377642221, 3474729866, 2041877159, 133361907, 1776460110, 3673476453, 96392454, 878845905, 2801699524, 777231668, 4082475170, 2330014213, 4142626212, 2213296395, 1626319424, 1906247262, 1846563261, 562755902, 3708173718, 1040559837, 3871163981, 1418573201, 3294430577, 114585348, 1343618912, 2566595609, 3186202582, 1078185097, 3651041127, 3896688048, 2307622919, 425408743, 3371096953, 2081048481, 1108339068, 2216610296, 0, 2156299017, 736970802, 292596766, 1517440620, 251657213, 2235061775, 2933202493, 758720310, 265905162, 1554391400, 1532285339, 908999204, 174567692, 1474760595, 4002861748, 2610011675, 3234156416, 3693126241, 2001430874, 303699484, 2478443234, 2687165888, 585122620, 454499602, 151849742, 2345119218, 3064510765, 514443284, 4044981591, 1963412655, 2581445614, 2137062819, 19308535, 1928707164, 1715193156, 4219352155, 1126790795, 600235211, 3992742070, 3841024952, 836553431, 1669664834, 2535604243, 3323011204, 1243905413, 3141400786, 4180808110, 698445255, 2653899549, 2989552604, 2253581325, 3252932727, 3004591147, 1891211689, 2487810577, 3915653703, 4237083816, 4030667424, 2100090966, 865136418, 1229899655, 953270745, 3399679628, 3557504664, 4118925222, 2061379749, 3079546586, 2915017791, 983426092, 2022837584, 1607244650, 2118541908, 2366882550, 3635996816, 972512814, 3283088770, 1568718495, 3499326569, 3576539503, 621982671, 2895723464, 410887952, 2623762152, 1002142683, 645401037, 1494807662, 2595684844, 1335535747, 2507040230, 4293295786, 3167684641, 367585007, 3885750714, 1865862730, 2668221674, 2960971305, 2763173681, 1059270954, 2777952454, 2724642869, 1320957812, 2194319100, 2429595872, 2815956275, 77089521, 3973773121, 3444575871, 2448830231, 1305906550, 4021308739, 2857194700, 2516901860, 3518358430, 1787304780, 740276417, 1699839814, 1592394909, 2352307457, 2272556026, 188821243, 1729977011, 3687994002, 274084841, 3594982253, 3613494426, 2701949495, 4162096729, 322734571, 2837966542, 1640576439, 484830689, 1202797690, 3537852828, 4067639125, 349075736, 3342319475, 4157467219, 4255800159, 1030690015, 1155237496, 2951971274, 1757691577, 607398968, 2738905026, 499347990, 3794078908, 1011452712, 227885567, 2818666809, 213114376, 3034881240, 1455525988, 3414450555, 850817237, 1817998408, 3092726480],
-  vn = [0, 235474187, 470948374, 303765277, 941896748, 908933415, 607530554, 708780849, 1883793496, 2118214995, 1817866830, 1649639237, 1215061108, 1181045119, 1417561698, 1517767529, 3767586992, 4003061179, 4236429990, 4069246893, 3635733660, 3602770327, 3299278474, 3400528769, 2430122216, 2664543715, 2362090238, 2193862645, 2835123396, 2801107407, 3035535058, 3135740889, 3678124923, 3576870512, 3341394285, 3374361702, 3810496343, 3977675356, 4279080257, 4043610186, 2876494627, 2776292904, 3076639029, 3110650942, 2472011535, 2640243204, 2403728665, 2169303058, 1001089995, 899835584, 666464733, 699432150, 59727847, 226906860, 530400753, 294930682, 1273168787, 1172967064, 1475418501, 1509430414, 1942435775, 2110667444, 1876241833, 1641816226, 2910219766, 2743034109, 2976151520, 3211623147, 2505202138, 2606453969, 2302690252, 2269728455, 3711829422, 3543599269, 3240894392, 3475313331, 3843699074, 3943906441, 4178062228, 4144047775, 1306967366, 1139781709, 1374988112, 1610459739, 1975683434, 2076935265, 1775276924, 1742315127, 1034867998, 866637845, 566021896, 800440835, 92987698, 193195065, 429456164, 395441711, 1984812685, 2017778566, 1784663195, 1683407248, 1315562145, 1080094634, 1383856311, 1551037884, 101039829, 135050206, 437757123, 337553864, 1042385657, 807962610, 573804783, 742039012, 2531067453, 2564033334, 2328828971, 2227573024, 2935566865, 2700099354, 3001755655, 3168937228, 3868552805, 3902563182, 4203181171, 4102977912, 3736164937, 3501741890, 3265478751, 3433712980, 1106041591, 1340463100, 1576976609, 1408749034, 2043211483, 2009195472, 1708848333, 1809054150, 832877231, 1068351396, 766945465, 599762354, 159417987, 126454664, 361929877, 463180190, 2709260871, 2943682380, 3178106961, 3009879386, 2572697195, 2538681184, 2236228733, 2336434550, 3509871135, 3745345300, 3441850377, 3274667266, 3910161971, 3877198648, 4110568485, 4211818798, 2597806476, 2497604743, 2261089178, 2295101073, 2733856160, 2902087851, 3202437046, 2968011453, 3936291284, 3835036895, 4136440770, 4169408201, 3535486456, 3702665459, 3467192302, 3231722213, 2051518780, 1951317047, 1716890410, 1750902305, 1113818384, 1282050075, 1584504582, 1350078989, 168810852, 67556463, 371049330, 404016761, 841739592, 1008918595, 775550814, 540080725, 3969562369, 3801332234, 4035489047, 4269907996, 3569255213, 3669462566, 3366754619, 3332740144, 2631065433, 2463879762, 2160117071, 2395588676, 2767645557, 2868897406, 3102011747, 3069049960, 202008497, 33778362, 270040487, 504459436, 875451293, 975658646, 675039627, 641025152, 2084704233, 1917518562, 1615861247, 1851332852, 1147550661, 1248802510, 1484005843, 1451044056, 933301370, 967311729, 733156972, 632953703, 260388950, 25965917, 328671808, 496906059, 1206477858, 1239443753, 1543208500, 1441952575, 2144161806, 1908694277, 1675577880, 1842759443, 3610369226, 3644379585, 3408119516, 3307916247, 4011190502, 3776767469, 4077384432, 4245618683, 2809771154, 2842737049, 3144396420, 3043140495, 2673705150, 2438237621, 2203032232, 2370213795],
-  In = [0, 185469197, 370938394, 487725847, 741876788, 657861945, 975451694, 824852259, 1483753576, 1400783205, 1315723890, 1164071807, 1950903388, 2135319889, 1649704518, 1767536459, 2967507152, 3152976349, 2801566410, 2918353863, 2631447780, 2547432937, 2328143614, 2177544179, 3901806776, 3818836405, 4270639778, 4118987695, 3299409036, 3483825537, 3535072918, 3652904859, 2077965243, 1893020342, 1841768865, 1724457132, 1474502543, 1559041666, 1107234197, 1257309336, 598438867, 681933534, 901210569, 1052338372, 261314535, 77422314, 428819965, 310463728, 3409685355, 3224740454, 3710368113, 3593056380, 3875770207, 3960309330, 4045380933, 4195456072, 2471224067, 2554718734, 2237133081, 2388260884, 3212035895, 3028143674, 2842678573, 2724322336, 4138563181, 4255350624, 3769721975, 3955191162, 3667219033, 3516619604, 3431546947, 3347532110, 2933734917, 2782082824, 3099667487, 3016697106, 2196052529, 2313884476, 2499348523, 2683765030, 1179510461, 1296297904, 1347548327, 1533017514, 1786102409, 1635502980, 2087309459, 2003294622, 507358933, 355706840, 136428751, 53458370, 839224033, 957055980, 605657339, 790073846, 2373340630, 2256028891, 2607439820, 2422494913, 2706270690, 2856345839, 3075636216, 3160175349, 3573941694, 3725069491, 3273267108, 3356761769, 4181598602, 4063242375, 4011996048, 3828103837, 1033297158, 915985419, 730517276, 545572369, 296679730, 446754879, 129166120, 213705253, 1709610350, 1860738147, 1945798516, 2029293177, 1239331162, 1120974935, 1606591296, 1422699085, 4148292826, 4233094615, 3781033664, 3931371469, 3682191598, 3497509347, 3446004468, 3328955385, 2939266226, 2755636671, 3106780840, 2988687269, 2198438022, 2282195339, 2501218972, 2652609425, 1201765386, 1286567175, 1371368976, 1521706781, 1805211710, 1620529459, 2105887268, 1988838185, 533804130, 350174575, 164439672, 46346101, 870912086, 954669403, 636813900, 788204353, 2358957921, 2274680428, 2592523643, 2441661558, 2695033685, 2880240216, 3065962831, 3182487618, 3572145929, 3756299780, 3270937875, 3388507166, 4174560061, 4091327024, 4006521127, 3854606378, 1014646705, 930369212, 711349675, 560487590, 272786309, 457992840, 106852767, 223377554, 1678381017, 1862534868, 1914052035, 2031621326, 1211247597, 1128014560, 1580087799, 1428173050, 32283319, 182621114, 401639597, 486441376, 768917123, 651868046, 1003007129, 818324884, 1503449823, 1385356242, 1333838021, 1150208456, 1973745387, 2125135846, 1673061617, 1756818940, 2970356327, 3120694122, 2802849917, 2887651696, 2637442643, 2520393566, 2334669897, 2149987652, 3917234703, 3799141122, 4284502037, 4100872472, 3309594171, 3460984630, 3545789473, 3629546796, 2050466060, 1899603969, 1814803222, 1730525723, 1443857720, 1560382517, 1075025698, 1260232239, 575138148, 692707433, 878443390, 1062597235, 243256656, 91341917, 409198410, 325965383, 3403100636, 3252238545, 3704300486, 3620022987, 3874428392, 3990953189, 4042459122, 4227665663, 2460449204, 2578018489, 2226875310, 2411029155, 3198115200, 3046200461, 2827177882, 2743944855],
-  Sn = [0, 218828297, 437656594, 387781147, 875313188, 958871085, 775562294, 590424639, 1750626376, 1699970625, 1917742170, 2135253587, 1551124588, 1367295589, 1180849278, 1265195639, 3501252752, 3720081049, 3399941250, 3350065803, 3835484340, 3919042237, 4270507174, 4085369519, 3102249176, 3051593425, 2734591178, 2952102595, 2361698556, 2177869557, 2530391278, 2614737639, 3145456443, 3060847922, 2708326185, 2892417312, 2404901663, 2187128086, 2504130317, 2555048196, 3542330227, 3727205754, 3375740769, 3292445032, 3876557655, 3926170974, 4246310725, 4027744588, 1808481195, 1723872674, 1910319033, 2094410160, 1608975247, 1391201670, 1173430173, 1224348052, 59984867, 244860394, 428169201, 344873464, 935293895, 984907214, 766078933, 547512796, 1844882806, 1627235199, 2011214180, 2062270317, 1507497298, 1423022939, 1137477952, 1321699145, 95345982, 145085239, 532201772, 313773861, 830661914, 1015671571, 731183368, 648017665, 3175501286, 2957853679, 2807058932, 2858115069, 2305455554, 2220981195, 2474404304, 2658625497, 3575528878, 3625268135, 3473416636, 3254988725, 3778151818, 3963161475, 4213447064, 4130281361, 3599595085, 3683022916, 3432737375, 3247465558, 3802222185, 4020912224, 4172763771, 4122762354, 3201631749, 3017672716, 2764249623, 2848461854, 2331590177, 2280796200, 2431590963, 2648976442, 104699613, 188127444, 472615631, 287343814, 840019705, 1058709744, 671593195, 621591778, 1852171925, 1668212892, 1953757831, 2037970062, 1514790577, 1463996600, 1080017571, 1297403050, 3673637356, 3623636965, 3235995134, 3454686199, 4007360968, 3822090177, 4107101658, 4190530515, 2997825956, 3215212461, 2830708150, 2779915199, 2256734592, 2340947849, 2627016082, 2443058075, 172466556, 122466165, 273792366, 492483431, 1047239e3, 861968209, 612205898, 695634755, 1646252340, 1863638845, 2013908262, 1963115311, 1446242576, 1530455833, 1277555970, 1093597963, 1636604631, 1820824798, 2073724613, 1989249228, 1436590835, 1487645946, 1337376481, 1119727848, 164948639, 81781910, 331544205, 516552836, 1039717051, 821288114, 669961897, 719700128, 2973530695, 3157750862, 2871682645, 2787207260, 2232435299, 2283490410, 2667994737, 2450346104, 3647212047, 3564045318, 3279033885, 3464042516, 3980931627, 3762502690, 4150144569, 4199882800, 3070356634, 3121275539, 2904027272, 2686254721, 2200818878, 2384911031, 2570832044, 2486224549, 3747192018, 3528626907, 3310321856, 3359936201, 3950355702, 3867060991, 4049844452, 4234721005, 1739656202, 1790575107, 2108100632, 1890328081, 1402811438, 1586903591, 1233856572, 1149249077, 266959938, 48394827, 369057872, 418672217, 1002783846, 919489135, 567498868, 752375421, 209336225, 24197544, 376187827, 459744698, 945164165, 895287692, 574624663, 793451934, 1679968233, 1764313568, 2117360635, 1933530610, 1343127501, 1560637892, 1243112415, 1192455638, 3704280881, 3519142200, 3336358691, 3419915562, 3907448597, 3857572124, 4075877127, 4294704398, 3029510009, 3113855344, 2927934315, 2744104290, 2159976285, 2377486676, 2594734927, 2544078150],
-  Tn = [0, 151849742, 303699484, 454499602, 607398968, 758720310, 908999204, 1059270954, 1214797936, 1097159550, 1517440620, 1400849762, 1817998408, 1699839814, 2118541908, 2001430874, 2429595872, 2581445614, 2194319100, 2345119218, 3034881240, 3186202582, 2801699524, 2951971274, 3635996816, 3518358430, 3399679628, 3283088770, 4237083816, 4118925222, 4002861748, 3885750714, 1002142683, 850817237, 698445255, 548169417, 529487843, 377642221, 227885567, 77089521, 1943217067, 2061379749, 1640576439, 1757691577, 1474760595, 1592394909, 1174215055, 1290801793, 2875968315, 2724642869, 3111247143, 2960971305, 2405426947, 2253581325, 2638606623, 2487810577, 3808662347, 3926825029, 4044981591, 4162096729, 3342319475, 3459953789, 3576539503, 3693126241, 1986918061, 2137062819, 1685577905, 1836772287, 1381620373, 1532285339, 1078185097, 1229899655, 1040559837, 923313619, 740276417, 621982671, 439452389, 322734571, 137073913, 19308535, 3871163981, 4021308739, 4104605777, 4255800159, 3263785589, 3414450555, 3499326569, 3651041127, 2933202493, 2815956275, 3167684641, 3049390895, 2330014213, 2213296395, 2566595609, 2448830231, 1305906550, 1155237496, 1607244650, 1455525988, 1776460110, 1626319424, 2079897426, 1928707164, 96392454, 213114376, 396673818, 514443284, 562755902, 679998e3, 865136418, 983426092, 3708173718, 3557504664, 3474729866, 3323011204, 4180808110, 4030667424, 3945269170, 3794078908, 2507040230, 2623762152, 2272556026, 2390325492, 2975484382, 3092726480, 2738905026, 2857194700, 3973773121, 3856137295, 4274053469, 4157467219, 3371096953, 3252932727, 3673476453, 3556361835, 2763173681, 2915017791, 3064510765, 3215307299, 2156299017, 2307622919, 2459735317, 2610011675, 2081048481, 1963412655, 1846563261, 1729977011, 1480485785, 1362321559, 1243905413, 1126790795, 878845905, 1030690015, 645401037, 796197571, 274084841, 425408743, 38544885, 188821243, 3613494426, 3731654548, 3313212038, 3430322568, 4082475170, 4200115116, 3780097726, 3896688048, 2668221674, 2516901860, 2366882550, 2216610296, 3141400786, 2989552604, 2837966542, 2687165888, 1202797690, 1320957812, 1437280870, 1554391400, 1669664834, 1787304780, 1906247262, 2022837584, 265905162, 114585348, 499347990, 349075736, 736970802, 585122620, 972512814, 821712160, 2595684844, 2478443234, 2293045232, 2174754046, 3196267988, 3079546586, 2895723464, 2777952454, 3537852828, 3687994002, 3234156416, 3385345166, 4142626212, 4293295786, 3841024952, 3992742070, 174567692, 57326082, 410887952, 292596766, 777231668, 660510266, 1011452712, 893681702, 1108339068, 1258480242, 1343618912, 1494807662, 1715193156, 1865862730, 1948373848, 2100090966, 2701949495, 2818666809, 3004591147, 3122358053, 2235061775, 2352307457, 2535604243, 2653899549, 3915653703, 3764988233, 4219352155, 4067639125, 3444575871, 3294430577, 3746175075, 3594982253, 836553431, 953270745, 600235211, 718002117, 367585007, 484830689, 133361907, 251657213, 2041877159, 1891211689, 1806599355, 1654886325, 1568718495, 1418573201, 1335535747, 1184342925];
-function bn(e) {
+  pn = [1, 2, 4, 8, 16, 32, 64, 128, 27, 54, 108, 216, 171, 77, 154, 47, 94, 188, 99, 198, 151, 53, 106, 212, 179, 125, 250, 239, 197, 145],
+  fn = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 214, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69, 249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 146, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94, 11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 228, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62, 181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223, 140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22],
+  gn = [82, 9, 106, 213, 48, 54, 165, 56, 191, 64, 163, 158, 129, 243, 215, 251, 124, 227, 57, 130, 155, 47, 255, 135, 52, 142, 67, 68, 196, 222, 233, 203, 84, 123, 148, 50, 166, 194, 35, 61, 238, 76, 149, 11, 66, 250, 195, 78, 8, 46, 161, 102, 40, 217, 36, 178, 118, 91, 162, 73, 109, 139, 209, 37, 114, 248, 246, 100, 134, 104, 152, 22, 212, 164, 92, 204, 93, 101, 182, 146, 108, 112, 72, 80, 253, 237, 185, 218, 94, 21, 70, 87, 167, 141, 157, 132, 144, 216, 171, 0, 140, 188, 211, 10, 247, 228, 88, 5, 184, 179, 69, 6, 208, 44, 30, 143, 202, 63, 15, 2, 193, 175, 189, 3, 1, 19, 138, 107, 58, 145, 17, 65, 79, 103, 220, 234, 151, 242, 207, 206, 240, 180, 230, 115, 150, 172, 116, 34, 231, 173, 53, 133, 226, 249, 55, 232, 28, 117, 223, 110, 71, 241, 26, 113, 29, 41, 197, 137, 111, 183, 98, 14, 170, 24, 190, 27, 252, 86, 62, 75, 198, 210, 121, 32, 154, 219, 192, 254, 120, 205, 90, 244, 31, 221, 168, 51, 136, 7, 199, 49, 177, 18, 16, 89, 39, 128, 236, 95, 96, 81, 127, 169, 25, 181, 74, 13, 45, 229, 122, 159, 147, 201, 156, 239, 160, 224, 59, 77, 174, 42, 245, 176, 200, 235, 187, 60, 131, 83, 153, 97, 23, 43, 4, 126, 186, 119, 214, 38, 225, 105, 20, 99, 85, 33, 12, 125],
+  mn = [3328402341, 4168907908, 4000806809, 4135287693, 4294111757, 3597364157, 3731845041, 2445657428, 1613770832, 33620227, 3462883241, 1445669757, 3892248089, 3050821474, 1303096294, 3967186586, 2412431941, 528646813, 2311702848, 4202528135, 4026202645, 2992200171, 2387036105, 4226871307, 1101901292, 3017069671, 1604494077, 1169141738, 597466303, 1403299063, 3832705686, 2613100635, 1974974402, 3791519004, 1033081774, 1277568618, 1815492186, 2118074177, 4126668546, 2211236943, 1748251740, 1369810420, 3521504564, 4193382664, 3799085459, 2883115123, 1647391059, 706024767, 134480908, 2512897874, 1176707941, 2646852446, 806885416, 932615841, 168101135, 798661301, 235341577, 605164086, 461406363, 3756188221, 3454790438, 1311188841, 2142417613, 3933566367, 302582043, 495158174, 1479289972, 874125870, 907746093, 3698224818, 3025820398, 1537253627, 2756858614, 1983593293, 3084310113, 2108928974, 1378429307, 3722699582, 1580150641, 327451799, 2790478837, 3117535592, 0, 3253595436, 1075847264, 3825007647, 2041688520, 3059440621, 3563743934, 2378943302, 1740553945, 1916352843, 2487896798, 2555137236, 2958579944, 2244988746, 3151024235, 3320835882, 1336584933, 3992714006, 2252555205, 2588757463, 1714631509, 293963156, 2319795663, 3925473552, 67240454, 4269768577, 2689618160, 2017213508, 631218106, 1269344483, 2723238387, 1571005438, 2151694528, 93294474, 1066570413, 563977660, 1882732616, 4059428100, 1673313503, 2008463041, 2950355573, 1109467491, 537923632, 3858759450, 4260623118, 3218264685, 2177748300, 403442708, 638784309, 3287084079, 3193921505, 899127202, 2286175436, 773265209, 2479146071, 1437050866, 4236148354, 2050833735, 3362022572, 3126681063, 840505643, 3866325909, 3227541664, 427917720, 2655997905, 2749160575, 1143087718, 1412049534, 999329963, 193497219, 2353415882, 3354324521, 1807268051, 672404540, 2816401017, 3160301282, 369822493, 2916866934, 3688947771, 1681011286, 1949973070, 336202270, 2454276571, 201721354, 1210328172, 3093060836, 2680341085, 3184776046, 1135389935, 3294782118, 965841320, 831886756, 3554993207, 4068047243, 3588745010, 2345191491, 1849112409, 3664604599, 26054028, 2983581028, 2622377682, 1235855840, 3630984372, 2891339514, 4092916743, 3488279077, 3395642799, 4101667470, 1202630377, 268961816, 1874508501, 4034427016, 1243948399, 1546530418, 941366308, 1470539505, 1941222599, 2546386513, 3421038627, 2715671932, 3899946140, 1042226977, 2521517021, 1639824860, 227249030, 260737669, 3765465232, 2084453954, 1907733956, 3429263018, 2420656344, 100860677, 4160157185, 470683154, 3261161891, 1781871967, 2924959737, 1773779408, 394692241, 2579611992, 974986535, 664706745, 3655459128, 3958962195, 731420851, 571543859, 3530123707, 2849626480, 126783113, 865375399, 765172662, 1008606754, 361203602, 3387549984, 2278477385, 2857719295, 1344809080, 2782912378, 59542671, 1503764984, 160008576, 437062935, 1707065306, 3622233649, 2218934982, 3496503480, 2185314755, 697932208, 1512910199, 504303377, 2075177163, 2824099068, 1841019862, 739644986],
+  yn = [2781242211, 2230877308, 2582542199, 2381740923, 234877682, 3184946027, 2984144751, 1418839493, 1348481072, 50462977, 2848876391, 2102799147, 434634494, 1656084439, 3863849899, 2599188086, 1167051466, 2636087938, 1082771913, 2281340285, 368048890, 3954334041, 3381544775, 201060592, 3963727277, 1739838676, 4250903202, 3930435503, 3206782108, 4149453988, 2531553906, 1536934080, 3262494647, 484572669, 2923271059, 1783375398, 1517041206, 1098792767, 49674231, 1334037708, 1550332980, 4098991525, 886171109, 150598129, 2481090929, 1940642008, 1398944049, 1059722517, 201851908, 1385547719, 1699095331, 1587397571, 674240536, 2704774806, 252314885, 3039795866, 151914247, 908333586, 2602270848, 1038082786, 651029483, 1766729511, 3447698098, 2682942837, 454166793, 2652734339, 1951935532, 775166490, 758520603, 3000790638, 4004797018, 4217086112, 4137964114, 1299594043, 1639438038, 3464344499, 2068982057, 1054729187, 1901997871, 2534638724, 4121318227, 1757008337, 0, 750906861, 1614815264, 535035132, 3363418545, 3988151131, 3201591914, 1183697867, 3647454910, 1265776953, 3734260298, 3566750796, 3903871064, 1250283471, 1807470800, 717615087, 3847203498, 384695291, 3313910595, 3617213773, 1432761139, 2484176261, 3481945413, 283769337, 100925954, 2180939647, 4037038160, 1148730428, 3123027871, 3813386408, 4087501137, 4267549603, 3229630528, 2315620239, 2906624658, 3156319645, 1215313976, 82966005, 3747855548, 3245848246, 1974459098, 1665278241, 807407632, 451280895, 251524083, 1841287890, 1283575245, 337120268, 891687699, 801369324, 3787349855, 2721421207, 3431482436, 959321879, 1469301956, 4065699751, 2197585534, 1199193405, 2898814052, 3887750493, 724703513, 2514908019, 2696962144, 2551808385, 3516813135, 2141445340, 1715741218, 2119445034, 2872807568, 2198571144, 3398190662, 700968686, 3547052216, 1009259540, 2041044702, 3803995742, 487983883, 1991105499, 1004265696, 1449407026, 1316239930, 504629770, 3683797321, 168560134, 1816667172, 3837287516, 1570751170, 1857934291, 4014189740, 2797888098, 2822345105, 2754712981, 936633572, 2347923833, 852879335, 1133234376, 1500395319, 3084545389, 2348912013, 1689376213, 3533459022, 3762923945, 3034082412, 4205598294, 133428468, 634383082, 2949277029, 2398386810, 3913789102, 403703816, 3580869306, 2297460856, 1867130149, 1918643758, 607656988, 4049053350, 3346248884, 1368901318, 600565992, 2090982877, 2632479860, 557719327, 3717614411, 3697393085, 2249034635, 2232388234, 2430627952, 1115438654, 3295786421, 2865522278, 3633334344, 84280067, 33027830, 303828494, 2747425121, 1600795957, 4188952407, 3496589753, 2434238086, 1486471617, 658119965, 3106381470, 953803233, 334231800, 3005978776, 857870609, 3151128937, 1890179545, 2298973838, 2805175444, 3056442267, 574365214, 2450884487, 550103529, 1233637070, 4289353045, 2018519080, 2057691103, 2399374476, 4166623649, 2148108681, 387583245, 3664101311, 836232934, 3330556482, 3100665960, 3280093505, 2955516313, 2002398509, 287182607, 3413881008, 4238890068, 3597515707, 975967766],
+  _n = [1671808611, 2089089148, 2006576759, 2072901243, 4061003762, 1807603307, 1873927791, 3310653893, 810573872, 16974337, 1739181671, 729634347, 4263110654, 3613570519, 2883997099, 1989864566, 3393556426, 2191335298, 3376449993, 2106063485, 4195741690, 1508618841, 1204391495, 4027317232, 2917941677, 3563566036, 2734514082, 2951366063, 2629772188, 2767672228, 1922491506, 3227229120, 3082974647, 4246528509, 2477669779, 644500518, 911895606, 1061256767, 4144166391, 3427763148, 878471220, 2784252325, 3845444069, 4043897329, 1905517169, 3631459288, 827548209, 356461077, 67897348, 3344078279, 593839651, 3277757891, 405286936, 2527147926, 84871685, 2595565466, 118033927, 305538066, 2157648768, 3795705826, 3945188843, 661212711, 2999812018, 1973414517, 152769033, 2208177539, 745822252, 439235610, 455947803, 1857215598, 1525593178, 2700827552, 1391895634, 994932283, 3596728278, 3016654259, 695947817, 3812548067, 795958831, 2224493444, 1408607827, 3513301457, 0, 3979133421, 543178784, 4229948412, 2982705585, 1542305371, 1790891114, 3410398667, 3201918910, 961245753, 1256100938, 1289001036, 1491644504, 3477767631, 3496721360, 4012557807, 2867154858, 4212583931, 1137018435, 1305975373, 861234739, 2241073541, 1171229253, 4178635257, 33948674, 2139225727, 1357946960, 1011120188, 2679776671, 2833468328, 1374921297, 2751356323, 1086357568, 2408187279, 2460827538, 2646352285, 944271416, 4110742005, 3168756668, 3066132406, 3665145818, 560153121, 271589392, 4279952895, 4077846003, 3530407890, 3444343245, 202643468, 322250259, 3962553324, 1608629855, 2543990167, 1154254916, 389623319, 3294073796, 2817676711, 2122513534, 1028094525, 1689045092, 1575467613, 422261273, 1939203699, 1621147744, 2174228865, 1339137615, 3699352540, 577127458, 712922154, 2427141008, 2290289544, 1187679302, 3995715566, 3100863416, 339486740, 3732514782, 1591917662, 186455563, 3681988059, 3762019296, 844522546, 978220090, 169743370, 1239126601, 101321734, 611076132, 1558493276, 3260915650, 3547250131, 2901361580, 1655096418, 2443721105, 2510565781, 3828863972, 2039214713, 3878868455, 3359869896, 928607799, 1840765549, 2374762893, 3580146133, 1322425422, 2850048425, 1823791212, 1459268694, 4094161908, 3928346602, 1706019429, 2056189050, 2934523822, 135794696, 3134549946, 2022240376, 628050469, 779246638, 472135708, 2800834470, 3032970164, 3327236038, 3894660072, 3715932637, 1956440180, 522272287, 1272813131, 3185336765, 2340818315, 2323976074, 1888542832, 1044544574, 3049550261, 1722469478, 1222152264, 50660867, 4127324150, 236067854, 1638122081, 895445557, 1475980887, 3117443513, 2257655686, 3243809217, 489110045, 2662934430, 3778599393, 4162055160, 2561878936, 288563729, 1773916777, 3648039385, 2391345038, 2493985684, 2612407707, 505560094, 2274497927, 3911240169, 3460925390, 1442818645, 678973480, 3749357023, 2358182796, 2717407649, 2306869641, 219617805, 3218761151, 3862026214, 1120306242, 1756942440, 1103331905, 2578459033, 762796589, 252780047, 2966125488, 1425844308, 3151392187, 372911126],
+  wn = [1667474886, 2088535288, 2004326894, 2071694838, 4075949567, 1802223062, 1869591006, 3318043793, 808472672, 16843522, 1734846926, 724270422, 4278065639, 3621216949, 2880169549, 1987484396, 3402253711, 2189597983, 3385409673, 2105378810, 4210693615, 1499065266, 1195886990, 4042263547, 2913856577, 3570689971, 2728590687, 2947541573, 2627518243, 2762274643, 1920112356, 3233831835, 3082273397, 4261223649, 2475929149, 640051788, 909531756, 1061110142, 4160160501, 3435941763, 875846760, 2779116625, 3857003729, 4059105529, 1903268834, 3638064043, 825316194, 353713962, 67374088, 3351728789, 589522246, 3284360861, 404236336, 2526454071, 84217610, 2593830191, 117901582, 303183396, 2155911963, 3806477791, 3958056653, 656894286, 2998062463, 1970642922, 151591698, 2206440989, 741110872, 437923380, 454765878, 1852748508, 1515908788, 2694904667, 1381168804, 993742198, 3604373943, 3014905469, 690584402, 3823320797, 791638366, 2223281939, 1398011302, 3520161977, 0, 3991743681, 538992704, 4244381667, 2981218425, 1532751286, 1785380564, 3419096717, 3200178535, 960056178, 1246420628, 1280103576, 1482221744, 3486468741, 3503319995, 4025428677, 2863326543, 4227536621, 1128514950, 1296947098, 859002214, 2240123921, 1162203018, 4193849577, 33687044, 2139062782, 1347481760, 1010582648, 2678045221, 2829640523, 1364325282, 2745433693, 1077985408, 2408548869, 2459086143, 2644360225, 943212656, 4126475505, 3166494563, 3065430391, 3671750063, 555836226, 269496352, 4294908645, 4092792573, 3537006015, 3452783745, 202118168, 320025894, 3974901699, 1600119230, 2543297077, 1145359496, 387397934, 3301201811, 2812801621, 2122220284, 1027426170, 1684319432, 1566435258, 421079858, 1936954854, 1616945344, 2172753945, 1330631070, 3705438115, 572679748, 707427924, 2425400123, 2290647819, 1179044492, 4008585671, 3099120491, 336870440, 3739122087, 1583276732, 185277718, 3688593069, 3772791771, 842159716, 976899700, 168435220, 1229577106, 101059084, 606366792, 1549591736, 3267517855, 3553849021, 2897014595, 1650632388, 2442242105, 2509612081, 3840161747, 2038008818, 3890688725, 3368567691, 926374254, 1835907034, 2374863873, 3587531953, 1313788572, 2846482505, 1819063512, 1448540844, 4109633523, 3941213647, 1701162954, 2054852340, 2930698567, 134748176, 3132806511, 2021165296, 623210314, 774795868, 471606328, 2795958615, 3031746419, 3334885783, 3907527627, 3722280097, 1953799400, 522133822, 1263263126, 3183336545, 2341176845, 2324333839, 1886425312, 1044267644, 3048588401, 1718004428, 1212733584, 50529542, 4143317495, 235803164, 1633788866, 892690282, 1465383342, 3115962473, 2256965911, 3250673817, 488449850, 2661202215, 3789633753, 4177007595, 2560144171, 286339874, 1768537042, 3654906025, 2391705863, 2492770099, 2610673197, 505291324, 2273808917, 3924369609, 3469625735, 1431699370, 673740880, 3755965093, 2358021891, 2711746649, 2307489801, 218961690, 3217021541, 3873845719, 1111672452, 1751693520, 1094828930, 2576986153, 757954394, 252645662, 2964376443, 1414855848, 3149649517, 370555436],
+  In = [1374988112, 2118214995, 437757123, 975658646, 1001089995, 530400753, 2902087851, 1273168787, 540080725, 2910219766, 2295101073, 4110568485, 1340463100, 3307916247, 641025152, 3043140495, 3736164937, 632953703, 1172967064, 1576976609, 3274667266, 2169303058, 2370213795, 1809054150, 59727847, 361929877, 3211623147, 2505202138, 3569255213, 1484005843, 1239443753, 2395588676, 1975683434, 4102977912, 2572697195, 666464733, 3202437046, 4035489047, 3374361702, 2110667444, 1675577880, 3843699074, 2538681184, 1649639237, 2976151520, 3144396420, 4269907996, 4178062228, 1883793496, 2403728665, 2497604743, 1383856311, 2876494627, 1917518562, 3810496343, 1716890410, 3001755655, 800440835, 2261089178, 3543599269, 807962610, 599762354, 33778362, 3977675356, 2328828971, 2809771154, 4077384432, 1315562145, 1708848333, 101039829, 3509871135, 3299278474, 875451293, 2733856160, 92987698, 2767645557, 193195065, 1080094634, 1584504582, 3178106961, 1042385657, 2531067453, 3711829422, 1306967366, 2438237621, 1908694277, 67556463, 1615861247, 429456164, 3602770327, 2302690252, 1742315127, 2968011453, 126454664, 3877198648, 2043211483, 2709260871, 2084704233, 4169408201, 0, 159417987, 841739592, 504459436, 1817866830, 4245618683, 260388950, 1034867998, 908933415, 168810852, 1750902305, 2606453969, 607530554, 202008497, 2472011535, 3035535058, 463180190, 2160117071, 1641816226, 1517767529, 470948374, 3801332234, 3231722213, 1008918595, 303765277, 235474187, 4069246893, 766945465, 337553864, 1475418501, 2943682380, 4003061179, 2743034109, 4144047775, 1551037884, 1147550661, 1543208500, 2336434550, 3408119516, 3069049960, 3102011747, 3610369226, 1113818384, 328671808, 2227573024, 2236228733, 3535486456, 2935566865, 3341394285, 496906059, 3702665459, 226906860, 2009195472, 733156972, 2842737049, 294930682, 1206477858, 2835123396, 2700099354, 1451044056, 573804783, 2269728455, 3644379585, 2362090238, 2564033334, 2801107407, 2776292904, 3669462566, 1068351396, 742039012, 1350078989, 1784663195, 1417561698, 4136440770, 2430122216, 775550814, 2193862645, 2673705150, 1775276924, 1876241833, 3475313331, 3366754619, 270040487, 3902563182, 3678124923, 3441850377, 1851332852, 3969562369, 2203032232, 3868552805, 2868897406, 566021896, 4011190502, 3135740889, 1248802510, 3936291284, 699432150, 832877231, 708780849, 3332740144, 899835584, 1951317047, 4236429990, 3767586992, 866637845, 4043610186, 1106041591, 2144161806, 395441711, 1984812685, 1139781709, 3433712980, 3835036895, 2664543715, 1282050075, 3240894392, 1181045119, 2640243204, 25965917, 4203181171, 4211818798, 3009879386, 2463879762, 3910161971, 1842759443, 2597806476, 933301370, 1509430414, 3943906441, 3467192302, 3076639029, 3776767469, 2051518780, 2631065433, 1441952575, 404016761, 1942435775, 1408749034, 1610459739, 3745345300, 2017778566, 3400528769, 3110650942, 941896748, 3265478751, 371049330, 3168937228, 675039627, 4279080257, 967311729, 135050206, 3635733660, 1683407248, 2076935265, 3576870512, 1215061108, 3501741890],
+  vn = [1347548327, 1400783205, 3273267108, 2520393566, 3409685355, 4045380933, 2880240216, 2471224067, 1428173050, 4138563181, 2441661558, 636813900, 4233094615, 3620022987, 2149987652, 2411029155, 1239331162, 1730525723, 2554718734, 3781033664, 46346101, 310463728, 2743944855, 3328955385, 3875770207, 2501218972, 3955191162, 3667219033, 768917123, 3545789473, 692707433, 1150208456, 1786102409, 2029293177, 1805211710, 3710368113, 3065962831, 401639597, 1724457132, 3028143674, 409198410, 2196052529, 1620529459, 1164071807, 3769721975, 2226875310, 486441376, 2499348523, 1483753576, 428819965, 2274680428, 3075636216, 598438867, 3799141122, 1474502543, 711349675, 129166120, 53458370, 2592523643, 2782082824, 4063242375, 2988687269, 3120694122, 1559041666, 730517276, 2460449204, 4042459122, 2706270690, 3446004468, 3573941694, 533804130, 2328143614, 2637442643, 2695033685, 839224033, 1973745387, 957055980, 2856345839, 106852767, 1371368976, 4181598602, 1033297158, 2933734917, 1179510461, 3046200461, 91341917, 1862534868, 4284502037, 605657339, 2547432937, 3431546947, 2003294622, 3182487618, 2282195339, 954669403, 3682191598, 1201765386, 3917234703, 3388507166, 0, 2198438022, 1211247597, 2887651696, 1315723890, 4227665663, 1443857720, 507358933, 657861945, 1678381017, 560487590, 3516619604, 975451694, 2970356327, 261314535, 3535072918, 2652609425, 1333838021, 2724322336, 1767536459, 370938394, 182621114, 3854606378, 1128014560, 487725847, 185469197, 2918353863, 3106780840, 3356761769, 2237133081, 1286567175, 3152976349, 4255350624, 2683765030, 3160175349, 3309594171, 878443390, 1988838185, 3704300486, 1756818940, 1673061617, 3403100636, 272786309, 1075025698, 545572369, 2105887268, 4174560061, 296679730, 1841768865, 1260232239, 4091327024, 3960309330, 3497509347, 1814803222, 2578018489, 4195456072, 575138148, 3299409036, 446754879, 3629546796, 4011996048, 3347532110, 3252238545, 4270639778, 915985419, 3483825537, 681933534, 651868046, 2755636671, 3828103837, 223377554, 2607439820, 1649704518, 3270937875, 3901806776, 1580087799, 4118987695, 3198115200, 2087309459, 2842678573, 3016697106, 1003007129, 2802849917, 1860738147, 2077965243, 164439672, 4100872472, 32283319, 2827177882, 1709610350, 2125135846, 136428751, 3874428392, 3652904859, 3460984630, 3572145929, 3593056380, 2939266226, 824852259, 818324884, 3224740454, 930369212, 2801566410, 2967507152, 355706840, 1257309336, 4148292826, 243256656, 790073846, 2373340630, 1296297904, 1422699085, 3756299780, 3818836405, 457992840, 3099667487, 2135319889, 77422314, 1560382517, 1945798516, 788204353, 1521706781, 1385356242, 870912086, 325965383, 2358957921, 2050466060, 2388260884, 2313884476, 4006521127, 901210569, 3990953189, 1014646705, 1503449823, 1062597235, 2031621326, 3212035895, 3931371469, 1533017514, 350174575, 2256028891, 2177544179, 1052338372, 741876788, 1606591296, 1914052035, 213705253, 2334669897, 1107234197, 1899603969, 3725069491, 2631447780, 2422494913, 1635502980, 1893020342, 1950903388, 1120974935],
+  Sn = [2807058932, 1699970625, 2764249623, 1586903591, 1808481195, 1173430173, 1487645946, 59984867, 4199882800, 1844882806, 1989249228, 1277555970, 3623636965, 3419915562, 1149249077, 2744104290, 1514790577, 459744698, 244860394, 3235995134, 1963115311, 4027744588, 2544078150, 4190530515, 1608975247, 2627016082, 2062270317, 1507497298, 2200818878, 567498868, 1764313568, 3359936201, 2305455554, 2037970062, 1047239e3, 1910319033, 1337376481, 2904027272, 2892417312, 984907214, 1243112415, 830661914, 861968209, 2135253587, 2011214180, 2927934315, 2686254721, 731183368, 1750626376, 4246310725, 1820824798, 4172763771, 3542330227, 48394827, 2404901663, 2871682645, 671593195, 3254988725, 2073724613, 145085239, 2280796200, 2779915199, 1790575107, 2187128086, 472615631, 3029510009, 4075877127, 3802222185, 4107101658, 3201631749, 1646252340, 4270507174, 1402811438, 1436590835, 3778151818, 3950355702, 3963161475, 4020912224, 2667994737, 273792366, 2331590177, 104699613, 95345982, 3175501286, 2377486676, 1560637892, 3564045318, 369057872, 4213447064, 3919042237, 1137477952, 2658625497, 1119727848, 2340947849, 1530455833, 4007360968, 172466556, 266959938, 516552836, 0, 2256734592, 3980931627, 1890328081, 1917742170, 4294704398, 945164165, 3575528878, 958871085, 3647212047, 2787207260, 1423022939, 775562294, 1739656202, 3876557655, 2530391278, 2443058075, 3310321856, 547512796, 1265195639, 437656594, 3121275539, 719700128, 3762502690, 387781147, 218828297, 3350065803, 2830708150, 2848461854, 428169201, 122466165, 3720081049, 1627235199, 648017665, 4122762354, 1002783846, 2117360635, 695634755, 3336358691, 4234721005, 4049844452, 3704280881, 2232435299, 574624663, 287343814, 612205898, 1039717051, 840019705, 2708326185, 793451934, 821288114, 1391201670, 3822090177, 376187827, 3113855344, 1224348052, 1679968233, 2361698556, 1058709744, 752375421, 2431590963, 1321699145, 3519142200, 2734591178, 188127444, 2177869557, 3727205754, 2384911031, 3215212461, 2648976442, 2450346104, 3432737375, 1180849278, 331544205, 3102249176, 4150144569, 2952102595, 2159976285, 2474404304, 766078933, 313773861, 2570832044, 2108100632, 1668212892, 3145456443, 2013908262, 418672217, 3070356634, 2594734927, 1852171925, 3867060991, 3473416636, 3907448597, 2614737639, 919489135, 164948639, 2094410160, 2997825956, 590424639, 2486224549, 1723872674, 3157750862, 3399941250, 3501252752, 3625268135, 2555048196, 3673637356, 1343127501, 4130281361, 3599595085, 2957853679, 1297403050, 81781910, 3051593425, 2283490410, 532201772, 1367295589, 3926170974, 895287692, 1953757831, 1093597963, 492483431, 3528626907, 1446242576, 1192455638, 1636604631, 209336225, 344873464, 1015671571, 669961897, 3375740769, 3857572124, 2973530695, 3747192018, 1933530610, 3464042516, 935293895, 3454686199, 2858115069, 1863638845, 3683022916, 4085369519, 3292445032, 875313188, 1080017571, 3279033885, 621591778, 1233856572, 2504130317, 24197544, 3017672716, 3835484340, 3247465558, 2220981195, 3060847922, 1551124588, 1463996600],
+  Tn = [4104605777, 1097159550, 396673818, 660510266, 2875968315, 2638606623, 4200115116, 3808662347, 821712160, 1986918061, 3430322568, 38544885, 3856137295, 718002117, 893681702, 1654886325, 2975484382, 3122358053, 3926825029, 4274053469, 796197571, 1290801793, 1184342925, 3556361835, 2405426947, 2459735317, 1836772287, 1381620373, 3196267988, 1948373848, 3764988233, 3385345166, 3263785589, 2390325492, 1480485785, 3111247143, 3780097726, 2293045232, 548169417, 3459953789, 3746175075, 439452389, 1362321559, 1400849762, 1685577905, 1806599355, 2174754046, 137073913, 1214797936, 1174215055, 3731654548, 2079897426, 1943217067, 1258480242, 529487843, 1437280870, 3945269170, 3049390895, 3313212038, 923313619, 679998e3, 3215307299, 57326082, 377642221, 3474729866, 2041877159, 133361907, 1776460110, 3673476453, 96392454, 878845905, 2801699524, 777231668, 4082475170, 2330014213, 4142626212, 2213296395, 1626319424, 1906247262, 1846563261, 562755902, 3708173718, 1040559837, 3871163981, 1418573201, 3294430577, 114585348, 1343618912, 2566595609, 3186202582, 1078185097, 3651041127, 3896688048, 2307622919, 425408743, 3371096953, 2081048481, 1108339068, 2216610296, 0, 2156299017, 736970802, 292596766, 1517440620, 251657213, 2235061775, 2933202493, 758720310, 265905162, 1554391400, 1532285339, 908999204, 174567692, 1474760595, 4002861748, 2610011675, 3234156416, 3693126241, 2001430874, 303699484, 2478443234, 2687165888, 585122620, 454499602, 151849742, 2345119218, 3064510765, 514443284, 4044981591, 1963412655, 2581445614, 2137062819, 19308535, 1928707164, 1715193156, 4219352155, 1126790795, 600235211, 3992742070, 3841024952, 836553431, 1669664834, 2535604243, 3323011204, 1243905413, 3141400786, 4180808110, 698445255, 2653899549, 2989552604, 2253581325, 3252932727, 3004591147, 1891211689, 2487810577, 3915653703, 4237083816, 4030667424, 2100090966, 865136418, 1229899655, 953270745, 3399679628, 3557504664, 4118925222, 2061379749, 3079546586, 2915017791, 983426092, 2022837584, 1607244650, 2118541908, 2366882550, 3635996816, 972512814, 3283088770, 1568718495, 3499326569, 3576539503, 621982671, 2895723464, 410887952, 2623762152, 1002142683, 645401037, 1494807662, 2595684844, 1335535747, 2507040230, 4293295786, 3167684641, 367585007, 3885750714, 1865862730, 2668221674, 2960971305, 2763173681, 1059270954, 2777952454, 2724642869, 1320957812, 2194319100, 2429595872, 2815956275, 77089521, 3973773121, 3444575871, 2448830231, 1305906550, 4021308739, 2857194700, 2516901860, 3518358430, 1787304780, 740276417, 1699839814, 1592394909, 2352307457, 2272556026, 188821243, 1729977011, 3687994002, 274084841, 3594982253, 3613494426, 2701949495, 4162096729, 322734571, 2837966542, 1640576439, 484830689, 1202797690, 3537852828, 4067639125, 349075736, 3342319475, 4157467219, 4255800159, 1030690015, 1155237496, 2951971274, 1757691577, 607398968, 2738905026, 499347990, 3794078908, 1011452712, 227885567, 2818666809, 213114376, 3034881240, 1455525988, 3414450555, 850817237, 1817998408, 3092726480],
+  bn = [0, 235474187, 470948374, 303765277, 941896748, 908933415, 607530554, 708780849, 1883793496, 2118214995, 1817866830, 1649639237, 1215061108, 1181045119, 1417561698, 1517767529, 3767586992, 4003061179, 4236429990, 4069246893, 3635733660, 3602770327, 3299278474, 3400528769, 2430122216, 2664543715, 2362090238, 2193862645, 2835123396, 2801107407, 3035535058, 3135740889, 3678124923, 3576870512, 3341394285, 3374361702, 3810496343, 3977675356, 4279080257, 4043610186, 2876494627, 2776292904, 3076639029, 3110650942, 2472011535, 2640243204, 2403728665, 2169303058, 1001089995, 899835584, 666464733, 699432150, 59727847, 226906860, 530400753, 294930682, 1273168787, 1172967064, 1475418501, 1509430414, 1942435775, 2110667444, 1876241833, 1641816226, 2910219766, 2743034109, 2976151520, 3211623147, 2505202138, 2606453969, 2302690252, 2269728455, 3711829422, 3543599269, 3240894392, 3475313331, 3843699074, 3943906441, 4178062228, 4144047775, 1306967366, 1139781709, 1374988112, 1610459739, 1975683434, 2076935265, 1775276924, 1742315127, 1034867998, 866637845, 566021896, 800440835, 92987698, 193195065, 429456164, 395441711, 1984812685, 2017778566, 1784663195, 1683407248, 1315562145, 1080094634, 1383856311, 1551037884, 101039829, 135050206, 437757123, 337553864, 1042385657, 807962610, 573804783, 742039012, 2531067453, 2564033334, 2328828971, 2227573024, 2935566865, 2700099354, 3001755655, 3168937228, 3868552805, 3902563182, 4203181171, 4102977912, 3736164937, 3501741890, 3265478751, 3433712980, 1106041591, 1340463100, 1576976609, 1408749034, 2043211483, 2009195472, 1708848333, 1809054150, 832877231, 1068351396, 766945465, 599762354, 159417987, 126454664, 361929877, 463180190, 2709260871, 2943682380, 3178106961, 3009879386, 2572697195, 2538681184, 2236228733, 2336434550, 3509871135, 3745345300, 3441850377, 3274667266, 3910161971, 3877198648, 4110568485, 4211818798, 2597806476, 2497604743, 2261089178, 2295101073, 2733856160, 2902087851, 3202437046, 2968011453, 3936291284, 3835036895, 4136440770, 4169408201, 3535486456, 3702665459, 3467192302, 3231722213, 2051518780, 1951317047, 1716890410, 1750902305, 1113818384, 1282050075, 1584504582, 1350078989, 168810852, 67556463, 371049330, 404016761, 841739592, 1008918595, 775550814, 540080725, 3969562369, 3801332234, 4035489047, 4269907996, 3569255213, 3669462566, 3366754619, 3332740144, 2631065433, 2463879762, 2160117071, 2395588676, 2767645557, 2868897406, 3102011747, 3069049960, 202008497, 33778362, 270040487, 504459436, 875451293, 975658646, 675039627, 641025152, 2084704233, 1917518562, 1615861247, 1851332852, 1147550661, 1248802510, 1484005843, 1451044056, 933301370, 967311729, 733156972, 632953703, 260388950, 25965917, 328671808, 496906059, 1206477858, 1239443753, 1543208500, 1441952575, 2144161806, 1908694277, 1675577880, 1842759443, 3610369226, 3644379585, 3408119516, 3307916247, 4011190502, 3776767469, 4077384432, 4245618683, 2809771154, 2842737049, 3144396420, 3043140495, 2673705150, 2438237621, 2203032232, 2370213795],
+  En = [0, 185469197, 370938394, 487725847, 741876788, 657861945, 975451694, 824852259, 1483753576, 1400783205, 1315723890, 1164071807, 1950903388, 2135319889, 1649704518, 1767536459, 2967507152, 3152976349, 2801566410, 2918353863, 2631447780, 2547432937, 2328143614, 2177544179, 3901806776, 3818836405, 4270639778, 4118987695, 3299409036, 3483825537, 3535072918, 3652904859, 2077965243, 1893020342, 1841768865, 1724457132, 1474502543, 1559041666, 1107234197, 1257309336, 598438867, 681933534, 901210569, 1052338372, 261314535, 77422314, 428819965, 310463728, 3409685355, 3224740454, 3710368113, 3593056380, 3875770207, 3960309330, 4045380933, 4195456072, 2471224067, 2554718734, 2237133081, 2388260884, 3212035895, 3028143674, 2842678573, 2724322336, 4138563181, 4255350624, 3769721975, 3955191162, 3667219033, 3516619604, 3431546947, 3347532110, 2933734917, 2782082824, 3099667487, 3016697106, 2196052529, 2313884476, 2499348523, 2683765030, 1179510461, 1296297904, 1347548327, 1533017514, 1786102409, 1635502980, 2087309459, 2003294622, 507358933, 355706840, 136428751, 53458370, 839224033, 957055980, 605657339, 790073846, 2373340630, 2256028891, 2607439820, 2422494913, 2706270690, 2856345839, 3075636216, 3160175349, 3573941694, 3725069491, 3273267108, 3356761769, 4181598602, 4063242375, 4011996048, 3828103837, 1033297158, 915985419, 730517276, 545572369, 296679730, 446754879, 129166120, 213705253, 1709610350, 1860738147, 1945798516, 2029293177, 1239331162, 1120974935, 1606591296, 1422699085, 4148292826, 4233094615, 3781033664, 3931371469, 3682191598, 3497509347, 3446004468, 3328955385, 2939266226, 2755636671, 3106780840, 2988687269, 2198438022, 2282195339, 2501218972, 2652609425, 1201765386, 1286567175, 1371368976, 1521706781, 1805211710, 1620529459, 2105887268, 1988838185, 533804130, 350174575, 164439672, 46346101, 870912086, 954669403, 636813900, 788204353, 2358957921, 2274680428, 2592523643, 2441661558, 2695033685, 2880240216, 3065962831, 3182487618, 3572145929, 3756299780, 3270937875, 3388507166, 4174560061, 4091327024, 4006521127, 3854606378, 1014646705, 930369212, 711349675, 560487590, 272786309, 457992840, 106852767, 223377554, 1678381017, 1862534868, 1914052035, 2031621326, 1211247597, 1128014560, 1580087799, 1428173050, 32283319, 182621114, 401639597, 486441376, 768917123, 651868046, 1003007129, 818324884, 1503449823, 1385356242, 1333838021, 1150208456, 1973745387, 2125135846, 1673061617, 1756818940, 2970356327, 3120694122, 2802849917, 2887651696, 2637442643, 2520393566, 2334669897, 2149987652, 3917234703, 3799141122, 4284502037, 4100872472, 3309594171, 3460984630, 3545789473, 3629546796, 2050466060, 1899603969, 1814803222, 1730525723, 1443857720, 1560382517, 1075025698, 1260232239, 575138148, 692707433, 878443390, 1062597235, 243256656, 91341917, 409198410, 325965383, 3403100636, 3252238545, 3704300486, 3620022987, 3874428392, 3990953189, 4042459122, 4227665663, 2460449204, 2578018489, 2226875310, 2411029155, 3198115200, 3046200461, 2827177882, 2743944855],
+  kn = [0, 218828297, 437656594, 387781147, 875313188, 958871085, 775562294, 590424639, 1750626376, 1699970625, 1917742170, 2135253587, 1551124588, 1367295589, 1180849278, 1265195639, 3501252752, 3720081049, 3399941250, 3350065803, 3835484340, 3919042237, 4270507174, 4085369519, 3102249176, 3051593425, 2734591178, 2952102595, 2361698556, 2177869557, 2530391278, 2614737639, 3145456443, 3060847922, 2708326185, 2892417312, 2404901663, 2187128086, 2504130317, 2555048196, 3542330227, 3727205754, 3375740769, 3292445032, 3876557655, 3926170974, 4246310725, 4027744588, 1808481195, 1723872674, 1910319033, 2094410160, 1608975247, 1391201670, 1173430173, 1224348052, 59984867, 244860394, 428169201, 344873464, 935293895, 984907214, 766078933, 547512796, 1844882806, 1627235199, 2011214180, 2062270317, 1507497298, 1423022939, 1137477952, 1321699145, 95345982, 145085239, 532201772, 313773861, 830661914, 1015671571, 731183368, 648017665, 3175501286, 2957853679, 2807058932, 2858115069, 2305455554, 2220981195, 2474404304, 2658625497, 3575528878, 3625268135, 3473416636, 3254988725, 3778151818, 3963161475, 4213447064, 4130281361, 3599595085, 3683022916, 3432737375, 3247465558, 3802222185, 4020912224, 4172763771, 4122762354, 3201631749, 3017672716, 2764249623, 2848461854, 2331590177, 2280796200, 2431590963, 2648976442, 104699613, 188127444, 472615631, 287343814, 840019705, 1058709744, 671593195, 621591778, 1852171925, 1668212892, 1953757831, 2037970062, 1514790577, 1463996600, 1080017571, 1297403050, 3673637356, 3623636965, 3235995134, 3454686199, 4007360968, 3822090177, 4107101658, 4190530515, 2997825956, 3215212461, 2830708150, 2779915199, 2256734592, 2340947849, 2627016082, 2443058075, 172466556, 122466165, 273792366, 492483431, 1047239e3, 861968209, 612205898, 695634755, 1646252340, 1863638845, 2013908262, 1963115311, 1446242576, 1530455833, 1277555970, 1093597963, 1636604631, 1820824798, 2073724613, 1989249228, 1436590835, 1487645946, 1337376481, 1119727848, 164948639, 81781910, 331544205, 516552836, 1039717051, 821288114, 669961897, 719700128, 2973530695, 3157750862, 2871682645, 2787207260, 2232435299, 2283490410, 2667994737, 2450346104, 3647212047, 3564045318, 3279033885, 3464042516, 3980931627, 3762502690, 4150144569, 4199882800, 3070356634, 3121275539, 2904027272, 2686254721, 2200818878, 2384911031, 2570832044, 2486224549, 3747192018, 3528626907, 3310321856, 3359936201, 3950355702, 3867060991, 4049844452, 4234721005, 1739656202, 1790575107, 2108100632, 1890328081, 1402811438, 1586903591, 1233856572, 1149249077, 266959938, 48394827, 369057872, 418672217, 1002783846, 919489135, 567498868, 752375421, 209336225, 24197544, 376187827, 459744698, 945164165, 895287692, 574624663, 793451934, 1679968233, 1764313568, 2117360635, 1933530610, 1343127501, 1560637892, 1243112415, 1192455638, 3704280881, 3519142200, 3336358691, 3419915562, 3907448597, 3857572124, 4075877127, 4294704398, 3029510009, 3113855344, 2927934315, 2744104290, 2159976285, 2377486676, 2594734927, 2544078150],
+  An = [0, 151849742, 303699484, 454499602, 607398968, 758720310, 908999204, 1059270954, 1214797936, 1097159550, 1517440620, 1400849762, 1817998408, 1699839814, 2118541908, 2001430874, 2429595872, 2581445614, 2194319100, 2345119218, 3034881240, 3186202582, 2801699524, 2951971274, 3635996816, 3518358430, 3399679628, 3283088770, 4237083816, 4118925222, 4002861748, 3885750714, 1002142683, 850817237, 698445255, 548169417, 529487843, 377642221, 227885567, 77089521, 1943217067, 2061379749, 1640576439, 1757691577, 1474760595, 1592394909, 1174215055, 1290801793, 2875968315, 2724642869, 3111247143, 2960971305, 2405426947, 2253581325, 2638606623, 2487810577, 3808662347, 3926825029, 4044981591, 4162096729, 3342319475, 3459953789, 3576539503, 3693126241, 1986918061, 2137062819, 1685577905, 1836772287, 1381620373, 1532285339, 1078185097, 1229899655, 1040559837, 923313619, 740276417, 621982671, 439452389, 322734571, 137073913, 19308535, 3871163981, 4021308739, 4104605777, 4255800159, 3263785589, 3414450555, 3499326569, 3651041127, 2933202493, 2815956275, 3167684641, 3049390895, 2330014213, 2213296395, 2566595609, 2448830231, 1305906550, 1155237496, 1607244650, 1455525988, 1776460110, 1626319424, 2079897426, 1928707164, 96392454, 213114376, 396673818, 514443284, 562755902, 679998e3, 865136418, 983426092, 3708173718, 3557504664, 3474729866, 3323011204, 4180808110, 4030667424, 3945269170, 3794078908, 2507040230, 2623762152, 2272556026, 2390325492, 2975484382, 3092726480, 2738905026, 2857194700, 3973773121, 3856137295, 4274053469, 4157467219, 3371096953, 3252932727, 3673476453, 3556361835, 2763173681, 2915017791, 3064510765, 3215307299, 2156299017, 2307622919, 2459735317, 2610011675, 2081048481, 1963412655, 1846563261, 1729977011, 1480485785, 1362321559, 1243905413, 1126790795, 878845905, 1030690015, 645401037, 796197571, 274084841, 425408743, 38544885, 188821243, 3613494426, 3731654548, 3313212038, 3430322568, 4082475170, 4200115116, 3780097726, 3896688048, 2668221674, 2516901860, 2366882550, 2216610296, 3141400786, 2989552604, 2837966542, 2687165888, 1202797690, 1320957812, 1437280870, 1554391400, 1669664834, 1787304780, 1906247262, 2022837584, 265905162, 114585348, 499347990, 349075736, 736970802, 585122620, 972512814, 821712160, 2595684844, 2478443234, 2293045232, 2174754046, 3196267988, 3079546586, 2895723464, 2777952454, 3537852828, 3687994002, 3234156416, 3385345166, 4142626212, 4293295786, 3841024952, 3992742070, 174567692, 57326082, 410887952, 292596766, 777231668, 660510266, 1011452712, 893681702, 1108339068, 1258480242, 1343618912, 1494807662, 1715193156, 1865862730, 1948373848, 2100090966, 2701949495, 2818666809, 3004591147, 3122358053, 2235061775, 2352307457, 2535604243, 2653899549, 3915653703, 3764988233, 4219352155, 4067639125, 3444575871, 3294430577, 3746175075, 3594982253, 836553431, 953270745, 600235211, 718002117, 367585007, 484830689, 133361907, 251657213, 2041877159, 1891211689, 1806599355, 1654886325, 1568718495, 1418573201, 1335535747, 1184342925];
+function Pn(e) {
   for (var t = [], n = 0; n < e.length; n += 4) {
     t.push(e[n] << 24 | e[n + 1] << 16 | e[n + 2] << 8 | e[n + 3]);
   }
   return t;
 }
-var En = /*#__PURE__*/function () {
-  function En(e) {
-    (0, _classCallCheck2.default)(this, En);
-    if (!(this instanceof En)) throw Error("AES must be instanitated with `new`");
+var Cn = /*#__PURE__*/function () {
+  function Cn(e) {
+    (0, _classCallCheck2.default)(this, Cn);
+    if (!(this instanceof Cn)) throw Error("AES must be instanitated with `new`");
     Object.defineProperty(this, "key", {
-      value: tn(e, !0)
+      value: on(e, !0)
     }), this._prepare();
   }
-  (0, _createClass2.default)(En, [{
+  (0, _createClass2.default)(Cn, [{
     key: "_prepare",
     value: function _prepare() {
-      var e = cn[this.key.length];
+      var e = dn[this.key.length];
       if (null == e) throw new Error("invalid key size (must be 16, 24 or 32 bytes)");
       this._Ke = [], this._Kd = [];
       for (var t = 0; t <= e; t++) {
@@ -14874,18 +14914,18 @@ var En = /*#__PURE__*/function () {
       var n,
         s = 4 * (e + 1),
         r = this.key.length / 4,
-        i = bn(this.key);
+        i = Pn(this.key);
       for (t = 0; t < r; t++) {
         n = t >> 2, this._Ke[n][t % 4] = i[t], this._Kd[e - n][t % 4] = i[t];
       }
       for (var o, a = 0, c = r; c < s;) {
-        if (o = i[r - 1], i[0] ^= hn[o >> 16 & 255] << 24 ^ hn[o >> 8 & 255] << 16 ^ hn[255 & o] << 8 ^ hn[o >> 24 & 255] ^ un[a] << 24, a += 1, 8 != r) for (t = 1; t < r; t++) {
+        if (o = i[r - 1], i[0] ^= fn[o >> 16 & 255] << 24 ^ fn[o >> 8 & 255] << 16 ^ fn[255 & o] << 8 ^ fn[o >> 24 & 255] ^ pn[a] << 24, a += 1, 8 != r) for (t = 1; t < r; t++) {
           i[t] ^= i[t - 1];
         } else {
           for (t = 1; t < r / 2; t++) {
             i[t] ^= i[t - 1];
           }
-          o = i[r / 2 - 1], i[r / 2] ^= hn[255 & o] ^ hn[o >> 8 & 255] << 8 ^ hn[o >> 16 & 255] << 16 ^ hn[o >> 24 & 255] << 24;
+          o = i[r / 2 - 1], i[r / 2] ^= fn[255 & o] ^ fn[o >> 8 & 255] << 8 ^ fn[o >> 16 & 255] << 16 ^ fn[o >> 24 & 255] << 24;
           for (t = r / 2 + 1; t < r; t++) {
             i[t] ^= i[t - 1];
           }
@@ -14896,7 +14936,7 @@ var En = /*#__PURE__*/function () {
       }
       for (var u = 1; u < e; u++) {
         for (var h = 0; h < 4; h++) {
-          o = this._Kd[u][h], this._Kd[u][h] = vn[o >> 24 & 255] ^ In[o >> 16 & 255] ^ Sn[o >> 8 & 255] ^ Tn[255 & o];
+          o = this._Kd[u][h], this._Kd[u][h] = bn[o >> 24 & 255] ^ En[o >> 16 & 255] ^ kn[o >> 8 & 255] ^ An[255 & o];
         }
       }
     }
@@ -14904,19 +14944,19 @@ var En = /*#__PURE__*/function () {
     key: "encrypt",
     value: function encrypt(e) {
       if (16 != e.length) throw new Error("invalid plaintext size (must be 16 bytes)");
-      for (var t = this._Ke.length - 1, n = [0, 0, 0, 0], s = bn(e), r = 0; r < 4; r++) {
+      for (var t = this._Ke.length - 1, n = [0, 0, 0, 0], s = Pn(e), r = 0; r < 4; r++) {
         s[r] ^= this._Ke[0][r];
       }
       for (var i = 1; i < t; i++) {
         for (r = 0; r < 4; r++) {
-          n[r] = dn[s[r] >> 24 & 255] ^ pn[s[(r + 1) % 4] >> 16 & 255] ^ fn[s[(r + 2) % 4] >> 8 & 255] ^ gn[255 & s[(r + 3) % 4]] ^ this._Ke[i][r];
+          n[r] = mn[s[r] >> 24 & 255] ^ yn[s[(r + 1) % 4] >> 16 & 255] ^ _n[s[(r + 2) % 4] >> 8 & 255] ^ wn[255 & s[(r + 3) % 4]] ^ this._Ke[i][r];
         }
         s = n.slice();
       }
       var o,
-        a = nn(16);
+        a = an(16);
       for (r = 0; r < 4; r++) {
-        o = this._Ke[t][r], a[4 * r] = 255 & (hn[s[r] >> 24 & 255] ^ o >> 24), a[4 * r + 1] = 255 & (hn[s[(r + 1) % 4] >> 16 & 255] ^ o >> 16), a[4 * r + 2] = 255 & (hn[s[(r + 2) % 4] >> 8 & 255] ^ o >> 8), a[4 * r + 3] = 255 & (hn[255 & s[(r + 3) % 4]] ^ o);
+        o = this._Ke[t][r], a[4 * r] = 255 & (fn[s[r] >> 24 & 255] ^ o >> 24), a[4 * r + 1] = 255 & (fn[s[(r + 1) % 4] >> 16 & 255] ^ o >> 16), a[4 * r + 2] = 255 & (fn[s[(r + 2) % 4] >> 8 & 255] ^ o >> 8), a[4 * r + 3] = 255 & (fn[255 & s[(r + 3) % 4]] ^ o);
       }
       return a;
     }
@@ -14924,109 +14964,109 @@ var En = /*#__PURE__*/function () {
     key: "decrypt",
     value: function decrypt(e) {
       if (16 != e.length) throw new Error("invalid ciphertext size (must be 16 bytes)");
-      for (var t = this._Kd.length - 1, n = [0, 0, 0, 0], s = bn(e), r = 0; r < 4; r++) {
+      for (var t = this._Kd.length - 1, n = [0, 0, 0, 0], s = Pn(e), r = 0; r < 4; r++) {
         s[r] ^= this._Kd[0][r];
       }
       for (var i = 1; i < t; i++) {
         for (r = 0; r < 4; r++) {
-          n[r] = mn[s[r] >> 24 & 255] ^ yn[s[(r + 3) % 4] >> 16 & 255] ^ _n[s[(r + 2) % 4] >> 8 & 255] ^ wn[255 & s[(r + 1) % 4]] ^ this._Kd[i][r];
+          n[r] = In[s[r] >> 24 & 255] ^ vn[s[(r + 3) % 4] >> 16 & 255] ^ Sn[s[(r + 2) % 4] >> 8 & 255] ^ Tn[255 & s[(r + 1) % 4]] ^ this._Kd[i][r];
         }
         s = n.slice();
       }
       var o,
-        a = nn(16);
+        a = an(16);
       for (r = 0; r < 4; r++) {
-        o = this._Kd[t][r], a[4 * r] = 255 & (ln[s[r] >> 24 & 255] ^ o >> 24), a[4 * r + 1] = 255 & (ln[s[(r + 3) % 4] >> 16 & 255] ^ o >> 16), a[4 * r + 2] = 255 & (ln[s[(r + 2) % 4] >> 8 & 255] ^ o >> 8), a[4 * r + 3] = 255 & (ln[255 & s[(r + 1) % 4]] ^ o);
+        o = this._Kd[t][r], a[4 * r] = 255 & (gn[s[r] >> 24 & 255] ^ o >> 24), a[4 * r + 1] = 255 & (gn[s[(r + 3) % 4] >> 16 & 255] ^ o >> 16), a[4 * r + 2] = 255 & (gn[s[(r + 2) % 4] >> 8 & 255] ^ o >> 8), a[4 * r + 3] = 255 & (gn[255 & s[(r + 1) % 4]] ^ o);
       }
       return a;
     }
   }]);
-  return En;
+  return Cn;
 }();
-var kn = /*#__PURE__*/function () {
-  function kn(e) {
-    (0, _classCallCheck2.default)(this, kn);
-    if (!(this instanceof kn)) throw Error("AES must be instanitated with `new`");
-    this.description = "Electronic Code Block", this.name = "ecb", this._aes = new En(e);
+var On = /*#__PURE__*/function () {
+  function On(e) {
+    (0, _classCallCheck2.default)(this, On);
+    if (!(this instanceof On)) throw Error("AES must be instanitated with `new`");
+    this.description = "Electronic Code Block", this.name = "ecb", this._aes = new Cn(e);
   }
-  (0, _createClass2.default)(kn, [{
+  (0, _createClass2.default)(On, [{
     key: "encrypt",
     value: function encrypt(e) {
-      if ((e = tn(e)).length % 16 != 0) throw new Error("invalid plaintext size (must be multiple of 16 bytes)");
-      for (var t = nn(e.length), n = nn(16), s = 0; s < e.length; s += 16) {
-        sn(e, n, 0, s, s + 16), sn(n = this._aes.encrypt(n), t, s);
+      if ((e = on(e)).length % 16 != 0) throw new Error("invalid plaintext size (must be multiple of 16 bytes)");
+      for (var t = an(e.length), n = an(16), s = 0; s < e.length; s += 16) {
+        cn(e, n, 0, s, s + 16), cn(n = this._aes.encrypt(n), t, s);
       }
       return t;
     }
   }, {
     key: "decrypt",
     value: function decrypt(e) {
-      if ((e = tn(e)).length % 16 != 0) throw new Error("invalid ciphertext size (must be multiple of 16 bytes)");
-      for (var t = nn(e.length), n = nn(16), s = 0; s < e.length; s += 16) {
-        sn(e, n, 0, s, s + 16), sn(n = this._aes.decrypt(n), t, s);
+      if ((e = on(e)).length % 16 != 0) throw new Error("invalid ciphertext size (must be multiple of 16 bytes)");
+      for (var t = an(e.length), n = an(16), s = 0; s < e.length; s += 16) {
+        cn(e, n, 0, s, s + 16), cn(n = this._aes.decrypt(n), t, s);
       }
       return t;
     }
   }]);
-  return kn;
+  return On;
 }();
-var Pn = /*#__PURE__*/function () {
-  function Pn(e, t) {
-    (0, _classCallCheck2.default)(this, Pn);
-    if (!(this instanceof Pn)) throw Error("AES must be instanitated with `new`");
+var xn = /*#__PURE__*/function () {
+  function xn(e, t) {
+    (0, _classCallCheck2.default)(this, xn);
+    if (!(this instanceof xn)) throw Error("AES must be instanitated with `new`");
     if (this.description = "Cipher Block Chaining", this.name = "cbc", t) {
       if (16 != t.length) throw new Error("invalid initialation vector size (must be 16 bytes)");
-    } else t = nn(16);
-    this._lastCipherblock = tn(t, !0), this._aes = new En(e);
+    } else t = an(16);
+    this._lastCipherblock = on(t, !0), this._aes = new Cn(e);
   }
-  (0, _createClass2.default)(Pn, [{
+  (0, _createClass2.default)(xn, [{
     key: "encrypt",
     value: function encrypt(e) {
-      if ((e = tn(e)).length % 16 != 0) throw new Error("invalid plaintext size (must be multiple of 16 bytes)");
-      for (var t = nn(e.length), n = nn(16), s = 0; s < e.length; s += 16) {
-        sn(e, n, 0, s, s + 16);
+      if ((e = on(e)).length % 16 != 0) throw new Error("invalid plaintext size (must be multiple of 16 bytes)");
+      for (var t = an(e.length), n = an(16), s = 0; s < e.length; s += 16) {
+        cn(e, n, 0, s, s + 16);
         for (var r = 0; r < 16; r++) {
           n[r] ^= this._lastCipherblock[r];
         }
-        this._lastCipherblock = this._aes.encrypt(n), sn(this._lastCipherblock, t, s);
+        this._lastCipherblock = this._aes.encrypt(n), cn(this._lastCipherblock, t, s);
       }
       return t;
     }
   }, {
     key: "decrypt",
     value: function decrypt(e) {
-      if ((e = tn(e)).length % 16 != 0) throw new Error("invalid ciphertext size (must be multiple of 16 bytes)");
-      for (var t = nn(e.length), n = nn(16), s = 0; s < e.length; s += 16) {
-        sn(e, n, 0, s, s + 16), n = this._aes.decrypt(n);
+      if ((e = on(e)).length % 16 != 0) throw new Error("invalid ciphertext size (must be multiple of 16 bytes)");
+      for (var t = an(e.length), n = an(16), s = 0; s < e.length; s += 16) {
+        cn(e, n, 0, s, s + 16), n = this._aes.decrypt(n);
         for (var r = 0; r < 16; r++) {
           t[s + r] = n[r] ^ this._lastCipherblock[r];
         }
-        sn(e, this._lastCipherblock, 0, s, s + 16);
+        cn(e, this._lastCipherblock, 0, s, s + 16);
       }
       return t;
     }
   }]);
-  return Pn;
+  return xn;
 }();
-var Cn = /*#__PURE__*/function () {
-  function Cn(e, t, n) {
-    (0, _classCallCheck2.default)(this, Cn);
-    if (!(this instanceof Cn)) throw Error("AES must be instanitated with `new`");
+var Nn = /*#__PURE__*/function () {
+  function Nn(e, t, n) {
+    (0, _classCallCheck2.default)(this, Nn);
+    if (!(this instanceof Nn)) throw Error("AES must be instanitated with `new`");
     if (this.description = "Cipher Feedback", this.name = "cfb", t) {
       if (16 != t.length) throw new Error("invalid initialation vector size (must be 16 size)");
-    } else t = nn(16);
-    n || (n = 1), this.segmentSize = n, this._shiftRegister = tn(t, !0), this._aes = new En(e);
+    } else t = an(16);
+    n || (n = 1), this.segmentSize = n, this._shiftRegister = on(t, !0), this._aes = new Cn(e);
   }
-  (0, _createClass2.default)(Cn, [{
+  (0, _createClass2.default)(Nn, [{
     key: "encrypt",
     value: function encrypt(e) {
       if (e.length % this.segmentSize != 0) throw new Error("invalid plaintext size (must be segmentSize bytes)");
-      for (var t, n = tn(e, !0), s = 0; s < n.length; s += this.segmentSize) {
+      for (var t, n = on(e, !0), s = 0; s < n.length; s += this.segmentSize) {
         t = this._aes.encrypt(this._shiftRegister);
         for (var r = 0; r < this.segmentSize; r++) {
           n[s + r] ^= t[r];
         }
-        sn(this._shiftRegister, this._shiftRegister, 0, this.segmentSize), sn(n, this._shiftRegister, 16 - this.segmentSize, s, s + this.segmentSize);
+        cn(this._shiftRegister, this._shiftRegister, 0, this.segmentSize), cn(n, this._shiftRegister, 16 - this.segmentSize, s, s + this.segmentSize);
       }
       return n;
     }
@@ -15034,31 +15074,31 @@ var Cn = /*#__PURE__*/function () {
     key: "decrypt",
     value: function decrypt(e) {
       if (e.length % this.segmentSize != 0) throw new Error("invalid ciphertext size (must be segmentSize bytes)");
-      for (var t, n = tn(e, !0), s = 0; s < n.length; s += this.segmentSize) {
+      for (var t, n = on(e, !0), s = 0; s < n.length; s += this.segmentSize) {
         t = this._aes.encrypt(this._shiftRegister);
         for (var r = 0; r < this.segmentSize; r++) {
           n[s + r] ^= t[r];
         }
-        sn(this._shiftRegister, this._shiftRegister, 0, this.segmentSize), sn(e, this._shiftRegister, 16 - this.segmentSize, s, s + this.segmentSize);
+        cn(this._shiftRegister, this._shiftRegister, 0, this.segmentSize), cn(e, this._shiftRegister, 16 - this.segmentSize, s, s + this.segmentSize);
       }
       return n;
     }
   }]);
-  return Cn;
+  return Nn;
 }();
-var An = /*#__PURE__*/function () {
-  function An(e, t) {
-    (0, _classCallCheck2.default)(this, An);
-    if (!(this instanceof An)) throw Error("AES must be instanitated with `new`");
+var Rn = /*#__PURE__*/function () {
+  function Rn(e, t) {
+    (0, _classCallCheck2.default)(this, Rn);
+    if (!(this instanceof Rn)) throw Error("AES must be instanitated with `new`");
     if (this.description = "Output Feedback", this.name = "ofb", t) {
       if (16 != t.length) throw new Error("invalid initialation vector size (must be 16 bytes)");
-    } else t = nn(16);
-    this._lastPrecipher = tn(t, !0), this._lastPrecipherIndex = 16, this._aes = new En(e);
+    } else t = an(16);
+    this._lastPrecipher = on(t, !0), this._lastPrecipherIndex = 16, this._aes = new Cn(e);
   }
-  (0, _createClass2.default)(An, [{
+  (0, _createClass2.default)(Rn, [{
     key: "encrypt",
     value: function encrypt(e) {
-      for (var t = tn(e, !0), n = 0; n < t.length; n++) {
+      for (var t = on(e, !0), n = 0; n < t.length; n++) {
         16 === this._lastPrecipherIndex && (this._lastPrecipher = this._aes.encrypt(this._lastPrecipher), this._lastPrecipherIndex = 0), t[n] ^= this._lastPrecipher[this._lastPrecipherIndex++];
       }
       return t;
@@ -15069,15 +15109,15 @@ var An = /*#__PURE__*/function () {
       return this.encrypt(e);
     }
   }]);
-  return An;
+  return Rn;
 }();
-var On = /*#__PURE__*/function () {
-  function On(e) {
-    (0, _classCallCheck2.default)(this, On);
-    if (!(this instanceof On)) throw Error("Counter must be instanitated with `new`");
-    0 === e || e || (e = 1), "number" == typeof e ? (this._counter = nn(16), this.setValue(e)) : this.setBytes(e);
+var Ln = /*#__PURE__*/function () {
+  function Ln(e) {
+    (0, _classCallCheck2.default)(this, Ln);
+    if (!(this instanceof Ln)) throw Error("Counter must be instanitated with `new`");
+    0 === e || e || (e = 1), "number" == typeof e ? (this._counter = an(16), this.setValue(e)) : this.setBytes(e);
   }
-  (0, _createClass2.default)(On, [{
+  (0, _createClass2.default)(Ln, [{
     key: "setValue",
     value: function setValue(e) {
       if ("number" != typeof e || parseInt(e) != e) throw new Error("invalid counter value (must be an integer)");
@@ -15089,7 +15129,7 @@ var On = /*#__PURE__*/function () {
   }, {
     key: "setBytes",
     value: function setBytes(e) {
-      if (16 != (e = tn(e, !0)).length) throw new Error("invalid counter bytes size (must be 16 bytes)");
+      if (16 != (e = on(e, !0)).length) throw new Error("invalid counter bytes size (must be 16 bytes)");
       this._counter = e;
     }
   }, {
@@ -15104,18 +15144,18 @@ var On = /*#__PURE__*/function () {
       }
     }
   }]);
-  return On;
+  return Ln;
 }();
-var xn = /*#__PURE__*/function () {
-  function xn(e, t) {
-    (0, _classCallCheck2.default)(this, xn);
-    if (!(this instanceof xn)) throw Error("AES must be instanitated with `new`");
-    this.description = "Counter", this.name = "ctr", t instanceof On || (t = new On(t)), this._counter = t, this._remainingCounter = null, this._remainingCounterIndex = 16, this._aes = new En(e);
+var Un = /*#__PURE__*/function () {
+  function Un(e, t) {
+    (0, _classCallCheck2.default)(this, Un);
+    if (!(this instanceof Un)) throw Error("AES must be instanitated with `new`");
+    this.description = "Counter", this.name = "ctr", t instanceof Ln || (t = new Ln(t)), this._counter = t, this._remainingCounter = null, this._remainingCounterIndex = 16, this._aes = new Cn(e);
   }
-  (0, _createClass2.default)(xn, [{
+  (0, _createClass2.default)(Un, [{
     key: "encrypt",
     value: function encrypt(e) {
-      for (var t = tn(e, !0), n = 0; n < t.length; n++) {
+      for (var t = on(e, !0), n = 0; n < t.length; n++) {
         16 === this._remainingCounterIndex && (this._remainingCounter = this._aes.encrypt(this._counter._counter), this._remainingCounterIndex = 0, this._counter.increment()), t[n] ^= this._remainingCounter[this._remainingCounterIndex++];
       }
       return t;
@@ -15126,108 +15166,71 @@ var xn = /*#__PURE__*/function () {
       return this.encrypt(e);
     }
   }]);
-  return xn;
+  return Un;
 }();
-var Nn = {
-  AES: En,
-  Counter: On,
+var Dn = {
+  AES: Cn,
+  Counter: Ln,
   ModeOfOperation: {
-    ecb: kn,
-    cbc: Pn,
-    cfb: Cn,
-    ofb: An,
-    ctr: xn
+    ecb: On,
+    cbc: xn,
+    cfb: Nn,
+    ofb: Rn,
+    ctr: Un
   },
   utils: {
-    hex: an,
-    utf8: on
+    hex: ln,
+    utf8: hn
   },
   padding: {
     pkcs7: {
       pad: function pad(e) {
-        var t = 16 - (e = tn(e, !0)).length % 16,
-          n = nn(e.length + t);
-        sn(e, n);
+        var t = 16 - (e = on(e, !0)).length % 16,
+          n = an(e.length + t);
+        cn(e, n);
         for (var s = e.length; s < n.length; s++) {
           n[s] = t;
         }
         return n;
       },
       strip: function strip(e) {
-        if ((e = tn(e, !0)).length < 16) throw new Error("PKCS#7 invalid length");
+        if ((e = on(e, !0)).length < 16) throw new Error("PKCS#7 invalid length");
         var t = e[e.length - 1];
         if (t > 16) throw new Error("PKCS#7 padding byte out of range");
         for (var n = e.length - t, s = 0; s < t; s++) {
           if (e[n + s] !== t) throw new Error("PKCS#7 invalid padding byte");
         }
-        var r = nn(n);
-        return sn(e, r, 0, 0, n), r;
+        var r = an(n);
+        return cn(e, r, 0, 0, n), r;
       }
     }
   },
   _arrayTest: {
-    coerceArray: tn,
-    createArray: nn,
-    copyArray: sn
+    coerceArray: on,
+    createArray: an,
+    copyArray: cn
   }
 };
-function Rn(e, t, n) {
+function Mn(e, t, n) {
   var s = new Uint8Array(uni.base64ToArrayBuffer(t)),
-    r = Nn.utils.utf8.toBytes(n),
-    i = Nn.utils.utf8.toBytes(e),
-    o = new Nn.ModeOfOperation.cbc(s, r),
-    a = Nn.padding.pkcs7.pad(i),
+    r = Dn.utils.utf8.toBytes(n),
+    i = Dn.utils.utf8.toBytes(e),
+    o = new Dn.ModeOfOperation.cbc(s, r),
+    a = Dn.padding.pkcs7.pad(i),
     c = o.encrypt(a);
   return uni.arrayBufferToBase64(c);
-}
-var Ln = "uni-secure-network",
-  Un = {
-    SYSTEM_ERROR: {
-      code: 2e4,
-      message: "System error"
-    },
-    APP_INFO_INVALID: {
-      code: 20101,
-      message: "Invalid client"
-    },
-    GET_ENCRYPT_KEY_FAILED: {
-      code: 20102,
-      message: "Get encrypt key failed"
-    }
-  },
-  Dn = {
-    10001: "Secure network is not supported on current playground or unimpsdk",
-    10003: "Config missing in current app. If the problem pesist, please contact DCloud.",
-    10009: "Encrypt payload failed",
-    10010: "Decrypt response failed"
-  };
-function Mn(e) {
-  var _ref35 = e || {},
-    t = _ref35.errSubject,
-    n = _ref35.subject,
-    s = _ref35.errCode,
-    r = _ref35.errMsg,
-    i = _ref35.code,
-    o = _ref35.message,
-    a = _ref35.cause;
-  return new te({
-    subject: t || n || Ln,
-    code: s || i || Un.SYSTEM_ERROR.code,
-    message: r || o,
-    cause: a
-  });
 }
 var qn,
   Fn,
   Kn = null;
-var jn = /*#__PURE__*/function (_Xt) {
-  (0, _inherits2.default)(jn, _Xt);
+var jn = /*#__PURE__*/function (_nn) {
+  (0, _inherits2.default)(jn, _nn);
   var _super8 = _createSuper(jn);
   function jn(e) {
-    var _this18;
+    var _this19;
     (0, _classCallCheck2.default)(this, jn);
-    _this18 = _super8.call(this, e), _this18.clientType = "mp-weixin", _this18.userEncryptKey = null;
-    return _this18;
+    _this19 = _super8.call(this, e), _this19.clientType = "mp-weixin", _this19.userEncryptKey = null;
+    return _this19;
   }
   (0, _createClass2.default)(jn, [{
     key: "isLogin",
@@ -15276,7 +15279,7 @@ var jn = /*#__PURE__*/function (_Xt) {
     key: "getUserEncryptKey",
     value: function () {
       var _getUserEncryptKey = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee53() {
-        var _this19 = this;
+        var _this20 = this;
         var e;
         return _regenerator.default.wrap(function _callee53$(_context53) {
           while (1) {
@@ -15302,10 +15305,10 @@ var jn = /*#__PURE__*/function (_Xt) {
                 return _context53.abrupt("return", new Promise(function (e, t) {
                   uni.getUserCryptoManager().getLatestUserKey({
                     success: function success(t) {
-                      Kn = t, _this19.userEncryptKey = t, e(_this19.userEncryptKey);
+                      Kn = t, _this20.userEncryptKey = t, e(_this20.userEncryptKey);
                     },
                     fail: function fail(e) {
-                      t(Mn(_objectSpread(_objectSpread({}, Un.GET_ENCRYPT_KEY_FAILED), {}, {
+                      t(tn(_objectSpread(_objectSpread({}, Zt.GET_ENCRYPT_KEY_FAILED), {}, {
                         cause: e
                       })));
                     }
@@ -15345,7 +15348,7 @@ var jn = /*#__PURE__*/function (_Xt) {
                 t = _yield$this$getUserEn.iv;
                 n = _yield$this$getUserEn.version;
                 return _context54.abrupt("return", {
-                  verifyClientSign: Rn(JSON.stringify({
+                  verifyClientSign: Mn(JSON.stringify({
                     data: JSON.stringify({}),
                     appId: this.appId,
                     deviceId: this.deviceId,
@@ -15395,7 +15398,7 @@ var jn = /*#__PURE__*/function (_Xt) {
                   content: e,
                   _uniCloudOptions: r
                 } : {
-                  content: Rn(JSON.stringify({
+                  content: Mn(JSON.stringify({
                     data: JSON.stringify(e),
                     appId: this.appId,
                     deviceId: this.deviceId,
@@ -15436,10 +15439,10 @@ var jn = /*#__PURE__*/function (_Xt) {
                 return _context56.abrupt("return", JSON.parse(function (e, t, n) {
                   var s = new Uint8Array(uni.base64ToArrayBuffer(e)),
                     r = new Uint8Array(uni.base64ToArrayBuffer(t)),
-                    i = Nn.utils.utf8.toBytes(n),
-                    o = new Nn.ModeOfOperation.cbc(r, i),
-                    a = Nn.padding.pkcs7.strip(o.decrypt(s));
-                  return Nn.utils.utf8.fromBytes(a);
+                    i = Dn.utils.utf8.toBytes(n),
+                    o = new Dn.ModeOfOperation.cbc(r, i),
+                    a = Dn.padding.pkcs7.strip(o.decrypt(s));
+                  return Dn.utils.utf8.fromBytes(a);
                 }(t, n, s)));
               case 7:
               case "end":
@@ -15460,7 +15463,7 @@ var jn = /*#__PURE__*/function (_Xt) {
     }
   }]);
   return jn;
-}(Xt);
+}(nn);
 function $n(e) {
   var t = ["hasClientKey", "encryptGetClientKeyPayload", "setClientKey", "encrypt", "decrypt"],
     n = {};
@@ -15479,12 +15482,12 @@ function $n(e) {
             i = _ref36.errMsg,
             o = _ref36.errSubject,
             a = _ref36.message;
-          "success" === e ? n(t) : s(Mn({
+          "success" === e ? n(t) : s(tn({
             errCode: r,
-            errMsg: Dn[r] || i || a,
+            errMsg: en[r] || i || a,
             errSubject: o
           }));
-        }])) : s(Mn({
+        }])) : s(tn({
           message: "请检查manifest.json内是否开启安全网络模块，另外注意标准基座不支持安全网络模块"
         }));
       });
@@ -15495,14 +15498,14 @@ function $n(e) {
   }
   return n;
 }
-var Bn = /*#__PURE__*/function (_Xt2) {
-  (0, _inherits2.default)(Bn, _Xt2);
+var Bn = /*#__PURE__*/function (_nn2) {
+  (0, _inherits2.default)(Bn, _nn2);
   var _super9 = _createSuper(Bn);
   function Bn(e) {
-    var _this20;
+    var _this21;
     (0, _classCallCheck2.default)(this, Bn);
-    _this20 = _super9.call(this, e), _this20.clientType = "app", _this20.appUtils = _objectSpread({}, $n(uni.requireNativePlugin("plus"))), _this20.systemInfo = qn || (qn = ae());
-    return _this20;
+    _this21 = _super9.call(this, e), _this21.clientType = "app", _this21.appUtils = _objectSpread({}, $n(uni.requireNativePlugin("plus"))), _this21.systemInfo = qn || (qn = ae());
+    return _this21;
   }
   (0, _createClass2.default)(Bn, [{
     key: "hasClientKey",
@@ -15574,9 +15577,9 @@ var Bn = /*#__PURE__*/function (_Xt2) {
                 }
                 throw function (e) {
                   return new te({
-                    subject: e.errSubject || Ln,
-                    code: e.errCode || e.code || Un.SYSTEM_ERROR.code,
-                    message: e.errMsg || e.message
+                    subject: e.errSubject || Xt,
+                    code: e.errCode || e.code || Zt.SYSTEM_ERROR.code,
+                    message: e.errMsg || e.message || Zt.SYSTEM_ERROR.message
                   });
                 }(n);
               case 13:
@@ -15604,7 +15607,7 @@ var Bn = /*#__PURE__*/function (_Xt2) {
     key: "ensureClientKey",
     value: function () {
       var _ensureClientKey = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee59() {
-        var _this21 = this;
+        var _this22 = this;
         var _ref37,
           _ref37$forceUpdate,
           e,
@@ -15631,9 +15634,9 @@ var Bn = /*#__PURE__*/function (_Xt2) {
                   break;
                 }
                 return _context59.abrupt("return", (e && this.scopedGlobalCache.initPromise && this.scopedGlobalCache.initStatus === d || !e && this.scopedGlobalCache.initPromise && this.scopedGlobalCache.initStatus !== f || (this.scopedGlobalCache.initPromise = this.getAppClientKey(), this.scopedGlobalCache.initPromise.then(function (e) {
-                  _this21.scopedGlobalCache.initStatus = p;
+                  _this22.scopedGlobalCache.initStatus = p;
                 }).catch(function (e) {
-                  throw _this21.scopedGlobalCache.initStatus = f, e;
+                  throw _this22.scopedGlobalCache.initStatus = f, e;
                 }), this.scopedGlobalCache.initStatus = d), this.scopedGlobalCache.initPromise));
               case 10:
               case "end":
@@ -15793,11 +15796,11 @@ var Bn = /*#__PURE__*/function (_Xt2) {
     value: function isClientKeyNotFound() {
       var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var t = e.result || {};
-      return 70009 === t.errCode && t.errSubject === Ln;
+      return 70009 === t.errCode && t.errSubject === Xt;
     }
   }]);
   return Bn;
-}(Xt);
+}(nn);
 function Wn() {
   var _ref39 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
     e = _ref39.secretType;
@@ -15808,7 +15811,7 @@ function Hn() {
     e = _ref40.name,
     _ref40$data = _ref40.data,
     t = _ref40$data === void 0 ? {} : _ref40$data;
-  return "app" === C && "DCloud-clientDB" === e && "encryption" === t.redirectTo && "getAppClientKey" === t.action;
+  return "app" === P && "DCloud-clientDB" === e && "encryption" === t.redirectTo && "getAppClientKey" === t.action;
 }
 function Jn() {
   var _ref41 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
@@ -15825,7 +15828,7 @@ function Jn() {
     var _ref42 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       e = _ref42.provider,
       t = _ref42.spaceId;
-    var n = P;
+    var n = A;
     if (!n) return {};
     e = function (e) {
       return "tencent" === e ? "tcb" : e;
@@ -15857,7 +15860,7 @@ function Jn() {
     var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     return e.appId === s && (e.platform || "").toLowerCase() === o.toLowerCase();
   })) return !0;
-  throw console.error("\u6B64\u5E94\u7528[appId: ".concat(s, ", platform: ").concat(o, "]\u4E0D\u5728\u4E91\u7AEF\u914D\u7F6E\u7684\u5141\u8BB8\u8BBF\u95EE\u7684\u5E94\u7528\u5217\u8868\u5185\uFF0C\u53C2\u8003\uFF1Ahttps://uniapp.dcloud.net.cn/uniCloud/secure-network.html#verify-client")), Mn(Un.APP_INFO_INVALID);
+  throw console.error("\u6B64\u5E94\u7528[appId: ".concat(s, ", platform: ").concat(o, "]\u4E0D\u5728\u4E91\u7AEF\u914D\u7F6E\u7684\u5141\u8BB8\u8BBF\u95EE\u7684\u5E94\u7528\u5217\u8868\u5185\uFF0C\u53C2\u8003\uFF1Ahttps://uniapp.dcloud.net.cn/uniCloud/secure-network.html#verify-client")), tn(Zt.APP_INFO_INVALID);
 }
 function zn(_ref43) {
   var e = _ref43.functionName,
@@ -15875,7 +15878,7 @@ function zn(_ref43) {
 function Vn(e) {
   var t = e.callFunction,
     n = function n(_n12) {
-      var _this22 = this;
+      var _this23 = this;
       var s = _n12.name;
       _n12.data = Bt.call(e, {
         data: _n12.data
@@ -15891,13 +15894,13 @@ function Vn(e) {
         o = Hn(_n12),
         a = i || o;
       return t.call(this, _n12).then(function (e) {
-        return e.errCode = 0, !a && zn.call(_this22, {
+        return e.errCode = 0, !a && zn.call(_this23, {
           functionName: s,
           result: e,
           logPvd: r
         }), Promise.resolve(e);
       }, function (e) {
-        return !a && zn.call(_this22, {
+        return !a && zn.call(_this23, {
           functionName: s,
           result: e,
           logPvd: r
@@ -15945,7 +15948,7 @@ function Vn(e) {
       var e = _ref45.name,
         _ref45$data = _ref45.data,
         t = _ref45$data === void 0 ? {} : _ref45$data;
-      return "mp-weixin" === C && "uni-id-co" === e && "secureNetworkHandshakeByWeixin" === t.method;
+      return "mp-weixin" === P && "uni-id-co" === e && "secureNetworkHandshakeByWeixin" === t.method;
     }(t)) a = o.call(e, t);else if (Wn(t)) {
       a = new Fn({
         secretType: t.secretType,
@@ -15966,23 +15969,23 @@ function Vn(e) {
         return console.warn("当前返回结果为Promise类型，不可直接访问其result属性，详情请参考：https://uniapp.dcloud.net.cn/uniCloud/faq?id=promise"), {};
       }
     }), a.then(function (e) {
-      return "undefined" != typeof UTSJSONObject && (e.result = new UTSJSONObject(e.result)), e;
+      return e;
     });
   };
 }
-Fn = "mp-weixin" !== C && "app" !== C ? /*#__PURE__*/function () {
+Fn = "mp-weixin" !== P && "app" !== P ? /*#__PURE__*/function () {
   function _class2() {
     (0, _classCallCheck2.default)(this, _class2);
-    throw Mn({
-      message: "Platform ".concat(C, " is not supported by secure network")
+    throw tn({
+      message: "Platform ".concat(P, " is not supported by secure network")
     });
   }
   return (0, _createClass2.default)(_class2);
-}() : k ? "mp-weixin" === C ? jn : Bn : /*#__PURE__*/function () {
+}() : k ? "mp-weixin" === P ? jn : Bn : /*#__PURE__*/function () {
   function _class3() {
     (0, _classCallCheck2.default)(this, _class3);
-    throw Mn({
-      message: "Platform ".concat(C, " is not enabled, please check whether secure network module is enabled in your manifest.json")
+    throw tn({
+      message: "Platform ".concat(P, " is not enabled, please check whether secure network module is enabled in your manifest.json")
     });
   }
   return (0, _createClass2.default)(_class3);
@@ -16350,7 +16353,7 @@ var as = /*#__PURE__*/function (_is) {
   }, {
     key: "_callCloudFunction",
     value: function _callCloudFunction(_ref48) {
-      var _this23 = this;
+      var _this24 = this;
       var e = _ref48.action,
         t = _ref48.command,
         n = _ref48.multiCommand,
@@ -16399,7 +16402,7 @@ var as = /*#__PURE__*/function (_is) {
             _n16 = _u$_e.message,
             _s17 = _u$_e.detail;
           var _r8 = "[System Info]" + _n16;
-          _s17 && (_r8 = "".concat(_r8, "\n\u8BE6\u7EC6\u4FE1\u606F\uFF1A").concat(_s17)), (console["app" === C && "warn" === _t14 ? "error" : _t14] || console.log)(_r8);
+          _s17 && (_r8 = "".concat(_r8, "\n\u8BE6\u7EC6\u4FE1\u606F\uFF1A").concat(_s17)), (console["app" === P && "warn" === _t14 ? "error" : _t14] || console.log)(_r8);
         }
         if (t) {
           return a(new te({
@@ -16411,10 +16414,10 @@ var as = /*#__PURE__*/function (_is) {
         e.result.errCode = e.result.errCode || e.result.code, e.result.errMsg = e.result.errMsg || e.result.message, s && c && (re({
           token: s,
           tokenExpired: c
-        }), _this23._callbackAuth("refreshToken", [{
+        }), _this24._callbackAuth("refreshToken", [{
           token: s,
           tokenExpired: c
-        }]), _this23._callback("refreshToken", [{
+        }]), _this24._callback("refreshToken", [{
           token: s,
           tokenExpired: c
         }]), Y(H.REFRESH_TOKEN, {
@@ -16485,50 +16488,53 @@ var cs = "token无效，跳转登录页面",
     "uni-id-check-token-failed": cs,
     "uni-id-token-not-exist": cs,
     "uni-id-check-device-feature-failed": cs
-  };
-function ds(e, t) {
+  },
+  ds = _objectSpread(_objectSpread(_objectSpread({}, hs), ls), {}, {
+    default: "用户未登录或登录状态过期，自动跳转登录页面"
+  });
+function ps(e, t) {
   var n = "";
   return n = e ? "".concat(e, "/").concat(t) : t, n.replace(/^\//, "");
 }
-function ps() {
+function fs() {
   var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var t = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
   var n = [],
     s = [];
   return e.forEach(function (e) {
-    !0 === e.needLogin ? n.push(ds(t, e.path)) : !1 === e.needLogin && s.push(ds(t, e.path));
+    !0 === e.needLogin ? n.push(ps(t, e.path)) : !1 === e.needLogin && s.push(ps(t, e.path));
   }), {
     needLoginPage: n,
     notNeedLoginPage: s
   };
 }
-function fs(e) {
+function gs(e) {
   return e.split("?")[0].replace(/^\//, "");
 }
-function gs() {
+function ms() {
   return function (e) {
-    var t = e && e.$page && e.$page.fullPath || "";
-    return t ? ("/" !== t.charAt(0) && (t = "/" + t), t) : t;
+    var t = e && e.$page && e.$page.fullPath;
+    return t ? ("/" !== t.charAt(0) && (t = "/" + t), t) : "";
   }(function () {
     var e = getCurrentPages();
     return e[e.length - 1];
   }());
 }
-function ms() {
-  return fs(gs());
-}
 function ys() {
+  return gs(ms());
+}
+function _s() {
   var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
   var t = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   if (!e) return !1;
   if (!(t && t.list && t.list.length)) return !1;
   var n = t.list,
-    s = fs(e);
+    s = gs(e);
   return n.some(function (e) {
     return e.pagePath === s;
   });
 }
-var _s = !!_pages.default.uniIdRouter;
+var ws = !!_pages.default.uniIdRouter;
 var _ref49 = function () {
     var _ref8 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _pages.default,
       _ref8$pages = _ref8.pages,
@@ -16544,9 +16550,9 @@ var _ref49 = function () {
       o = _s$needLogin === void 0 ? [] : _s$needLogin,
       _s$resToLogin = s.resToLogin,
       a = _s$resToLogin === void 0 ? !0 : _s$resToLogin,
-      _ps = ps(t),
-      c = _ps.needLoginPage,
-      u = _ps.notNeedLoginPage,
+      _fs = fs(t),
+      c = _fs.needLoginPage,
+      u = _fs.notNeedLoginPage,
       _ref9 = function () {
         var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
         var t = [],
@@ -16555,9 +16561,9 @@ var _ref49 = function () {
           var s = e.root,
             _e$pages = e.pages,
             r = _e$pages === void 0 ? [] : _e$pages,
-            _ps2 = ps(r, s),
-            i = _ps2.needLoginPage,
-            o = _ps2.notNeedLoginPage;
+            _fs2 = fs(r, s),
+            i = _fs2.needLoginPage,
+            o = _fs2.notNeedLoginPage;
           t.push.apply(t, (0, _toConsumableArray2.default)(i)), n.push.apply(n, (0, _toConsumableArray2.default)(o));
         }), {
           needLoginPage: t,
@@ -16572,18 +16578,18 @@ var _ref49 = function () {
       resToLogin: a,
       needLoginPage: [].concat((0, _toConsumableArray2.default)(c), (0, _toConsumableArray2.default)(h)),
       notNeedLoginPage: [].concat((0, _toConsumableArray2.default)(u), (0, _toConsumableArray2.default)(l)),
-      loginPageInTabBar: ys(i, r)
+      loginPageInTabBar: _s(i, r)
     };
   }(),
-  ws = _ref49.loginPage,
+  Is = _ref49.loginPage,
   vs = _ref49.routerNeedLogin,
-  Is = _ref49.resToLogin,
-  Ss = _ref49.needLoginPage,
-  Ts = _ref49.notNeedLoginPage,
-  bs = _ref49.loginPageInTabBar;
-if (Ss.indexOf(ws) > -1) throw new Error("Login page [".concat(ws, "] should not be \"needLogin\", please check your pages.json"));
-function Es(e) {
-  var t = ms();
+  Ss = _ref49.resToLogin,
+  Ts = _ref49.needLoginPage,
+  bs = _ref49.notNeedLoginPage,
+  Es = _ref49.loginPageInTabBar;
+if (Ts.indexOf(Is) > -1) throw new Error("Login page [".concat(Is, "] should not be \"needLogin\", please check your pages.json"));
+function ks(e) {
+  var t = ys();
   if ("/" === e.charAt(0)) return e;
   var _e$split = e.split("?"),
     _e$split2 = (0, _slicedToArray2.default)(_e$split, 2),
@@ -16598,31 +16604,31 @@ function Es(e) {
   }
   return "" === i[0] && i.shift(), "/" + i.join("/") + (s ? "?" + s : "");
 }
-function ks(e) {
-  var t = fs(Es(e));
-  return !(Ts.indexOf(t) > -1) && (Ss.indexOf(t) > -1 || vs.some(function (t) {
+function As(e) {
+  var t = gs(ks(e));
+  return !(bs.indexOf(t) > -1) && (Ts.indexOf(t) > -1 || vs.some(function (t) {
     return function (e, t) {
       return new RegExp(t).test(e);
     }(e, t);
   }));
 }
-function Ps(_ref31) {
-  var e = _ref31.redirect;
-  var t = fs(e),
-    n = fs(ws);
-  return ms() !== n && t !== n;
+function Ps(_ref32) {
+  var e = _ref32.redirect;
+  var t = gs(e),
+    n = gs(Is);
+  return ys() !== n && t !== n;
 }
 function Cs() {
-  var _ref33 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-    e = _ref33.api,
-    t = _ref33.redirect;
+  var _ref34 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+    e = _ref34.api,
+    t = _ref34.redirect;
   if (!t || !Ps({
     redirect: t
   })) return;
   var n = function (e, t) {
     return "/" !== e.charAt(0) && (e = "/" + e), t ? e.indexOf("?") > -1 ? e + "&uniIdRedirectUrl=".concat(encodeURIComponent(t)) : e + "?uniIdRedirectUrl=".concat(encodeURIComponent(t)) : e;
-  }(ws, t);
-  bs ? "navigateTo" !== e && "redirectTo" !== e || (e = "switchTab") : "switchTab" === e && (e = "navigateTo");
+  }(Is, t);
+  Es ? "navigateTo" !== e && "redirectTo" !== e || (e = "switchTab") : "switchTab" === e && (e = "navigateTo");
   var s = {
     navigateTo: uni.navigateTo,
     redirectTo: uni.redirectTo,
@@ -16635,7 +16641,7 @@ function Cs() {
     });
   }, 0);
 }
-function As() {
+function Os() {
   var _ref50 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
     e = _ref50.url;
   var t = {
@@ -16652,19 +16658,19 @@ function As() {
           var _e25 = "uni-id-token-expired";
           n = {
             errCode: _e25,
-            errMsg: ls[_e25]
+            errMsg: ds[_e25]
           };
         }
       } else {
         var _e26 = "uni-id-check-token-failed";
         n = {
           errCode: _e26,
-          errMsg: ls[_e26]
+          errMsg: ds[_e26]
         };
       }
       return n;
     }();
-  if (ks(e) && n) {
+  if (As(e) && n) {
     n.uniIdRedirectUrl = e;
     if (z(H.NEED_LOGIN).length > 0) return setTimeout(function () {
       Y(H.NEED_LOGIN, n);
@@ -16673,14 +16679,14 @@ function As() {
   }
   return t;
 }
-function Os() {
+function xs() {
   !function () {
-    var e = gs(),
-      _As = As({
+    var e = ms(),
+      _Os = Os({
         url: e
       }),
-      t = _As.abortLoginPageJump,
-      n = _As.autoToLoginPage;
+      t = _Os.abortLoginPageJump,
+      n = _Os.autoToLoginPage;
     t || n && Cs({
       api: "redirectTo",
       redirect: e
@@ -16691,14 +16697,14 @@ function Os() {
     var n = e[_t18];
     uni.addInterceptor(n, {
       invoke: function invoke(e) {
-        var _As2 = As({
+        var _Os2 = Os({
             url: e.url
           }),
-          t = _As2.abortLoginPageJump,
-          s = _As2.autoToLoginPage;
+          t = _Os2.abortLoginPageJump,
+          s = _Os2.autoToLoginPage;
         return t ? e : s ? (Cs({
           api: n,
-          redirect: Es(e.url)
+          redirect: ks(e.url)
         }), !1) : e;
       }
     });
@@ -16707,7 +16713,7 @@ function Os() {
     _loop3(_t18);
   }
 }
-function xs() {
+function Ns() {
   this.onResponse(function (e) {
     var t = e.type,
       n = e.content;
@@ -16718,7 +16724,7 @@ function xs() {
           if ("object" != (0, _typeof2.default)(e)) return !1;
           var _ref51 = e || {},
             t = _ref51.errCode;
-          return t in ls;
+          return t in ds;
         }(n);
         break;
       case "clientdb":
@@ -16733,12 +16739,12 @@ function xs() {
       var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var t = z(H.NEED_LOGIN);
       Z().then(function () {
-        var n = gs();
+        var n = ms();
         if (n && Ps({
           redirect: n
         })) return t.length > 0 ? Y(H.NEED_LOGIN, Object.assign({
           uniIdRedirectUrl: n
-        }, e)) : void (ws && Cs({
+        }, e)) : void (Is && Cs({
           api: "navigateTo",
           redirect: n
         }));
@@ -16746,7 +16752,7 @@ function xs() {
     }(n);
   });
 }
-function Ns(e) {
+function Rs(e) {
   !function (e) {
     e.onResponse = function (e) {
       V(H.RESPONSE, e);
@@ -16758,9 +16764,9 @@ function Ns(e) {
       V(H.NEED_LOGIN, e);
     }, e.offNeedLogin = function (e) {
       G(H.NEED_LOGIN, e);
-    }, _s && (U(Yt).needLoginInit || (U(Yt).needLoginInit = !0, Z().then(function () {
-      Os.call(e);
-    }), Is && xs.call(e)));
+    }, ws && (U(Yt).needLoginInit || (U(Yt).needLoginInit = !0, Z().then(function () {
+      xs.call(e);
+    }), Ss && Ns.call(e)));
   }(e), function (e) {
     e.onRefreshToken = function (e) {
       V(H.REFRESH_TOKEN, e);
@@ -16769,10 +16775,10 @@ function Ns(e) {
     };
   }(e);
 }
-var Rs;
-var Ls = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-  Us = /^(?:[A-Za-z\d+/]{4})*?(?:[A-Za-z\d+/]{2}(?:==)?|[A-Za-z\d+/]{3}=?)?$/;
-function Ds() {
+var Ls;
+var Us = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+  Ds = /^(?:[A-Za-z\d+/]{4})*?(?:[A-Za-z\d+/]{2}(?:==)?|[A-Za-z\d+/]{3}=?)?$/;
+function Ms() {
   var e = se().token || "",
     t = e.split(".");
   if (!e || 3 !== t.length) return {
@@ -16783,7 +16789,7 @@ function Ds() {
   };
   var n;
   try {
-    n = JSON.parse((s = t[1], decodeURIComponent(Rs(s).split("").map(function (e) {
+    n = JSON.parse((s = t[1], decodeURIComponent(Ls(s).split("").map(function (e) {
       return "%" + ("00" + e.charCodeAt(0).toString(16)).slice(-2);
     }).join(""))));
   } catch (e) {
@@ -16792,16 +16798,16 @@ function Ds() {
   var s;
   return n.tokenExpired = 1e3 * n.exp, delete n.exp, delete n.iat, n;
 }
-Rs = "function" != typeof atob ? function (e) {
-  if (e = String(e).replace(/[\t\n\f\r ]+/g, ""), !Us.test(e)) throw new Error("Failed to execute 'atob' on 'Window': The string to be decoded is not correctly encoded.");
+Ls = "function" != typeof atob ? function (e) {
+  if (e = String(e).replace(/[\t\n\f\r ]+/g, ""), !Ds.test(e)) throw new Error("Failed to execute 'atob' on 'Window': The string to be decoded is not correctly encoded.");
   var t;
   e += "==".slice(2 - (3 & e.length));
   for (var n, s, r = "", i = 0; i < e.length;) {
-    t = Ls.indexOf(e.charAt(i++)) << 18 | Ls.indexOf(e.charAt(i++)) << 12 | (n = Ls.indexOf(e.charAt(i++))) << 6 | (s = Ls.indexOf(e.charAt(i++))), r += 64 === n ? String.fromCharCode(t >> 16 & 255) : 64 === s ? String.fromCharCode(t >> 16 & 255, t >> 8 & 255) : String.fromCharCode(t >> 16 & 255, t >> 8 & 255, 255 & t);
+    t = Us.indexOf(e.charAt(i++)) << 18 | Us.indexOf(e.charAt(i++)) << 12 | (n = Us.indexOf(e.charAt(i++))) << 6 | (s = Us.indexOf(e.charAt(i++))), r += 64 === n ? String.fromCharCode(t >> 16 & 255) : 64 === s ? String.fromCharCode(t >> 16 & 255, t >> 8 & 255) : String.fromCharCode(t >> 16 & 255, t >> 8 & 255, 255 & t);
   }
   return r;
 } : atob;
-var Ms = n(function (e, t) {
+var qs = n(function (e, t) {
     Object.defineProperty(t, "__esModule", {
       value: !0
     });
@@ -16962,13 +16968,13 @@ var Ms = n(function (e, t) {
       };
     };
   }),
-  qs = t(Ms);
-var Fs = {
+  Fs = t(qs);
+var Ks = {
   auto: "auto",
   onready: "onready",
   manual: "manual"
 };
-function Ks(e) {
+function js(e) {
   return {
     props: {
       localdata: {
@@ -17077,7 +17083,7 @@ function Ks(e) {
       };
     },
     created: function created() {
-      var _this24 = this;
+      var _this25 = this;
       this.mixinDatacomPage = {
         current: this.pageCurrent,
         size: this.pageSize,
@@ -17085,37 +17091,37 @@ function Ks(e) {
       }, this.$watch(function () {
         var e = [];
         return ["pageCurrent", "pageSize", "localdata", "collection", "action", "field", "orderby", "where", "getont", "getcount", "gettree", "groupby", "groupField", "distinct"].forEach(function (t) {
-          e.push(_this24[t]);
+          e.push(_this25[t]);
         }), e;
       }, function (e, t) {
-        if (_this24.loadtime === Fs.manual) return;
+        if (_this25.loadtime === Ks.manual) return;
         var n = !1;
         var s = [];
         for (var _r9 = 2; _r9 < e.length; _r9++) {
           e[_r9] !== t[_r9] && (s.push(e[_r9]), n = !0);
         }
-        e[0] !== t[0] && (_this24.mixinDatacomPage.current = _this24.pageCurrent), _this24.mixinDatacomPage.size = _this24.pageSize, _this24.onMixinDatacomPropsChange(n, s);
+        e[0] !== t[0] && (_this25.mixinDatacomPage.current = _this25.pageCurrent), _this25.mixinDatacomPage.size = _this25.pageSize, _this25.onMixinDatacomPropsChange(n, s);
       });
     },
     methods: {
       onMixinDatacomPropsChange: function onMixinDatacomPropsChange(e, t) {},
       mixinDatacomEasyGet: function mixinDatacomEasyGet() {
-        var _this25 = this;
+        var _this26 = this;
         var _ref54 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
           _ref54$getone = _ref54.getone,
           e = _ref54$getone === void 0 ? !1 : _ref54$getone,
           t = _ref54.success,
           n = _ref54.fail;
         this.mixinDatacomLoading || (this.mixinDatacomLoading = !0, this.mixinDatacomErrorMessage = "", this.mixinDatacomError = null, this.mixinDatacomGet().then(function (n) {
-          _this25.mixinDatacomLoading = !1;
+          _this26.mixinDatacomLoading = !1;
           var _n$result = n.result,
             s = _n$result.data,
             r = _n$result.count;
-          _this25.getcount && (_this25.mixinDatacomPage.count = r), _this25.mixinDatacomHasMore = s.length < _this25.pageSize;
+          _this26.getcount && (_this26.mixinDatacomPage.count = r), _this26.mixinDatacomHasMore = s.length < _this26.pageSize;
           var i = e ? s.length ? s[0] : void 0 : s;
-          _this25.mixinDatacomResData = i, t && t(i);
+          _this26.mixinDatacomResData = i, t && t(i);
         }).catch(function (e) {
-          _this25.mixinDatacomLoading = !1, _this25.mixinDatacomErrorMessage = e, _this25.mixinDatacomError = e, n && n(e);
+          _this26.mixinDatacomLoading = !1, _this26.mixinDatacomErrorMessage = e, _this26.mixinDatacomError = e, n && n(e);
         }));
       },
       mixinDatacomGet: function mixinDatacomGet() {
@@ -17157,7 +17163,7 @@ function Ks(e) {
     }
   };
 }
-function js(e) {
+function $s(e) {
   return function (t) {
     var n = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     n = function (e) {
@@ -17457,14 +17463,14 @@ function js(e) {
     });
   };
 }
-function $s(e) {
+function Bs(e) {
   return U(Qt.replace("{spaceId}", e.config.spaceId));
 }
-function Bs() {
-  return _Bs.apply(this, arguments);
+function Ws() {
+  return _Ws.apply(this, arguments);
 }
-function _Bs() {
-  _Bs = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee71() {
+function _Ws() {
+  _Ws = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee71() {
     var _ref70,
       e,
       _ref70$callLoginByWei,
@@ -17478,12 +17484,12 @@ function _Bs() {
         switch (_context71.prev = _context71.next) {
           case 0:
             _ref70 = _args10.length > 0 && _args10[0] !== undefined ? _args10[0] : {}, e = _ref70.openid, _ref70$callLoginByWei = _ref70.callLoginByWeixin, t = _ref70$callLoginByWei === void 0 ? !1 : _ref70$callLoginByWei;
-            n = $s(this);
-            if (!("mp-weixin" !== C)) {
+            n = Bs(this);
+            if (!("mp-weixin" !== P)) {
               _context71.next = 4;
               break;
             }
-            throw new Error("[SecureNetwork] API `initSecureNetworkByWeixin` is not supported on platform `".concat(C, "`"));
+            throw new Error("[SecureNetwork] API `initSecureNetworkByWeixin` is not supported on platform `".concat(P, "`"));
           case 4:
             if (!(e && t)) {
               _context71.next = 6;
@@ -17530,20 +17536,20 @@ function _Bs() {
       }
     }, _callee71, this);
   }));
-  return _Bs.apply(this, arguments);
-}
-function Ws(_x52) {
   return _Ws.apply(this, arguments);
 }
-function _Ws() {
-  _Ws = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee72(e) {
+function Hs(_x52) {
+  return _Hs.apply(this, arguments);
+}
+function _Hs() {
+  _Hs = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee72(e) {
     var t;
     return _regenerator.default.wrap(function _callee72$(_context72) {
       while (1) {
         switch (_context72.prev = _context72.next) {
           case 0:
-            t = $s(this);
-            return _context72.abrupt("return", (t.initPromise || (t.initPromise = Bs.call(this, e).then(function (e) {
+            t = Bs(this);
+            return _context72.abrupt("return", (t.initPromise || (t.initPromise = Ws.call(this, e).then(function (e) {
               return e;
             }).catch(function (e) {
               throw delete t.initPromise, e;
@@ -17555,57 +17561,58 @@ function _Ws() {
       }
     }, _callee72, this);
   }));
-  return _Ws.apply(this, arguments);
+  return _Hs.apply(this, arguments);
 }
-function Hs(e) {
+function Js(e) {
   return function () {
     var _ref61 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       t = _ref61.openid,
       _ref61$callLoginByWei = _ref61.callLoginByWeixin,
       n = _ref61$callLoginByWei === void 0 ? !1 : _ref61$callLoginByWei;
-    return Ws.call(e, {
+    return Hs.call(e, {
       openid: t,
       callLoginByWeixin: n
     });
   };
 }
-function Js(e) {
+function zs(e) {
   !function (e) {
     ue = e;
   }(e);
 }
-function zs(e) {
-  var t = {
-    getSystemInfo: uni.getSystemInfo,
-    getPushClientId: uni.getPushClientId
-  };
-  return function (n) {
-    return new Promise(function (s, r) {
-      t[e](_objectSpread(_objectSpread({}, n), {}, {
+function Vs(e) {
+  var t = "mp-weixin" === P && wx.canIUse("getAppBaseInfo"),
+    n = {
+      getAppBaseInfo: t ? uni.getAppBaseInfo : uni.getSystemInfo,
+      getPushClientId: uni.getPushClientId
+    };
+  return function (s) {
+    return new Promise(function (r, i) {
+      t && "getAppBaseInfo" === e ? r(n[e]()) : n[e](_objectSpread(_objectSpread({}, s), {}, {
         success: function success(e) {
-          s(e);
+          r(e);
         },
         fail: function fail(e) {
-          r(e);
+          i(e);
         }
       }));
     });
   };
 }
-var Vs = /*#__PURE__*/function (_S) {
-  (0, _inherits2.default)(Vs, _S);
-  var _super11 = _createSuper(Vs);
-  function Vs() {
-    var _this26;
-    (0, _classCallCheck2.default)(this, Vs);
-    _this26 = _super11.call(this), _this26._uniPushMessageCallback = _this26._receivePushMessage.bind((0, _assertThisInitialized2.default)(_this26)), _this26._currentMessageId = -1, _this26._payloadQueue = [];
-    return _this26;
+var Gs = /*#__PURE__*/function (_S) {
+  (0, _inherits2.default)(Gs, _S);
+  var _super11 = _createSuper(Gs);
+  function Gs() {
+    var _this27;
+    (0, _classCallCheck2.default)(this, Gs);
+    _this27 = _super11.call(this), _this27._uniPushMessageCallback = _this27._receivePushMessage.bind((0, _assertThisInitialized2.default)(_this27)), _this27._currentMessageId = -1, _this27._payloadQueue = [];
+    return _this27;
   }
-  (0, _createClass2.default)(Vs, [{
+  (0, _createClass2.default)(Gs, [{
     key: "init",
     value: function init() {
-      var _this27 = this;
-      return Promise.all([zs("getSystemInfo")(), zs("getPushClientId")()]).then(function () {
+      var _this28 = this;
+      return Promise.all([Vs("getAppBaseInfo")(), Vs("getPushClientId")()]).then(function () {
         var _ref62 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [],
           _ref63 = (0, _slicedToArray2.default)(_ref62, 2),
           _ref63$ = _ref63[0];
@@ -17616,9 +17623,9 @@ var Vs = /*#__PURE__*/function (_S) {
         var t = _ref63$2.cid;
         if (!e) throw new Error("Invalid appId, please check the manifest.json file");
         if (!t) throw new Error("Invalid push client id");
-        _this27._appId = e, _this27._pushClientId = t, _this27._seqId = Date.now() + "-" + Math.floor(9e5 * Math.random() + 1e5), _this27.emit("open"), _this27._initMessageListener();
+        _this28._appId = e, _this28._pushClientId = t, _this28._seqId = Date.now() + "-" + Math.floor(9e5 * Math.random() + 1e5), _this28.emit("open"), _this28._initMessageListener();
       }, function (e) {
-        throw _this27.emit("error", e), _this27.close(), e;
+        throw _this28.emit("error", e), _this28.close(), e;
       });
     }
   }, {
@@ -17666,10 +17673,10 @@ var Vs = /*#__PURE__*/function (_S) {
   }, {
     key: "_consumMessage",
     value: function _consumMessage() {
-      var _this28 = this;
+      var _this29 = this;
       for (;;) {
         var _e28 = this._payloadQueue.find(function (e) {
-          return e.messageId === _this28._currentMessageId + 1;
+          return e.messageId === _this29._currentMessageId + 1;
         });
         if (!_e28) break;
         this._currentMessageId++, this._parseMessagePayload(_e28);
@@ -17730,14 +17737,14 @@ var Vs = /*#__PURE__*/function (_S) {
       this._destroy(), this.emit("close");
     }
   }]);
-  return Vs;
+  return Gs;
 }(S);
-function Gs(_x53) {
-  return _Gs.apply(this, arguments);
+function Ys(_x53) {
+  return _Ys.apply(this, arguments);
 }
-function _Gs() {
-  _Gs = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee73(e) {
-    var _ae2, _e33, _t22, t, _t$debugInfo, n, s, _yield$At2, r, i, o;
+function _Ys() {
+  _Ys = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee73(e) {
+    var _ae2, _e33, _t22, t, _t$debugInfo, n, s, _yield$Ct2, r, i, o;
     return _regenerator.default.wrap(function _callee73$(_context73) {
       while (1) {
         switch (_context73.prev = _context73.next) {
@@ -17748,7 +17755,7 @@ function _Gs() {
             }
             return _context73.abrupt("return", Promise.resolve());
           case 2:
-            if ("app" === C) {
+            if ("app" === P) {
               _ae2 = ae(), _e33 = _ae2.osName, _t22 = _ae2.osVersion;
               "ios" === _e33 && function (e) {
                 if (!e || "string" != typeof e) return 0;
@@ -17767,19 +17774,19 @@ function _Gs() {
             n = _t$debugInfo.address;
             s = _t$debugInfo.servePort;
             _context73.next = 11;
-            return At(n, s);
+            return Ct(n, s);
           case 11:
-            _yield$At2 = _context73.sent;
-            r = _yield$At2.address;
+            _yield$Ct2 = _context73.sent;
+            r = _yield$Ct2.address;
             if (!r) {
               _context73.next = 15;
               break;
             }
             return _context73.abrupt("return", (t.localAddress = r, void (t.localPort = s)));
           case 15:
-            i = console["app" === C ? "error" : "warn"];
+            i = console["app" === P ? "error" : "warn"];
             o = "";
-            if (!("remote" === t.debugInfo.initialLaunchType ? (t.debugInfo.forceRemote = !0, o = "当前客户端和HBuilderX不在同一局域网下（或其他网络原因无法连接HBuilderX），uniCloud本地调试服务不对当前客户端生效。\n- 如果不使用uniCloud本地调试服务，请直接忽略此信息。\n- 如需使用uniCloud本地调试服务，请将客户端与主机连接到同一局域网下并重新运行到客户端。") : o = "无法连接uniCloud本地调试服务，请检查当前客户端是否与主机在同一局域网下。\n- 如需使用uniCloud本地调试服务，请将客户端与主机连接到同一局域网下并重新运行到客户端。", o += "\n- 如果在HBuilderX开启的状态下切换过网络环境，请重启HBuilderX后再试\n- 检查系统防火墙是否拦截了HBuilderX自带的nodejs\n- 检查是否错误的使用拦截器修改uni.request方法的参数", "web" === C && (o += "\n- 部分浏览器开启节流模式之后访问本地地址受限，请检查是否启用了节流模式"), 0 === C.indexOf("mp-") && (o += "\n- 小程序中如何使用uniCloud，请参考：https://uniapp.dcloud.net.cn/uniCloud/publish.html#useinmp"), !t.debugInfo.forceRemote)) {
+            if (!("remote" === t.debugInfo.initialLaunchType ? (t.debugInfo.forceRemote = !0, o = "当前客户端和HBuilderX不在同一局域网下（或其他网络原因无法连接HBuilderX），uniCloud本地调试服务不对当前客户端生效。\n- 如果不使用uniCloud本地调试服务，请直接忽略此信息。\n- 如需使用uniCloud本地调试服务，请将客户端与主机连接到同一局域网下并重新运行到客户端。") : o = "无法连接uniCloud本地调试服务，请检查当前客户端是否与主机在同一局域网下。\n- 如需使用uniCloud本地调试服务，请将客户端与主机连接到同一局域网下并重新运行到客户端。", o += "\n- 如果在HBuilderX开启的状态下切换过网络环境，请重启HBuilderX后再试\n- 检查系统防火墙是否拦截了HBuilderX自带的nodejs\n- 检查是否错误的使用拦截器修改uni.request方法的参数", "web" === P && (o += "\n- 部分浏览器开启节流模式之后访问本地地址受限，请检查是否启用了节流模式"), 0 === P.indexOf("mp-") && (o += "\n- 小程序中如何使用uniCloud，请参考：https://uniapp.dcloud.net.cn/uniCloud/publish.html#useinmp"), !t.debugInfo.forceRemote)) {
               _context73.next = 19;
               break;
             }
@@ -17793,10 +17800,10 @@ function _Gs() {
       }
     }, _callee73);
   }));
-  return _Gs.apply(this, arguments);
+  return _Ys.apply(this, arguments);
 }
-function Ys(e) {
-  e._initPromiseHub || (e._initPromiseHub = new I({
+function Qs(e) {
+  e._initPromiseHub || (e._initPromiseHub = new v({
     createPromise: function createPromise() {
       var t = Promise.resolve();
       var n;
@@ -17814,15 +17821,15 @@ function Ys(e) {
     }
   }));
 }
-var Qs = {
-  tcb: Pt,
-  tencent: Pt,
+var Xs = {
+  tcb: At,
+  tencent: At,
   aliyun: pe,
   private: Nt,
   dcloud: Nt,
   alipay: $t
 };
-var Xs = new ( /*#__PURE__*/function () {
+var Zs = new ( /*#__PURE__*/function () {
   function _class5() {
     (0, _classCallCheck2.default)(this, _class5);
   }
@@ -17830,23 +17837,23 @@ var Xs = new ( /*#__PURE__*/function () {
     key: "init",
     value: function init(e) {
       var t = {};
-      var n = Qs[e.provider];
+      var n = Xs[e.provider];
       if (!n) throw new Error("未提供正确的provider参数");
       t = n.init(e), b && function (e) {
         if (!b) return;
         var t = {};
-        e.__dev__ = t, t.debugLog = b && ("web" === C && navigator.userAgent.indexOf("HBuilderX") > 0 || "app" === C || "mp-harmony" === C);
-        var n = A;
+        e.__dev__ = t, t.debugLog = b && ("web" === P && navigator.userAgent.indexOf("HBuilderX") > 0 || "app" === P || "mp-harmony" === P);
+        var n = C;
         n && !n.code && (t.debugInfo = n);
-        var s = new I({
+        var s = new v({
           createPromise: function createPromise() {
-            return Gs(e);
+            return Ys(e);
           }
         });
         t.initLocalNetwork = function () {
           return s.exec();
         };
-      }(t), Ys(t), Vn(t), function (e) {
+      }(t), Qs(t), Vn(t), function (e) {
         var t = e.uploadFile;
         e.uploadFile = function (e) {
           return t.call(this, e);
@@ -17869,11 +17876,11 @@ var Xs = new ( /*#__PURE__*/function () {
           return this._databaseForJQL = n, n;
         };
       }(t), function (e) {
-        e.getCurrentUserInfo = Ds, e.chooseAndUploadFile = qs.initChooseAndUploadFile(e), Object.assign(e, {
+        e.getCurrentUserInfo = Ms, e.chooseAndUploadFile = Fs.initChooseAndUploadFile(e), Object.assign(e, {
           get mixinDatacom() {
-            return Ks(e);
+            return js(e);
           }
-        }), e.SSEChannel = Vs, e.initSecureNetworkByWeixin = Hs(e), e.setCustomClientInfo = Js, e.importObject = js(e);
+        }), e.SSEChannel = Gs, e.initSecureNetworkByWeixin = Js(e), e.setCustomClientInfo = zs, e.importObject = $s(e);
       }(t);
       return ["callFunction", "uploadFile", "deleteFile", "getTempFileURL", "downloadFile", "chooseAndUploadFile"].forEach(function (e) {
         if (!t[e]) return;
@@ -17882,7 +17889,7 @@ var Xs = new ( /*#__PURE__*/function () {
           return n.apply(t, Array.from(arguments));
         }, t[e] = function (e, t) {
           return function (n) {
-            var _this29 = this;
+            var _this30 = this;
             var s = !1;
             if ("callFunction" === t) {
               var _e29 = n && n.type || l.DEFAULT;
@@ -17898,7 +17905,7 @@ var Xs = new ( /*#__PURE__*/function () {
               u = i.then(function () {
                 return s ? Promise.resolve() : j($(t, "invoke"), n);
               }).then(function () {
-                return e.call(_this29, n);
+                return e.call(_this30, n);
               }).then(function (e) {
                 return s ? Promise.resolve(e) : j($(t, "success"), e).then(function () {
                   return j($(t, "complete"), e);
@@ -17937,33 +17944,35 @@ var Xs = new ( /*#__PURE__*/function () {
   }]);
   return _class5;
 }())();
-exports.uniCloud = Xs;
+exports.uniCloud = Zs;
 (function () {
   var e = O;
   var t = {};
-  if (e && 1 === e.length) t = e[0], exports.uniCloud = Xs = Xs.init(t), Xs._isDefault = !0;else {
-    var _t21 = ["auth", "callFunction", "uploadFile", "deleteFile", "getTempFileURL", "downloadFile", "database", "getCurrentUSerInfo", "importObject"];
-    var _n20;
-    _n20 = e && e.length > 0 ? "应用有多个服务空间，请通过uniCloud.init方法指定要使用的服务空间" : x ? "应用未关联服务空间，请在uniCloud目录右键关联服务空间" : "uni-app cli项目内使用uniCloud需要使用HBuilderX的运行菜单运行项目，且需要在uniCloud目录关联服务空间", _t21.forEach(function (e) {
-      Xs[e] = function () {
-        return console.error(_n20), Promise.reject(new te({
+  if (e && 1 === e.length) t = e[0], exports.uniCloud = Zs = Zs.init(t), Zs._isDefault = !0;else {
+    var _t21 = ["auth", "callFunction", "uploadFile", "deleteFile", "getTempFileURL", "downloadFile"],
+      _n20 = ["database", "getCurrentUserInfo", "importObject"];
+    var _s19;
+    _s19 = e && e.length > 0 ? "应用有多个服务空间，请通过uniCloud.init方法指定要使用的服务空间" : x ? "应用未关联服务空间，请在uniCloud目录右键关联服务空间" : "uni-app cli项目内使用uniCloud需要使用HBuilderX的运行菜单运行项目，且需要在uniCloud目录关联服务空间", [].concat(_t21, _n20).forEach(function (e) {
+      Zs[e] = function () {
+        if (console.error(_s19), -1 === _n20.indexOf(e)) return Promise.reject(new te({
           code: "SYS_ERR",
-          message: _n20
+          message: _s19
         }));
+        console.error(_s19);
       };
     });
   }
-  if (Object.assign(Xs, {
+  if (Object.assign(Zs, {
     get mixinDatacom() {
-      return Ks(Xs);
+      return js(Zs);
     }
-  }), Ns(Xs), Xs.addInterceptor = F, Xs.removeInterceptor = K, Xs.interceptObject = B, b && "web" === C && (window.uniCloud = Xs), "app" === C && (uni.__uniCloud = Xs), "app" === C || "web" === C) {
+  }), Rs(Zs), Zs.addInterceptor = F, Zs.removeInterceptor = K, Zs.interceptObject = B, b && "web" === P && (window.uniCloud = Zs), "app" === P && (uni.__uniCloud = Zs), "app" === P || "web" === P) {
     var _e30 = D();
-    _e30.uniCloud = Xs, _e30.UniCloudError = te;
+    _e30.uniCloud = Zs, _e30.UniCloudError = te;
   }
 })();
-var Zs = Xs;
-exports.default = Zs;
+var er = Zs;
+exports.default = er;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../webpack/buildin/global.js */ 3), __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
 
 /***/ }),
@@ -18521,6 +18530,12 @@ var _default = {
     "style": {
       "navigationBarTitleText": "更多",
       "usingComponents": {}
+    }
+  }, {
+    "path": "pages/web-view/web-view",
+    "style": {
+      "usingComponents": {},
+      "navigationBarTitleText": "医院官网"
     }
   }, {
     "path": "pages/service/service",

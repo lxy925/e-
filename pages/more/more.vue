@@ -93,7 +93,7 @@
 		    <view class="hospital-card" v-for="hospital in filteredHospitals" :key="hospital._id"
 		      @tap="handleHospitalTap(hospital)">
 		      <!-- 修改图片部分，添加默认图片 -->
-		      <image src="/static/images/hospital1.jpg" mode="aspectFill"></image>
+		      <image src="/static/images/hospital.png" mode="aspectFill"></image>
 		      <view class="hospital-info">
 		        <text class="hospital-name">{{hospital.name}}</text>
 		        <view class="type-level-container">

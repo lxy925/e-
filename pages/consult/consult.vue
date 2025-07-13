@@ -364,18 +364,7 @@ export default {
 
       this.userId = currentUserInfo.user_id;
       this.userType = currentUserInfo.type;
-      this.userUserId = currentUserInfo.user_id;
-
-      if (!this.userUserId) {
-        // 兜底查库
-        let collection = this.userType === '普通用户'
-          ? db.collection('users')
-          : db.collection('escorts');
-        const { result } = await collection.doc(this.userId).get();
-        if (result.data && result.data.length > 0) {
-          this.userUserId = result.data[0].user_id;
-        }
-      }
+      //this.userUserId = currentUserInfo.user_id;
       
       console.log('初始化用户信息：', {
         userId: this.userId,
@@ -534,7 +523,7 @@ export default {
             action: 'startMessageListener',
             data: {
               userId: this.userId,
-              chatPartnerId: this.chatPartner._id,
+              chatPartnerId: this.chatPartner.user_id,
               sender_type: this.userType
             }
           }
@@ -547,10 +536,10 @@ export default {
               const { result } = await uniCloud.callFunction({
                 name: 'chatMessage',
                 data: {
-                  action: 'getLatestMessages',
+                  action: 'startMessageListener',
                   data: {
                     userId: this.userId,
-                    chatPartnerId: this.chatPartner._id,
+                    chatPartnerId: this.chatPartner.user_id,
                     lastMessageTime: this.messageList.length > 0 ? this.messageList[this.messageList.length - 1].time : '0',
                     sender_type: this.userType
                   }
@@ -574,7 +563,7 @@ export default {
             } catch (e) {
               console.error('获取新消息失败:', e);
             }
-          }, 30000000); // 每3秒检查一次新消息
+          }, 3000); // 每3秒检查一次新消息
         } else {
           throw new Error(result.msg || '启动消息监听失败');
         }
@@ -831,7 +820,8 @@ export default {
     
     // 判断是否是自己的消息
     isSelfMessage(message) {
-      return message.user_id === this.userUserId;
+			return message.sender_type === this.userType;
+      
     },
     
     // 获取自己的头像
@@ -879,66 +869,51 @@ export default {
           sizeType: ['compressed'],
           sourceType: ['album', 'camera']
         });
-        
         if (err) {
           throw new Error('选择图片失败');
         }
-        
         if (!res || !res.tempFilePaths || res.tempFilePaths.length === 0) {
           throw new Error('未选择图片');
         }
-        
         const tempFilePath = res.tempFilePaths[0];
-        const currentTime = Date.now().toString();
-        
-        // 显示发送中的消息
-        const tempMessage = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
-          content: tempFilePath,
-          message_type: 'image',
-          time: currentTime,
-          status: 'sending',
-          sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
-        };
-        
-        this.messageList.push(tempMessage);
-        this.scrollToBottom();
-        
         // 上传图片到云存储
         const uploadRes = await uniCloud.uploadFile({
           filePath: tempFilePath,
           cloudPath: `chat/images/${Date.now()}_${Math.random().toString(36).slice(-6)}.${tempFilePath.split('.').pop()}`
         });
-        
         if (!uploadRes || !uploadRes.fileID) {
           throw new Error('上传图片失败：未获取到文件ID');
         }
-        
-        // 发送消息到数据库
+        // 通过云函数发送消息
         const message = {
-          ...tempMessage,
           content: uploadRes.fileID,
-          status: 'sent'
+          message_type: 'image',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
-        const { result } = await messageCollection.add(message);
-        if (result.id) {
-          // 更新本地消息状态
-          const index = this.messageList.findIndex(msg => 
-            msg.status === 'sending' && msg.time === currentTime
-          );
-          if (index !== -1) {
-            this.messageList[index] = {
-              ...message,
-              _id: result.id
-            };
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'sendMessage',
+            data: message
           }
+        });
+        if (result.code === 200) {
+          // 可选：立即插入本地消息列表
+          this.messageList.push({
+            ...message,
+            user_id: this.userId,
+            escort_id: this.chatPartner.user_id,
+            time: Date.now().toString(),
+            status: 'sent',
+            _id: result.data.id
+          });
+          this.scrollToBottom();
         } else {
-          throw new Error('保存消息失败');
+          throw new Error(result.msg || '发送图片失败');
         }
-        
         this.showMediaOptions = false;
       } catch (e) {
         console.error('发送图片失败:', e);
@@ -946,15 +921,8 @@ export default {
           title: e.message || '发送图片失败',
           icon: 'none'
         });
-        
-        // 移除发送失败的消息
-        const index = this.messageList.findIndex(msg => msg.status === 'sending');
-        if (index !== -1) {
-          this.messageList.splice(index, 1);
-        }
       }
     },
-    
     // 选择视频
     async chooseVideo() {
       try {
@@ -963,69 +931,51 @@ export default {
           maxDuration: 60,
           camera: 'back'
         });
-        
         if (err) {
           throw new Error('选择视频失败');
         }
-        
         if (!res || !res.tempFilePath) {
           throw new Error('未选择视频');
         }
-        
         const tempFilePath = res.tempFilePath;
-        const currentTime = Date.now().toString();
-        
-        // 显示发送中的消息
-        const tempMessage = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
-          content: tempFilePath,
-          message_type: 'video',
-          time: currentTime,
-          status: 'sending',
-          sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
-        };
-        
-        this.messageList.push(tempMessage);
-        this.scrollToBottom();
-        
-        // 获取文件扩展名
         const fileExt = tempFilePath.substring(tempFilePath.lastIndexOf('.') + 1);
-        
         // 上传视频到云存储
         const uploadRes = await uniCloud.uploadFile({
           filePath: tempFilePath,
           cloudPath: `chat/videos/${Date.now()}_${Math.random().toString(36).slice(-6)}.${fileExt}`
         });
-        
         if (!uploadRes || !uploadRes.fileID) {
           throw new Error('上传视频失败：未获取到文件ID');
         }
-        
-        // 发送消息到数据库
+        // 通过云函数发送消息
         const message = {
-          ...tempMessage,
           content: uploadRes.fileID,
-          status: 'sent'
+          message_type: 'video',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
-        const { result } = await messageCollection.add(message);
-        if (result.id) {
-          // 更新本地消息状态
-          const index = this.messageList.findIndex(msg => 
-            msg.status === 'sending' && msg.time === currentTime
-          );
-          if (index !== -1) {
-            this.messageList[index] = {
-              ...message,
-              _id: result.id
-            };
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'sendMessage',
+            data: message
           }
+        });
+        if (result.code === 200) {
+          this.messageList.push({
+            ...message,
+            user_id: this.userId,
+            escort_id: this.chatPartner.user_id,
+            time: Date.now().toString(),
+            status: 'sent',
+            _id: result.data.id
+          });
+          this.scrollToBottom();
         } else {
-          throw new Error('保存消息失败');
+          throw new Error(result.msg || '发送视频失败');
         }
-        
         this.showMediaOptions = false;
       } catch (e) {
         console.error('发送视频失败:', e);
@@ -1033,92 +983,64 @@ export default {
           title: e.message || '发送视频失败',
           icon: 'none'
         });
-        
-        // 移除发送失败的消息
-        const index = this.messageList.findIndex(msg => msg.status === 'sending');
-        if (index !== -1) {
-          this.messageList.splice(index, 1);
-        }
       }
     },
-    
     // 选择文件
     async chooseFile() {
       try {
-        // 使用 uni.chooseMessageFile 替代 uni.chooseFile
         const [err, res] = await uni.chooseMessageFile({
           count: 1,
           type: 'all',
           extension: ['.doc', '.docx', '.pdf', '.xls', '.xlsx', '.ppt', '.pptx', '.txt']
         });
-        
         if (err) {
           throw new Error('选择文件失败');
         }
-        
         if (!res || !res.tempFiles || res.tempFiles.length === 0) {
           throw new Error('未选择文件');
         }
-        
         const file = res.tempFiles[0];
-        const currentTime = Date.now().toString();
-        
-        // 显示发送中的消息
-        const tempMessage = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
-          content: JSON.stringify({
-            name: file.name,
-            size: file.size,
-            path: file.path
-          }),
-          message_type: 'file',
-          time: currentTime,
-          status: 'sending',
-          sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
-        };
-        
-        this.messageList.push(tempMessage);
-        this.scrollToBottom();
-        
         // 上传文件到云存储
         const uploadRes = await uniCloud.uploadFile({
           filePath: file.path,
           cloudPath: `chat/files/${Date.now()}_${file.name}`
         });
-        
         if (!uploadRes || !uploadRes.fileID) {
           throw new Error('上传文件失败：未获取到文件ID');
         }
-        
-        // 发送消息到数据库
+        // 通过云函数发送消息
         const message = {
-          ...tempMessage,
           content: JSON.stringify({
             name: file.name,
             size: file.size,
             fileID: uploadRes.fileID
           }),
-          status: 'sent'
+          message_type: 'file',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
-        const { result } = await messageCollection.add(message);
-        if (result.id) {
-          // 更新本地消息状态
-          const index = this.messageList.findIndex(msg => 
-            msg.status === 'sending' && msg.time === currentTime
-          );
-          if (index !== -1) {
-            this.messageList[index] = {
-              ...message,
-              _id: result.id
-            };
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'sendMessage',
+            data: message
           }
+        });
+        if (result.code === 200) {
+          this.messageList.push({
+            ...message,
+            user_id: this.userId,
+            escort_id: this.chatPartner.user_id,
+            time: Date.now().toString(),
+            status: 'sent',
+            _id: result.data.id
+          });
+          this.scrollToBottom();
         } else {
-          throw new Error('保存消息失败');
+          throw new Error(result.msg || '发送文件失败');
         }
-        
         this.showMediaOptions = false;
       } catch (e) {
         console.error('发送文件失败:', e);
@@ -1126,56 +1048,8 @@ export default {
           title: e.message || '发送文件失败',
           icon: 'none'
         });
-        
-        // 移除发送失败的消息
-        const index = this.messageList.findIndex(msg => msg.status === 'sending');
-        if (index !== -1) {
-          this.messageList.splice(index, 1);
-        }
       }
     },
-    
-    // 获取当前位置
-    async getLocation() {
-      try {
-        const [err, res] = await uni.chooseLocation({
-          latitude: 23.12463,  // 默认纬度
-          longitude: 113.36199, // 默认经度
-        });
-        
-        if (err) {
-          throw new Error('获取位置失败');
-        }
-        
-        console.log('获取到的位置信息:', res);
-        
-        // 直接使用微信返回的位置信息
-        this.currentLocation = {
-          latitude: parseFloat(res.latitude),
-          longitude: parseFloat(res.longitude),
-          address: res.address,
-          name: res.name
-        };
-        
-        // 保存位置信息到本地存储
-        if (res.province) {
-          uni.setStorageSync('provinceName', res.province);
-        }
-        if (res.city) {
-          uni.setStorageSync('cityName', res.city);
-        }
-        if (res.district) {
-          uni.setStorageSync('areaName', res.district);
-        }
-      } catch (e) {
-        console.error('获取位置失败:', e);
-        uni.showToast({
-          title: e.message || '获取位置失败',
-          icon: 'none'
-        });
-      }
-    },
-    
     // 选择位置（用于发送位置消息）
     async chooseLocation() {
       try {
@@ -1183,21 +1057,14 @@ export default {
           latitude: 23.12463,  // 默认纬度
           longitude: 113.36199, // 默认经度
         });
-        
         if (err) {
           throw new Error('选择位置失败');
         }
-        
         if (!res) {
           throw new Error('未选择位置');
         }
-        
-        const currentTime = Date.now().toString();
-        
-        // 显示发送中的消息
-        const tempMessage = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
+        // 通过云函数发送消息
+        const message = {
           content: JSON.stringify({
             latitude: res.latitude,
             longitude: res.longitude,
@@ -1205,34 +1072,31 @@ export default {
             name: res.name
           }),
           message_type: 'location',
-          time: currentTime,
-          status: 'sending',
           sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
-        this.messageList.push(tempMessage);
-        this.scrollToBottom();
-        
-        // 发送到数据库
-        const { result } = await messageCollection.add(tempMessage);
-        
-        if (result.id) {
-          // 更新本地消息状态
-          const index = this.messageList.findIndex(msg => 
-            msg.status === 'sending' && msg.time === currentTime
-          );
-          if (index !== -1) {
-            this.messageList[index] = {
-              ...tempMessage,
-              _id: result.id,
-              status: 'sent'
-            };
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'sendMessage',
+            data: message
           }
+        });
+        if (result.code === 200) {
+          this.messageList.push({
+            ...message,
+            user_id: this.userId,
+            escort_id: this.chatPartner.user_id,
+            time: Date.now().toString(),
+            status: 'sent',
+            _id: result.data.id
+          });
+          this.scrollToBottom();
         } else {
-          throw new Error('保存位置信息失败');
+          throw new Error(result.msg || '发送位置失败');
         }
-        
         this.showMediaOptions = false;
       } catch (e) {
         console.error('发送位置失败:', e);
@@ -1240,12 +1104,6 @@ export default {
           title: e.message || '发送位置失败',
           icon: 'none'
         });
-        
-        // 移除发送失败的消息
-        const index = this.messageList.findIndex(msg => msg.status === 'sending');
-        if (index !== -1) {
-          this.messageList.splice(index, 1);
-        }
       }
     },
     
@@ -1929,6 +1787,8 @@ export default {
 }
 
 .footer {
+	position: fixed;
+	bottom: 0;
   background-color: #fff;
   border-top: 1rpx solid #eee;
   width: 100%;

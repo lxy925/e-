@@ -1,10 +1,9 @@
 'use strict';
-const jwt = require('./jwt.js');
 
 exports.main = async (event, context) => {
     const db = uniCloud.database();
     const {
-		
+		user_id,
         name,
         age,
         gender,
@@ -19,12 +18,9 @@ exports.main = async (event, context) => {
         parentId
     } = event;
 
-    // 获取用户ID
-    let user_id = jwt.verifyToken(event.user_id).userId;
-    let result;
-    let moreResult;
-
     try {
+		let result;
+		let moreResult;
         // 1. 首先检查陪诊师是否已存在
         const escortRecord = await db.collection('escorts')
             .where({ user_id: user_id })
@@ -63,7 +59,6 @@ exports.main = async (event, context) => {
                 create_time: Date.now(),
                 update_time: Date.now()
             });
-
             // 如果是新记录，还需要初始化关系和账户
             await uniCloud.callFunction({
                 name: 'escort_relation',
@@ -72,15 +67,18 @@ exports.main = async (event, context) => {
                     subordinateId: user_id
                 }
             });
-
-            await db.collection('escort_account').add({
+const row=await db.collection('escort_account').add({
                 user_id,
                 balance: 0,
                 withdrawable_amount: 0,
                 pending_amount: 0,
                 create_time: Date.now(),
                 update_time: Date.now()
+				
             });
+				console.log("打印账户添加错误",row)
+			
+            
         }
 
         // 处理附加信息（同样采用存在则更新，不存在则添加的逻辑）

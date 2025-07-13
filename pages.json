@@ -35,6 +35,13 @@
 			}
 		},
 		{
+			"path": "pages/web-view/web-view",
+			"style": {
+				"usingComponents": {},
+				"navigationBarTitleText": "医院官网"
+			}
+		},
+		{
 			"path": "pages/service/service",
 			"style": {
 				"usingComponents": {},

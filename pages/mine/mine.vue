@@ -47,12 +47,11 @@
 								<text class="account-label">可提取金额</text>
 							</view>
 							<view class="account-item">
-								<text
-									class="account-value">{{(userInfo.accountInfo.pending_amount / 100).toFixed(2)}}</text>
+								<text class="account-value">{{(accountData.pendingAmount).toFixed(2)}}</text>
 								<text class="account-label">待结算金额</text>
 							</view>
 							<view class="account-item">
-								<text class="account-value">{{(userInfo.accountInfo.balance / 100).toFixed(2)}}</text>
+								<text class="account-value">{{(accountData.settledAmount).toFixed(2)}}</text>
 								<text class="account-label">累计已结算金额</text>
 							</view>
 						</view>
@@ -113,43 +112,48 @@
 
 				<view class="order-box">
 					<text class="order-title">订单管理</text>
+
+					<!-- 陪诊师视图 -->
 					<view class="order-item" v-if="userInfo.type == '陪诊师'">
-						<view class="box" style="margin-left: 0">
-							<image src="../../static/images/mine/willdo.png" alt=""></image>
-							<text class="box-title">待完成</text>
+						<view class="box" style="margin-left: 0" @click="goToOrderManage('pending')">
+							<image src="../../static/images/mine/ordering.png"></image>
+							<text class="box-title">待接单</text>
 						</view>
-						<view class="box">
-							<image src="../../static/images/mine/ordering.png" alt=""></image>
-							<text class="box-title">进行中</text>
+						<view class="box" @click="goToOrderManage('processing')">
+							<image src="../../static/images/mine/willdo.png"></image>
+							<text class="box-title">服务中</text>
 						</view>
-						<view class="box">
-							<image src="../../static/images/mine/finish.png" alt=""></image>
+						<view class="box" @click="goToOrderManage('completed')">
+							<image src="../../static/images/mine/finish.png"></image>
 							<text class="box-title">已完成</text>
 						</view>
-						<view class="box">
-							<image src="../../static/images/mine/cancel.png" alt=""></image>
+						<view class="box" @click="goToOrderManage('cancelled')">
+							<image src="../../static/images/mine/cancel.png"></image>
 							<text class="box-title">已取消</text>
 						</view>
 					</view>
+
+					<!-- 普通用户视图 -->
 					<view class="order-item" v-else>
-						<view class="box" style="margin-left: 0">
-							<image src="../../static/images/mine/pay.png" alt=""></image>
+						<view class="box" style="margin-left: 0" @click="goToOrderManage('paying')">
+							<image src="../../static/images/mine/willdo.png"></image>
 							<text class="box-title">待付款</text>
 						</view>
-						<view class="box">
-							<image src="../../static/images/mine/ordering.png" alt=""></image>
-							<text class="box-title">进行中</text>
+						<view class="box" @click="goToOrderManage('pending')">
+							<image src="../../static/images/mine/ordering.png"></image>
+							<text class="box-title">待服务</text>
 						</view>
-						<view class="box">
-							<image src="../../static/images/mine/finish.png" alt=""></image>
+						<view class="box" @click="goToOrderManage('completed')">
+							<image src="../../static/images/mine/finish.png"></image>
 							<text class="box-title">已完成</text>
 						</view>
-						<view class="box">
-							<image src="../../static/images/mine/cancel.png" alt=""></image>
+						<view class="box" @click="goToOrderManage('cancelled')">
+							<image src="../../static/images/mine/cancel.png"></image>
 							<text class="box-title">已取消</text>
 						</view>
 					</view>
 				</view>
+
 				<view class="order-box">
 					<text class="order-title">
 						我的工具</text>
@@ -216,6 +220,10 @@
 	export default {
 		data() {
 			return {
+				accountData: {
+					pendingAmount: 0,
+					settledAmount: 0
+				},
 				navHeight: 0, // 添加导航栏高度存储
 				pageTitle: '个人中心',
 				scrollTop: 0,
@@ -250,7 +258,7 @@
 			if (this.userInfo != '' && this.userInfo.type == "陪诊师") {
 				this.selectTime('today');
 			}
-
+			this.getAccountData();
 		},
 		onShow() {
 			this.initUserInfo();
@@ -259,6 +267,117 @@
 			}
 		},
 		methods: {
+
+			async getAccountData() {
+				try {
+					const userId = uni.getStorageSync('userId'); // 假设用户ID存储在storage中
+					const currentDate = new Date();
+					const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+					const res = await uniCloud.callFunction({
+						name: 'getEscortAccountData',
+						data: {
+							userId: this.userInfo.user_id,
+							startTime: firstDayOfMonth.toISOString(),
+							endTime: currentDate.toISOString()
+						}
+					});
+					if (res.result.code === 200) {
+						this.accountData = res.result.data;
+					} else {
+						console.error('获取账户数据失败:', res.result.msg);
+					}
+				} catch (error) {
+					console.error('调用云函数失败:', error);
+				}
+			},
+			async fetchAccountData(timeRange = 'today') {
+				try {
+					uni.showLoading({
+						title: '加载中'
+					});
+
+					// 1. 获取时间范围
+					const {
+						startTime,
+						endTime
+					} = this.getTimeRange(timeRange);
+
+					// 2. 调用云函数获取数据
+					const {
+						result
+					} = await uniCloud.callFunction({
+						name: 'getEscortAccountData',
+						data: {
+							userId: this.userInfo.user_id,
+							startTime,
+							endTime
+						}
+					});
+
+					if (result.code === 200) {
+						// 3. 更新数据
+						this.orderCount = result.data.orderCount;
+						this.salesAmount = (result.data.salesAmount).toFixed(2);
+						this.pendingAmount = (result.data.pendingAmount).toFixed(2);
+						this.settledAmount = (result.data.settledAmount).toFixed(2);
+
+					} else {
+						uni.showToast({
+							title: result.msg || '获取数据失败',
+							icon: 'none'
+						});
+					}
+				} catch (e) {
+					console.error('获取账户数据失败:', e);
+					uni.showToast({
+						title: '获取数据失败',
+						icon: 'none'
+					});
+				} finally {
+					uni.hideLoading();
+				}
+			},
+
+			getTimeRange(timeRange) {
+				const now = new Date();
+				let startTime, endTime = now.toISOString();
+
+				switch (timeRange) {
+					case 'today':
+						startTime = new Date(now.setHours(0, 0, 0, 0)).toISOString();
+						break;
+					case 'week':
+						const day = now.getDay();
+						const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+						startTime = new Date(now.setDate(diff)).toISOString();
+						break;
+					case 'month':
+						startTime = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+						break;
+					case 'year':
+						startTime = new Date(now.getFullYear(), 0, 1).toISOString();
+						break;
+					default:
+						startTime = new Date(now.setHours(0, 0, 0, 0)).toISOString();
+				}
+
+				return {
+					startTime,
+					endTime
+				};
+			},
+
+
+			//点击订单管理任意按钮跳转到order_manage页面
+			goToOrderManage(status) {
+				const userInfo = uni.getStorageSync('userInfo') || {};
+				const role = userInfo.type === '陪诊师' ? 'doctor' : 'user';
+
+				uni.navigateTo({
+					url: `/pages/order_manage/order_manage?status=${status}&role=${role}`
+				});
+			},
 			//监视页面滚动情况
 			handleScroll(e) {
 				if (this.scrollTimer) clearTimeout(this.scrollTimer)
@@ -273,6 +392,7 @@
 			},
 			selectTime(time) {
 				this.selectedTime = time; // 更新选择的时间选项
+				this.fetchAccountData(time);
 				if (time === "today") {
 					this.pendingAmount = this.userInfo.withdrawStats.dayAmount;
 				} else if (time === "month") {

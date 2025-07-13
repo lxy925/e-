@@ -421,252 +421,7 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 新增退款金额样式 */
-.refund-value.data-v-23b7b074 {
-	color: #ff6a00;
-	font-weight: 600;
-}
-/* 新增查看退款按钮样式 */
-.btn-refund-detail.data-v-23b7b074 {
-	color: #ff6a00;
-	border-color: #ff9c6e;
-	background: linear-gradient(to right, #fff7e6, #fff2e8);
-	margin-left: 10px;
-}
-/* 调整按钮间距 */
-.card-footer.data-v-23b7b074 {
-	display: flex;
-	justify-content: flex-end;
-	padding: 12px 15px;
-	border-top: 1px solid #f5f5f5;
-	flex-wrap: wrap;
-	gap: 10px;
-}
-.action-btn.data-v-23b7b074 {
-	height: 32px;
-	min-width: 90px;
-	border-radius: 16px;
-	font-size: 13px;
-	font-weight: 500;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border: 1px solid #ddd;
-	background: white;
-	padding: 0 15px;
-	margin: 0;
-}
-@media (max-width: 350px) {
-.action-btn.data-v-23b7b074 {
-		min-width: 80px;
-		font-size: 12px;
-		padding: 0 8px;
-}
-}
+/* 完全保持您原有的样式定义 */
 .page.data-v-23b7b074 {
 	display: flex;
 	flex-direction: column;
@@ -691,7 +446,6 @@
 }
 .fixed-header.data-v-23b7b074 {
 	margin-top: 90rpx;
-	/* 恢复原来的上边距 */
 	width: 100%;
 	position: fixed;
 	top: 44px;
@@ -729,34 +483,6 @@
 	width: 18px;
 	height: 18px;
 }
-.filter-container.data-v-23b7b074 {
-	display: flex;
-	align-items: center;
-	position: relative;
-}
-.filter-icon.data-v-23b7b074 {
-	width: 20px;
-	height: 20px;
-	margin-right: 5px;
-}
-.filter-text.data-v-23b7b074 {
-	font-size: 14px;
-	color: #383838;
-}
-.notification.data-v-23b7b074 {
-	background-color: #d64444;
-	color: #fff;
-	border-radius: 50%;
-	width: 20px;
-	height: 20px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: absolute;
-	top: -8px;
-	right: -8px;
-	font-size: 12px;
-}
 .tabs.data-v-23b7b074 {
 	width: 100%;
 	display: flex;
@@ -785,9 +511,8 @@
 	border-radius: 1px;
 }
 .content.data-v-23b7b074 {
-	margin-top: 400rpx;
-	/* 恢复原来的上边距 */
-
+	overflow-y: auto;
+	margin-top: 340rpx;
 	width: 100%;
 	padding: 10px;
 	box-sizing: border-box;
@@ -822,7 +547,7 @@
 .status-completed.data-v-23b7b074 {
 	color: #09be4f;
 }
-.status-canceled.data-v-23b7b074 {
+.status-cancelled.data-v-23b7b074 {
 	color: #999;
 }
 .card-body.data-v-23b7b074 {
@@ -896,7 +621,6 @@
 .action-btn.data-v-23b7b074 {
 	height: 32px;
 	min-width: 90px;
-	margin-left: 10px;
 	border-radius: 16px;
 	font-size: 13px;
 	font-weight: 500;
@@ -906,19 +630,29 @@
 	border: 1px solid #ddd;
 	background: white;
 	padding: 0 15px;
+	margin-left: 80rpx;
 }
 .btn-refund.data-v-23b7b074 {
 	color: #ff6a00;
 	border-color: #ff9c6e;
 	background: linear-gradient(to right, #fff7e6, #fff2e8);
-	position: relative;
-	/* 确保按钮在层级最上方 */
-	z-index: 999;
 }
 .btn-detail.data-v-23b7b074 {
 	color: #568eff;
 	border-color: #85a5ff;
 	background: linear-gradient(to right, #f0f7ff, #e6f4ff);
+}
+.btn-complete.data-v-23b7b074 {
+	/* 文字色：选用深绿色，传递“成功/完成”的明确语义，避免过于鲜艳的绿色导致视觉疲劳 */
+	color: #0a9b44;
+	/* 边框色：比文字色浅一度，与背景渐变自然过渡 */
+	border-color: #5cdb87;
+	/* 背景渐变：从浅绿到更浅的绿，营造清爽感，与“完成”状态匹配 */
+	background: linear-gradient(to right, #f0fff4, #e6ffef);
+}
+.btn-delete.data-v-23b7b074 {
+	color: #ff4d4f;
+	border-color: #ff7875;
 }
 .empty-state.data-v-23b7b074 {
 	display: flex;
@@ -930,9 +664,9 @@
 	height: 100%;
 }
 .empty-image.data-v-23b7b074 {
-
-	margin-bottom: 120rpx;
-	width: 100%;
+	width: 200px;
+	height: 200px;
+	margin-bottom: 15px;
 	opacity: 0.6;
 }
 .empty-text.data-v-23b7b074 {
@@ -946,138 +680,6 @@
 	padding: 15px;
 	color: #999;
 	font-size: 14px;
-}
-/* 自定义弹窗样式 */
-.custom-popup-mask.data-v-23b7b074 {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.5);
-	z-index: 999;
-	display: flex;
-	justify-content: center;
-	align-items: flex-end;
-}
-.custom-popup-container.data-v-23b7b074 {
-	width: 100%;
-	max-height: 70vh;
-	background-color: #fff;
-	border-radius: 16px 16px 0 0;
-	overflow: hidden;
-	-webkit-animation: popup-show-data-v-23b7b074 0.3s ease;
-	        animation: popup-show-data-v-23b7b074 0.3s ease;
-}
-@-webkit-keyframes popup-show-data-v-23b7b074 {
-from {
-		-webkit-transform: translateY(100%);
-		        transform: translateY(100%);
-}
-to {
-		-webkit-transform: translateY(0);
-		        transform: translateY(0);
-}
-}
-@keyframes popup-show-data-v-23b7b074 {
-from {
-		-webkit-transform: translateY(100%);
-		        transform: translateY(100%);
-}
-to {
-		-webkit-transform: translateY(0);
-		        transform: translateY(0);
-}
-}
-.custom-popup-header.data-v-23b7b074 {
-	padding: 15px 20px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	border-bottom: 1px solid #f5f5f5;
-}
-.custom-popup-title.data-v-23b7b074 {
-	font-size: 18px;
-	font-weight: bold;
-	color: #333;
-}
-.custom-popup-close.data-v-23b7b074 {
-	font-size: 24px;
-	color: #999;
-	padding: 5px;
-}
-.custom-popup-body.data-v-23b7b074 {
-	padding: 20px;
-	max-height: 50vh;
-	overflow-y: auto;
-}
-.filter-section.data-v-23b7b074 {
-	margin-bottom: 20px;
-}
-.section-title.data-v-23b7b074 {
-	display: block;
-	font-size: 16px;
-	font-weight: 500;
-	margin-bottom: 12px;
-	color: #333;
-}
-.filter-tags.data-v-23b7b074 {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-}
-.filter-tag.data-v-23b7b074 {
-	padding: 6px 15px;
-	border-radius: 15px;
-	background: #f5f5f5;
-	color: #666;
-	font-size: 14px;
-}
-.filter-tag.active.data-v-23b7b074 {
-	background: #e6f4ff;
-	color: #568eff;
-	border: 1px solid #568eff;
-}
-.time-range.data-v-23b7b074 {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-.time-picker.data-v-23b7b074 {
-	flex: 1;
-	padding: 8px 12px;
-	border: 1px solid #eee;
-	border-radius: 4px;
-	text-align: center;
-}
-.time-separator.data-v-23b7b074 {
-	color: #999;
-}
-.custom-popup-footer.data-v-23b7b074 {
-	display: flex;
-	padding: 15px 20px;
-	border-top: 1px solid #f5f5f5;
-}
-.custom-reset-btn.data-v-23b7b074 {
-	flex: 1;
-	height: 44px;
-	line-height: 44px;
-	background-color: #f5f5f5;
-	color: #333;
-	border-radius: 22px;
-	margin-right: 15px;
-	font-size: 16px;
-	border: none;
-}
-.custom-confirm-btn.data-v-23b7b074 {
-	flex: 1;
-	height: 44px;
-	line-height: 44px;
-	background: linear-gradient(135deg, #568eff, #3a6cd9);
-	color: white;
-	border-radius: 22px;
-	font-size: 16px;
-	border: none;
 }
 @media (max-width: 350px) {
 .action-btn.data-v-23b7b074 {

@@ -244,6 +244,11 @@
       </view>
     </view>
 
+    <!-- 隐藏 custom-nav，仅用于调用定位方法 -->
+    <custom-nav
+      ref="navRef"
+      v-show="false"
+    />
     <!-- 打卡弹窗 -->
     <view class="check-in-modal" v-if="showCheckInModal">
       <view class="check-in-content">
@@ -258,6 +263,7 @@
               <text class="location-text">{{currentLocation.address}}</text>
               <button class="refresh-btn" @click="refreshLocation">刷新</button>
             </view>
+			
             <button class="get-location-btn" @click="getLocation" v-else>获取位置</button>
           </view>
           <view class="image-section">
@@ -294,8 +300,12 @@
 <script>
 const db = uniCloud.database();
 const messageCollection = db.collection('messages');
+import customNav from '@/components/custom-nav/custom-nav.vue';
 
 export default {
+  components: {
+    customNav
+  },
   data() {
     return {
       messageText: '',
@@ -1222,6 +1232,74 @@ export default {
         uni.hideLoading();
       }
     },
+	// 获取当前位置（自动获取并逆地理编码详细地址）
+	async getLocation() {
+	  try {
+	    // 1. 获取经纬度
+	    const [err, loc] = await uni.getLocation({ type: 'gcj02' });
+	    if (err) throw new Error('获取位置失败');
+	    const { latitude, longitude } = loc;
+	
+	    // 2. 调高德逆地理编码
+	    const [reqErr, geoRes] = await uni.request({
+	      url: 'https://restapi.amap.com/v3/geocode/regeo',
+	      data: {
+	        location: `${longitude},${latitude}`,
+	        key: '588c83165bf098b125e621655239f1af',
+	        extensions: 'base'
+	      }
+	    });
+	    if (reqErr) throw new Error('网络异常');
+	
+	    const data = geoRes?.data;
+	    if (!data || data.status !== '1') throw new Error('逆地理编码失败');
+	
+	    // 3. 拼装完整地址
+	    const c = data.regeocode.addressComponent;
+	    const city    = c.city || c.province || '';
+	    const district = c.district || '';
+	    const township = c.township || '';
+	    const street   = (c.streetNumber?.street || '') + (c.streetNumber?.number || '');
+	    const fullAddress = `${city}${district}${township}${street}`.trim();
+	
+	    // 4. 保存
+	    this.currentLocation = { latitude, longitude, address: fullAddress, name: '' };
+	    console.log('完整地址:', fullAddress);
+	  } catch (e) {
+	    console.error(e);
+	    uni.showToast({ title: e.message || '获取位置失败', icon: 'none' });
+	  }
+	},
+
+    //  getLocation() 方法2
+    /*async getLocation() {
+      try {
+        // 调用 custom-nav 的 getLocationInfo 方法
+        await this.$refs.navRef.getLocationInfo();
+    
+        // 从 custom-nav 中读取定位结果
+        const { locationName, location } = this.$refs.navRef;
+    
+        if (!locationName || !location.latitude || !location.longitude) {
+          throw new Error('未能获取到详细地址');
+        }
+    
+        this.currentLocation = {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          address: locationName, // 使用 custom-nav 的城市名
+          name: ''
+        };
+    
+        console.log('custom-nav 获取到的位置信息:', this.currentLocation);
+      } catch (e) {
+        console.error('custom-nav 获取位置失败:', e);
+        uni.showToast({
+          title: e.message || '获取位置失败',
+          icon: 'none'
+        });
+      }
+    },*/
 
     // 打开位置
     openLocation(location) {
@@ -1423,86 +1501,48 @@ export default {
     startCheckInCheck() {
       // 立即执行一次检查
       this.checkPendingCheckIns();
-      
       // 每10秒检查一次是否有待打卡任务
       this.checkInTimer = setInterval(() => {
         this.checkPendingCheckIns();
-		//console.log('check');
       }, 10000);
     },
-    
     // 检查待打卡任务
     async checkPendingCheckIns() {
       try {
         console.log('开始检查打卡任务，当前用户ID:', this.userId);
-        
-        // 先检查是否有成功的打卡记录
-        const checkResult = await uniCloud.callFunction({
-          name: 'checkIn',
-          data: {
-            action: 'checkSuccessfulCheckIn',
-            data: {
-              escort_id: this.userId
-            }
-          }
-        });
-        
-        console.log('检查成功打卡记录结果:', checkResult);
-        
-        if (checkResult.result.code === 200 && checkResult.result.data.hasSuccessfulCheckIn) {
-          console.log('已有成功打卡记录，停止检查');
-          // 如果有成功打卡记录，停止检查
-          if (this.checkInTimer) {
-            clearInterval(this.checkInTimer);
-            this.checkInTimer = null;
-          }
-          // 如果弹窗显示，关闭它
-          if (this.showCheckInModal) {
-            this.closeCheckInModal();
-          }
-          return;
-        }
-        
-        // 如果没有成功打卡记录，继续检查待打卡任务
+        // 直接请求后端，传doctor_id为当前用户
         const { result } = await uniCloud.callFunction({
           name: 'checkIn',
           data: {
             action: 'getPendingCheckIns',
             data: {
-              escort_id: this.userId
+              doctor_id: this.userId
             }
           }
         });
-        
         console.log('云函数返回结果:', result);
-        
         if (result.code === 200) {
           if (result.data && result.data.length > 0) {
-            console.log('找到待打卡任务:', result.data);
-            // 如果当前没有显示打卡弹窗，则显示
+            // 有待打卡任务且未打卡成功，弹窗
             if (!this.showCheckInModal) {
-              console.log('显示打卡弹窗');
               this.currentCheckIn = result.data[0];
               this.showCheckInModal = true;
-              
-              // 获取位置信息
               await this.getLocation();
-              
-              // 显示提示
               uni.showToast({
                 title: '请及时完成打卡',
                 icon: 'none',
                 duration: 2000
               });
-            } else {
-              console.log('打卡弹窗已显示，不重复显示');
             }
           } else {
-            console.log('没有找到待打卡任务');
-            // 如果没有待打卡任务，关闭打卡弹窗
+            // 没有待打卡任务，关闭弹窗
             if (this.showCheckInModal) {
-              console.log('关闭打卡弹窗');
               this.closeCheckInModal();
+            }
+            // 停止定时器
+            if (this.checkInTimer) {
+              clearInterval(this.checkInTimer);
+              this.checkInTimer = null;
             }
           }
         } else {

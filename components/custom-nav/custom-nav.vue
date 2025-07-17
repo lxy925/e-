@@ -159,7 +159,8 @@ export default {
         url: 'https://restapi.amap.com/v3/geocode/regeo',
         data: {
           location: `${longitude},${latitude}`,
-          key: '06d3e5f2f7ed1bf8504fe90a1a1e04e5',
+          //key: '06d3e5f2f7ed1bf8504fe90a1a1e04e5',
+		  key: '588c83165bf098b125e621655239f1af',
           extensions: 'base'
         },
         success: (res) => {

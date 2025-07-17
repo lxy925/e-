@@ -1,7 +1,7 @@
 'use strict';
 const db = uniCloud.database();
 const checkInsCollection = db.collection('check_ins');
-const ordersCollection = db.collection('order');
+const ordersCollection = db.collection('orders');
 
 exports.main = async (event, context) => {
   const { action, data } = event;
@@ -156,155 +156,84 @@ async function submitCheckIn(data) {
 
 // 获取待打卡任务
 async function getPendingCheckIns(data) {
-  const { escort_id } = data;
-  
+  const { doctor_id } = data;
   try {
-    console.log('开始查询待打卡任务，陪诊师ID:', escort_id);
-    
-    // 获取当前时间
+    console.log('开始查询待打卡任务，陪诊师doctor_id:', doctor_id);
     const now = new Date();
-    console.log('当前时间:', now.toISOString());
-    
-    // 1. 先查找符合条件的订单
+    // 1. 查找该陪诊师的所有订单（可根据实际业务调整订单状态筛选）
     const orders = await ordersCollection.where({
-      escort_id,
-      order_status: '已确认'
+      doctor_id,
+      // 可根据实际业务调整状态筛选
+      status: db.command.in(['paid', '已确认'])
     }).get();
-    
-    console.log('所有已确认订单:', JSON.stringify(orders.data));
-    
-    // 2. 查找已有的待打卡记录
-    const existingCheckIns = await checkInsCollection.where({
-      escort_id,
-      status: 'pending'
+    console.log('所有有效订单:', JSON.stringify(orders.data));
+    // 2. 查找该陪诊师所有check_in记录
+    const allCheckIns = await checkInsCollection.where({
+      escort_id: doctor_id
     }).get();
-    
-    console.log('已有的待打卡记录:', JSON.stringify(existingCheckIns.data));
-    
-    // 3. 检查并更新超时的打卡记录
-    for (const checkIn of existingCheckIns.data) {
-      const scheduledTime = new Date(checkIn.scheduled_time);
-      const fiveMinutesAfter = new Date(scheduledTime.getTime() + 5 * 60 * 1000);
-      if (now > fiveMinutesAfter) {
-        await checkInsCollection.doc(checkIn._id).update({
-          status: 'failed',
-          update_time: now
-        });
+    // 3. 遍历订单，找出需要打卡的订单
+    const pendingCheckIns = [];
+    for (const order of orders.data) {
+      let serviceTimeRaw = order.service_info && order.service_info.service_time;
+      let serviceTimeStr = serviceTimeRaw;
+      // 强制兼容Date类型
+      if (serviceTimeRaw instanceof Date) {
+        serviceTimeStr = serviceTimeRaw.toISOString();
       }
-    }
-    
-    // 4. 过滤出需要新建打卡任务的订单
-    const pendingOrders = orders.data.filter(order => {
-      try {
-        // 修复时间格式，确保是有效的ISO格式
-        let orderTimeStr = order.order_time;
-        // 如果时间格式是 "2025-06-07T7:34:00Z"，转换为 "2025-06-07T07:34:00Z"
-        if (orderTimeStr.includes('T') && !orderTimeStr.includes('Z')) {
-          orderTimeStr += 'Z';
-        }
-        // 确保小时是两位数
-        orderTimeStr = orderTimeStr.replace(/T(\d):/, 'T0$1:');
-        
-        // 将字符串时间转换为Date对象
-        const orderTime = new Date(orderTimeStr);
-        const fiveMinutesBefore = new Date(orderTime.getTime() - 5 * 60 * 1000);
-        const fiveMinutesAfter = new Date(orderTime.getTime() + 5 * 60 * 1000);
-        
-        console.log('原始订单时间:', order.order_time);
-        console.log('格式化后订单时间:', orderTimeStr);
-        console.log('订单时间对象:', orderTime.toISOString());
-        console.log('5分钟前时间:', fiveMinutesBefore.toISOString());
-        console.log('5分钟后时间:', fiveMinutesAfter.toISOString());
-        console.log('当前时间:', now.toISOString());
-        
-        // 检查时间是否有效
-        if (isNaN(orderTime.getTime())) {
-          console.log('无效的订单时间:', order.order_time);
-          return false;
-        }
-        
-        // 检查是否在打卡时间范围内（订单时间前后5分钟）
-        const isInTimeRange = now >= fiveMinutesBefore && now <= fiveMinutesAfter;
-        console.log('是否在打卡时间范围内:', isInTimeRange);
-        
-        // 检查是否已存在打卡记录（包括success和failed状态）
-        const hasAnyCheckIn = existingCheckIns.data.some(
-          checkIn => checkIn.order_id === order.order_id
-        );
-        
-        // 如果在时间范围内且没有任何打卡记录，则需要新建打卡任务
-        return isInTimeRange && !hasAnyCheckIn;
-      } catch (e) {
-        console.error('处理订单时间时出错:', e);
-        return false;
+      // 兼容时间戳（数字）
+      if (typeof serviceTimeRaw === 'number') {
+        serviceTimeStr = new Date(serviceTimeRaw).toISOString();
       }
-    });
-    
-    console.log('需要新建打卡任务的订单:', JSON.stringify(pendingOrders));
-    
-    // 5. 创建新的打卡任务
-    const newCheckIns = [];
-    for (const order of pendingOrders) {
-      try {
-        console.log('处理订单:', order.order_id);
-        
-        // 修复时间格式
-        let orderTimeStr = order.order_time;
-        if (orderTimeStr.includes('T') && !orderTimeStr.includes('Z')) {
-          orderTimeStr += 'Z';
-        }
-        orderTimeStr = orderTimeStr.replace(/T(\d):/, 'T0$1:');
-        
-        // 创建新的打卡任务
+      console.error('serviceTimeRaw:', serviceTimeRaw, 'typeof:', typeof serviceTimeRaw, 'serviceTimeStr:', serviceTimeStr);
+      if (!serviceTimeStr || typeof serviceTimeStr !== 'string' || !serviceTimeStr.includes('T')) continue;
+      if (serviceTimeStr.includes('T') && !serviceTimeStr.includes('Z')) {
+        serviceTimeStr += 'Z';
+      }
+      serviceTimeStr = serviceTimeStr.replace(/T(\d):/, 'T0$1:');
+      const serviceTime = new Date(serviceTimeStr);
+      if (isNaN(serviceTime.getTime())) continue;
+      const fiveMinutesBefore = new Date(serviceTime.getTime() - 5 * 60 * 1000);
+      const fiveMinutesAfter = new Date(serviceTime.getTime() + 5 * 60 * 1000);
+      console.error('serviceTime:', serviceTime.toISOString());
+      console.error('now:', now.toISOString());
+      console.error('fiveMinutesBefore:', fiveMinutesBefore.toISOString());
+      console.error('fiveMinutesAfter:', fiveMinutesAfter.toISOString());
+      console.error('now in window:', now >= fiveMinutesBefore && now <= fiveMinutesAfter);
+      if (now < fiveMinutesBefore || now > fiveMinutesAfter) continue;
+      const hasSuccessCheckIn = allCheckIns.data.some(
+        ci => ci.order_id === order._id && ci.escort_id === doctor_id && ci.status === 'success'
+      );
+      if (hasSuccessCheckIn) continue;
+      let pendingCheckIn = allCheckIns.data.find(
+        ci => ci.order_id === order._id && ci.escort_id === doctor_id && ci.status === 'pending'
+      );
+      if (!pendingCheckIn) {
         const checkInData = {
-          order_id: order.order_id,
-          escort_id,
+          order_id: order._id,
+          escort_id: doctor_id,
           user_id: order.user_id,
-          scheduled_time: new Date(orderTimeStr),
+          scheduled_time: serviceTime,
           status: 'pending',
           create_time: now,
           update_time: now
         };
-        
-        console.log('创建新的打卡任务:', JSON.stringify(checkInData));
-        
         const result = await checkInsCollection.add(checkInData);
-        if (result.id) {
-          newCheckIns.push({
-            ...checkInData,
-            _id: result.id
-          });
-          console.log('打卡任务创建成功，ID:', result.id);
-        }
-      } catch (e) {
-        console.error('创建打卡任务失败:', e);
+        pendingCheckIn = { ...checkInData, _id: result.id };
       }
+      if (now > fiveMinutesAfter) {
+        await checkInsCollection.doc(pendingCheckIn._id).update({
+          status: 'failed',
+          update_time: now
+        });
+        continue;
+      }
+      pendingCheckIns.push(pendingCheckIn);
     }
-    
-    // 6. 重新获取所有有效的待打卡记录（包括新创建的）
-    const updatedCheckIns = await checkInsCollection.where({
-      escort_id,
-      status: 'pending'
-    }).get();
-    
-    // 过滤掉已超时的记录
-    const validCheckIns = updatedCheckIns.data.filter(checkIn => {
-      try {
-        const scheduledTime = new Date(checkIn.scheduled_time);
-        const fiveMinutesAfter = new Date(scheduledTime.getTime() + 5 * 60 * 1000);
-        return now <= fiveMinutesAfter;
-      } catch (e) {
-        console.error('处理打卡记录时间时出错:', e);
-        return false;
-      }
-    });
-    
-    console.log('返回的所有待打卡任务:', JSON.stringify(validCheckIns));
-    
+    // 返回所有有效的待打卡任务
     return {
       code: 200,
-      msg: validCheckIns.length > 0 ? '获取成功' : '没有需要打卡的订单',
-      data: validCheckIns
+      msg: pendingCheckIns.length > 0 ? '获取成功' : '没有需要打卡的订单',
+      data: pendingCheckIns
     };
   } catch (e) {
     console.error('获取待打卡任务失败:', e);

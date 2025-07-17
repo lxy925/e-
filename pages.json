@@ -38,7 +38,8 @@
 			"path": "pages/web-view/web-view",
 			"style": {
 				"usingComponents": {},
-				"navigationBarTitleText": "医院官网"
+				"navigationBarTitleText": "医院官网",
+				"navigationStyle": "custom"
 			}
 		},
 		{

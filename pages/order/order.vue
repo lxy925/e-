@@ -42,7 +42,7 @@
 					</view>
 					<view class="input-group" v-if="include_transport" :class="{ 'error-field': fieldErrors.address }">
 						<text class="label">接送地点<span class="required">*</span></text>
-						<input class="input" placeholder="请选择地址" :value="selectAddress" @click="goToAddressList" />
+						<input class="input" placeholder="请选择地址" :value="selectedAddress" @click="goToAddressList" />
 					</view>
 					<view class="note-info">
 						<image src="../../static/images/order/icon_2.png" class="icon" />
@@ -94,9 +94,9 @@
 					</view>
 				</view>
 
+
 				<view class="requirements">
 					<text class="label_1">就诊人特点及陪诊需求</text>
-
 					<!-- 就诊人特点分组 -->
 					<view class="requirements-group">
 						<text class="group-title">就诊人特点</text>
@@ -230,14 +230,17 @@
 				selectedPatientName: '',
 				selectedPatientPhone: '',
 				selectedDoctorName: '',
-				selectDoctorId: '',
+				selectedDoctorId: '',
 				selectedHospital: '',
-				selectAddress: ' ',
+				selectedAddress: ' ',
 				// 服务信息
 				serviceData: {},
-				service_price: '',
 				service_id: '',
+				service_name: '',
+				service_desc: '',
+				service_price: '',
 				include_transport: ' ',
+
 				storageTimestamp: 0,
 				STORAGE_KEY: 'order_form_data',
 				STORAGE_EXPIRE: 30 * 60 * 1000,
@@ -257,9 +260,18 @@
 				],
 				// 沟通需求选项
 				communicationNeeds: [{
-					value: 'common',
-					label: '普通话沟通'
-				}],
+						value: 'common',
+						label: '普通话沟通'
+					},
+					{
+						value: 'cantonese',
+						label: '粤语沟通'
+					},
+					{
+						value: 'chaoshan',
+						label: '潮汕话沟通'
+					}
+				],
 				// 陪诊师偏好选项
 				doctorPreferences: [{
 						value: 'male',
@@ -301,13 +313,16 @@
 			this.restoreFormData();
 		},
 		onLoad(options) {
-			uni.$on('clear-order-form-data', this.clearFormData);
+			uni.$on('clear-order-form-data', this.resetFormData());
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
-			this.loadSavedPhotos();
 			this.initDateTimeList();
 
 			// 解析并存储服务数据
+			// 检查是否来自服务选择页面
+			if (options.from === 'serviceSelection') {
+				this.resetFormData();
+			}
 			const serviceDataString = options.service;
 			if (serviceDataString) {
 				try {
@@ -324,15 +339,14 @@
 			this.include_transport = this.serviceData?.include_transport || '';
 			this.service_price = this.serviceData?.service_price || '';
 			this.service_id = this.serviceData?.service_id || '';
+			this.service_name = this.serviceData.service_name || '';
+			this.service_desc = this.serviceData.service_details || ''; // 注意字段名是 service_details
+			this.include_transport = this.serviceData.include_transport || false;
+			console.log("完整服务数据:", this.serviceData);
 
-			this.loadPatientInfo();
-			this.loadDoctorInfo();
+			// 存储服务数据
+			uni.setStorageSync('serviceData', this.serviceData);
 
-			const address = uni.getStorageSync('selectedAddress');
-			console.log("获取地址:", address);
-			if (address) {
-				this.selectAddress = (address.district || '') + (address.detail || '');
-			}
 		},
 
 		computed: {
@@ -342,17 +356,18 @@
 					patient_phone: this.selectedPatientPhone,
 					patient_name: this.selectedPatientName,
 					hospital: this.selectedHospital,
-					service_time: this.selectedDateTime,
+					service_time: this.selectedDateTimeISO,
 					doctor_name: this.selectedDoctorName,
-					doctor_id: this.selectDoctorId,
+					doctor_id: this.selectedDoctorId,
 					department: this.selectedDepartment,
 					materials: this.photoList,
 					requirements: this.selectedCheckboxes,
 					custom_requirements: this.customRequirements,
 					include_transport: this.include_transport,
-					service_id: this.serviceData.service_id,
-					service_name: this.serviceData.service_name || '自定义医疗陪诊服务',
-					service_desc: this.serviceData.service_desc || '根据您的需求提供专业陪诊服务'
+					address: this.selectedAddress,
+					service_id: this.service_id,
+					service_name: this.service_name,
+					service_desc: this.service_desc // 使用组件数据而非 serviceData
 				};
 			}
 		},
@@ -362,6 +377,23 @@
 			this.loadPatientInfo();
 			this.loadSavedPhotos();
 			this.restoreFormData();
+			const address = uni.getStorageSync('selectedAddress');
+			console.log("获取地址是：" + address)
+			if (address) {
+				this.selectedAddress = address.district + address.detail || '';
+			}
+			// 如果 selectedHospital 仍然为空，尝试从单独的 storage 恢复
+			if (!this.selectedHospital) {
+				const hospital = uni.getStorageSync('selectedHospital');
+				if (hospital) {
+					this.selectedHospital = hospital;
+				}
+			}
+
+			// 确保服务数据恢复
+			if (!this.service_price && this.serviceData) {
+				this.service_price = this.serviceData.service_price;
+			}
 		},
 
 		onHide() {
@@ -400,6 +432,7 @@
 		},
 
 		methods: {
+
 			//监视页面滚动情况
 			handleScroll(e) {
 				if (this.scrollTimer) clearTimeout(this.scrollTimer)
@@ -407,6 +440,31 @@
 					this.scrollTop = e.detail.scrollTop
 				}, 16) // 约60fps
 			},
+
+			resetFormData() {
+				this.selectedDepartment = null;
+				this.selectedCheckboxes = [];
+				this.photoList = [];
+				this.selectedDateTime = '';
+				this.selectedPatientName = '';
+				this.selectedPatientPhone = '';
+				this.selectedDoctorName = '';
+				this.selectedDoctorId = '';
+				this.selectedHospital = '';
+				this.selectedAddress = '';
+				this.customRequirements = '';
+
+				// 清除所有可能的数据源
+				uni.removeStorageSync('selectedPatient');
+				uni.removeStorageSync('selectedDoctor');
+				uni.removeStorageSync('selectedAddress');
+				uni.removeStorageSync('selectedHospital');
+				uni.removeStorageSync('photoList');
+				uni.removeStorageSync('order_form_full_data');
+				uni.removeStorageSync('serviceData');
+			},
+
+
 			// 提交订单处理函数
 			handleSubmitOrder() {
 				console.log('提交订单事件触发，开始验证表单');
@@ -430,7 +488,7 @@
 						patient: !this.selectedPatientName,
 						hospital: !this.selectedHospital,
 						datetime: !this.selectedDateTime,
-						address: this.include_transport && (!this.selectAddress || this.selectAddress
+						address: this.include_transport && (!this.selectedAddress || this.selectedAddress
 							.trim() === '')
 					};
 
@@ -521,14 +579,14 @@
 				const doctor = uni.getStorageSync('selectedDoctor');
 				console.log("获取医生信息：" + doctor.user_id);
 				if (doctor) {
-					this.selectDoctorId = doctor.user_id;
+					this.selectedDoctorId = doctor.user_id;
 					this.selectedDoctorName = doctor.name || '';
 				}
 			},
 
 			loadPatientInfo() {
 				const patient = uni.getStorageSync('selectedPatient');
-				console.log(patient);
+				console.log("选择病人信息:" + patient);
 				if (patient) {
 					this.selectedPatientPhone = patient.phone;
 					this.selectedPatientName = patient.name || '';
@@ -540,8 +598,10 @@
 				uni.navigateTo({
 					url: '/pages/more/more?from=order',
 					success: () => {
+						// 确保每次跳转都重新绑定事件
 						uni.$once('select-hospital', (hospital) => {
 							this.selectedHospital = hospital.name;
+							this.saveFormData(); // 存储最新选择的医院
 						});
 					}
 				});
@@ -560,17 +620,19 @@
 					selectedDateTime: this.selectedDateTime,
 					selectedPatientName: this.selectedPatientName,
 					selectedDoctorName: this.selectedDoctorName,
-					selectAddress: this.selectAddress,
+					selectedAddress: this.selectedAddress,
+					selectedHospital: this.selectedHospital, // 存储医院
 					customRequirements: this.customRequirements,
+
 					serviceData: this.serviceData, // 新增服务数据保存
 					service_price: this.service_price, // 新增价格保存
 					timestamp: new Date().getTime()
 				};
-				uni.setStorageSync(this.STORAGE_KEY, formData);
+				uni.setStorageSync('order_form_full_data', formData);
 			},
 
 			restoreFormData() {
-				const savedData = uni.getStorageSync(this.STORAGE_KEY);
+				const savedData = uni.getStorageSync('order_form_full_data');
 				if (savedData && !this.isDataExpired(savedData.timestamp)) {
 					// 恢复表单数据
 					if (!this.selectedDepartment) this.selectedDepartment = savedData.selectedDepartment;
@@ -587,8 +649,13 @@
 						this.serviceData = savedData.serviceData;
 						this.service_price = savedData.service_price;
 					}
+					Object.keys(savedData).forEach(key => {
+						if (!this[key] && savedData[key]) {
+							this[key] = savedData[key];
+						}
+					});
 				} else {
-					uni.removeStorageSync(this.STORAGE_KEY);
+					uni.removeStorageSync('order_form_full_data');
 				}
 			},
 
@@ -605,7 +672,7 @@
 				this.selectedPatientName = '';
 				this.selectedPatientPhone = '';
 				this.selectedDoctorName = '';
-				this.selectDoctorId = '';
+				this.selectedDoctorId = '';
 				this.selectedHospital = '';
 				this.selectAddress = '';
 				this.customRequirements = '';
@@ -793,7 +860,34 @@
 				const date = this.dateList[this.selectedDateIndex];
 				const time = this.timeList[this.selectedTimeIndex];
 				this.selectedDateTime = `${date.day} ${date.week} ${time}`;
-				// this.selectedTime={date,time}
+				const dateMatch = date.day.match(/(\d+)月(\d+)日/);
+				if (!dateMatch) {
+					console.error('日期格式解析错误:', date.day);
+					return;
+				}
+
+				const month = parseInt(dateMatch[1]);
+				const day = parseInt(dateMatch[2]);
+				const timeMatch = time.match(/(\d+):(\d+)/);
+				if (!timeMatch) {
+					console.error('时间格式解析错误:', time);
+					return;
+				}
+
+				const hours = parseInt(timeMatch[1]);
+				const minutes = parseInt(timeMatch[2]);
+
+				// 2. 创建 Date 对象（当前年份）
+				const currentYear = new Date().getFullYear();
+				const dateObj = new Date(currentYear, month - 1, day, hours, minutes);
+
+				// 3. 转换为 ISO 字符串格式 (UTC)
+				this.selectedDateTimeISO = dateObj.toISOString();
+
+				// 测试输出
+				console.log('原始时间:', this.selectedDateTime);
+				console.log('转换后时间:', this.selectedDateTimeISO);
+
 				this.hideDateTimePicker();
 			},
 

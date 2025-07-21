@@ -861,15 +861,15 @@
 						service_desc: this.serviceDesc, // 使用组件prop
 						service_info: {
 							...this.orderInfo,
-							service_id: this.serviceId,
-							service_name: this.serviceName,
-							service_details: this.serviceDesc // 内部使用实际字段名
+							service_id: this.serviceId, // 使用组件prop
+							service_name: this.serviceName, // 使用组件prop
 						},
 						doctor_id: this.orderInfo.doctor_id,
 						total_price: this.servicePrice,
 						status: 'unpaid',
 						create_time: new Date(),
-						js_code: code
+						js_code: code,
+						address: this.orderInfo.address,
 					};
 					console.log('发送到云函数的orderData:', orderData);
 
@@ -880,6 +880,7 @@
 						authMode: 'requireAuth'
 					});
 
+					console.log("在数据库里创建订单:", createRes.result);
 					if (createRes.result.code !== 200) {
 						throw new Error(createRes.result.message || '订单创建失败');
 					}

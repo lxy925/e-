@@ -109,12 +109,11 @@
 				</view>
 
 				<!-- 收货地址信息 -->
-				<view v-if="(orderStatus !== 'paying' || !isOrderExpired) && orderInfo.include_transport"
-					class="info-section">
-					<h2 class="section-title">收货地址</h2>
+				<view v-if="orderInfo.include_transport" class="info-section">
+					<h2 class="section-title">服务地址</h2>
 					<div class="address-card">
 						<view class="address-item">
-							<text class="address-text">{{deliveryAddress || '未设置地址'}}</text>
+							<text class="address-text">{{orderInfo.address || '未设置地址'}}</text>
 						</view>
 					</div>
 				</view>
@@ -316,10 +315,12 @@
 							orderInfo = {
 								...orderInfo,
 								openid: orderInfo.userid,
+								include_transport: serviceInfo.include_transport,
 								service_name: serviceInfo.service_name,
 								service_price: serviceInfo.service_price,
-								service_time: serviceInfo.service_time,
-								service_desc: serviceInfo.service_desc || '服务支付'
+								service_time: orderInfo.service_info.service_time,
+								service_desc: serviceInfo.service_desc || '服务支付',
+
 							};
 						} else {
 							console.warn('未查询到对应服务信息，service_id:', orderInfo.service_id);

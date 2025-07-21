@@ -313,12 +313,28 @@
 				try {
 					const db = uniCloud.database();
 					const userInfo = uni.getStorageSync('userInfo') || {};
-
+					const _ = db.command;
 					// 构建查询条件
 					let query = db.collection('orders')
 						.where({
 							[this.userRole === 'doctor' ? 'doctor_id' : 'user_id']: userInfo.user_id
 						});
+
+					// 添加搜索条件 - 只根据服务名称或患者姓名搜索
+					if (this.searchQuery) {
+						const searchRegex = new RegExp(this.searchQuery, 'i');
+
+						// 创建复合查询条件：服务名称 OR 患者姓名
+						query = query.where(
+							_.or([{
+									'service_info.service_name': searchRegex
+								},
+								{
+									'patient_name': searchRegex
+								}
+							])
+						);
+					}
 
 					// 保持原有状态筛选逻辑
 					if (this.currentTab > 0) {
@@ -334,7 +350,8 @@
 						.skip((this.currentPage - 1) * this.pageSize)
 						.limit(this.pageSize)
 						.get();
-					console.log("查询到的订单结果" + res.result);
+					// 正确方式：
+					console.log("查询到的订单结果:", res.result); // 使用逗号分隔
 					// 保持原有结果处理
 					if (res.result.data) {
 						this.orderList = this.currentPage === 1 ?
@@ -356,6 +373,7 @@
 			},
 			handleSearch() {
 				this.currentPage = 1;
+				console.log("执行搜索，关键词:", this.searchQuery); // 添加日志
 				this.getOrderList();
 			},
 			loadMore() {
@@ -370,8 +388,11 @@
 				});
 			},
 			applyRefund(order) {
+				// 将订单对象编码为URL安全的字符串
+				const encodedOrderInfo = encodeURIComponent(JSON.stringify(order));
+
 				uni.navigateTo({
-					url: `/pages/refund/refund?orderId=${order.order_no}`
+					url: `/pages/refund/refund?orderInfo=${encodedOrderInfo}`
 				});
 			},
 			deleteOrder(order) {

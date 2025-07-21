@@ -206,12 +206,12 @@ var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/run
 var _components$data$onSh;
 var PaymentComponent = function PaymentComponent() {
   __webpack_require__.e(/*! require.ensure | components/PaymentComponent */ "components/PaymentComponent").then((function () {
-    return resolve(__webpack_require__(/*! @/components/PaymentComponent.vue */ 672));
+    return resolve(__webpack_require__(/*! @/components/PaymentComponent.vue */ 680));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var ServiceNoticePopup = function ServiceNoticePopup() {
   __webpack_require__.e(/*! require.ensure | components/service-notice-popup */ "components/service-notice-popup").then((function () {
-    return resolve(__webpack_require__(/*! @/components/service-notice-popup.vue */ 679));
+    return resolve(__webpack_require__(/*! @/components/service-notice-popup.vue */ 687));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var _default = (_components$data$onSh = {
@@ -248,13 +248,15 @@ var _default = (_components$data$onSh = {
       selectedPatientName: '',
       selectedPatientPhone: '',
       selectedDoctorName: '',
-      selectDoctorId: '',
+      selectedDoctorId: '',
       selectedHospital: '',
-      selectAddress: ' ',
+      selectedAddress: ' ',
       // 服务信息
       serviceData: {},
-      service_price: '',
       service_id: '',
+      service_name: '',
+      service_desc: '',
+      service_price: '',
       include_transport: ' ',
       storageTimestamp: 0,
       STORAGE_KEY: 'order_form_data',
@@ -274,6 +276,12 @@ var _default = (_components$data$onSh = {
       communicationNeeds: [{
         value: 'common',
         label: '普通话沟通'
+      }, {
+        value: 'cantonese',
+        label: '粤语沟通'
+      }, {
+        value: 'chaoshan',
+        label: '潮汕话沟通'
       }],
       // 陪诊师偏好选项
       doctorPreferences: [{
@@ -313,13 +321,16 @@ var _default = (_components$data$onSh = {
   },
   onLoad: function onLoad(options) {
     var _this$serviceData, _this$serviceData2, _this$serviceData3;
-    uni.$on('clear-order-form-data', this.clearFormData);
+    uni.$on('clear-order-form-data', this.resetFormData());
     var systemInfo = uni.getSystemInfoSync();
     this.navHeight = systemInfo.statusBarHeight + 44;
-    this.loadSavedPhotos();
     this.initDateTimeList();
 
     // 解析并存储服务数据
+    // 检查是否来自服务选择页面
+    if (options.from === 'serviceSelection') {
+      this.resetFormData();
+    }
     var serviceDataString = options.service;
     if (serviceDataString) {
       try {
@@ -335,13 +346,13 @@ var _default = (_components$data$onSh = {
     this.include_transport = ((_this$serviceData = this.serviceData) === null || _this$serviceData === void 0 ? void 0 : _this$serviceData.include_transport) || '';
     this.service_price = ((_this$serviceData2 = this.serviceData) === null || _this$serviceData2 === void 0 ? void 0 : _this$serviceData2.service_price) || '';
     this.service_id = ((_this$serviceData3 = this.serviceData) === null || _this$serviceData3 === void 0 ? void 0 : _this$serviceData3.service_id) || '';
-    this.loadPatientInfo();
-    this.loadDoctorInfo();
-    var address = uni.getStorageSync('selectedAddress');
-    console.log("获取地址:", address);
-    if (address) {
-      this.selectAddress = (address.district || '') + (address.detail || '');
-    }
+    this.service_name = this.serviceData.service_name || '';
+    this.service_desc = this.serviceData.service_details || ''; // 注意字段名是 service_details
+    this.include_transport = this.serviceData.include_transport || false;
+    console.log("完整服务数据:", this.serviceData);
+
+    // 存储服务数据
+    uni.setStorageSync('serviceData', this.serviceData);
   },
   computed: {
     // 整合所有订单信息
@@ -350,17 +361,18 @@ var _default = (_components$data$onSh = {
         patient_phone: this.selectedPatientPhone,
         patient_name: this.selectedPatientName,
         hospital: this.selectedHospital,
-        service_time: this.selectedDateTime,
+        service_time: this.selectedDateTimeISO,
         doctor_name: this.selectedDoctorName,
-        doctor_id: this.selectDoctorId,
+        doctor_id: this.selectedDoctorId,
         department: this.selectedDepartment,
         materials: this.photoList,
         requirements: this.selectedCheckboxes,
         custom_requirements: this.customRequirements,
         include_transport: this.include_transport,
-        service_id: this.serviceData.service_id,
-        service_name: this.serviceData.service_name || '自定义医疗陪诊服务',
-        service_desc: this.serviceData.service_desc || '根据您的需求提供专业陪诊服务'
+        address: this.selectedAddress,
+        service_id: this.service_id,
+        service_name: this.service_name,
+        service_desc: this.service_desc // 使用组件数据而非 serviceData
       };
     }
   }
@@ -369,6 +381,23 @@ var _default = (_components$data$onSh = {
   this.loadPatientInfo();
   this.loadSavedPhotos();
   this.restoreFormData();
+  var address = uni.getStorageSync('selectedAddress');
+  console.log("获取地址是：" + address);
+  if (address) {
+    this.selectedAddress = address.district + address.detail || '';
+  }
+  // 如果 selectedHospital 仍然为空，尝试从单独的 storage 恢复
+  if (!this.selectedHospital) {
+    var hospital = uni.getStorageSync('selectedHospital');
+    if (hospital) {
+      this.selectedHospital = hospital;
+    }
+  }
+
+  // 确保服务数据恢复
+  if (!this.service_price && this.serviceData) {
+    this.service_price = this.serviceData.service_price;
+  }
 }), (0, _defineProperty2.default)(_components$data$onSh, "onHide", function onHide() {
   this.saveFormData();
 }), (0, _defineProperty2.default)(_components$data$onSh, "onUnload", function onUnload() {
@@ -406,6 +435,28 @@ var _default = (_components$data$onSh = {
       _this2.scrollTop = e.detail.scrollTop;
     }, 16); // 约60fps
   },
+  resetFormData: function resetFormData() {
+    this.selectedDepartment = null;
+    this.selectedCheckboxes = [];
+    this.photoList = [];
+    this.selectedDateTime = '';
+    this.selectedPatientName = '';
+    this.selectedPatientPhone = '';
+    this.selectedDoctorName = '';
+    this.selectedDoctorId = '';
+    this.selectedHospital = '';
+    this.selectedAddress = '';
+    this.customRequirements = '';
+
+    // 清除所有可能的数据源
+    uni.removeStorageSync('selectedPatient');
+    uni.removeStorageSync('selectedDoctor');
+    uni.removeStorageSync('selectedAddress');
+    uni.removeStorageSync('selectedHospital');
+    uni.removeStorageSync('photoList');
+    uni.removeStorageSync('order_form_full_data');
+    uni.removeStorageSync('serviceData');
+  },
   // 提交订单处理函数
   handleSubmitOrder: function handleSubmitOrder() {
     var _this3 = this;
@@ -430,7 +481,7 @@ var _default = (_components$data$onSh = {
         patient: !_this4.selectedPatientName,
         hospital: !_this4.selectedHospital,
         datetime: !_this4.selectedDateTime,
-        address: _this4.include_transport && (!_this4.selectAddress || _this4.selectAddress.trim() === '')
+        address: _this4.include_transport && (!_this4.selectedAddress || _this4.selectedAddress.trim() === '')
       };
 
       // 检查必填字段
@@ -519,13 +570,13 @@ var _default = (_components$data$onSh = {
     var doctor = uni.getStorageSync('selectedDoctor');
     console.log("获取医生信息：" + doctor.user_id);
     if (doctor) {
-      this.selectDoctorId = doctor.user_id;
+      this.selectedDoctorId = doctor.user_id;
       this.selectedDoctorName = doctor.name || '';
     }
   },
   loadPatientInfo: function loadPatientInfo() {
     var patient = uni.getStorageSync('selectedPatient');
-    console.log(patient);
+    console.log("选择病人信息:" + patient);
     if (patient) {
       this.selectedPatientPhone = patient.phone;
       this.selectedPatientName = patient.name || '';
@@ -537,8 +588,10 @@ var _default = (_components$data$onSh = {
     uni.navigateTo({
       url: '/pages/more/more?from=order',
       success: function success() {
+        // 确保每次跳转都重新绑定事件
         uni.$once('select-hospital', function (hospital) {
           _this5.selectedHospital = hospital.name;
+          _this5.saveFormData(); // 存储最新选择的医院
         });
       }
     });
@@ -554,7 +607,9 @@ var _default = (_components$data$onSh = {
       selectedDateTime: this.selectedDateTime,
       selectedPatientName: this.selectedPatientName,
       selectedDoctorName: this.selectedDoctorName,
-      selectAddress: this.selectAddress,
+      selectedAddress: this.selectedAddress,
+      selectedHospital: this.selectedHospital,
+      // 存储医院
       customRequirements: this.customRequirements,
       serviceData: this.serviceData,
       // 新增服务数据保存
@@ -562,10 +617,11 @@ var _default = (_components$data$onSh = {
       // 新增价格保存
       timestamp: new Date().getTime()
     };
-    uni.setStorageSync(this.STORAGE_KEY, formData);
+    uni.setStorageSync('order_form_full_data', formData);
   },
   restoreFormData: function restoreFormData() {
-    var savedData = uni.getStorageSync(this.STORAGE_KEY);
+    var _this6 = this;
+    var savedData = uni.getStorageSync('order_form_full_data');
     if (savedData && !this.isDataExpired(savedData.timestamp)) {
       // 恢复表单数据
       if (!this.selectedDepartment) this.selectedDepartment = savedData.selectedDepartment;
@@ -582,8 +638,13 @@ var _default = (_components$data$onSh = {
         this.serviceData = savedData.serviceData;
         this.service_price = savedData.service_price;
       }
+      Object.keys(savedData).forEach(function (key) {
+        if (!_this6[key] && savedData[key]) {
+          _this6[key] = savedData[key];
+        }
+      });
     } else {
-      uni.removeStorageSync(this.STORAGE_KEY);
+      uni.removeStorageSync('order_form_full_data');
     }
   },
   isDataExpired: function isDataExpired(timestamp) {
@@ -598,7 +659,7 @@ var _default = (_components$data$onSh = {
     this.selectedPatientName = '';
     this.selectedPatientPhone = '';
     this.selectedDoctorName = '';
-    this.selectDoctorId = '';
+    this.selectedDoctorId = '';
     this.selectedHospital = '';
     this.selectAddress = '';
     this.customRequirements = '';
@@ -648,7 +709,7 @@ var _default = (_components$data$onSh = {
     }
   },
   chooseImage: function chooseImage() {
-    var _this6 = this;
+    var _this7 = this;
     var remaining = this.maxPhotos - this.photoList.length;
     if (remaining <= 0) {
       wx.showToast({
@@ -664,21 +725,21 @@ var _default = (_components$data$onSh = {
       sourceType: ['album', 'camera'],
       success: function success(res) {
         res.tempFilePaths.forEach(function (filePath) {
-          return _this6.checkFileSize(filePath);
+          return _this7.checkFileSize(filePath);
         });
       }
     });
   },
   checkFileSize: function checkFileSize(filePath) {
-    var _this7 = this;
+    var _this8 = this;
     var fs = wx.getFileSystemManager();
     fs.getFileInfo({
       filePath: filePath,
       success: function success(res) {
-        res.size > _this7.maxSize ? wx.showToast({
+        res.size > _this8.maxSize ? wx.showToast({
           title: '图片大小不能超过5MB',
           icon: 'none'
-        }) : _this7.uploadImg(filePath);
+        }) : _this8.uploadImg(filePath);
       },
       fail: function fail(err) {
         console.error("Failed to get file size:", err);
@@ -690,7 +751,7 @@ var _default = (_components$data$onSh = {
     });
   },
   uploadImg: function uploadImg(imgSrc) {
-    var _this8 = this;
+    var _this9 = this;
     wx.showLoading({
       title: "上传中..."
     });
@@ -699,8 +760,8 @@ var _default = (_components$data$onSh = {
       tempFilePath: imgSrc,
       success: function success(res) {
         if (res.savedFilePath) {
-          _this8.photoList.push(res.savedFilePath);
-          wx.setStorageSync('photoList', _this8.photoList);
+          _this9.photoList.push(res.savedFilePath);
+          wx.setStorageSync('photoList', _this9.photoList);
           wx.hideLoading();
           wx.showToast({
             title: '上传成功',
@@ -774,7 +835,31 @@ var _default = (_components$data$onSh = {
     var date = this.dateList[this.selectedDateIndex];
     var time = this.timeList[this.selectedTimeIndex];
     this.selectedDateTime = "".concat(date.day, " ").concat(date.week, " ").concat(time);
-    // this.selectedTime={date,time}
+    var dateMatch = date.day.match(/(\d+)月(\d+)日/);
+    if (!dateMatch) {
+      console.error('日期格式解析错误:', date.day);
+      return;
+    }
+    var month = parseInt(dateMatch[1]);
+    var day = parseInt(dateMatch[2]);
+    var timeMatch = time.match(/(\d+):(\d+)/);
+    if (!timeMatch) {
+      console.error('时间格式解析错误:', time);
+      return;
+    }
+    var hours = parseInt(timeMatch[1]);
+    var minutes = parseInt(timeMatch[2]);
+
+    // 2. 创建 Date 对象（当前年份）
+    var currentYear = new Date().getFullYear();
+    var dateObj = new Date(currentYear, month - 1, day, hours, minutes);
+
+    // 3. 转换为 ISO 字符串格式 (UTC)
+    this.selectedDateTimeISO = dateObj.toISOString();
+
+    // 测试输出
+    console.log('原始时间:', this.selectedDateTime);
+    console.log('转换后时间:', this.selectedDateTimeISO);
     this.hideDateTimePicker();
   },
   goToPatientManagement: function goToPatientManagement() {

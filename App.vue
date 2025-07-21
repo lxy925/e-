@@ -1,4 +1,5 @@
 <script>
+	const jwt=require("./utils/jwt")
 	// app.js
 	export default {
 		data() {
@@ -19,13 +20,43 @@
 			}
 
 			this.globalData = {};
-
+			this.checkToken();
 
 		},
 		onShow() {
 
 		},
-		methods: {}
+		methods: {
+			async checkToken() {
+			      try {
+			        // 从缓存中获取token
+					
+			        const token = uni.getStorageSync('token');
+					console.log("token",token)
+			       jwt.verifyToken(token)
+			        
+			        console.log('Token有效');
+			      } catch (error) {
+			        console.error('检查token出错:', error);
+			        await this.loginAndCacheToken();
+			      }
+			    },
+				async loginAndCacheToken(){
+					uni.showModal({
+					          title: '提示',
+					          content: '使用完整服务前请先登录',
+					          showCancel: false,
+					          success: (res) => {
+					            if (res.confirm) {
+					              // 跳转到登录页面
+					              uni.navigateTo({
+					                url: '/pages/userInfoDetail/userInfoDetail'
+					              });
+					            }
+					          }
+					        });
+				}
+		}
 	}
 </script>
 <style>

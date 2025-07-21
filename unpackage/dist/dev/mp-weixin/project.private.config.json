@@ -3,5 +3,18 @@
   "projectname": "e-",
   "setting": {
     "compileHotReLoad": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/userInfoDetail/userInfoDetail",
+          "pathName": "pages/userInfoDetail/userInfoDetail",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
   }
 }

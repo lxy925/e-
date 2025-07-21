@@ -115,12 +115,16 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(wx) {
+/* WEBPACK VAR INJECTION */(function(wx, uni) {
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
+var jwt = __webpack_require__(/*! ./utils/jwt */ 775);
 // app.js
 var _default = {
   data: function data() {
@@ -140,12 +144,71 @@ var _default = {
       });
     }
     this.globalData = {};
+    this.checkToken();
   },
   onShow: function onShow() {},
-  methods: {}
+  methods: {
+    checkToken: function checkToken() {
+      var _this = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var token;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                // 从缓存中获取token
+                token = uni.getStorageSync('token');
+                console.log("token", token);
+                jwt.verifyToken(token);
+                console.log('Token有效');
+                _context.next = 12;
+                break;
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](0);
+                console.error('检查token出错:', _context.t0);
+                _context.next = 12;
+                return _this.loginAndCacheToken();
+              case 12:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 7]]);
+      }))();
+    },
+    loginAndCacheToken: function loginAndCacheToken() {
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+        return _regenerator.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                uni.showModal({
+                  title: '提示',
+                  content: '使用完整服务前请先登录',
+                  showCancel: false,
+                  success: function success(res) {
+                    if (res.confirm) {
+                      // 跳转到登录页面
+                      uni.navigateTo({
+                        url: '/pages/userInfoDetail/userInfoDetail'
+                      });
+                    }
+                  }
+                });
+              case 1:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    }
+  }
 };
 exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
 

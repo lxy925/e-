@@ -50,7 +50,7 @@
 				const serviceData = encodeURIComponent(JSON.stringify(service));
 				// 在服务选择页面的跳转代码中
 				uni.navigateTo({
-					url: `/pages/order/order?service=${encodeURIComponent(JSON.stringify(service))}&from=serviceSelection`
+					url: `/pages/order_details/order_details?service=${encodeURIComponent(JSON.stringify(service))}&from=serviceSelection`
 				});
 			}
 		}

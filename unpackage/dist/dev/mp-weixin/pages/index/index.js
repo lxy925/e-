@@ -298,7 +298,7 @@ var _default = {
       }, {
         icon: "/static/images/index/index-test.png",
         text: "陪诊师考题",
-        path: "/pages/test/test"
+        path: "/pages/study/study"
       }],
       hospitals: [] // 清空原有的模拟数据
     };

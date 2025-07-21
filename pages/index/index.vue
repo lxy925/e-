@@ -57,7 +57,7 @@
 				<view class="hospital-list">
 					<view class="hospital-item" v-for="hospital in hospitals" :key="hospital._id"
 						@tap="navigateToHospital(hospital)">
-						<image :src="hospital.image || '/static/images/hospital1.jpg'" mode="aspectFill"
+						<image :src="hospital.image || '/static/images/more/hospital.png'" mode="aspectFill"
 							class="hospital-image"></image>
 						<view class="hospital-info">
 							<view class="hospital-header">
@@ -126,7 +126,7 @@
 					{
 						icon: "/static/images/index/index-test.png",
 						text: "陪诊师考题",
-						path: "/pages/test/test",
+						path: "/pages/study/study",
 					},
 				],
 				hospitals: [], // 清空原有的模拟数据

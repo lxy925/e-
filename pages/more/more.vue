@@ -93,7 +93,7 @@
 		    <view class="hospital-card" v-for="hospital in filteredHospitals" :key="hospital._id"
 		      @tap="handleHospitalTap(hospital)">
 		      <!-- 修改图片部分，添加默认图片 -->
-		      <image src="/static/images/hospital1.jpg" mode="aspectFill"></image>
+		      <image src="/static/images/more/hospital.png" mode="aspectFill"></image>
 		      <view class="hospital-info">
 		        <text class="hospital-name">{{hospital.name}}</text>
 		        <view class="type-level-container">
@@ -113,9 +113,9 @@
 	export default {
 		data() {
 			return {
+				pageTitle:"医院列表",
 				navHeight: 0, // 添加导航栏高度存储
 				currentType: 'hospital',
-				pageTitle:"医院列表",
 				searchText: '',
 				hospitals: [],
 				filteredHospitals: [], 
@@ -330,7 +330,7 @@
 			handleScroll(e) {
 				// 直接赋值scrollTop（不需要节流，因为custom-nav内部已经做了立即切换的处理）
 				this.scrollTop = e.detail.scrollTop;
-				// console.log("scrollTop")
+				console.log("scrollTop")
 			},
 						},
 	

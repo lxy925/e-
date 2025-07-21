@@ -156,13 +156,7 @@ exports.default = void 0;
 //
 //
 //
-//
-//
-//
-//
-//
-//
-var _default = {
+var _default2 = {
   name: 'custom-nav',
   data: function data() {
     return {
@@ -186,8 +180,14 @@ var _default = {
     scrollTop: {
       type: Number,
       default: 0
+    },
+    onBack: {
+      // 接收父组件的回调函数
+      type: Function,
+      default: function _default() {} // 默认空函数，避免报错
     }
   },
+
   watch: {
     scrollTop: function scrollTop(newVal) {
       // 修改透明度计算逻辑：从 0 开始，随滚动增加
@@ -296,11 +296,20 @@ var _default = {
       });
     },
     goBack: function goBack() {
-      uni.navigateBack();
+      console.log('------------------- custom-nav 组件 -------------------');
+      console.log('1. 点击了返回按钮，进入 goBack 方法');
+      if (this.onBack) {
+        console.log('custom-nav：调用父组件传递的 onBack 方法');
+        this.onBack(); // 直接调用父组件的 handleBack
+      } else {
+        console.log('custom-nav：未传递 onBack，执行默认返回');
+        uni.navigateBack();
+      }
+      console.log('-------------------------------------------------------');
     }
   }
 };
-exports.default = _default;
+exports.default = _default2;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),

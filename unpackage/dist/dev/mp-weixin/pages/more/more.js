@@ -283,10 +283,10 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 var _default = {
   data: function data() {
     return {
+      pageTitle: "医院列表",
       navHeight: 0,
       // 添加导航栏高度存储
       currentType: 'hospital',
-      pageTitle: "医院列表",
       searchText: '',
       hospitals: [],
       filteredHospitals: [],
@@ -531,7 +531,7 @@ var _default = {
     handleScroll: function handleScroll(e) {
       // 直接赋值scrollTop（不需要节流，因为custom-nav内部已经做了立即切换的处理）
       this.scrollTop = e.detail.scrollTop;
-      // console.log("scrollTop")
+      console.log("scrollTop");
     }
   },
   onLoad: function onLoad(options) {

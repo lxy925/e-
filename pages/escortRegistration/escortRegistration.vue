@@ -178,7 +178,7 @@
 
 				<!-- 注册按钮 -->
 				<button type="primary" block @click="submitForm" :disabled="!agreeTerms" class="button">
-					注册陪诊师
+					{{ isUpdate ? '保存修改' : '注册陪诊师' }}
 				</button>
 			</view>
 		</scroll-view>
@@ -241,7 +241,8 @@
 					"皮肤科", "眼科", "耳鼻喉科", "口腔科", "中医科", "康复科", "急诊科",
 					"麻醉科", "感染科", "精神科", "老年医学科", "全科医学科", "其他"
 				], // 完整的科室列表
-				userInfo: {}
+				userInfo: {},
+				isUpdate:false
 			};
 		},
 		onLoad(options) {
@@ -282,6 +283,7 @@
 				this.selectedAddress =
 					`${this.formData.city.provinceName} ${this.formData.city.cityName} ${this.formData.city.areaName}`;
 				console.log("缓存过的表格值", this.formData)
+				this.isUpdate=true;
 			}
 			// 若扫码入驻的则解析 scene 参数（陪诊师的 user_id）
 			const scene = decodeURIComponent(options.scene);

@@ -1,11 +1,11 @@
 <template>
 	<view class="order-detail">
-		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav"
+			:on-back="handleBack" />
 		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
 		  paddingTop: navHeight + 'px',
 		  height: 'calc(100vh - ' + navHeight + 'px)'
 		}" :scroll-top="scrollTop" :show-scrollbar="false">
-
 
 			<view class="content">
 				<!-- 支付组件 -->
@@ -24,7 +24,7 @@
 					<h3 class="status-title">订单待支付</h3>
 					<p class="status-message">请在{{timeLeft}}内进行支付，超时将取消</p>
 					<div class="timer-progress">
-						<div class="timer-bar" :style="{width: timeProgress + '%'}"></div>
+						<div class="timer-bar" :style="{width: (100-timeProgress) + '%'}"></div>
 					</div>
 					<div class="action-buttons">
 						<button class="btn cancel-btn" @click="cancelOrder">取消订单</button>
@@ -109,11 +109,11 @@
 				</view>
 
 				<!-- 收货地址信息 -->
-				<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
-					<h2 class="section-title">收货地址</h2>
+				<view v-if="orderInfo.include_transport" class="info-section">
+					<h2 class="section-title">服务地址</h2>
 					<div class="address-card">
 						<view class="address-item">
-							<text class="address-text">{{deliveryAddress || '未设置地址'}}</text>
+							<text class="address-text">{{orderInfo.address || '未设置地址'}}</text>
 						</view>
 					</div>
 				</view>
@@ -149,6 +149,7 @@
 		},
 		data() {
 			return {
+				prevPagePath: '',
 				navHeight: 0, // 添加导航栏高度存储
 				pageTitle: '服务详情',
 				scrollTop: 0,
@@ -171,7 +172,7 @@
 				timeLeft: '00:15:00',
 				timeProgress: 100,
 				quantity: 1,
-				deliveryAddress: '火箭联邦学府华夏学院黄龙公寓101',
+				deliveryAddress: '',
 				serviceImage: '/static/service-default.png',
 				timer: null,
 				isOrderExpired: false,
@@ -195,6 +196,7 @@
 			}
 		},
 		onLoad(options) {
+			this.getPrevPagePath();
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
 			console.log('接收到的订单参数:', options);
@@ -213,7 +215,12 @@
 				}, 1500);
 			}
 		},
+		// 父组件的 onReady 生命周期
+		onReady() {
+			console.log('父组件中 custom-nav 的 listeners:', this.$refs.customNav.$listeners);
+		},
 		onShow() {
+			this.getPrevPagePath();
 			// 页面显示时刷新订单状态
 			if (this.orderId) {
 				this.loadOrderData();
@@ -223,6 +230,43 @@
 			this.clearTimer();
 		},
 		methods: {
+			getPrevPagePath() {
+				const pages = getCurrentPages();
+				if (pages.length >= 2) {
+					const prevPage = pages[pages.length - 2];
+					this.prevPagePath = prevPage.route;
+					console.log('上一页真实路径:', this.prevPagePath); // 重点看这里输出
+				}
+			},
+			handleBack() {
+				console.log('------------------- 父组件（order_detail） -------------------');
+				console.log('1. 收到 click-back 事件，进入 handleBack 方法');
+
+				// 实时获取页面栈，不依赖 prevPagePath
+				const pages = getCurrentPages();
+				let prevPagePath = '';
+				if (pages.length >= 2) {
+					const prevPage = pages[pages.length - 2];
+					prevPagePath = prevPage.route; // 实时获取上一页路径
+				}
+
+				console.log('2. 实时获取的上一页路径:', prevPagePath);
+				const isFromOrderPage = prevPagePath === 'pages/order/order';
+				console.log('3. 是否来自 order 页面:', isFromOrderPage);
+
+				if (isFromOrderPage) {
+					console.log('4. 执行跳转 → 首页');
+					uni.reLaunch({
+						url: '/pages/index/index', // 跳转到首页
+						success: () => console.log('5. 重定向到首页成功'),
+						fail: (err) => console.error('5. 重定向到首页失败:', err)
+					});
+				} else {
+					console.log('4. 执行默认返回（uni.navigateBack）');
+					uni.navigateBack();
+				}
+				console.log('-------------------------------------------------------');
+			},
 			//监视页面滚动情况
 			handleScroll(e) {
 				if (this.scrollTimer) clearTimeout(this.scrollTimer)
@@ -271,10 +315,12 @@
 							orderInfo = {
 								...orderInfo,
 								openid: orderInfo.userid,
+								include_transport: serviceInfo.include_transport,
 								service_name: serviceInfo.service_name,
 								service_price: serviceInfo.service_price,
-								service_time: serviceInfo.service_time,
-								service_desc: serviceInfo.service_desc || '服务支付'
+								service_time: orderInfo.service_info.service_time,
+								service_desc: serviceInfo.service_desc || '服务支付',
+
 							};
 						} else {
 							console.warn('未查询到对应服务信息，service_id:', orderInfo.service_id);
@@ -307,6 +353,7 @@
 				const date = new Date(dateStr);
 				return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
 			},
+			// 修改 calculateTimeLeft 方法
 			calculateTimeLeft() {
 				if (!this.orderInfo.expire_time) {
 					console.warn('订单缺少过期时间');
@@ -314,17 +361,13 @@
 					return;
 				}
 
-				// 确保时间格式兼容
 				const expireTime = new Date(this.orderInfo.expire_time);
-				if (isNaN(expireTime.getTime())) {
-					console.error('无效的过期时间格式:', this.orderInfo.expire_time);
-					this.isOrderExpired = true;
-					return;
-				}
-
 				const now = new Date();
 				const diff = expireTime - now;
-				const totalMinutes = 15 * 60; // 假设默认超时时间为15分钟
+
+				// 计算总超时秒数（从当前时间到过期时间）
+				const totalSeconds = Math.max(Math.floor(diff / 1000), 0);
+				const initialTotalSeconds = 15 * 60; // 假设默认超时时间为15分钟
 
 				if (diff <= 0) {
 					this.isOrderExpired = true;
@@ -334,33 +377,27 @@
 						this.cancelExpiredOrder();
 					}
 				} else {
-					this.updateTimeDisplay(diff, totalMinutes);
+					// 使用实际剩余秒数和初始总秒数计算进度
+					this.updateTimeDisplay(totalSeconds, initialTotalSeconds);
 				}
 			},
-			updateTimeDisplay(milliseconds, totalMinutes) {
-				if (milliseconds <= 0) {
-					this.timeLeft = '00:00:00';
-					this.timeProgress = 0;
-					this.isOrderExpired = true;
-					return;
-				}
 
-				const seconds = Math.floor(milliseconds / 1000);
-				const totalSeconds = totalMinutes * 60;
-				const remainingSeconds = seconds;
+			// 修改 updateTimeDisplay 方法
+			updateTimeDisplay(remainingSeconds, initialTotalSeconds) {
 				// 计算进度百分比
-				this.timeProgress = Math.round((remainingSeconds / totalSeconds) * 100);
-
+				this.timeProgress = Math.round((remainingSeconds / initialTotalSeconds) * 100);
+				console.log('timeProgress 更新为:', this.timeProgress);
 				// 确保进度不低于0
 				if (this.timeProgress < 0) this.timeProgress = 0;
 
-				const hours = Math.floor(seconds / 3600);
-				const mins = Math.floor((seconds % 3600) / 60);
-				const secs = seconds % 60;
+				const hours = Math.floor(remainingSeconds / 3600);
+				const mins = Math.floor((remainingSeconds % 3600) / 60);
+				const secs = remainingSeconds % 60;
 
 				this.timeLeft =
 					`${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 			},
+
 			startTimer() {
 				this.clearTimer();
 				this.timer = setInterval(() => {
@@ -368,13 +405,18 @@
 						const expireTime = new Date(this.orderInfo.expire_time);
 						const now = new Date();
 						const diff = expireTime - now;
-						const totalMinutes = 15; // 假设默认超时时间为15分钟
-						this.updateTimeDisplay(diff, totalMinutes * 60);
 
-						// 检查是否过期
 						if (diff <= 0 && !this.isOrderExpired) {
 							this.isOrderExpired = true;
 							this.updateOrderStatus('cancelled');
+						} else {
+							// 重新计算剩余时间和进度
+							const totalSeconds = Math.max(Math.floor(diff / 1000), 0);
+							const initialTotalSeconds = 15 * 60; // 默认15分钟
+							this.updateTimeDisplay(totalSeconds, initialTotalSeconds);
+
+							// 强制更新视图（可选，用于确保进度条刷新）
+							this.$forceUpdate();
 						}
 					}
 				}, 1000);

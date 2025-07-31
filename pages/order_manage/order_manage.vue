@@ -313,6 +313,7 @@
 				try {
 					const db = uniCloud.database();
 					const userInfo = uni.getStorageSync('userInfo') || {};
+
 					const _ = db.command;
 					// 构建查询条件
 					let query = db.collection('orders')
@@ -336,6 +337,7 @@
 						);
 					}
 
+
 					// 保持原有状态筛选逻辑
 					if (this.currentTab > 0) {
 						const tabValue = this.tabs[this.currentTab].value;
@@ -351,7 +353,8 @@
 						.limit(this.pageSize)
 						.get();
 					// 正确方式：
-					console.log("查询到的订单结果:", res.result); // 使用逗号分隔
+					console.log("查询到的订单结果:", res.result);
+
 					// 保持原有结果处理
 					if (res.result.data) {
 						this.orderList = this.currentPage === 1 ?

@@ -35,8 +35,8 @@
 
 		</view>
 		<view class="submit">
-			<image src="../../static/images/mine/submit.png" alt=""></image>
-			<button class="submit-btn" @click="submitUserInfo">提交</button>
+			<!-- <image src="../../static/images/mine/submit.png" alt=""></image> -->
+			<button class="submit-btn" @click="submitUserInfo">登录</button>
 		</view>
 	</view>
 </template>
@@ -243,7 +243,7 @@
 						avatar: this.avatar
 					}
 				});
-				console.log(result.data.userInfo)
+				console.log(result)
 				if (result.code === 0) {
 					uni.showToast({
 						title: '登录成功',
@@ -318,7 +318,7 @@
 <style>
 	.page {
 		min-height: 100vh;
-		background: linear-gradient(to bottom, #15cbbc, #fffcf9);
+		/* background: linear-gradient(to bottom, #15cbbc, #fffcf9); */
 		padding: 50rpx;
 		padding-top: 100rpx;
 
@@ -354,7 +354,7 @@
 
 	.tip {
 		font-size: 30rpx;
-		color: #fff;
+		/* color: #fff; */
 		text-align: center;
 		margin-top: 20rpx;
 	}
@@ -391,10 +391,10 @@
 
 	.get-code {
 		margin-left: 20rpx;
-		background-color: #54c69a;
+		background-color: #1fc7d6;
 		color: #fff;
 		border-radius: 10rpx;
-		width: 150rpx;
+		width: 140rpx;
 		height: 60rpx;
 		font-size: 28rpx;
 		line-height: 60rpx;
@@ -410,21 +410,11 @@
 	.submit-btn {
 		width: 400rpx;
 		height: 80rpx;
-		background-color: #54c69a;
+		background-color: #1fc7d6;
 		color: #fff;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding-left: 50rpx;
-	}
 
-	.submit image {
-		width: 60rpx;
-		height: 60rpx;
-		position: absolute;
-		/* 使用绝对定位 */
-		left: calc(50% - 120rpx);
-		/* 调整图标位置 */
-		z-index: 1;
 	}
 </style>

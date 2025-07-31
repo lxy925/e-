@@ -95,7 +95,7 @@
 
 				<view class="info-box" v-else>
 					<view class="money">
-						<text class="money-num"> 1</text>
+						<text class="money-num">0</text>
 						<view class="money-box">
 							<image src="../../static/images/index/money (2).png" alt=""></image>
 							<text class="money-title"> 当前余额(元)</text>
@@ -159,57 +159,52 @@
 						我的工具</text>
 					<view class="order-item" v-if="userInfo.type == '陪诊师'">
 						<view class="boxed" @click="doctorRegister">
-							<image src="../../static/images/mine/patient.png" alt=""></image>
+							<image src="../../static/images/mine/personIcon.png" alt=""></image>
 							<text class="box-title">个人信息管理</text>
 						</view>
 						<view class="boxed" @click="goToSetTime">
-							<image src="../../static/images/mine/advice.png" alt=""></image>
-							<text class="box-title">查看用户评价</text>
+							<image src="../../static/images/mine/timeIcon.png" alt=""></image>
+							<text class="box-title">日程表</text>
 						</view>
-						<view class="box" @click="goToChat">
-							<image src="../../static/images/mine/chat1.png" alt=""></image>
-							<text class="box-title">聊天</text>
+						<view class="boxed" @click="goToChat">
+							<image src="../../static/images/mine/chatIcon.png" alt=""></image>
+							<text class="boxed-title">信息</text>
 						</view>
 						<view class="boxed" @click="goSetting">
-							<image src="../../static/images/mine/setting.png" alt=""></image>
-							<text class="box-title">设置中心</text>
+							<image src="../../static/images/mine/helpIcon.png" alt=""></image>
+							<text class="box-title">帮助</text>
 						</view>
 
 					</view>
 					<view class="order-item" v-else>
-						<view class="box" id="box1" style="margin-left: 0">
-							<image src="../../static/images/mine/location.png" alt=""></image>
+						<view class="boxed" id="box1" style="margin-left: 0" @click="goMyAddress">
+							<image src="../../static/images/mine/locationIcon.png" alt=""></image>
 							<text class="box-title">地址管理</text>
 						</view>
-						<view class="box" @click="goPationManager">
-							<image src="../../static/images/mine/patient.png" alt=""></image>
+						<view class="boxed" @click="goPationManager">
+							<image src="../../static/images/mine/personIcon.png" alt=""></image>
 							<text class="box-title">就诊人管理</text>
 						</view>
-						<view class="box" @click="goToChat">
-							<image src="../../static/images/mine/chat1.png" alt=""></image>
-							<text class="box-title">聊天</text>
+						<view class="boxed" @click="goToChat">
+							<image src="../../static/images/mine/chatIcon.png" alt=""></image>
+							<text class="boxed-title">信息</text>
 						</view>
-
-						<view class="box">
-							<image src="../../static/images/mine/advice.png" alt=""></image>
-							<text class="box-title">投诉建议</text>
+						<view class="boxed" style="margin-left: 0" @click="doctorRegister">
+							<image src="../../static/images/mine/joinIcon.png" alt=""></image>
+							<text class="boxed-title">陪诊师入驻</text>
 						</view>
-						<view class="box" style="margin-left: 0" @click="doctorRegister">
-							<image src="../../static/images/mine/help.png" alt=""></image>
-							<text class="box-title">陪诊师入驻</text>
-						</view>
-						<view class="box" @click="goSetting">
-							<image src="../../static/images/mine/setting.png" alt=""></image>
-							<text class="box-title">设置中心</text>
+						<view class="boxed" @click="goSetting">
+							<image src="../../static/images/mine/helpIcon.png" alt=""></image>
+							<text class="box-title">帮助</text>
 						</view>
 					</view>
 				</view>
-				<view class="logout-box">
+				<!-- 	<view class="logout-box">
 					<image src="../../static/images/mine/logout.png" alt=""></image>
 					<button class="logout" @click="logout" v-if="userInfo.user_id">
 						退出登录
 					</button>
-				</view>
+				</view> -->
 			</view>
 
 		</scroll-view>
@@ -337,6 +332,12 @@
 				} finally {
 					uni.hideLoading();
 				}
+			},
+
+			goMyAddress() {
+				uni.navigateTo({
+					url: '/pages/myAddress/myAddress'
+				});
 			},
 
 			getTimeRange(timeRange) {
@@ -506,47 +507,18 @@
 					});
 				}
 			},
+
+			goSetting() {
+				uni.navigateTo({
+					url: "/pages/help/help",
+				});
+
+			},
 			doctorRegister() {
 				uni.navigateTo({
 					url: "/pages/escortRegistration/escortRegistration",
 				});
 
-			},
-			async onSwitchChange() {
-				console.log("改变之前的值", this.userInfo.moreInfo.is_bookable);
-				try {
-					const {
-						result
-					} = await uniCloud.callFunction({
-						name: "updateEscort",
-						data: {
-							user_id: this.userInfo.user_id,
-							is_bookable: !this.userInfo.moreInfo.is_bookable,
-						},
-					});
-
-					if (result.code === 200) {
-						uni.showToast({
-							title: "修改成功",
-							icon: "success",
-						});
-
-						this.getUser();
-						console.log("改变之后的值", this.userInfo.moreInfo.is_bookable);
-					} else {
-						uni.showToast({
-							title: result.message || "修改失败",
-							icon: "none",
-						});
-					}
-				} catch (e) {
-					uni.showToast({
-						title: '获取用户数据失败',
-						icon: 'none'
-					});
-				} finally {
-					uni.hideLoading();
-				}
 			},
 
 			toApply() {
@@ -864,6 +836,7 @@
 		border-radius: 15rpx;
 		padding: 20rpx;
 		padding: 20 0rpx;
+		box-sizing: border-box;
 		width: 100%;
 	}
 
@@ -877,6 +850,7 @@
 	.order-item {
 		margin-top: 20rpx;
 		display: flex;
+		justify-content: space-between;
 		flex-wrap: wrap;
 	}
 
@@ -885,9 +859,9 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		width: 30%;
 		margin-bottom: 20rpx;
-		margin-left: 15rpx;
+		width: 25%;
+		/* margin-left: 15rpx; */
 	}
 
 	.boxed image {

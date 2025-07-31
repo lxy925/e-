@@ -216,6 +216,14 @@
 				"navigationBarTitleText": ""
 			}
 		},
+
+		{
+			"path": "uni_modules/uni-pay/pages/pay-desk/pay-desk",
+			"style": {
+				"backgroundColor": "#F8F8F8",
+				"navigationBarTitleText": "收银台"
+			}
+		},
 		{
 			"path": "uni_modules/uni-pay/pages/success/success",
 			"style": {
@@ -241,17 +249,30 @@
 			"style": {
 				"navigationBarTitleText": ""
 			}
+		},
+		{
+			"path": "pages/help/help",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/web-view/web-view",
+			"style": {
+				"usingComponents": {},
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "医院官网"
+			}
 		}
 	],
 	"globalStyle": {
-		"backgroundColor": "#0bd6c8",
+		"backgroundColor": "#1fc7d6",
 		"backgroundTextStyle": "light",
-		"navigationBarBackgroundColor": "#0bd6c8",
+		"navigationBarBackgroundColor": "#1fc7d6",
 		"navigationBarTitleText": "e陪无忧",
 		"navigationBarTextStyle": "white",
 		"navigationStyle": "custom"
 	},
-
 	"sitemapLocation": "sitemap.json",
 	"style": "v2",
 	"lazyCodeLoading": "requiredComponents",
@@ -290,6 +311,7 @@
 	"easycom": {
 		"autoscan": true,
 		"custom": {
+			"^uni-pay$": "@/uni_modules/uni-pay/components/uni-pay/uni-pay.vue",
 			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
 			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 		}

@@ -364,17 +364,7 @@ export default {
 
       this.userId = currentUserInfo.user_id;
       this.userType = currentUserInfo.type;
-
-      if (!this.userId) {
-        // 兜底查库
-        let collection = this.userType === '普通用户'
-          ? db.collection('users')
-          : db.collection('escorts');
-        const { result } = await collection.doc(this.userId).get();
-        if (result.data && result.data.length > 0) {
-          this.userUserId = result.data[0].user_id;
-        }
-      }
+      //this.userUserId = currentUserInfo.user_id;
       
       console.log('初始化用户信息：', {
         userId: this.userId,
@@ -424,24 +414,13 @@ export default {
       try {
         console.log('开始获取聊天对象信息，用户类型：', this.userType);
         console.log('当前用户ID：', this.userId);
-        
         const currentUserInfo = uni.getStorageSync('currentUserInfo');
         if (!currentUserInfo || !currentUserInfo.partner_id) {
           throw new Error('未找到聊天对象信息');
         }
-        
         let partnerId = currentUserInfo.partner_id;
-        let collection;
-        
-        if (this.userType === '普通用户') {
-          collection = db.collection('escorts');
-        } else {
-          collection = db.collection('users');
-        }
-        
-        console.log('开始查询聊天对象信息，ID：', partnerId);
-        const { result } = await collection.where({user_id:partnerId}).get();
-        
+        // 直接查users表
+        const { result } = await uniCloud.database().collection('users').where({user_id: partnerId}).get();
         if (result.data && result.data.length > 0) {
           this.chatPartner = result.data[0];
           console.log('获取到的聊天对象信息：', this.chatPartner);
@@ -463,10 +442,9 @@ export default {
     // 加载历史消息
     async loadMessages() {
       try {
-        if (!this.userId || !this.chatPartner || !this.chatPartner._id) {
+        if (!this.userId || !this.chatPartner || !this.chatPartner.user_id) {
           throw new Error('用户信息不完整');
         }
-        
         const { result } = await uniCloud.callFunction({
           name: 'chatMessage',
           data: {
@@ -479,7 +457,6 @@ export default {
             }
           }
         });
-        
         if (result.code === 200) {
           this.messageList = result.data;
           this.$nextTick(() => {
@@ -546,7 +523,7 @@ export default {
             action: 'startMessageListener',
             data: {
               userId: this.userId,
-              chatPartnerId: this.chatPartner._id,
+              chatPartnerId: this.chatPartner.user_id,
               sender_type: this.userType
             }
           }
@@ -559,10 +536,10 @@ export default {
               const { result } = await uniCloud.callFunction({
                 name: 'chatMessage',
                 data: {
-                  action: 'getLatestMessages',
+                  action: 'startMessageListener',
                   data: {
                     userId: this.userId,
-                    chatPartnerId: this.chatPartner._id,
+                    chatPartnerId: this.chatPartner.user_id,
                     lastMessageTime: this.messageList.length > 0 ? this.messageList[this.messageList.length - 1].time : '0',
                     sender_type: this.userType
                   }
@@ -586,7 +563,7 @@ export default {
             } catch (e) {
               console.error('获取新消息失败:', e);
             }
-          }, 30000000); // 每3秒检查一次新消息
+          }, 3000); // 每3秒检查一次新消息
         } else {
           throw new Error(result.msg || '启动消息监听失败');
         }
@@ -598,40 +575,34 @@ export default {
     // 发送消息
     async sendMessage() {
       if (!this.messageText.trim()) return;
-      
       try {
-        if (!this.userId || !this.chatPartner || !this.chatPartner._id) {
+        if (!this.userId || !this.chatPartner || !this.chatPartner.user_id) {
           throw new Error('用户信息不完整');
         }
-        
         const message = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
           content: this.messageText,
           message_type: 'text',
-          time: Date.now().toString(),
-          status: 'sending',
           sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
         // 先显示消息
-        this.messageList.push(message);
+        this.messageList.push({
+          ...message,
+          user_id: this.userId,
+          escort_id: this.chatPartner.user_id,
+          time: Date.now().toString(),
+          status: 'sending'
+        });
         this.scrollToBottom();
-        
         const { result } = await uniCloud.callFunction({
           name: 'chatMessage',
           data: {
             action: 'sendMessage',
-            data: {
-              ...message,
-              userId: this.userId,
-              chatPartnerId: this.chatPartner._id,
-              sender_type: this.userType
-            }
+            data: message
           }
         });
-        
         if (result.code === 200) {
           const index = this.messageList.findIndex(msg => msg.status === 'sending');
           if (index !== -1) {
@@ -641,7 +612,6 @@ export default {
         } else {
           throw new Error(result.msg || '发送消息失败');
         }
-        
         this.messageText = '';
         this.showMediaOptions = false;
       } catch (e) {
@@ -850,7 +820,8 @@ export default {
     
     // 判断是否是自己的消息
     isSelfMessage(message) {
-      return message.user_id === this.userUserId;
+			return message.sender_type === this.userType;
+      
     },
     
     // 获取自己的头像
@@ -898,66 +869,51 @@ export default {
           sizeType: ['compressed'],
           sourceType: ['album', 'camera']
         });
-        
         if (err) {
           throw new Error('选择图片失败');
         }
-        
         if (!res || !res.tempFilePaths || res.tempFilePaths.length === 0) {
           throw new Error('未选择图片');
         }
-        
         const tempFilePath = res.tempFilePaths[0];
-        const currentTime = Date.now().toString();
-        
-        // 显示发送中的消息
-        const tempMessage = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
-          content: tempFilePath,
-          message_type: 'image',
-          time: currentTime,
-          status: 'sending',
-          sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
-        };
-        
-        this.messageList.push(tempMessage);
-        this.scrollToBottom();
-        
         // 上传图片到云存储
         const uploadRes = await uniCloud.uploadFile({
           filePath: tempFilePath,
           cloudPath: `chat/images/${Date.now()}_${Math.random().toString(36).slice(-6)}.${tempFilePath.split('.').pop()}`
         });
-        
         if (!uploadRes || !uploadRes.fileID) {
           throw new Error('上传图片失败：未获取到文件ID');
         }
-        
-        // 发送消息到数据库
+        // 通过云函数发送消息
         const message = {
-          ...tempMessage,
           content: uploadRes.fileID,
-          status: 'sent'
+          message_type: 'image',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
-        const { result } = await messageCollection.add(message);
-        if (result.id) {
-          // 更新本地消息状态
-          const index = this.messageList.findIndex(msg => 
-            msg.status === 'sending' && msg.time === currentTime
-          );
-          if (index !== -1) {
-            this.messageList[index] = {
-              ...message,
-              _id: result.id
-            };
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'sendMessage',
+            data: message
           }
+        });
+        if (result.code === 200) {
+          // 可选：立即插入本地消息列表
+          this.messageList.push({
+            ...message,
+            user_id: this.userId,
+            escort_id: this.chatPartner.user_id,
+            time: Date.now().toString(),
+            status: 'sent',
+            _id: result.data.id
+          });
+          this.scrollToBottom();
         } else {
-          throw new Error('保存消息失败');
+          throw new Error(result.msg || '发送图片失败');
         }
-        
         this.showMediaOptions = false;
       } catch (e) {
         console.error('发送图片失败:', e);
@@ -965,15 +921,8 @@ export default {
           title: e.message || '发送图片失败',
           icon: 'none'
         });
-        
-        // 移除发送失败的消息
-        const index = this.messageList.findIndex(msg => msg.status === 'sending');
-        if (index !== -1) {
-          this.messageList.splice(index, 1);
-        }
       }
     },
-    
     // 选择视频
     async chooseVideo() {
       try {
@@ -982,69 +931,51 @@ export default {
           maxDuration: 60,
           camera: 'back'
         });
-        
         if (err) {
           throw new Error('选择视频失败');
         }
-        
         if (!res || !res.tempFilePath) {
           throw new Error('未选择视频');
         }
-        
         const tempFilePath = res.tempFilePath;
-        const currentTime = Date.now().toString();
-        
-        // 显示发送中的消息
-        const tempMessage = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
-          content: tempFilePath,
-          message_type: 'video',
-          time: currentTime,
-          status: 'sending',
-          sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
-        };
-        
-        this.messageList.push(tempMessage);
-        this.scrollToBottom();
-        
-        // 获取文件扩展名
         const fileExt = tempFilePath.substring(tempFilePath.lastIndexOf('.') + 1);
-        
         // 上传视频到云存储
         const uploadRes = await uniCloud.uploadFile({
           filePath: tempFilePath,
           cloudPath: `chat/videos/${Date.now()}_${Math.random().toString(36).slice(-6)}.${fileExt}`
         });
-        
         if (!uploadRes || !uploadRes.fileID) {
           throw new Error('上传视频失败：未获取到文件ID');
         }
-        
-        // 发送消息到数据库
+        // 通过云函数发送消息
         const message = {
-          ...tempMessage,
           content: uploadRes.fileID,
-          status: 'sent'
+          message_type: 'video',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
-        const { result } = await messageCollection.add(message);
-        if (result.id) {
-          // 更新本地消息状态
-          const index = this.messageList.findIndex(msg => 
-            msg.status === 'sending' && msg.time === currentTime
-          );
-          if (index !== -1) {
-            this.messageList[index] = {
-              ...message,
-              _id: result.id
-            };
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'sendMessage',
+            data: message
           }
+        });
+        if (result.code === 200) {
+          this.messageList.push({
+            ...message,
+            user_id: this.userId,
+            escort_id: this.chatPartner.user_id,
+            time: Date.now().toString(),
+            status: 'sent',
+            _id: result.data.id
+          });
+          this.scrollToBottom();
         } else {
-          throw new Error('保存消息失败');
+          throw new Error(result.msg || '发送视频失败');
         }
-        
         this.showMediaOptions = false;
       } catch (e) {
         console.error('发送视频失败:', e);
@@ -1052,92 +983,64 @@ export default {
           title: e.message || '发送视频失败',
           icon: 'none'
         });
-        
-        // 移除发送失败的消息
-        const index = this.messageList.findIndex(msg => msg.status === 'sending');
-        if (index !== -1) {
-          this.messageList.splice(index, 1);
-        }
       }
     },
-    
     // 选择文件
     async chooseFile() {
       try {
-        // 使用 uni.chooseMessageFile 替代 uni.chooseFile
         const [err, res] = await uni.chooseMessageFile({
           count: 1,
           type: 'all',
           extension: ['.doc', '.docx', '.pdf', '.xls', '.xlsx', '.ppt', '.pptx', '.txt']
         });
-        
         if (err) {
           throw new Error('选择文件失败');
         }
-        
         if (!res || !res.tempFiles || res.tempFiles.length === 0) {
           throw new Error('未选择文件');
         }
-        
         const file = res.tempFiles[0];
-        const currentTime = Date.now().toString();
-        
-        // 显示发送中的消息
-        const tempMessage = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
-          content: JSON.stringify({
-            name: file.name,
-            size: file.size,
-            path: file.path
-          }),
-          message_type: 'file',
-          time: currentTime,
-          status: 'sending',
-          sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
-        };
-        
-        this.messageList.push(tempMessage);
-        this.scrollToBottom();
-        
         // 上传文件到云存储
         const uploadRes = await uniCloud.uploadFile({
           filePath: file.path,
           cloudPath: `chat/files/${Date.now()}_${file.name}`
         });
-        
         if (!uploadRes || !uploadRes.fileID) {
           throw new Error('上传文件失败：未获取到文件ID');
         }
-        
-        // 发送消息到数据库
+        // 通过云函数发送消息
         const message = {
-          ...tempMessage,
           content: JSON.stringify({
             name: file.name,
             size: file.size,
             fileID: uploadRes.fileID
           }),
-          status: 'sent'
+          message_type: 'file',
+          sender_type: this.userType,
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
-        const { result } = await messageCollection.add(message);
-        if (result.id) {
-          // 更新本地消息状态
-          const index = this.messageList.findIndex(msg => 
-            msg.status === 'sending' && msg.time === currentTime
-          );
-          if (index !== -1) {
-            this.messageList[index] = {
-              ...message,
-              _id: result.id
-            };
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'sendMessage',
+            data: message
           }
+        });
+        if (result.code === 200) {
+          this.messageList.push({
+            ...message,
+            user_id: this.userId,
+            escort_id: this.chatPartner.user_id,
+            time: Date.now().toString(),
+            status: 'sent',
+            _id: result.data.id
+          });
+          this.scrollToBottom();
         } else {
-          throw new Error('保存消息失败');
+          throw new Error(result.msg || '发送文件失败');
         }
-        
         this.showMediaOptions = false;
       } catch (e) {
         console.error('发送文件失败:', e);
@@ -1145,56 +1048,8 @@ export default {
           title: e.message || '发送文件失败',
           icon: 'none'
         });
-        
-        // 移除发送失败的消息
-        const index = this.messageList.findIndex(msg => msg.status === 'sending');
-        if (index !== -1) {
-          this.messageList.splice(index, 1);
-        }
       }
     },
-    
-    // 获取当前位置
-    async getLocation() {
-      try {
-        const [err, res] = await uni.chooseLocation({
-          latitude: 23.12463,  // 默认纬度
-          longitude: 113.36199, // 默认经度
-        });
-        
-        if (err) {
-          throw new Error('获取位置失败');
-        }
-        
-        console.log('获取到的位置信息:', res);
-        
-        // 直接使用微信返回的位置信息
-        this.currentLocation = {
-          latitude: parseFloat(res.latitude),
-          longitude: parseFloat(res.longitude),
-          address: res.address,
-          name: res.name
-        };
-        
-        // 保存位置信息到本地存储
-        if (res.province) {
-          uni.setStorageSync('provinceName', res.province);
-        }
-        if (res.city) {
-          uni.setStorageSync('cityName', res.city);
-        }
-        if (res.district) {
-          uni.setStorageSync('areaName', res.district);
-        }
-      } catch (e) {
-        console.error('获取位置失败:', e);
-        uni.showToast({
-          title: e.message || '获取位置失败',
-          icon: 'none'
-        });
-      }
-    },
-    
     // 选择位置（用于发送位置消息）
     async chooseLocation() {
       try {
@@ -1202,21 +1057,14 @@ export default {
           latitude: 23.12463,  // 默认纬度
           longitude: 113.36199, // 默认经度
         });
-        
         if (err) {
           throw new Error('选择位置失败');
         }
-        
         if (!res) {
           throw new Error('未选择位置');
         }
-        
-        const currentTime = Date.now().toString();
-        
-        // 显示发送中的消息
-        const tempMessage = {
-          user_id: this.userUserId,
-          escort_id: this.chatPartner.user_id,
+        // 通过云函数发送消息
+        const message = {
           content: JSON.stringify({
             latitude: res.latitude,
             longitude: res.longitude,
@@ -1224,34 +1072,31 @@ export default {
             name: res.name
           }),
           message_type: 'location',
-          time: currentTime,
-          status: 'sending',
           sender_type: this.userType,
-          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户'
+          receiver_type: this.userType === '普通用户' ? '陪诊师' : '普通用户',
+          userId: this.userId,
+          chatPartnerId: this.chatPartner.user_id
         };
-        
-        this.messageList.push(tempMessage);
-        this.scrollToBottom();
-        
-        // 发送到数据库
-        const { result } = await messageCollection.add(tempMessage);
-        
-        if (result.id) {
-          // 更新本地消息状态
-          const index = this.messageList.findIndex(msg => 
-            msg.status === 'sending' && msg.time === currentTime
-          );
-          if (index !== -1) {
-            this.messageList[index] = {
-              ...tempMessage,
-              _id: result.id,
-              status: 'sent'
-            };
+        const { result } = await uniCloud.callFunction({
+          name: 'chatMessage',
+          data: {
+            action: 'sendMessage',
+            data: message
           }
+        });
+        if (result.code === 200) {
+          this.messageList.push({
+            ...message,
+            user_id: this.userId,
+            escort_id: this.chatPartner.user_id,
+            time: Date.now().toString(),
+            status: 'sent',
+            _id: result.data.id
+          });
+          this.scrollToBottom();
         } else {
-          throw new Error('保存位置信息失败');
+          throw new Error(result.msg || '发送位置失败');
         }
-        
         this.showMediaOptions = false;
       } catch (e) {
         console.error('发送位置失败:', e);
@@ -1259,12 +1104,6 @@ export default {
           title: e.message || '发送位置失败',
           icon: 'none'
         });
-        
-        // 移除发送失败的消息
-        const index = this.messageList.findIndex(msg => msg.status === 'sending');
-        if (index !== -1) {
-          this.messageList.splice(index, 1);
-        }
       }
     },
     
@@ -1289,25 +1128,13 @@ export default {
     // 获取聊天对象头像
     getPartnerAvatar() {
       if (!this.chatPartner) return '/static/service-default.png';
-      if (this.userType === '普通用户') {
-        // 当前用户是普通用户，聊天对象是陪诊师
-        return this.chatPartner.avatarUrl || '/static/service-default.png';
-      } else {
-        // 当前用户是陪诊师，聊天对象是普通用户
-        return this.chatPartner.avatar || '/static/service-default.png';
-      }
+      return this.chatPartner.avatar || '/static/service-default.png';
     },
     
     // 获取聊天对象名称
     getPartnerName() {
       if (!this.chatPartner) return '未知用户';
-      if (this.userType === '普通用户') {
-        // 当前用户是普通用户，聊天对象是陪诊师
-        return this.chatPartner.name || '未知用户';
-      } else {
-        // 当前用户是陪诊师，聊天对象是普通用户
-        return this.chatPartner.realName || '未知用户';
-      }
+      return this.chatPartner.realName || this.chatPartner.nickName || '未知用户';
     },
 
     // 预览图片
@@ -1395,6 +1222,46 @@ export default {
         uni.hideLoading();
       }
     },
+	// 获取当前位置
+	    async getLocation() {
+	      try {
+	        const [err, res] = await uni.chooseLocation({
+	          latitude: 23.12463,  // 默认纬度
+	          longitude: 113.36199, // 默认经度
+	        });
+	        
+	        if (err) {
+	          throw new Error('获取位置失败');
+	        }
+	        
+	        console.log('获取到的位置信息:', res);
+	        
+	        // 直接使用微信返回的位置信息
+	        this.currentLocation = {
+	          latitude: parseFloat(res.latitude),
+	          longitude: parseFloat(res.longitude),
+	          address: res.address,
+	          name: res.name
+	        };
+	        
+	        // 保存位置信息到本地存储
+	        if (res.province) {
+	          uni.setStorageSync('provinceName', res.province);
+	        }
+	        if (res.city) {
+	          uni.setStorageSync('cityName', res.city);
+	        }
+	        if (res.district) {
+	          uni.setStorageSync('areaName', res.district);
+	        }
+	      } catch (e) {
+	        console.error('获取位置失败:', e);
+	        uni.showToast({
+	          title: e.message || '获取位置失败',
+	          icon: 'none'
+	        });
+	      }
+	    },
 
     // 打开位置
     openLocation(location) {
@@ -1596,86 +1463,48 @@ export default {
     startCheckInCheck() {
       // 立即执行一次检查
       this.checkPendingCheckIns();
-      
       // 每10秒检查一次是否有待打卡任务
       this.checkInTimer = setInterval(() => {
         this.checkPendingCheckIns();
-		//console.log('check');
       }, 10000);
     },
-    
     // 检查待打卡任务
     async checkPendingCheckIns() {
       try {
         console.log('开始检查打卡任务，当前用户ID:', this.userId);
-        
-        // 先检查是否有成功的打卡记录
-        const checkResult = await uniCloud.callFunction({
-          name: 'checkIn',
-          data: {
-            action: 'checkSuccessfulCheckIn',
-            data: {
-              escort_id: this.userId
-            }
-          }
-        });
-        
-        console.log('检查成功打卡记录结果:', checkResult);
-        
-        if (checkResult.result.code === 200 && checkResult.result.data.hasSuccessfulCheckIn) {
-          console.log('已有成功打卡记录，停止检查');
-          // 如果有成功打卡记录，停止检查
-          if (this.checkInTimer) {
-            clearInterval(this.checkInTimer);
-            this.checkInTimer = null;
-          }
-          // 如果弹窗显示，关闭它
-          if (this.showCheckInModal) {
-            this.closeCheckInModal();
-          }
-          return;
-        }
-        
-        // 如果没有成功打卡记录，继续检查待打卡任务
+        // 直接请求后端，传doctor_id为当前用户
         const { result } = await uniCloud.callFunction({
           name: 'checkIn',
           data: {
             action: 'getPendingCheckIns',
             data: {
-              escort_id: this.userId
+              doctor_id: this.userId
             }
           }
         });
-        
         console.log('云函数返回结果:', result);
-        
         if (result.code === 200) {
           if (result.data && result.data.length > 0) {
-            console.log('找到待打卡任务:', result.data);
-            // 如果当前没有显示打卡弹窗，则显示
+            // 有待打卡任务且未打卡成功，弹窗
             if (!this.showCheckInModal) {
-              console.log('显示打卡弹窗');
               this.currentCheckIn = result.data[0];
               this.showCheckInModal = true;
-              
-              // 获取位置信息
               await this.getLocation();
-              
-              // 显示提示
               uni.showToast({
                 title: '请及时完成打卡',
                 icon: 'none',
                 duration: 2000
               });
-            } else {
-              console.log('打卡弹窗已显示，不重复显示');
             }
           } else {
-            console.log('没有找到待打卡任务');
-            // 如果没有待打卡任务，关闭打卡弹窗
+            // 没有待打卡任务，关闭弹窗
             if (this.showCheckInModal) {
-              console.log('关闭打卡弹窗');
               this.closeCheckInModal();
+            }
+            // 停止定时器
+            if (this.checkInTimer) {
+              clearInterval(this.checkInTimer);
+              this.checkInTimer = null;
             }
           }
         } else {
@@ -1960,6 +1789,8 @@ export default {
 }
 
 .footer {
+	position: fixed;
+	bottom: 0;
   background-color: #fff;
   border-top: 1rpx solid #eee;
   width: 100%;

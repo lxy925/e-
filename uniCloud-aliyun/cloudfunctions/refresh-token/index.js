@@ -1,5 +1,3 @@
-const jwt = require('./jwt');
-
 'use strict';
 const jwt = require('../common/jwt');
 

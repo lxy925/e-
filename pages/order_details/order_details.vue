@@ -1,76 +1,77 @@
 <template>
 	<view class="page">
 		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
-			<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
+		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
 		  paddingTop: navHeight + 'px',
 		  height: 'calc(100vh - ' + navHeight + 'px)'
 		}" :scroll-top="scrollTop" :show-scrollbar="false">
-		
-		<view class="container">
-			<scroll-view scroll-y="true" class="scroll-content">
-				<view class="accompany-service">
-					<image v-if="details.length > 0" :src="details[0].image" id="service-introduce" mode="aspectFill" />
-					<view class="intro_1">
-						<text>认证陪诊师提供专业服务</text>
-						<text>家人般温暖</text>
-					</view>
-					<view class="intro_2">
-						<view class="text-with-icon">
-							<image src="../../static/images/order/icon_6.png" class="icon" />
-							<view class="text-container">
-								<text class="i_1">全程陪诊</text>
-								<text class="i_2">全程陪同服务，手续代办服务</text>
+
+			<view class="container">
+				<scroll-view scroll-y="true" class="scroll-content">
+					<view class="accompany-service">
+						<image v-if="details.length > 0" :src="details[0].image" id="service-introduce"
+							mode="aspectFill" />
+						<view class="intro_1">
+							<text>认证陪诊师提供专业服务</text>
+							<text>家人般温暖</text>
+						</view>
+						<view class="intro_2">
+							<view class="text-with-icon">
+								<image src="../../static/images/order/icon_6.png" class="icon" />
+								<view class="text-container">
+									<text class="i_1">全程陪诊</text>
+									<text class="i_2">全程陪同服务，手续代办服务</text>
+								</view>
+							</view>
+							<view class="text-container_1">
+								<text class="i_3">[半天陪诊/全天陪诊] 仅供白天医院正常工作时间使用,如在非医院正常工作时间需要陪诊服务,您需选择[夜间急诊]</text>
 							</view>
 						</view>
-						<view class="text-container_1">
-							<text class="i_3">[半天陪诊/全天陪诊] 仅供白天医院正常工作时间使用,如在非医院正常工作时间需要陪诊服务,您需选择[夜间急诊]</text>
+					</view>
+					<view class="service-information">
+						<view class="service-info">
+							<text class="s_1">优惠价 </text>
+							<text class="s_2">¥</text>
+							<text class="s_3">{{serviceData ? serviceData.service_price : '加载失败'}}</text>
+							<!-- <text class="s_4">起/次 日常价 ¥178 起</text> -->
+							<text class="s_5">已售{{serviceData ? serviceData.sold_quantity : '加载失败'}}单</text>
+						</view>
+						<text class="s_6">{{serviceData ? serviceData.service_name : '加载失败'}}</text>
+						<view class="text-container_2">
+							<text class="s_7">平安自营</text>
+							<text class="s_8">持证上岗更安心</text>
 						</view>
 					</view>
+					<view class="options">
+						<view class="selection">
+							<text id="name">规格解释</text>
+							<text id="description">{{serviceData ? serviceData.service_details : '加载失败'}}</text>
+						</view>
+						<view class="quantity">
+							<text>数量</text>
+							<text>1</text>
+						</view>
+					</view>
+					<view class="service-content">
+						<view class="service-title">
+							<text>服</text>
+							<text class="green">务内</text>
+							<text>容</text>
+						</view>
+						<view class="service-image">
+							<image v-if="details.length > 0" :src="details[1].image" mode="aspectFill" />
+						</view>
+					</view>
+				</scroll-view>
+				<view class="fixed-buttons">
+					<button class="customer-service">
+						<image src="../../static/images/order/icon_7.png" alt="" />
+					</button>
+					<button class="order-now" style="border: none; position: relative;" @click="goToOrder">
+						<text class="button-text">立即下单</text>
+					</button>
 				</view>
-				<view class="service-information">
-					<view class="service-info">
-						<text class="s_1">优惠价 </text>
-						<text class="s_2">¥</text>
-						<text class="s_3">{{serviceData ? serviceData.service_price : '加载失败'}}</text>
-						<!-- <text class="s_4">起/次 日常价 ¥178 起</text> -->
-						<text class="s_5">已售{{serviceData ? serviceData.sold_quantity : '加载失败'}}单</text>
-					</view>
-					<text class="s_6">{{serviceData ? serviceData.service_name : '加载失败'}}</text>
-					<view class="text-container_2">
-						<text class="s_7">平安自营</text>
-						<text class="s_8">持证上岗更安心</text>
-					</view>
-				</view>
-				<view class="options">
-					<view class="selection">
-						<text id="name">规格解释</text>
-						<text id="description">{{serviceData ? serviceData.service_details : '加载失败'}}</text>
-					</view>
-					<view class="quantity">
-						<text>数量</text>
-						<text>1</text>
-					</view>
-				</view>
-				<view class="service-content">
-					<view class="service-title">
-						<text>服</text>
-						<text class="green">务内</text>
-						<text>容</text>
-					</view>
-					<view class="service-image">
-						<image v-if="details.length > 0" :src="details[1].image" mode="aspectFill" />
-					</view>
-				</view>
-			</scroll-view>
-			<view class="fixed-buttons">
-				<button class="customer-service">
-					<image src="../../static/images/order/icon_7.png" alt="" />
-				</button>
-				<button class="order-now" style="border: none; position: relative;" @click="goToOrder">
-					<text class="button-text">立即下单</text>
-				</button>
 			</view>
-		</view>
 		</scroll-view>
 	</view>
 </template>
@@ -90,7 +91,7 @@
 				include_transport: false,
 			};
 		},
-		onLoad(){
+		onLoad() {
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
 		},
@@ -106,7 +107,7 @@
 				const service = encodeURIComponent(JSON.stringify(this.serviceData));
 				console.log("传递的 service 参数:", service);
 				uni.navigateTo({
-					url: `/pages/order/order?service=${service}`
+					url: `/pages/order/order?service=${service}&from=order_details`
 				});
 			},
 			async getDetailsImage() {
@@ -167,12 +168,13 @@
 	/**index.wxss**/
 	/* pages/order_details/order_details.wxss */
 	page {
-			height: 100vh;
+		height: 100vh;
 	}
-.page-container {
+
+	.page-container {
 		min-height: 100vh;
 		position: relative;
-		
+
 		padding-left: 25rpx;
 		padding-right: 25rpx;
 		margin: 0;
@@ -184,7 +186,7 @@
 		scrollbar-width: none;
 		/* Firefox */
 	}
-	
+
 	.page-container ::-webkit-scrollbar {
 		display: none;
 		/* Chrome/Safari */
@@ -192,20 +194,26 @@
 		/* 微信小程序可能需要 */
 		height: 0 !important;
 	}
-.container {
-		margin-top: 200rpx; /* 根据导航栏高度调整 */
-		padding-bottom: 120rpx; /* 避免底部按钮遮挡内容 */
+
+	.container {
+		margin-top: 200rpx;
+		/* 根据导航栏高度调整 */
+		padding-bottom: 120rpx;
+		/* 避免底部按钮遮挡内容 */
 	}
-.fixed-nav {
+
+	.fixed-nav {
 		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
-		z-index: 1000; /* 确保导航栏在最上层 */
+		z-index: 1000;
+		/* 确保导航栏在最上层 */
 	}
 
 	.scroll-content {
-		height: calc(100vh - 200rpx - 120rpx); /* 动态高度：视窗高度 - 导航栏 - 底部按钮 */
+		height: calc(100vh - 200rpx - 120rpx);
+		/* 动态高度：视窗高度 - 导航栏 - 底部按钮 */
 		overflow-y: auto;
 	}
 

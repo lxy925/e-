@@ -1,7 +1,0 @@
-{
-  "usingComponents": {
-    "custom-nav": "/components/custom-nav/custom-nav",
-    "service-notice-popup": "/components/service-notice-popup",
-    "payment-component": "/components/PaymentComponent"
-  }
-}

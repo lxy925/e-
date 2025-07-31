@@ -7,8 +7,9 @@
 		      height: 'calc(100vh - ' + navHeight + 'px)'
 		    }" :scroll-top="scrollTop" :show-scrollbar="false">
 			<view class="search-box">
-				<image class="search-icon" src="../../static/images/icons/search.png" ></image>
-				<input type="text" v-model="searchKeyword" placeholder="搜索陪诊师的名字" placeholder-class="placeholder-style" @input="handleSearch" />
+				<image class="search-icon" src="../../static/images/icons/search.png"></image>
+				<input type="text" v-model="searchKeyword" placeholder="搜索陪诊师的名字" placeholder-class="placeholder-style"
+					@input="handleSearch" />
 			</view>
 			<view class="doctor-list">
 				<view class="doctor-card" v-for="(doctor, index) in doctors" :key="index"
@@ -33,9 +34,7 @@
 							<text :class="['doctor-certification', doctor.is_certified ? 'certified' : 'uncertified']">
 								{{ doctor.is_certified ? '已认证' : '未认证' }}
 							</text>
-							<text :class="['doctor-availability', doctor.is_bookable ? 'available' : 'unavailable']">
-								{{ doctor.is_bookable ? '可预约' : '不可预约' }}
-							</text>
+
 						</view>
 					</view>
 					<view class="doctor-need">
@@ -44,6 +43,15 @@
 							<image src="../../static/images/index/star.png" alt=""></image>
 						</view>
 					</view>
+				</view>
+			</view>
+			<view class="loading-footer" v-if="showLoading">
+				<view class="loading" v-if="!noMore">
+					<!-- 这里使用你的加载组件，没有可以用文字代替 -->
+					<text class="loading-text">加载中...</text>
+				</view>
+				<view class="no-more" v-if="noMore">
+					<text>没有更多数据了</text>
 				</view>
 			</view>
 		</scroll-view>
@@ -62,23 +70,43 @@
 				searchKeyword: '', // 新增搜索关键词
 				doctors: [],
 				Location: {},
-				fromOrder: false
+				fromOrder: false,
+				startTime: null,
+				endTime: null,
+				page: 1, // 新增：当前页码，默认1
+				pageSize: 10, // 新增：每页条数，默认10
+				showLoading: false, // 新增：是否显示加载状态
+				noMore: false, // 新增：是否没有更多数据
+				isLoading: false // 新增：防止重复请求的锁
 			};
 		},
 		onLoad(options) {
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
 
-			// 检查是否从order页面跳转过来
-			if (options.from === 'order' && options.selectedTime) {
+			// 接收所有参数（检查是否从order页面跳转过来)
+			if (options.from === 'order') {
 				this.fromOrder = true;
-				console.log("传过来的时间参数", options.selectedTime)
-				const selectedTime = options.selectedTime;
-				this.timeObj = this.convertTimeToValue(selectedTime);
-				console.log(this.timeObj);
-				console.log("传过来的时间参数", selectedTime)
+
+				// 接收时间参数
+				if (options.timeObj) {
+					this.timeObj = parseInt(options.timeObj);
+				}
+
+				if (options.startTime && options.endTime) {
+					this.startTime = decodeURIComponent(options.startTime); // 解码
+					this.endTime = decodeURIComponent(options.endTime); // 解码
+					console.log("传过来的时间参数", this.startTime, this.endTime);
+				} else {
+					// 打印缺少的参数便于调试
+					console.log("缺少时间参数", {
+						hasStartTime: !!options.startTime,
+						hasEndTime: !!options.endTime
+					});
+				}
 				console.log('从order页面跳转过来，点击医生卡片将返回order页面');
 			}
+
 			this.fetchDoctors();
 		},
 		methods: {
@@ -86,85 +114,106 @@
 			handleScroll(e) {
 				if (this.scrollTimer) clearTimeout(this.scrollTimer)
 				this.scrollTimer = setTimeout(() => {
-					this.scrollTop = e.detail.scrollTop
+					this.scrollTop = e.detail.scrollTop;
+					// 新增：滚动到底部时加载更多（距离底部200rpx时触发）
+					const {
+						scrollHeight,
+						scrollTop,
+						clientHeight
+					} = e.detail;
+					if (scrollTop + clientHeight >= scrollHeight - 200 && !this.isLoading && !this.noMore) {
+						this.loadMore();
+					}
 				}, 16) // 约60fps
 			},
-			convertTimeToValue(timeStr) {
-				if (!timeStr) return null;
-
-				// 解析字符串
-				const parts = timeStr.split(' ');
-				if (parts.length < 3) return null;
-
-				const weekDay = parts[1]; // 获取周几
-				const time = parts[2]; // 获取时间
-
-				// 周几映射
-				const weekMap = {
-					'周一': 0,
-					'周二': 1,
-					'周三': 2,
-					'周四': 3,
-					'周五': 4,
-					'周六': 5,
-					'周日': 6
-				};
-
-				// 判断上午/下午
-				const hour = parseInt(time.split(':')[0]);
-				const isAfternoon = hour >= 12;
-
-				// 计算值
-				const weekValue = weekMap[weekDay] || 0;
-				return isAfternoon ? weekValue + 7 : weekValue;
+			loadMore() {
+				// 防止重复加载或没有更多数据时调用
+				if (this.isLoading || this.noMore) return;
+				this.page++; // 页码+1
+				this.fetchDoctors(); // 重新请求下一页数据
 			},
 			async fetchDoctors() {
+				this.isLoading = true;
+				this.showLoading = true;
+				this.noMore = false;
+
+				// 新增：打印当前请求的页码和参数
+				console.log(`===== 开始请求第 ${this.page} 页数据 =====`);
+				console.log('请求参数:', {
+					isFromOrder: this.fromOrder,
+					startTime: this.startTime,
+					endTime: this.endTime,
+					timeObj: this.timeObj,
+					searchKeyword: this.searchKeyword,
+					page: this.page,
+					pageSize: this.pageSize
+				});
+
 				try {
-					let timeObj;
-					if (this.fromOrder && this.timeObj !== undefined) {
-						timeObj = this.timeObj;
-					}
-					console.log("timeObj", timeObj)
-					console.log("searchKeyword", this.searchKeyword)
 					const res = await uniCloud.callFunction({
-							name: 'getEscorts',
-							data: {
-								timeObj,
-								isFromOrder: this.fromOrder,
-								searchKeyword: this.searchKeyword
-								}// 新增参数，标识是否来自order页面}
-							});
-
-						if (res.result.success) {
-							this.doctors = res.result.data;
-						} else {
-							console.error('获取陪诊师数据失败:', res.result.error);
+						name: 'getEscorts',
+						data: {
+							isFromOrder: this.fromOrder,
+							startTime: this.startTime,
+							endTime: this.endTime,
+							timeObj: this.timeObj,
+							searchKeyword: this.searchKeyword,
+							page: this.page,
+							pageSize: this.pageSize
 						}
-					}
-					catch (err) {
-						console.error('调用云函数失败:', err);
-					}
-				},
-				goToDoctorDetailPage(doctor) {
-					if (this.fromOrder) {
-						// 从order页面跳转过来，将医生信息存入缓存
-						uni.setStorageSync('selectedDoctor', doctor);
-						console.log('已将医生信息存入缓存:', doctor.name);
+					});
 
-						// 返回order页面
-						uni.navigateBack({});
+					// 新增：打印云函数返回结果
+					console.log(`第 ${this.page} 页请求结果:`, res.result);
+
+					if (res.result.success) {
+						// 打印当前页数据量
+						console.log(`第 ${this.page} 页返回数据量:`, res.result.data.length);
+
+						if (this.page === 1) {
+							this.doctors = res.result.data;
+							console.log('首次加载完成，总数据量:', this.doctors.length);
+						} else {
+							this.doctors = [...this.doctors, ...res.result.data];
+							console.log('加载更多完成，累计数据量:', this.doctors.length);
+						}
+
+						if (res.result.data.length < this.pageSize) {
+							this.noMore = true;
+							console.log('已加载全部数据，没有更多了');
+						}
 					} else {
-						uni.navigateTo({
-							url: `/pages/doctordetail/doctordetail?doctor=${encodeURIComponent(JSON.stringify(doctor))}`
-						});
+						console.error('获取数据失败:', res.result.error);
 					}
-				},
-				handleSearch() {
-				  // 触发云函数重新获取数据
-				  this.fetchDoctors();
+				} catch (err) {
+					console.error('请求云函数出错:', err);
+				} finally {
+					this.isLoading = false;
+					this.showLoading = true;
+					console.log(`===== 第 ${this.page} 页请求结束 =====\n`);
 				}
+			},
+			goToDoctorDetailPage(doctor) {
+				if (this.fromOrder) {
+					// 从order页面跳转过来，将医生信息存入缓存
+					uni.setStorageSync('selectedDoctor', doctor);
+					console.log('已将医生信息存入缓存:', doctor.name);
+
+					// 返回order页面
+					uni.navigateBack({});
+				} else {
+					uni.navigateTo({
+						url: `/pages/doctordetail/doctordetail?doctor=${encodeURIComponent(JSON.stringify(doctor))}`
+					});
+				}
+			},
+			handleSearch() {
+				// 触发云函数重新获取数据
+				this.page = 1;
+				this.fetchDoctors();
 			}
-		};
+		}
+	};
 </script>
 
 <style>
@@ -377,5 +426,29 @@
 		background-color: #dcf4ff;
 		padding: 20rpx;
 		border-radius: 50%;
+	}
+
+	/* 新增：加载提示样式 */
+	.loading-footer {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 30rpx 0;
+		font-size: 26rpx;
+		color: #999;
+	}
+
+	.loading {
+		display: flex;
+		align-items: center;
+		gap: 10rpx;
+	}
+
+	.loading-text {
+		color: #666;
+	}
+
+	.no-more {
+		color: #999;
 	}
 </style>

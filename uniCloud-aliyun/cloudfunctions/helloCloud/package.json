@@ -1,0 +1,7 @@
+{
+  "name": "helloCloud",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

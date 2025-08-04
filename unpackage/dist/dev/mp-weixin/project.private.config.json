@@ -8,8 +8,8 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/userInfoDetail/userInfoDetail",
-          "pathName": "pages/userInfoDetail/userInfoDetail",
+          "name": "pages/mine/mine",
+          "pathName": "pages/mine/mine",
           "query": "",
           "launchMode": "default",
           "scene": null

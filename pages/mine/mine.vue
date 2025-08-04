@@ -43,7 +43,7 @@
 						<view class="account-info">
 							<view class="account-item">
 								<text
-									class="account-value">{{(userInfo.accountInfo.withdrawable_amount / 100).toFixed(2)}}</text>
+									class="account-value">{{ userInfo.accountInfo ? (userInfo.accountInfo.withdrawable_amount / 100 || 0).toFixed(2) : 0.00 }}</text>
 								<text class="account-label">可提取金额</text>
 							</view>
 							<view class="account-item">
@@ -81,7 +81,7 @@
 
 						</view>
 						<view class="data-item">
-							<text class="data-item-item">{{ pendingAmount }}</text>
+							<text class="data-item-item">{{ pendingAmount||0.00 }}</text>
 							<text>已提现金额</text>
 
 						</view>
@@ -249,17 +249,23 @@
 			// 获取导航栏高度
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
-			this.initUserInfo();
+			this.userInfo = uni.getStorageSync("userInfo");
+			this.getUser();
 			if (this.userInfo != '' && this.userInfo.type == "陪诊师") {
 				this.selectTime('today');
 			}
+
 			this.getAccountData();
 		},
 		onShow() {
-			this.initUserInfo();
+
+
+			this.userInfo = uni.getStorageSync("userInfo");
+			this.getUser();
 			if (this.userInfo != '' && this.userInfo.type == "陪诊师") {
 				this.selectTime('today');
 			}
+
 		},
 		methods: {
 
@@ -314,7 +320,7 @@
 						// 3. 更新数据
 						this.orderCount = result.data.orderCount;
 						this.salesAmount = (result.data.salesAmount).toFixed(2);
-						this.pendingAmount = (result.data.pendingAmount).toFixed(2);
+						// this.pendingAmount = (result.data.pendingAmount).toFixed(2);
 						this.settledAmount = (result.data.settledAmount).toFixed(2);
 
 					} else {
@@ -393,13 +399,13 @@
 				this.selectedTime = time; // 更新选择的时间选项
 				this.fetchAccountData(time);
 				if (time === "today") {
-					this.pendingAmount = this.userInfo.withdrawStats.dayAmount;
+					this.pendingAmount = (this.userInfo.withdrawStats.dayAmount/ 100).toFixed(2);
 				} else if (time === "month") {
-					this.pendingAmount = this.userInfo.withdrawStats.monthAmount;
+					this.pendingAmount = (this.userInfo.withdrawStats.monthAmount/ 100).toFixed(2);
 				} else if (time === "week") {
-					this.pendingAmount = this.userInfo.withdrawStats.weekAmount;
+					this.pendingAmount = (this.userInfo.withdrawStats.weekAmount/ 100).toFixed(2);
 				} else if (time === "year") {
-					this.pendingAmount = this.userInfo.withdrawStats.yearAmount;
+					this.pendingAmount = (this.userInfo.withdrawStats.yearAmount/ 100).toFixed(2);
 				}
 
 			},
@@ -413,15 +419,14 @@
 					url: `/pages/RQcode/RQcode?${query}`,
 				});
 			},
-			initUserInfo() {
-				const userInfo = uni.getStorageSync("userInfo");
-				console.log("初始化后的值：", userInfo);
-				if (userInfo) {
-					this.userInfo = userInfo;
-					this.getUser();
-				}
+			// initUserInfo() {
 
-			},
+			// 	if (userInfo) {
+			// 		this.userInfo = userInfo;
+			// 		this.getUser();
+			// 	}
+
+			// },
 			async getUser() {
 				console.log("调取前检查", this.userInfo);
 

@@ -170,6 +170,10 @@
 							<image src="../../static/images/mine/chatIcon.png" alt=""></image>
 							<text class="boxed-title">信息</text>
 						</view>
+						<view class="boxed">
+							<image src="../../static/images/mine/application.png" alt=""></image>
+							<text class="box-title">报名申请</text>
+						</view>
 						<view class="boxed" @click="goSetting">
 							<image src="../../static/images/mine/helpIcon.png" alt=""></image>
 							<text class="box-title">帮助</text>

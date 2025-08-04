@@ -631,6 +631,10 @@
 			serviceDesc: { // 虽然数据中是service_details，但保持组件接口一致
 				type: String,
 				required: true
+			},
+			duration: {
+				type: Number,
+				required: true, // 确保父组件传递该值
 			}
 		},
 		mounted() {
@@ -639,6 +643,7 @@
 			console.log('serviceName:', this.serviceName);
 			console.log('serviceDesc:', this.serviceDesc);
 			console.log('orderInfo:', this.orderInfo);
+			console.log('服务时长(duration):', this.duration);
 		},
 		data() {
 			return {
@@ -851,6 +856,13 @@
 						code
 					} = await this.getLoginCode();
 					if (!code) throw new Error('获取登录凭证失败');
+					const serviceStartTime = new Date(this.orderInfo.service_time);
+					if (isNaN(serviceStartTime.getTime())) {
+						throw new Error('服务开始时间格式错误');
+					}
+					const serviceEndTime = new Date(
+						serviceStartTime.getTime() + this.duration * 60 * 60 * 1000 // 转换小时为毫秒
+					);
 
 					// 2. 构建完整订单数据
 					const orderData = {
@@ -859,10 +871,13 @@
 						service_id: this.serviceId, // 使用组件prop
 						service_name: this.serviceName, // 使用组件prop
 						service_desc: this.serviceDesc, // 使用组件prop
+						service_start_time: serviceStartTime.toISOString(),
+						service_end_time: serviceEndTime.toISOString(),
 						service_info: {
 							...this.orderInfo,
 							service_id: this.serviceId, // 使用组件prop
 							service_name: this.serviceName, // 使用组件prop
+							duration: this.duration,
 						},
 						doctor_id: this.orderInfo.doctor_id,
 						total_price: this.servicePrice,
@@ -871,6 +886,11 @@
 						js_code: code,
 						address: this.orderInfo.address,
 					};
+					console.log('订单时间信息:', {
+						start: orderData.service_start_time,
+						end: orderData.service_end_time,
+						duration: this.duration // 仍可保留原始时长用于日志
+					});
 					console.log('发送到云函数的orderData:', orderData);
 
 					// 3. 调用云函数创建订单

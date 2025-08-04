@@ -108,6 +108,45 @@
 					</div>
 				</view>
 
+				<!-- 打卡信息模块（从check_ins集合获取） -->
+				<view class="info-section">
+					<h2 class="section-title">打卡信息</h2>
+					<!-- 已打卡状态：显示打卡详情 -->
+					<div v-if="checkInInfo.check_in_time" class="checkin-card">
+						<div class="checkin-item">
+							<span class="item-label">打卡时间</span>
+							<span class="item-value">{{formatDate(checkInInfo.check_in_time) || '未记录'}}</span>
+						</div>
+						<div class="checkin-item">
+							<span class="item-label">打卡地点</span>
+							<span class="item-value">
+								{{checkInInfo.location && checkInInfo.location.name ? checkInInfo.location.name : (checkInInfo.location && checkInInfo.location.address ? checkInInfo.location.address : '未记录')}}
+							</span>
+						</div>
+						<!-- <div class="checkin-item full-width">
+							<span class="item-label">打卡描述</span>
+							<div class="item-value full-content">
+								{{checkInInfo.description || '无描述'}}
+							</div>
+						</div> -->
+						<div v-if="checkInInfo.images && checkInInfo.images.length > 0" class="checkin-item full-width">
+							<span class="item-label">打卡图片</span>
+							<div class="checkin-images">
+								<image v-for="(img, index) in checkInInfo.images" :key="index" :src="img"
+									mode="aspectFill" class="checkin-image" @click="previewImage(img)"></image>
+							</div>
+						</div>
+					</div>
+
+					<!-- 未打卡状态：显示提示 -->
+					<div v-else class="no-checkin-card">
+						<div class="no-checkin-icon">⚠️</div>
+						<p class="no-checkin-text">陪诊师尚未打卡</p>
+						<p class="no-checkin-desc" v-if="orderStatus === 'paid'">服务开始后，陪诊师需在指定地点完成打卡</p>
+						<p class="no-checkin-desc" v-else>服务开始时将显示打卡信息</p>
+					</div>
+				</view>
+
 				<!-- 收货地址信息 -->
 				<view v-if="orderInfo.include_transport" class="info-section">
 					<h2 class="section-title">服务地址</h2>
@@ -143,6 +182,8 @@
 </template>
 
 <script>
+	import order_detailVue from './order_detail.vue';
+
 	export default {
 		components: {
 			'custom-nav': () => import('@/components/custom-nav/custom-nav.vue')
@@ -170,6 +211,17 @@
 					service_status: '',
 				},
 				timeLeft: '00:15:00',
+				checkInInfo: {
+					check_in_time: '',
+					description: '',
+					images: [],
+					location: {
+						name: '',
+						address: '',
+						latitude: '',
+						longitude: '',
+					}
+				},
 				timeProgress: 100,
 				quantity: 1,
 				deliveryAddress: '',
@@ -278,13 +330,71 @@
 			async loadOrderData() {
 				try {
 					this.isLoading = true;
+					//1.获取订单数据
 					await this.getOrderDetails(this.orderId);
-					this.startTimer();
+
+					// 2. 只有当订单信息加载成功后，才查询打卡信息
+					if (this.orderInfo && this.orderInfo.order_no) {
+						await this.getCheckInInfo(); // 此时调用，可直接使用 this.orderInfo.order_no
+					} else {
+						console.warn('订单信息中未找到 order_no，无法查询打卡信息');
+						this.checkInInfo = {
+							check_in_time: '',
+							description: '',
+							images: [],
+							location: {}
+						};
+					}
+
+					//3.根据订单是否支付判断是否开启定时器
+					if (this.orderInfo && this.orderInfo.status === 'paying') {
+						this.startTimer();
+					}
 				} catch (e) {
 					console.error('加载订单数据异常:', e);
 				} finally {
 					this.isLoading = false;
 				}
+			},
+
+			// 从check_ins集合获取打卡信息
+			async getCheckInInfo() {
+				try {
+					const db = uniCloud.database();
+					// 直接从 this.orderInfo 中获取订单编号（order_no）
+					const orderNo = this.orderInfo.order_no;
+					console.log('正在查询订单对应的打卡信息，order_no:', orderNo);
+
+					// 用订单编号（order_no）匹配打卡信息中的 order_id
+					const checkInResult = await db.collection('check_ins')
+						.where({
+							order_id: orderNo // 关键：用订单的 order_no 匹配打卡信息的 order_id
+						})
+						.get();
+					console.log('打卡信息查询结果:', checkInResult);
+
+					if (checkInResult.result && checkInResult.result.data && checkInResult.result.data.length > 0) {
+						this.checkInInfo = checkInResult.result.data[0];
+					} else {
+						console.log('该订单暂无打卡记录');
+						this.checkInInfo = {
+							check_in_time: '',
+							description: '',
+							images: [],
+							location: {}
+						};
+					}
+				} catch (e) {
+					console.error('获取打卡信息失败:', e);
+				}
+			},
+
+			// 预览打卡图片
+			previewImage(url) {
+				uni.previewImage({
+					current: url,
+					urls: this.checkInInfo.images || []
+				});
 			},
 
 			async getOrderDetails(orderId) {
@@ -308,7 +418,8 @@
 							.get();
 						console.log('服务信息查询结果:', serviceResult);
 
-						if (serviceResult.result && serviceResult.result.data && serviceResult.result.data.length >
+						if (serviceResult.result && serviceResult.result.data && serviceResult.result.data
+							.length >
 							0) {
 							const serviceInfo = serviceResult.result.data[0];
 							// 合并服务信息到订单信息
@@ -616,11 +727,80 @@
 </script>
 
 <style>
+	/* 未打卡状态样式 */
+	.no-checkin-card {
+		padding: 40rpx 20rpx;
+		text-align: center;
+		background-color: #f9f9f9;
+		border-radius: 16rpx;
+	}
+
+	.no-checkin-icon {
+		font-size: 60rpx;
+		color: #ff9500;
+		margin-bottom: 20rpx;
+	}
+
+	.no-checkin-text {
+		font-size: 30rpx;
+		font-weight: 500;
+		color: red;
+		margin-bottom: 10rpx;
+	}
+
+	.no-checkin-desc {
+		font-size: 24rpx;
+		color: #999;
+		line-height: 1.5;
+	}
+
+	/* 打卡信息样式 */
+	.checkin-card {
+		margin-top: 20rpx;
+	}
+
+	.checkin-item {
+		display: flex;
+		justify-content: space-between;
+		padding: 20rpx 0;
+		border-bottom: 1rpx solid #f0f0f0;
+	}
+
+	.checkin-item:last-child {
+		border-bottom: none;
+	}
+
+	.full-width {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10rpx;
+	}
+
+	.full-content {
+		width: 100%;
+		text-align: left;
+		line-height: 1.6;
+	}
+
+	.checkin-images {
+		display: flex;
+		gap: 16rpx;
+		margin-top: 10rpx;
+		flex-wrap: wrap;
+	}
+
+	.checkin-image {
+		width: 160rpx;
+		height: 160rpx;
+		border-radius: 10rpx;
+		object-fit: cover;
+	}
+
 	.page-container {
 		min-height: 100vh;
 		position: relative;
-
-
 		margin: 0;
 		width: 100%;
 		box-sizing: border-box;

@@ -243,7 +243,7 @@
 						avatar: this.avatar
 					}
 				});
-				console.log(result.data.userInfo)
+				console.log(result)
 				if (result.code === 0) {
 					uni.showToast({
 						title: '登录成功',
@@ -415,8 +415,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		
+
 	}
-
-
 </style>

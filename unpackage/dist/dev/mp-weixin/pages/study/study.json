@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "考证题库",
-  "usingComponents": {
-    "custom-nav": "/components/custom-nav/custom-nav"
-  }
-}

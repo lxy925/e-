@@ -242,7 +242,7 @@
 					"麻醉科", "感染科", "精神科", "老年医学科", "全科医学科", "其他"
 				], // 完整的科室列表
 				userInfo: {},
-				isUpdate:false
+				isUpdate: false
 			};
 		},
 		onLoad(options) {
@@ -283,7 +283,7 @@
 				this.selectedAddress =
 					`${this.formData.city.provinceName} ${this.formData.city.cityName} ${this.formData.city.areaName}`;
 				console.log("缓存过的表格值", this.formData)
-				this.isUpdate=true;
+				this.isUpdate = true;
 			}
 			// 若扫码入驻的则解析 scene 参数（陪诊师的 user_id）
 			const scene = decodeURIComponent(options.scene);

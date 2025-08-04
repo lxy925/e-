@@ -3,18 +3,11 @@
 		<!-- pages/doctor/doctor.wxml -->
 		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" ref="customNav" />
 		<!-- 内容区域 -->
-		    <scroll-view 
-		    scroll-y
-		    class="page-container" 
-		    @scroll="handleScroll"
-		    :style="{ 
+		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
 		      paddingTop: navHeight + 'px',
 		      height: 'calc(100vh - ' + navHeight + 'px)'
-		    }" 
-		    :scroll-top="scrollTop"
-		    :show-scrollbar="false"
-		    >
-		
+		    }" :scroll-top="scrollTop" :show-scrollbar="false">
+
 			<view class="content" style="padding: 0rpx;">
 				<view class="first">
 					<swiper class="swiper" circular autoplay interval="3000" duration="500">
@@ -27,7 +20,7 @@
 				<view class="second">
 					<view class="second-item1">
 						<view class="second-item1-text">
-							<text class="second-item1-text1">考证</text>
+							<text class="second-item1-text1">考证通道</text>
 							<text class="second-item1-text2">精选推荐</text>
 							<text class="second-item1-text3">了解更多</text>
 						</view>
@@ -35,14 +28,14 @@
 					</view>
 					<view class="second-item2" @click="goToStudyPage">
 						<view class="second-item2-text">
-							<text class="second-item2-text1">学习</text>
+							<text class="second-item2-text1">学习通道</text>
 							<text class="second-item2-text2">一起来分享</text>
 							<text class="second-item2-text3">了解更多</text>
 						</view>
 						<image src="../../static/images/index/money.png" alt=""></image>
 					</view>
 				</view>
-				<view class="third">
+				<!-- <view class="third">
 					<text class="third-title">课程推荐</text>
 					<text class="third-text">更多 ></text>
 				</view>
@@ -54,7 +47,7 @@
 						<text class="next-text3">时间：2023/4/17 - 7/16</text>
 						<text class="next-text4">￥199</text>
 					</view>
-				</view>
+				</view> -->
 				<view class="third">
 					<text class="third-title">优秀陪诊师</text>
 					<text class="third-text" @click="goToDoctorListPage">更多 ></text>
@@ -91,9 +84,7 @@
 									:class="['doctor-certification', doctor.is_certified  ? 'certified' : 'uncertified']">
 									{{ doctor.is_certified ? '已认证' : '未认证' }}
 								</text>
-								<text :class="['doctor-availability', doctor.is_bookable? 'available' : 'unavailable']">
-									{{ doctor.is_bookable ? '可预约' : '不可预约' }}
-								</text>
+
 							</view>
 						</view>
 						<view class="doctor-need">
@@ -205,23 +196,22 @@
 					}
 					console.log("timeObj", timeObj)
 					const res = await uniCloud.callFunction({
-							name: 'getEscorts',
-							data: {
-								timeObj,
-								isFromOrder: this.fromOrder,
-								}// 新增参数，标识是否来自order页面}
-							});
-			
-						if (res.result.success) {
-							this.doctors = res.result.data;
-						} else {
-							console.error('获取陪诊师数据失败:', res.result.error);
-						}
+						name: 'getEscorts',
+						data: {
+							timeObj,
+							isFromOrder: this.fromOrder,
+						} // 新增参数，标识是否来自order页面}
+					});
+
+					if (res.result.success) {
+						this.doctors = res.result.data;
+					} else {
+						console.error('获取陪诊师数据失败:', res.result.error);
 					}
-					catch (err) {
-						console.error('调用云函数失败:', err);
-					}
-				},
+				} catch (err) {
+					console.error('调用云函数失败:', err);
+				}
+			},
 			goToDoctorDetailPage(doctor) {
 
 				const doctorData = encodeURIComponent(JSON.stringify(doctor));
@@ -275,12 +265,13 @@
 	.page {
 		height: 100vh;
 		/* background-color: #2ecc71; */
-		
+
 	}
+
 	.page-container {
 		min-height: 100vh;
 		position: relative;
-		
+
 		padding-left: 25rpx;
 		padding-right: 25rpx;
 		margin: 0;
@@ -292,7 +283,7 @@
 		scrollbar-width: none;
 		/* Firefox */
 	}
-	
+
 	.page-container ::-webkit-scrollbar {
 		display: none;
 		/* Chrome/Safari */
@@ -313,7 +304,7 @@
 	.swiper {
 		width: 100%;
 		height: 100%;
-		
+
 	}
 
 	.swiper-image {

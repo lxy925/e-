@@ -449,7 +449,7 @@ var _default = {
               case 7:
                 _yield$uniCloud$callF2 = _context2.sent;
                 result = _yield$uniCloud$callF2.result;
-                console.log(result.data.userInfo);
+                console.log(result);
                 if (result.code === 0) {
                   uni.showToast({
                     title: '登录成功',

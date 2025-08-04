@@ -193,6 +193,10 @@
 							<image src="../../static/images/mine/joinIcon.png" alt=""></image>
 							<text class="boxed-title">陪诊师入驻</text>
 						</view>
+						<view class="boxed">
+							<image src="../../static/images/mine/application.png" alt=""></image>
+							<text class="box-title">报名申请</text>
+						</view>
 						<view class="boxed" @click="goSetting">
 							<image src="../../static/images/mine/helpIcon.png" alt=""></image>
 							<text class="box-title">帮助</text>
@@ -339,11 +343,13 @@
 					uni.hideLoading();
 				}
 			},
+
 			goMyAddress() {
 				uni.navigateTo({
 					url: '/pages/myAddress/myAddress'
 				});
 			},
+
 			getTimeRange(timeRange) {
 				const now = new Date();
 				let startTime, endTime = now.toISOString();
@@ -522,42 +528,6 @@
 					url: "/pages/escortRegistration/escortRegistration",
 				});
 
-			},
-			async onSwitchChange() {
-				console.log("改变之前的值", this.userInfo.moreInfo.is_bookable);
-				try {
-					const {
-						result
-					} = await uniCloud.callFunction({
-						name: "updateEscort",
-						data: {
-							user_id: this.userInfo.user_id,
-							is_bookable: !this.userInfo.moreInfo.is_bookable,
-						},
-					});
-
-					if (result.code === 200) {
-						uni.showToast({
-							title: "修改成功",
-							icon: "success",
-						});
-
-						this.getUser();
-						console.log("改变之后的值", this.userInfo.moreInfo.is_bookable);
-					} else {
-						uni.showToast({
-							title: result.message || "修改失败",
-							icon: "none",
-						});
-					}
-				} catch (e) {
-					uni.showToast({
-						title: '获取用户数据失败',
-						icon: 'none'
-					});
-				} finally {
-					uni.hideLoading();
-				}
 			},
 
 			toApply() {
@@ -889,7 +859,7 @@
 	.order-item {
 		margin-top: 20rpx;
 		display: flex;
-		justify-content: space-between;
+		/* justify-content: space-between; */
 		flex-wrap: wrap;
 	}
 

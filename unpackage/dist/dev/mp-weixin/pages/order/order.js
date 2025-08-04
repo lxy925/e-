@@ -203,6 +203,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
 var _components$data$onSh;
 var PaymentComponent = function PaymentComponent() {
   __webpack_require__.e(/*! require.ensure | components/PaymentComponent */ "components/PaymentComponent").then((function () {
@@ -244,6 +245,7 @@ var _default = (_components$data$onSh = {
       selectedDateIndex: 0,
       selectedTimeIndex: -1,
       selectedDateTime: '',
+      selectedDateTimeISO: '',
       selectedTime: null,
       selectedPatientName: '',
       selectedPatientPhone: '',
@@ -321,28 +323,23 @@ var _default = (_components$data$onSh = {
   },
   onLoad: function onLoad(options) {
     var _this$serviceData, _this$serviceData2, _this$serviceData3;
-    uni.$on('clear-order-form-data', this.resetFormData());
+    uni.$on('clear-order-form-data', this.resetFormData);
     var systemInfo = uni.getSystemInfoSync();
     this.navHeight = systemInfo.statusBarHeight + 44;
     this.initDateTimeList();
 
     // 解析并存储服务数据
     // 检查是否来自服务选择页面
-    if (options.from === 'serviceSelection') {
+    if (options.from === 'order_details') {
       this.resetFormData();
+      console.log("重置表单数据");
     }
     var serviceDataString = options.service;
     if (serviceDataString) {
-      try {
-        this.serviceData = JSON.parse(decodeURIComponent(serviceDataString));
-        console.log("初始服务数据:", this.serviceData);
-        this.service_price = this.serviceData.service_price;
-        // 立即存储服务数据
-        uni.setStorageSync('current_service', this.serviceData);
-      } catch (error) {
-        console.error('解析服务数据失败:', error);
-      }
+      this.serviceData = JSON.parse(decodeURIComponent(serviceDataString));
+      uni.setStorageSync('current_service', this.serviceData); // 仅初始化时更新缓存
     }
+
     this.include_transport = ((_this$serviceData = this.serviceData) === null || _this$serviceData === void 0 ? void 0 : _this$serviceData.include_transport) || '';
     this.service_price = ((_this$serviceData2 = this.serviceData) === null || _this$serviceData2 === void 0 ? void 0 : _this$serviceData2.service_price) || '';
     this.service_id = ((_this$serviceData3 = this.serviceData) === null || _this$serviceData3 === void 0 ? void 0 : _this$serviceData3.service_id) || '';
@@ -350,13 +347,16 @@ var _default = (_components$data$onSh = {
     this.service_desc = this.serviceData.service_details || ''; // 注意字段名是 service_details
     this.include_transport = this.serviceData.include_transport || false;
     console.log("完整服务数据:", this.serviceData);
-
+    // 在 order.vue 的 onShow 中添加
+    console.log("serviceData.duration:", this.serviceData.duration, (0, _typeof2.default)(this.serviceData.duration));
     // 存储服务数据
     uni.setStorageSync('serviceData', this.serviceData);
   },
   computed: {
     // 整合所有订单信息
     orderInfo: function orderInfo() {
+      var serviceTime = this.selectedDateTimeISO;
+      console.log('父组件传递的 service_time:', serviceTime); // 必须是有效的 ISO 字符串
       return {
         patient_phone: this.selectedPatientPhone,
         patient_name: this.selectedPatientName,
@@ -382,7 +382,6 @@ var _default = (_components$data$onSh = {
   this.loadSavedPhotos();
   this.restoreFormData();
   var address = uni.getStorageSync('selectedAddress');
-  console.log("获取地址是：" + address);
   if (address) {
     this.selectedAddress = address.district + address.detail || '';
   }
@@ -392,11 +391,6 @@ var _default = (_components$data$onSh = {
     if (hospital) {
       this.selectedHospital = hospital;
     }
-  }
-
-  // 确保服务数据恢复
-  if (!this.service_price && this.serviceData) {
-    this.service_price = this.serviceData.service_price;
   }
 }), (0, _defineProperty2.default)(_components$data$onSh, "onHide", function onHide() {
   this.saveFormData();
@@ -440,6 +434,7 @@ var _default = (_components$data$onSh = {
     this.selectedCheckboxes = [];
     this.photoList = [];
     this.selectedDateTime = '';
+    this.selectedDateTimeISO = null;
     this.selectedPatientName = '';
     this.selectedPatientPhone = '';
     this.selectedDoctorName = '';
@@ -449,13 +444,25 @@ var _default = (_components$data$onSh = {
     this.customRequirements = '';
 
     // 清除所有可能的数据源
-    uni.removeStorageSync('selectedPatient');
-    uni.removeStorageSync('selectedDoctor');
-    uni.removeStorageSync('selectedAddress');
-    uni.removeStorageSync('selectedHospital');
-    uni.removeStorageSync('photoList');
-    uni.removeStorageSync('order_form_full_data');
-    uni.removeStorageSync('serviceData');
+    var storageKeys = ['selectedPatient', 'selectedDoctor', 'selectedAddress', 'selectedHospital', 'photoList', 'order_form_full_data', 'current_service', 'serviceData'];
+    storageKeys.forEach(function (key) {
+      try {
+        uni.removeStorageSync(key);
+      } catch (e) {
+        console.error("\u6E05\u9664\u5B58\u50A8 ".concat(key, " \u5931\u8D25:"), e);
+      }
+    });
+    // 清除图片物理文件
+    this.clearPhotoCache();
+
+    // 重置验证状态
+    this.fieldErrors = {
+      patient: false,
+      hospital: false,
+      datetime: false,
+      address: false
+    };
+    this.missingOptionalFields = [];
   },
   // 提交订单处理函数
   handleSubmitOrder: function handleSubmitOrder() {
@@ -476,12 +483,14 @@ var _default = (_components$data$onSh = {
   validateForm: function validateForm() {
     var _this4 = this;
     return new Promise(function (resolve) {
+      // 地址字段的特殊处理
+      var addressRequired = _this4.include_transport && (!_this4.selectedAddress || _this4.selectedAddress.trim() === '');
       // 重置验证状态
       _this4.fieldErrors = {
         patient: !_this4.selectedPatientName,
         hospital: !_this4.selectedHospital,
         datetime: !_this4.selectedDateTime,
-        address: _this4.include_transport && (!_this4.selectedAddress || _this4.selectedAddress.trim() === '')
+        address: addressRequired
       };
 
       // 检查必填字段
@@ -576,7 +585,6 @@ var _default = (_components$data$onSh = {
   },
   loadPatientInfo: function loadPatientInfo() {
     var patient = uni.getStorageSync('selectedPatient');
-    console.log("选择病人信息:" + patient);
     if (patient) {
       this.selectedPatientPhone = patient.phone;
       this.selectedPatientName = patient.name || '';
@@ -628,16 +636,11 @@ var _default = (_components$data$onSh = {
       if (!this.selectedCheckboxes) this.selectedCheckboxes = savedData.selectedCheckboxes;
       if (!this.photoList) this.photoList = savedData.photoList;
       if (!this.selectedDateTime) this.selectedDateTime = savedData.selectedDateTime;
+      if (!this.selectedDateTimeISO) this.selectedDateTimeISO = savedData.selectedDateTimeISO;
       if (!this.selectedPatientName) this.selectedPatientName = savedData.selectedPatientName;
       if (!this.selectedDoctorName) this.selectedDoctorName = savedData.selectedDoctorName;
       if (!this.selectAddress) this.selectAddress = savedData.selectAddress;
       if (!this.customRequirements) this.customRequirements = savedData.customRequirements || '';
-
-      // 恢复服务数据
-      if (savedData.serviceData) {
-        this.serviceData = savedData.serviceData;
-        this.service_price = savedData.service_price;
-      }
       Object.keys(savedData).forEach(function (key) {
         if (!_this6[key] && savedData[key]) {
           _this6[key] = savedData[key];
@@ -800,7 +803,7 @@ var _default = (_components$data$onSh = {
       length: 7
     }, function (_, i) {
       var date = new Date();
-      date.setDate(date.getDate() + i);
+      date.setDate(date.getDate() + i + 1);
       return {
         day: "".concat(date.getMonth() + 1, "\u6708").concat(date.getDate(), "\u65E5"),
         week: days[date.getDay()]
@@ -880,9 +883,51 @@ var _default = (_components$data$onSh = {
     }
     this.saveFormData();
     uni.setStorageSync('current_service', this.serviceData);
-    var selectedTime = this.selectedDateTime;
+
+    // 关键修改：使用已转换的 ISO 字符串创建 Date 对象
+    if (!this.selectedDateTimeISO) {
+      console.error("selectedDateTimeISO 为空，时间转换失败");
+      return;
+    }
+
+    // 检查 duration 是否有效
+    if (typeof this.serviceData.duration !== 'number' || isNaN(this.serviceData.duration) || this.serviceData.duration <= 0) {
+      console.error("serviceData.duration 无效（必须是正数）:", this.serviceData.duration);
+      return;
+    }
+
+    // 使用 ISO 字符串创建 startTime（确保有效）
+    var startTime = new Date(this.selectedDateTimeISO);
+    // 二次验证 startTime 是否有效
+    if (isNaN(startTime.getTime())) {
+      console.error("startTime 无效，ISO 字符串格式错误:", this.selectedDateTimeISO);
+      return;
+    }
+    // 计算结束时间
+    var endTime = new Date(startTime.getTime() + this.serviceData.duration * 60 * 60 * 1000);
+    // 验证 endTime 是否有效
+    if (isNaN(endTime.getTime())) {
+      console.error("endTime 无效，可能是 duration 过大导致时间溢出");
+      return;
+    }
+    var timeObj = this.convertTimeToValue(this.selectedDateTime);
+    console.log("timeObj", timeObj);
+    // 检查 timeObj 是否有效
+    if (timeObj === null || timeObj === undefined) {
+      console.error('生成 timeObj 失败，selectedDateTime 可能为空');
+      uni.showToast({
+        title: '请先选择服务时间',
+        icon: 'none'
+      });
+      return; // 阻止跳转
+    }
+
+    // 跳转前添加日志
+    var url = "/pages/doctorlist/doctorlist?timeObj=".concat(timeObj, "&") + "startTime=".concat(encodeURIComponent(startTime.toISOString()), "&") + "endTime=".concat(encodeURIComponent(endTime.toISOString()), "&") + "from=order";
+    console.log('跳转的完整URL:', url); // 关键日志：查看 URL 中是否有 timeObj=xxx
+
     uni.navigateTo({
-      url: "/pages/doctorlist/doctorlist?from=order&selectedTime=".concat(selectedTime)
+      url: url
     });
   },
   goToAddressList: function goToAddressList() {
@@ -893,6 +938,34 @@ var _default = (_components$data$onSh = {
   // 处理自定义需求输入
   onCustomRequirementsInput: function onCustomRequirementsInput(e) {
     this.customRequirements = e.detail.value;
+  },
+  convertTimeToValue: function convertTimeToValue(timeStr) {
+    if (!timeStr) return null;
+
+    // 解析字符串
+    var parts = timeStr.split(' ');
+    if (parts.length < 3) return null;
+    var weekDay = parts[1]; // 获取周几
+    var time = parts[2]; // 获取时间
+
+    // 周几映射
+    var weekMap = {
+      '周一': 0,
+      '周二': 1,
+      '周三': 2,
+      '周四': 3,
+      '周五': 4,
+      '周六': 5,
+      '周日': 6
+    };
+
+    // 判断上午/下午
+    var hour = parseInt(time.split(':')[0]);
+    var isAfternoon = hour >= 12;
+
+    // 计算值
+    var weekValue = weekMap[weekDay] || 0;
+    return isAfternoon ? weekValue + 7 : weekValue;
   }
 }), _components$data$onSh);
 exports.default = _default;

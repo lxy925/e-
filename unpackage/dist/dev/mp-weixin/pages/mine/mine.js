@@ -403,6 +403,10 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
+//
+//
+//
 var _default = {
   data: function data() {
     return {
@@ -750,61 +754,6 @@ var _default = {
       uni.navigateTo({
         url: "/pages/escortRegistration/escortRegistration"
       });
-    },
-    onSwitchChange: function onSwitchChange() {
-      var _this5 = this;
-      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
-        var _yield$uniCloud$callF3, result;
-        return _regenerator.default.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                console.log("改变之前的值", _this5.userInfo.moreInfo.is_bookable);
-                _context4.prev = 1;
-                _context4.next = 4;
-                return uniCloud.callFunction({
-                  name: "updateEscort",
-                  data: {
-                    user_id: _this5.userInfo.user_id,
-                    is_bookable: !_this5.userInfo.moreInfo.is_bookable
-                  }
-                });
-              case 4:
-                _yield$uniCloud$callF3 = _context4.sent;
-                result = _yield$uniCloud$callF3.result;
-                if (result.code === 200) {
-                  uni.showToast({
-                    title: "修改成功",
-                    icon: "success"
-                  });
-                  _this5.getUser();
-                  console.log("改变之后的值", _this5.userInfo.moreInfo.is_bookable);
-                } else {
-                  uni.showToast({
-                    title: result.message || "修改失败",
-                    icon: "none"
-                  });
-                }
-                _context4.next = 12;
-                break;
-              case 9:
-                _context4.prev = 9;
-                _context4.t0 = _context4["catch"](1);
-                uni.showToast({
-                  title: '获取用户数据失败',
-                  icon: 'none'
-                });
-              case 12:
-                _context4.prev = 12;
-                uni.hideLoading();
-                return _context4.finish(12);
-              case 15:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4, null, [[1, 9, 12, 15]]);
-      }))();
     },
     toApply: function toApply() {
       var accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));

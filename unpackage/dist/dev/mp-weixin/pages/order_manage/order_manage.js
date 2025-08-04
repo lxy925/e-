@@ -525,7 +525,7 @@ var _default = {
     getOrderList: function getOrderList() {
       var _this5 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-        var _db, userInfo, query, tabValue, res;
+        var _db, userInfo, _, query, searchRegex, tabValue, res;
         return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -539,8 +539,19 @@ var _default = {
                 _this5.loading = true;
                 _context2.prev = 3;
                 _db = uniCloud.database();
-                userInfo = uni.getStorageSync('userInfo') || {}; // 构建查询条件
-                query = _db.collection('orders').where((0, _defineProperty2.default)({}, _this5.userRole === 'doctor' ? 'doctor_id' : 'user_id', userInfo.user_id)); // 保持原有状态筛选逻辑
+                userInfo = uni.getStorageSync('userInfo') || {};
+                _ = _db.command; // 构建查询条件
+                query = _db.collection('orders').where((0, _defineProperty2.default)({}, _this5.userRole === 'doctor' ? 'doctor_id' : 'user_id', userInfo.user_id)); // 添加搜索条件 - 只根据服务名称或患者姓名搜索
+                if (_this5.searchQuery) {
+                  searchRegex = new RegExp(_this5.searchQuery, 'i'); // 创建复合查询条件：服务名称 OR 患者姓名
+                  query = query.where(_.or([{
+                    'service_info.service_name': searchRegex
+                  }, {
+                    'patient_name': searchRegex
+                  }]));
+                }
+
+                // 保持原有状态筛选逻辑
                 if (_this5.currentTab > 0) {
                   tabValue = _this5.tabs[_this5.currentTab].value;
                   if (tabValue !== 'all') {
@@ -551,32 +562,34 @@ var _default = {
                 }
 
                 // 保持原有分页逻辑
-                _context2.next = 10;
+                _context2.next = 12;
                 return query.orderBy('create_time', 'desc').skip((_this5.currentPage - 1) * _this5.pageSize).limit(_this5.pageSize).get();
-              case 10:
+              case 12:
                 res = _context2.sent;
-                console.log("查询到的订单结果" + res.result);
+                // 正确方式：
+                console.log("查询到的订单结果:", res.result);
+
                 // 保持原有结果处理
                 if (res.result.data) {
                   _this5.orderList = _this5.currentPage === 1 ? res.result.data : [].concat((0, _toConsumableArray2.default)(_this5.orderList), (0, _toConsumableArray2.default)(res.result.data));
                   _this5.hasMore = res.result.data.length >= _this5.pageSize;
                 }
-                _context2.next = 18;
+                _context2.next = 20;
                 break;
-              case 15:
-                _context2.prev = 15;
+              case 17:
+                _context2.prev = 17;
                 _context2.t0 = _context2["catch"](3);
                 console.error('查询失败:', _context2.t0);
-              case 18:
-                _context2.prev = 18;
+              case 20:
+                _context2.prev = 20;
                 _this5.loading = false;
-                return _context2.finish(18);
-              case 21:
+                return _context2.finish(20);
+              case 23:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[3, 15, 18, 21]]);
+        }, _callee2, null, [[3, 17, 20, 23]]);
       }))();
     },
     // 保持原有方法不变
@@ -587,6 +600,7 @@ var _default = {
     },
     handleSearch: function handleSearch() {
       this.currentPage = 1;
+      console.log("执行搜索，关键词:", this.searchQuery); // 添加日志
       this.getOrderList();
     },
     loadMore: function loadMore() {

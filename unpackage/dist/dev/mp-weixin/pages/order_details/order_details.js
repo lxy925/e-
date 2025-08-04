@@ -257,6 +257,7 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
+//
 var _default = (0, _defineProperty2.default)({
   name: 'OrderComponent',
   data: function data() {
@@ -291,7 +292,7 @@ var _default = (0, _defineProperty2.default)({
       var service = encodeURIComponent(JSON.stringify(this.serviceData));
       console.log("传递的 service 参数:", service);
       uni.navigateTo({
-        url: "/pages/order/order?service=".concat(service)
+        url: "/pages/order/order?service=".concat(service, "&from=order_details")
       });
     },
     getDetailsImage: function getDetailsImage() {

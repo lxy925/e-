@@ -227,10 +227,8 @@
 						from_status: this.orderInfo.status,
 						to_status: 'refunded', // 状态：已退款
 						update_data: {
-							service_status: 'cancelled',
 							last_refund_time: Date.now(),
 							refund_id: this.refundId, // 关联退款记录ID
-							refund_api_response: this.refundResult?.result || {} // 保存API响应
 						}
 					}
 				});

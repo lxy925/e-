@@ -13,6 +13,7 @@
 		"axios": "^1.8.3",
 		"crypto-browserify": "^3.12.1",
 		"jsonwebtoken": "^8.5.1",
+		"koa-jwt": "^4.0.4",
 		"pinia": "^3.0.1",
 		"qrcode": "^1.5.4",
 		"uview-ui": "^2.0.38",

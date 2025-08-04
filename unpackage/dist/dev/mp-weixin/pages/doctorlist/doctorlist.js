@@ -178,7 +178,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -245,21 +254,43 @@ var _default = {
       // 新增搜索关键词
       doctors: [],
       Location: {},
-      fromOrder: false
+      fromOrder: false,
+      startTime: null,
+      endTime: null,
+      page: 1,
+      // 新增：当前页码，默认1
+      pageSize: 10,
+      // 新增：每页条数，默认10
+      showLoading: false,
+      // 新增：是否显示加载状态
+      noMore: false,
+      // 新增：是否没有更多数据
+      isLoading: false // 新增：防止重复请求的锁
     };
   },
   onLoad: function onLoad(options) {
     var systemInfo = uni.getSystemInfoSync();
     this.navHeight = systemInfo.statusBarHeight + 44;
 
-    // 检查是否从order页面跳转过来
-    if (options.from === 'order' && options.selectedTime) {
+    // 接收所有参数（检查是否从order页面跳转过来)
+    if (options.from === 'order') {
       this.fromOrder = true;
-      console.log("传过来的时间参数", options.selectedTime);
-      var selectedTime = options.selectedTime;
-      this.timeObj = this.convertTimeToValue(selectedTime);
-      console.log(this.timeObj);
-      console.log("传过来的时间参数", selectedTime);
+
+      // 接收时间参数
+      if (options.timeObj) {
+        this.timeObj = parseInt(options.timeObj);
+      }
+      if (options.startTime && options.endTime) {
+        this.startTime = decodeURIComponent(options.startTime); // 解码
+        this.endTime = decodeURIComponent(options.endTime); // 解码
+        console.log("传过来的时间参数", this.startTime, this.endTime);
+      } else {
+        // 打印缺少的参数便于调试
+        console.log("缺少时间参数", {
+          hasStartTime: !!options.startTime,
+          hasEndTime: !!options.endTime
+        });
+      }
       console.log('从order页面跳转过来，点击医生卡片将返回order页面');
     }
     this.fetchDoctors();
@@ -271,78 +302,98 @@ var _default = {
       if (this.scrollTimer) clearTimeout(this.scrollTimer);
       this.scrollTimer = setTimeout(function () {
         _this.scrollTop = e.detail.scrollTop;
+        // 新增：滚动到底部时加载更多（距离底部200rpx时触发）
+        var _e$detail = e.detail,
+          scrollHeight = _e$detail.scrollHeight,
+          scrollTop = _e$detail.scrollTop,
+          clientHeight = _e$detail.clientHeight;
+        if (scrollTop + clientHeight >= scrollHeight - 200 && !_this.isLoading && !_this.noMore) {
+          _this.loadMore();
+        }
       }, 16); // 约60fps
     },
-    convertTimeToValue: function convertTimeToValue(timeStr) {
-      if (!timeStr) return null;
-
-      // 解析字符串
-      var parts = timeStr.split(' ');
-      if (parts.length < 3) return null;
-      var weekDay = parts[1]; // 获取周几
-      var time = parts[2]; // 获取时间
-
-      // 周几映射
-      var weekMap = {
-        '周一': 0,
-        '周二': 1,
-        '周三': 2,
-        '周四': 3,
-        '周五': 4,
-        '周六': 5,
-        '周日': 6
-      };
-
-      // 判断上午/下午
-      var hour = parseInt(time.split(':')[0]);
-      var isAfternoon = hour >= 12;
-
-      // 计算值
-      var weekValue = weekMap[weekDay] || 0;
-      return isAfternoon ? weekValue + 7 : weekValue;
+    loadMore: function loadMore() {
+      // 防止重复加载或没有更多数据时调用
+      if (this.isLoading || this.noMore) return;
+      this.page++; // 页码+1
+      this.fetchDoctors(); // 重新请求下一页数据
     },
     fetchDoctors: function fetchDoctors() {
       var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var timeObj, res;
+        var res;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                if (_this2.fromOrder && _this2.timeObj !== undefined) {
-                  timeObj = _this2.timeObj;
-                }
-                console.log("timeObj", timeObj);
-                console.log("searchKeyword", _this2.searchKeyword);
-                _context.next = 6;
+                _this2.isLoading = true;
+                _this2.showLoading = true;
+                _this2.noMore = false;
+
+                // 新增：打印当前请求的页码和参数
+                console.log("===== \u5F00\u59CB\u8BF7\u6C42\u7B2C ".concat(_this2.page, " \u9875\u6570\u636E ====="));
+                console.log('请求参数:', {
+                  isFromOrder: _this2.fromOrder,
+                  startTime: _this2.startTime,
+                  endTime: _this2.endTime,
+                  timeObj: _this2.timeObj,
+                  searchKeyword: _this2.searchKeyword,
+                  page: _this2.page,
+                  pageSize: _this2.pageSize
+                });
+                _context.prev = 5;
+                _context.next = 8;
                 return uniCloud.callFunction({
                   name: 'getEscorts',
                   data: {
-                    timeObj: timeObj,
                     isFromOrder: _this2.fromOrder,
-                    searchKeyword: _this2.searchKeyword
-                  } // 新增参数，标识是否来自order页面}
+                    startTime: _this2.startTime,
+                    endTime: _this2.endTime,
+                    timeObj: _this2.timeObj,
+                    searchKeyword: _this2.searchKeyword,
+                    page: _this2.page,
+                    pageSize: _this2.pageSize
+                  }
                 });
-              case 6:
+              case 8:
                 res = _context.sent;
+                // 新增：打印云函数返回结果
+                console.log("\u7B2C ".concat(_this2.page, " \u9875\u8BF7\u6C42\u7ED3\u679C:"), res.result);
                 if (res.result.success) {
-                  _this2.doctors = res.result.data;
+                  // 打印当前页数据量
+                  console.log("\u7B2C ".concat(_this2.page, " \u9875\u8FD4\u56DE\u6570\u636E\u91CF:"), res.result.data.length);
+                  if (_this2.page === 1) {
+                    _this2.doctors = res.result.data;
+                    console.log('首次加载完成，总数据量:', _this2.doctors.length);
+                  } else {
+                    _this2.doctors = [].concat((0, _toConsumableArray2.default)(_this2.doctors), (0, _toConsumableArray2.default)(res.result.data));
+                    console.log('加载更多完成，累计数据量:', _this2.doctors.length);
+                  }
+                  if (res.result.data.length < _this2.pageSize) {
+                    _this2.noMore = true;
+                    console.log('已加载全部数据，没有更多了');
+                  }
                 } else {
-                  console.error('获取陪诊师数据失败:', res.result.error);
+                  console.error('获取数据失败:', res.result.error);
                 }
-                _context.next = 13;
+                _context.next = 16;
                 break;
-              case 10:
-                _context.prev = 10;
-                _context.t0 = _context["catch"](0);
-                console.error('调用云函数失败:', _context.t0);
               case 13:
+                _context.prev = 13;
+                _context.t0 = _context["catch"](5);
+                console.error('请求云函数出错:', _context.t0);
+              case 16:
+                _context.prev = 16;
+                _this2.isLoading = false;
+                _this2.showLoading = true;
+                console.log("===== \u7B2C ".concat(_this2.page, " \u9875\u8BF7\u6C42\u7ED3\u675F =====\n"));
+                return _context.finish(16);
+              case 21:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 10]]);
+        }, _callee, null, [[5, 13, 16, 21]]);
       }))();
     },
     goToDoctorDetailPage: function goToDoctorDetailPage(doctor) {
@@ -361,6 +412,7 @@ var _default = {
     },
     handleSearch: function handleSearch() {
       // 触发云函数重新获取数据
+      this.page = 1;
       this.fetchDoctors();
     }
   }

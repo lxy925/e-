@@ -282,14 +282,14 @@
               </view>
             </view>
           </view>
-          <view class="description-section">
+          <!-- <view class="description-section">
             <text class="section-title">备注说明（选填）</text>
             <textarea 
               v-model="checkInDescription" 
               placeholder="请输入备注说明" 
               class="description-textarea"
             ></textarea>
-          </view>
+          </view> -->
         </view>
         <button class="submit-btn" @click="submitCheckIn" :disabled="!canSubmitCheckIn">提交打卡</button>
       </view>
@@ -337,7 +337,7 @@ export default {
       currentCheckIn: null,
       currentLocation: null,
       checkInImages: [],
-      checkInDescription: '',
+      //checkInDescription: '',
       checkInTimer: null
     }
   },
@@ -1630,7 +1630,7 @@ export default {
                 name: this.currentLocation.name
               },
               images: uploadedImages,
-              description: this.checkInDescription
+              //description: this.checkInDescription
             }
           }
         });
@@ -1669,7 +1669,7 @@ export default {
       this.currentCheckIn = null;
       this.currentLocation = null;
       this.checkInImages = [];
-      this.checkInDescription = '';
+      //this.checkInDescription = '';
     }
   }
 }
@@ -2331,14 +2331,14 @@ export default {
   margin-bottom: 30rpx;
 }
 
-.description-textarea {
+/* .description-textarea {
   width: 100%;
   height: 200rpx;
   background: #f5f5f5;
   border-radius: 10rpx;
   padding: 20rpx;
   font-size: 28rpx;
-}
+} */
 
 .submit-btn {
   width: 100%;

@@ -27,7 +27,7 @@
 				<view class="second">
 					<view class="second-item1">
 						<view class="second-item1-text">
-							<text class="second-item1-text1">考证</text>
+							<text class="second-item1-text1">报名</text>
 							<text class="second-item1-text2">精选推荐</text>
 							<text class="second-item1-text3">了解更多</text>
 						</view>

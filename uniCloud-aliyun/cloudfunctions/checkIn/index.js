@@ -74,7 +74,7 @@ async function createCheckIn(data) {
 
 // 提交打卡
 async function submitCheckIn(data) {
-  const { check_in_id, location, images, description } = data;
+  const { check_in_id, location, images } = data;
   
   try {
     if (!location || !images || images.length === 0) {
@@ -132,7 +132,7 @@ async function submitCheckIn(data) {
       check_in_time: now,
       location,
       images,
-      description: description || '',
+      //description: description || '',
       status: 'success',
       update_time: now
     };

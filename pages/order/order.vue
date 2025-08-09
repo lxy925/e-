@@ -1,11 +1,8 @@
 <template>
 	<view class="page">
 		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
-		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
-		  paddingTop: navHeight + 'px',
-		  height: 'calc(100vh - ' + navHeight + 'px)'
-		}" :scroll-top="scrollTop" :show-scrollbar="false">
-
+		<scroll-view class="page-container" :style="{ paddingTop: navHeight + 'px' }">
+		<!-- 	<view class="content"> -->
 
 			<!-- 服务须知弹窗 -->
 			<service-notice-popup ref="serviceNoticePopup" @confirm="onNoticeConfirm"></service-notice-popup>
@@ -298,6 +295,10 @@
 				},
 				missingOptionalFields: []
 			};
+		},
+		onPageScroll(e) {
+			// console.log('页面滚动:', e.scrollTop);
+			this.scrollTop = e.scrollTop;
 		},
 		onShow() {
 			// 恢复服务数据
@@ -1050,19 +1051,13 @@
 	}
 
 	.page-container {
-		min-height: 100vh;
-		position: relative;
-
-		padding-left: 25rpx;
-		padding-right: 25rpx;
-		margin: 0;
 		width: 100%;
 		box-sizing: border-box;
-		/* 关键：让 width 包含 padding */
-		-webkit-overflow-scrolling: touch;
-		/* 平滑滚动 */
-		scrollbar-width: none;
-		/* Firefox */
+		/* 关键：让 padding 包含在宽度内 */
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		height: calc(100vh - var(--nav-height));
+		overflow-y: auto;
 	}
 
 	.page-container ::-webkit-scrollbar {

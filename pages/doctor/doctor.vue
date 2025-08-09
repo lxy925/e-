@@ -3,10 +3,7 @@
 		<!-- pages/doctor/doctor.wxml -->
 		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" ref="customNav" />
 		<!-- 内容区域 -->
-		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
-		      paddingTop: navHeight + 'px',
-		      height: 'calc(100vh - ' + navHeight + 'px)'
-		    }" :scroll-top="scrollTop" :show-scrollbar="false">
+		<scroll-view class="page-container" @scroll="handleScroll" :style="{ paddingTop: navHeight + 'px' }">
 
 			<view class="content" style="padding: 0rpx;">
 				<view class="first">
@@ -179,6 +176,11 @@
 		 * 用户点击右上角分享
 		 */
 		onShareAppMessage() {},
+		// 在页面的生命周期中监听滚动
+		onPageScroll(e) {
+			// console.log('页面滚动:', e.scrollTop);
+			this.scrollTop = e.scrollTop;
+		},
 		methods: {
 			//监视页面滚动情况
 			handleScroll(e) {
@@ -269,19 +271,13 @@
 	}
 
 	.page-container {
-		min-height: 100vh;
-		position: relative;
-
-		padding-left: 25rpx;
-		padding-right: 25rpx;
-		margin: 0;
 		width: 100%;
 		box-sizing: border-box;
-		/* 关键：让 width 包含 padding */
-		-webkit-overflow-scrolling: touch;
-		/* 平滑滚动 */
-		scrollbar-width: none;
-		/* Firefox */
+		/* 关键：让 padding 包含在宽度内 */
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		height: calc(100vh - var(--nav-height));
+		overflow-y: auto;
 	}
 
 	.page-container ::-webkit-scrollbar {

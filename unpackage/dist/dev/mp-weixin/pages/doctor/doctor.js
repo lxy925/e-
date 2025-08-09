@@ -293,9 +293,6 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
-//
-//
-//
 // pages/doctor/doctor.js
 var _default = {
   data: function data() {
@@ -357,6 +354,11 @@ var _default = {
    * 用户点击右上角分享
    */
   onShareAppMessage: function onShareAppMessage() {},
+  // 在页面的生命周期中监听滚动
+  onPageScroll: function onPageScroll(e) {
+    // console.log('页面滚动:', e.scrollTop);
+    this.scrollTop = e.scrollTop;
+  },
   methods: {
     //监视页面滚动情况
     handleScroll: function handleScroll(e) {

@@ -1,14 +1,8 @@
 <template>
 	<!-- 主容器 -->
 	<view>
-		<!-- 自定义导航栏 -->
-		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
-
-		<!-- 内容滚动区域 -->
-		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
-        paddingTop: navHeight + 'px',
-        height: 'calc(100vh - ' + navHeight + 'px)'
-      }" :scroll-top="scrollTop" :show-scrollbar="false">
+		<custom-nav :title="pageTitle" :isHomePage="true" :scroll-top="scrollTop" />
+		<scroll-view class="page-container" @scroll="handleScroll" :style="{ paddingTop: navHeight + 'px' }">
 			<view class="content">
 				<view class="textTop"> 祝您有一个健康的一天 </view>
 				<view class="uni-margin-wrap">
@@ -46,43 +40,45 @@
 
 				<!-- 热门医院推荐 -->
 				<view class="hospital-section">
-				
-								<view class="section-header">
-									<text class="section-title">热门医院推荐</text>
-									<view class="more-link" @tap="navigateToMore">
-										更多<text class="arrow">></text>
+
+					<view class="section-header">
+						<text class="section-title">热门医院推荐</text>
+						<view class="more-link" @tap="navigateToMore">
+							更多<text class="arrow">></text>
+						</view>
+					</view>
+					<!-- 修改医院列表部分 -->
+					<view class="hospital-list">
+						<view class="hospital-item" v-for="hospital in hospitals" :key="hospital._id"
+							@tap="navigateToHospital(hospital)">
+							<image :src="hospital.image || '/static/images/more/hospital.png'" mode="aspectFill"
+								class="hospital-image"></image>
+							<view class="hospital-info">
+								<view class="hospital-header">
+									<text class="hospital-name">{{ hospital.name }}</text>
+									<text class="hospital-level">{{ hospital.level }}</text>
+								</view>
+								<view class="hospital-detail">
+									<view class="detail-item">
+										<text class="label">类型：</text>
+										<text class="value">{{ hospital.type }}</text>
 									</view>
-								</view>
-				<!-- 修改医院列表部分 -->
-				<view class="hospital-list">
-					<view class="hospital-item" v-for="hospital in hospitals" :key="hospital._id"
-						@tap="navigateToHospital(hospital)">
-						<image :src="hospital.image || '/static/images/more/hospital.png'" mode="aspectFill"
-							class="hospital-image"></image>
-						<view class="hospital-info">
-							<view class="hospital-header">
-								<text class="hospital-name">{{ hospital.name }}</text>
-								<text class="hospital-level">{{ hospital.level }}</text>
-							</view>
-							<view class="hospital-detail">
-								<view class="detail-item">
-									<text class="label">类型：</text>
-									<text class="value">{{ hospital.type }}</text>
-								</view>
-								<view class="detail-item">
-									<text class="label">电话：</text>
-									<text class="value">{{ hospital.phone || '暂无' }}</text>
-								</view>
-								<view class="detail-item address">
-									<text class="label">地址：</text>
-									<text class="value">{{ hospital.address.city }}{{ hospital.address.detail }}</text>
+									<view class="detail-item">
+										<text class="label">电话：</text>
+										<text class="value">{{ hospital.phone || '暂无' }}</text>
+									</view>
+									<view class="detail-item address">
+										<text class="label">地址：</text>
+										<text
+											class="value">{{ hospital.address.city }}{{ hospital.address.detail }}</text>
+									</view>
 								</view>
 							</view>
 						</view>
 					</view>
 				</view>
-				</view>
 			</view>
+			<!-- </scroll-view> -->
 		</scroll-view>
 	</view>
 
@@ -132,6 +128,11 @@
 				hospitals: [], // 清空原有的模拟数据
 			};
 		},
+		// 在页面的生命周期中监听滚动
+		onPageScroll(e) {
+			// console.log('页面滚动:', e.scrollTop);
+			this.scrollTop = e.scrollTop;
+		},
 		/**
 		 * 生命周期函数--监听页面加载
 		 */
@@ -139,7 +140,7 @@
 			// 获取导航栏高度
 			const systemInfo = uni.getSystemInfoSync();
 			this.navHeight = systemInfo.statusBarHeight + 44;
-			
+
 			this.getBanners();
 			this.getHospitalList(); // 新增调用获取医院数据
 		},
@@ -173,13 +174,7 @@
 		onShareAppMessage() {},
 		methods: {
 			//监视页面滚动情况
-			handleScroll(e) {
-				// 使用节流减少更新频率
-				if (this.scrollTimer) clearTimeout(this.scrollTimer);
-				this.scrollTimer = setTimeout(() => {
-					this.scrollTop = e.detail.scrollTop;
-				}, 16); // 约60fps
-			},
+			
 			// 新增获取医院数据的方法
 			async getHospitalList() {
 				try {
@@ -247,128 +242,122 @@
 						icon: 'none'
 					});
 				}
-		},
-		handleNavClick(path) {
-			uni.navigateTo({
-				url: path,
-			});
-		},
-
-		navigateToMore() {
-			uni.navigateTo({
-				url: '/pages/more/more?from=index'
-			})
-		},
-		// 跳转到AI问答页面
-		navigateToAI() {
-			if (!this.isDragging) { // 只有在非拖拽状态才触发跳转
+			},
+			handleNavClick(path) {
 				uni.navigateTo({
-					url: '/pages/AI/AI'
+					url: path,
 				});
-			}
-		},
-		// 触摸开始
-		touchStart(e) {
-			this.startX = e.touches[0].clientX;
-			this.startY = e.touches[0].clientY;
-			this.isDragging = false;
-		},
-		// 触摸移动
-		touchMove(e) {
-			const moveX = e.touches[0].clientX - this.startX;
-			const moveY = e.touches[0].clientY - this.startY;
+			},
 
-			// 如果移动距离超过10px，认为是拖拽
-			if (Math.abs(moveX) > 10 || Math.abs(moveY) > 10) {
-				this.isDragging = true;
-			}
-
-			// 计算新的位置
-			let newX = this.buttonX + moveX;
-			let newY = this.buttonY + moveY;
-
-			// 获取屏幕尺寸
-			const systemInfo = uni.getSystemInfoSync();
-			const screenWidth = systemInfo.windowWidth;
-			const screenHeight = systemInfo.windowHeight;
-
-			// 限制按钮在屏幕范围内
-			newX = Math.max(0, Math.min(newX, screenWidth - 100));
-			newY = Math.max(0, Math.min(newY, screenHeight - 100));
-
-			this.buttonX = newX;
-			this.buttonY = newY;
-			this.startX = e.touches[0].clientX;
-			this.startY = e.touches[0].clientY;
-		},
-		// 触摸结束
-		touchEnd() {
-			this.isDragging = false;
-		},
-		// 获取轮播图数据
-		async getBanners() {
-			try {
-				uni.showLoading({
-					title: '加载中'
-				})
-
-				const {
-					result
-				} = await uniCloud.callFunction({
-					name: 'getBanners'
-				})
-				console.log(result)
-				if (result.code === 0) {
-					this.banners = result.data
-					console.log(result.data)
-				} else {
-					uni.showToast({
-						title: result.msg || '获取轮播图失败',
-						icon: 'none'
-					})
-				}
-			} catch (e) {
-				uni.showToast({
-					title: '获取轮播图失败',
-					icon: 'none'
-				})
-			} finally {
-				uni.hideLoading()
-			}
-		},
-		// 处理轮播图点击
-		handleBannerClick(banner) {
-			if (banner.url) {
+			navigateToMore() {
 				uni.navigateTo({
-					url: banner.url,
-					fail() {
+					url: '/pages/more/more?from=index'
+				})
+			},
+			// 跳转到AI问答页面
+			navigateToAI() {
+				if (!this.isDragging) { // 只有在非拖拽状态才触发跳转
+					uni.navigateTo({
+						url: '/pages/AI/AI'
+					});
+				}
+			},
+			// 触摸开始
+			touchStart(e) {
+				this.startX = e.touches[0].clientX;
+				this.startY = e.touches[0].clientY;
+				this.isDragging = false;
+			},
+			// 触摸移动
+			touchMove(e) {
+				const moveX = e.touches[0].clientX - this.startX;
+				const moveY = e.touches[0].clientY - this.startY;
+
+				// 如果移动距离超过10px，认为是拖拽
+				if (Math.abs(moveX) > 10 || Math.abs(moveY) > 10) {
+					this.isDragging = true;
+				}
+
+				// 计算新的位置
+				let newX = this.buttonX + moveX;
+				let newY = this.buttonY + moveY;
+
+				// 获取屏幕尺寸
+				const systemInfo = uni.getSystemInfoSync();
+				const screenWidth = systemInfo.windowWidth;
+				const screenHeight = systemInfo.windowHeight;
+
+				// 限制按钮在屏幕范围内
+				newX = Math.max(0, Math.min(newX, screenWidth - 100));
+				newY = Math.max(0, Math.min(newY, screenHeight - 100));
+
+				this.buttonX = newX;
+				this.buttonY = newY;
+				this.startX = e.touches[0].clientX;
+				this.startY = e.touches[0].clientY;
+			},
+			// 触摸结束
+			touchEnd() {
+				this.isDragging = false;
+			},
+			// 获取轮播图数据
+			async getBanners() {
+				try {
+					uni.showLoading({
+						title: '加载中'
+					})
+
+					const {
+						result
+					} = await uniCloud.callFunction({
+						name: 'getBanners'
+					})
+					console.log(result)
+					if (result.code === 0) {
+						this.banners = result.data
+						console.log(result.data)
+					} else {
 						uni.showToast({
-							title: '页面跳转失败',
+							title: result.msg || '获取轮播图失败',
 							icon: 'none'
 						})
 					}
-				})
-			}
-		},
+				} catch (e) {
+					uni.showToast({
+						title: '获取轮播图失败',
+						icon: 'none'
+					})
+				} finally {
+					uni.hideLoading()
+				}
+			},
+			// 处理轮播图点击
+			handleBannerClick(banner) {
+				if (banner.url) {
+					uni.navigateTo({
+						url: banner.url,
+						fail() {
+							uni.showToast({
+								title: '页面跳转失败',
+								icon: 'none'
+							})
+						}
+					})
+				}
+			},
 		}
 
 	};
 </script>
 <style>
 	.page-container {
-		min-height: 100vh;
-		position: relative;
-		padding: 0 rpx;
-		padding-left: 25rpx;
-		padding-right: 25rpx;
-		margin: 0;
 		width: 100%;
 		box-sizing: border-box;
-		/* 关键：让 width 包含 padding */
-		-webkit-overflow-scrolling: touch;
-		/* 平滑滚动 */
-		scrollbar-width: none;
-		/* Firefox */
+		/* 关键：让 padding 包含在宽度内 */
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		height: calc(100vh - var(--nav-height));
+		overflow-y: auto;
 	}
 
 	.page-container ::-webkit-scrollbar {

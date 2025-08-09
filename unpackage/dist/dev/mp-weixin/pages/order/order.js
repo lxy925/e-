@@ -204,7 +204,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
 var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/typeof */ 13));
-var _components$data$onSh;
+var _components$data$onPa;
 var PaymentComponent = function PaymentComponent() {
   __webpack_require__.e(/*! require.ensure | components/PaymentComponent */ "components/PaymentComponent").then((function () {
     return resolve(__webpack_require__(/*! @/components/PaymentComponent.vue */ 710));
@@ -215,7 +215,7 @@ var ServiceNoticePopup = function ServiceNoticePopup() {
     return resolve(__webpack_require__(/*! @/components/service-notice-popup.vue */ 717));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
-var _default = (_components$data$onSh = {
+var _default = (_components$data$onPa = {
   components: {
     ServiceNoticePopup: ServiceNoticePopup,
     PaymentComponent: PaymentComponent
@@ -308,6 +308,10 @@ var _default = (_components$data$onSh = {
       missingOptionalFields: []
     };
   },
+  onPageScroll: function onPageScroll(e) {
+    // console.log('页面滚动:', e.scrollTop);
+    this.scrollTop = e.scrollTop;
+  },
   onShow: function onShow() {
     // 恢复服务数据
     var savedService = uni.getStorageSync('current_service');
@@ -376,7 +380,7 @@ var _default = (_components$data$onSh = {
       };
     }
   }
-}, (0, _defineProperty2.default)(_components$data$onSh, "onShow", function onShow() {
+}, (0, _defineProperty2.default)(_components$data$onPa, "onShow", function onShow() {
   this.loadDoctorInfo();
   this.loadPatientInfo();
   this.loadSavedPhotos();
@@ -392,12 +396,12 @@ var _default = (_components$data$onSh = {
       this.selectedHospital = hospital;
     }
   }
-}), (0, _defineProperty2.default)(_components$data$onSh, "onHide", function onHide() {
+}), (0, _defineProperty2.default)(_components$data$onPa, "onHide", function onHide() {
   this.saveFormData();
-}), (0, _defineProperty2.default)(_components$data$onSh, "onUnload", function onUnload() {
+}), (0, _defineProperty2.default)(_components$data$onPa, "onUnload", function onUnload() {
   // 移除监听，避免内存泄漏
   uni.$off('clear-order-form-data', this.clearFormData);
-}), (0, _defineProperty2.default)(_components$data$onSh, "onBackPress", function onBackPress() {
+}), (0, _defineProperty2.default)(_components$data$onPa, "onBackPress", function onBackPress() {
   var _this = this;
   if (this.hasFormData()) {
     uni.showModal({
@@ -415,12 +419,12 @@ var _default = (_components$data$onSh = {
     });
     return true;
   }
-}), (0, _defineProperty2.default)(_components$data$onSh, "mounted", function mounted() {
+}), (0, _defineProperty2.default)(_components$data$onPa, "mounted", function mounted() {
   console.log('支付组件实例:', this.$refs.paymentComponent);
   if (!this.$refs.paymentComponent) {
     console.error('未获取到支付组件实例，请检查ref名称是否正确');
   }
-}), (0, _defineProperty2.default)(_components$data$onSh, "methods", {
+}), (0, _defineProperty2.default)(_components$data$onPa, "methods", {
   //监视页面滚动情况
   handleScroll: function handleScroll(e) {
     var _this2 = this;
@@ -967,7 +971,7 @@ var _default = (_components$data$onSh = {
     var weekValue = weekMap[weekDay] || 0;
     return isAfternoon ? weekValue + 7 : weekValue;
   }
-}), _components$data$onSh);
+}), _components$data$onPa);
 exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
 

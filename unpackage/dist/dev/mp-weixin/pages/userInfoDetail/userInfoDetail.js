@@ -463,7 +463,9 @@ var _default = {
                   uni.setStorageSync('token', result.data.token);
                   console.log(uni.getStorageSync('userInfo'));
                   uni.setStorageSync('userInfoForm', result.data.userInfo);
-                  uni.navigateBack();
+                  uni.reLaunch({
+                    url: '/pages/index/index'
+                  });
                 } else {
                   uni.showToast({
                     title: result.message || '登录失败',

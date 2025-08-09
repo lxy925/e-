@@ -220,7 +220,7 @@ var _default = {
                   success: function success(res) {
                     if (res.confirm) {
                       // 跳转到登录页面
-                      uni.navigateTo({
+                      uni.reLaunch({
                         url: '/pages/userInfoDetail/userInfoDetail'
                       });
                     }

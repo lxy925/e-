@@ -1,9 +1,9 @@
 <template>
 	<view class="custom-nav" :style="{ 
-       height: navHeight + 'px',
-       backgroundColor: `rgba(114, 221, 232, ${navOpacity})`,
-       color: '#fff' // 强制字体颜色为白色
-     }">
+	    height: navHeight + 'px',
+		backgroundColor: `rgba(114, 221, 232, ${navOpacity})`,
+	    color: '#fff'
+	  }">
 		<view class="nav-content" :style="{ marginTop: statusBarHeight + 'px' }">
 			<view class="nav-left">
 				<template v-if="isHomePage">
@@ -187,14 +187,16 @@
 </script>
 
 <style scoped>
-	.custom-nav {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		z-index: 999;
-		transition: all 0.3s ease;
-	}
+	 .custom-nav {
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    right: 0;
+	    z-index: 100;
+	    background-color: rgba(114, 221, 232, 0);
+	    transition: background-color 0.3s ease;
+	    will-change: transform;
+	  }
 
 	.nav-content {
 		height: 44px;

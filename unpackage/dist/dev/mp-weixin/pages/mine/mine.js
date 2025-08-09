@@ -408,9 +408,6 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
-//
-//
-//
 var _default = {
   data: function data() {
     return {
@@ -444,6 +441,11 @@ var _default = {
       selectedTime: 'today' // 默认选择今日
     };
   },
+
+  onReady: function onReady() {
+    this.userInfo = uni.getStorageSync("userInfo");
+    this.getUser();
+  },
   onLoad: function onLoad() {
     // 获取导航栏高度
     var systemInfo = uni.getSystemInfoSync();
@@ -454,6 +456,10 @@ var _default = {
       this.selectTime('today');
     }
     this.getAccountData();
+  },
+  onPageScroll: function onPageScroll(e) {
+    // console.log('页面滚动:', e.scrollTop);
+    this.scrollTop = e.scrollTop;
   },
   onShow: function onShow() {
     this.userInfo = uni.getStorageSync("userInfo");
@@ -608,14 +614,13 @@ var _default = {
         url: "/pages/order_manage/order_manage?status=".concat(status, "&role=").concat(role)
       });
     },
-    //监视页面滚动情况
-    handleScroll: function handleScroll(e) {
-      var _this3 = this;
-      if (this.scrollTimer) clearTimeout(this.scrollTimer);
-      this.scrollTimer = setTimeout(function () {
-        _this3.scrollTop = e.detail.scrollTop;
-      }, 16); // 约60fps
-    },
+    // //监视页面滚动情况
+    // handleScroll(e) {
+    // 	if (this.scrollTimer) clearTimeout(this.scrollTimer)
+    // 	this.scrollTimer = setTimeout(() => {
+    // 		this.scrollTop = e.detail.scrollTop
+    // 	}, 16) // 约60fps
+    // },
     goToSetTime: function goToSetTime() {
       uni.navigateTo({
         url: "/pages/time/time"
@@ -651,15 +656,15 @@ var _default = {
     // 	}
     // },
     getUser: function getUser() {
-      var _this4 = this;
+      var _this3 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
         var userInfo, _yield$uniCloud$callF2, result;
         return _regenerator.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                console.log("调取前检查", _this4.userInfo);
-                userInfo = _this4.userInfo;
+                console.log("调取前检查", _this3.userInfo);
+                userInfo = _this3.userInfo;
                 _context3.prev = 2;
                 uni.showLoading({
                   title: "加载中"
@@ -676,16 +681,16 @@ var _default = {
                 result = _yield$uniCloud$callF2.result;
                 if (result.code == 200) {
                   console.log(result.data);
-                  _this4.userInfo = result.data;
-                  console.log("调取后检查", _this4.userInfo);
-                  uni.setStorageSync("userInfo", _this4.userInfo);
-                  console.log(_this4.userInfo.type);
+                  _this3.userInfo = result.data;
+                  console.log("调取后检查", _this3.userInfo);
+                  uni.setStorageSync("userInfo", _this3.userInfo);
+                  console.log(_this3.userInfo.type);
                 } else if (result.code == 401) {
                   uni.showToast({
                     title: '登录状态已过期，请重新登录',
                     icon: "none"
                   });
-                  _this4.logout();
+                  _this3.logout();
                   uni.navigateTo({
                     url: "/pages/userInfoDetail/userInfoDetail"
                   });

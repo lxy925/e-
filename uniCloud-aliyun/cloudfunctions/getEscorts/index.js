@@ -37,7 +37,7 @@ exports.main = async (event, context) => {
 					});
 					console.log("从订单页面进入，仅显示已认证陪诊师");
 				}
-				query = query.skip(skip).limit(safePageSize);
+				query = query.skip(skip).limit(pageSize);
 		
 				// 2. 添加姓名搜索条件（如果有搜索关键词）
 				if (searchKeyword && searchKeyword.trim()) {

@@ -254,10 +254,6 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
-//
-//
-//
-//
 // pages/index/index.js
 var _default = {
   data: function data() {
@@ -303,6 +299,11 @@ var _default = {
       hospitals: [] // 清空原有的模拟数据
     };
   },
+  // 在页面的生命周期中监听滚动
+  onPageScroll: function onPageScroll(e) {
+    // console.log('页面滚动:', e.scrollTop);
+    this.scrollTop = e.scrollTop;
+  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -343,17 +344,9 @@ var _default = {
   onShareAppMessage: function onShareAppMessage() {},
   methods: {
     //监视页面滚动情况
-    handleScroll: function handleScroll(e) {
-      var _this = this;
-      // 使用节流减少更新频率
-      if (this.scrollTimer) clearTimeout(this.scrollTimer);
-      this.scrollTimer = setTimeout(function () {
-        _this.scrollTop = e.detail.scrollTop;
-      }, 16); // 约60fps
-    },
     // 新增获取医院数据的方法
     getHospitalList: function getHospitalList() {
-      var _this2 = this;
+      var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
         var res;
         return _regenerator.default.wrap(function _callee$(_context) {
@@ -375,7 +368,7 @@ var _default = {
               case 4:
                 res = _context.sent;
                 if (res.result.code === 0) {
-                  _this2.hospitals = res.result.data.list;
+                  _this.hospitals = res.result.data.list;
                 } else {
                   uni.showToast({
                     title: "\u83B7\u53D6\u6570\u636E\u5931\u8D25\uFF1A".concat(res.result.msg),
@@ -495,7 +488,7 @@ var _default = {
     },
     // 获取轮播图数据
     getBanners: function getBanners() {
-      var _this3 = this;
+      var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
         var _yield$uniCloud$callF, result;
         return _regenerator.default.wrap(function _callee2$(_context2) {
@@ -515,7 +508,7 @@ var _default = {
                 result = _yield$uniCloud$callF.result;
                 console.log(result);
                 if (result.code === 0) {
-                  _this3.banners = result.data;
+                  _this2.banners = result.data;
                   console.log(result.data);
                 } else {
                   uni.showToast({

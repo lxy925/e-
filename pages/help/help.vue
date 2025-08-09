@@ -7,8 +7,11 @@
 	}" :scroll-top="scrollTop" :show-scrollbar="false">
 	
 	<view class="settings-container">
-		<view class="settings-item" @click="viewDocumentation">
-			<text>查看小程序相关文档</text>
+		<view class="settings-item" @click="viewDocumentation1">
+			<text>查看考证报名须知</text>
+		</view>
+		<view class="settings-item" @click="viewDocumentation1">
+			<text>查看提现须知</text>
 		</view>
 	</view>
 	</scroll-view>
@@ -20,7 +23,7 @@
 		data() {
 			return {
 				navHeight: 0, // 添加导航栏高度存储
-				pageTitle: '设置中心',
+				pageTitle: '帮助中心',
 				scrollTop: 0,
 			}
 		},
@@ -42,10 +45,9 @@
 					title: '即将打开文档',
 					icon: 'none'
 				});
-				// 实际项目中这里可以跳转到文档页面或打开网页
-				// uni.navigateTo({ url: '/pages/documentation/index' });
-				// 或
-				// uni.openUrl({ url: 'https://your-documentation-url' });
+				
+				uni.navigateTo({ url: '/pages/documentation1/index' });
+				
 			},
 		}
 	}

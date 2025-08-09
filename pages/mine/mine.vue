@@ -1,10 +1,7 @@
 <template>
 	<view class="page">
 		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" ref="customNav" />
-		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
-	  paddingTop: navHeight + 'px',
-	  height: 'calc(100vh - ' + navHeight + 'px)'
-	}" :scroll-top="scrollTop" :show-scrollbar="false">
+			<scroll-view class="page-container" @scroll="handleScroll" :style="{ paddingTop: navHeight + 'px' }">
 
 			<view class="content">
 				<view class="header" @click="handleHeaderClick">
@@ -253,6 +250,10 @@
 
 			};
 		},
+		onReady: function() {
+		   this.userInfo = uni.getStorageSync("userInfo");
+		   this.getUser();
+		  },
 		onLoad() {
 			// 获取导航栏高度
 			const systemInfo = uni.getSystemInfoSync();
@@ -264,6 +265,10 @@
 			}
 
 			this.getAccountData();
+		},
+		onPageScroll(e) {
+			// console.log('页面滚动:', e.scrollTop);
+			this.scrollTop = e.scrollTop;
 		},
 		onShow() {
 
@@ -393,13 +398,13 @@
 					url: `/pages/order_manage/order_manage?status=${status}&role=${role}`
 				});
 			},
-			//监视页面滚动情况
-			handleScroll(e) {
-				if (this.scrollTimer) clearTimeout(this.scrollTimer)
-				this.scrollTimer = setTimeout(() => {
-					this.scrollTop = e.detail.scrollTop
-				}, 16) // 约60fps
-			},
+			// //监视页面滚动情况
+			// handleScroll(e) {
+			// 	if (this.scrollTimer) clearTimeout(this.scrollTimer)
+			// 	this.scrollTimer = setTimeout(() => {
+			// 		this.scrollTop = e.detail.scrollTop
+			// 	}, 16) // 约60fps
+			// },
 			goToSetTime() {
 				uni.navigateTo({
 					url: `/pages/time/time`
@@ -600,19 +605,13 @@
 	}
 
 	.page-container {
-		min-height: 100vh;
-		position: relative;
-
-		padding-left: 25rpx;
-		padding-right: 25rpx;
-		margin: 0;
 		width: 100%;
 		box-sizing: border-box;
-		/* 关键：让 width 包含 padding */
-		-webkit-overflow-scrolling: touch;
-		/* 平滑滚动 */
-		scrollbar-width: none;
-		/* Firefox */
+		/* 关键：让 padding 包含在宽度内 */
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		height: calc(100vh - var(--nav-height));
+		overflow-y: auto;
 	}
 
 	.page-container ::-webkit-scrollbar {

@@ -1,10 +1,8 @@
 <template>
 	<view class="page">
 		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
-		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
-		  paddingTop: navHeight + 'px',
-		  height: 'calc(100vh - ' + navHeight + 'px)'
-		}" :scroll-top="scrollTop" :show-scrollbar="false">
+		<scroll-view class="page-container" @scroll="handleScroll" :style="{ paddingTop: navHeight + 'px' }">
+			
 
 			<view class="container">
 				<!-- 头像上传 -->
@@ -189,7 +187,7 @@
 	import {
 		ref
 	} from 'vue';
-	import citys from '../../Utils/citys.js'; // 引入外部文件
+	import citys from '../../utils/citys.js'; // 引入外部文件
 
 	export default {
 		data() {
@@ -244,6 +242,11 @@
 				userInfo: {},
 				isUpdate: false
 			};
+		},
+		// 在页面的生命周期中监听滚动
+		onPageScroll(e) {
+			console.log('页面滚动:', e.scrollTop);
+			this.scrollTop = e.scrollTop;
 		},
 		onLoad(options) {
 			// 获取导航栏高度
@@ -633,19 +636,13 @@
 	}
 
 	.page-container {
-		min-height: 100vh;
-		position: relative;
-
-		padding-left: 25rpx;
-		padding-right: 25rpx;
-		margin: 0;
 		width: 100%;
 		box-sizing: border-box;
-		/* 关键：让 width 包含 padding */
-		-webkit-overflow-scrolling: touch;
-		/* 平滑滚动 */
-		scrollbar-width: none;
-		/* Firefox */
+		/* 关键：让 padding 包含在宽度内 */
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		height: calc(100vh - var(--nav-height));
+		overflow-y: auto;
 	}
 
 	.page-container ::-webkit-scrollbar {

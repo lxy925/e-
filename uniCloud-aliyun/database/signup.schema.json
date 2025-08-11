@@ -1,0 +1,36 @@
+{
+  "bsonType": "object",
+  "required": [
+    "userId", "name", "idType", "idNumber", "examType", "jobType", "examLevel",
+    "applicationFormUrl", "idCardImagesUrls", "educationProofUrl", "photoUrl",
+    "auditStatus", "payStatus"
+  ],
+  "permission":{"read":true,"create":true,"update":true,"delete":true},
+  "properties": {
+    "userId": { "bsonType": "string", "description": "用户ID" },
+    "name": { "bsonType": "string", "description": "姓名" },
+    "idType": { "bsonType": "string", "description": "证件类型" },
+    "idNumber": { "bsonType": "string", "description": "证件号" },
+    "examType": { "bsonType": "string", "description": "报考类型" },
+    "jobType": { "bsonType": "string", "description": "报名工种" },
+    "examLevel": { "bsonType": "string", "description": "考试级别" },
+    "applicationFormUrl": { "bsonType": "string", "description": "个人申请表文件URL" },
+    "idCardImagesUrls": { "bsonType": "array", "items": { "bsonType": "string" }, "description": "身份证正反面图片URL数组" },
+    "educationProofUrl": { "bsonType": "string", "description": "学历证明材料URL" },
+    "photoUrl": { "bsonType": "string", "description": "2寸白底证件照URL" },
+    "workProofUrl": { "bsonType": "string", "description": "工作年限证明及承诺书URL（职业报考必填）" },
+    "socialSecurityUrl": { "bsonType": "string", "description": "社保缴纳记录URL（职业报考必填）" },
+    "otherProofUrl": { "bsonType": "string", "description": "劳动合同/离职证明/工资流水等佐证材料URL（职业报考必填）" },
+    "auditStatus": {
+      "bsonType": "string",
+      "enum": ["unreviewed", "pending_review", "approved", "rejected"],
+      "description": "审核状态：unreviewed未审核，pending_review审核中，approved审核通过，rejected审核拒绝"
+    },
+    "payStatus": {
+      "bsonType": "string",
+      "enum": ["paid", "unpaid", "paying", "pay_fail", "cancelled", "refunding", "refunded"],
+      "description": "支付状态：paid已支付，unpaid未支付，paying支付中，pay_fail支付失败，cancelled已取消，refunding退款中，refunded已退款"
+    },
+    "createdAt": { "bsonType": "date", "description": "创建时间" }
+  }
+} 

@@ -96,7 +96,7 @@ exports.main = async (event, context) => {
 		});
 	} else {
 		// 老用户更新信息
-		type="陪诊师";
+		
 		await usersCollection.doc(userRes.data[0]._id).update({
 			avatar,
 			nickName,

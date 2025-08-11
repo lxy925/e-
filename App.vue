@@ -1,5 +1,5 @@
 <script>
-	const jwt = require("./Utils/jwt")
+	const jwt = require("./utils/jwt")
 	// app.js
 	export default {
 		data() {
@@ -49,7 +49,7 @@
 					success: (res) => {
 						if (res.confirm) {
 							// 跳转到登录页面
-							uni.navigateTo({
+							uni.reLaunch({
 								url: '/pages/userInfoDetail/userInfoDetail'
 							});
 						}

@@ -107,11 +107,19 @@ async function handleWithdrawFailure(recordId, userId, amount, accountId, errorM
 
         // 2. 解冻资金（查询当前账户状态以确保准确性）
         const accountRes = await transaction.collection('escort_account').doc(accountId).get();
-        const account = accountRes.data[0];
+        if (!accountRes.data || accountRes.data.length === 0) {
+            throw new Error('账户信息不存在');
+        }
         
+        const account = accountRes.data;
+		console.log("accountRes",account)
+        if (account.frozen_amount < amount) {
+            throw new Error('冻结金额不足');
+        }
+
         await transaction.collection('escort_account').doc(accountId).update({
-            withdrawable_amount: account.withdrawable_amount + amount,
-            frozen_amount: account.frozen_amount - amount,
+            withdrawable_amount: (account.withdrawable_amount || 0) + amount,
+            frozen_amount: (account.frozen_amount || 0) - amount,
             update_time: Date.now()
         });
 
@@ -120,6 +128,7 @@ async function handleWithdrawFailure(recordId, userId, amount, accountId, errorM
         await transaction.rollback();
         console.error('资金解冻失败:', e);
         // 这里可以添加通知管理员的逻辑
+        throw e; // 重新抛出错误以便外层捕获
     }
 }
 

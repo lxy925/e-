@@ -17,7 +17,7 @@ const type=moreData.type;
 		.update({
 			
 			
-			certificate: moreData.certificateList,
+			// certificate: moreData.certificateList,
 			
 			
 			provide_transport: moreData.provide_transport,

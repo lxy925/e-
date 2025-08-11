@@ -21,7 +21,6 @@ exports.main = async (event, context) => {
     socialSecurityUrl: event.socialSecurityUrl || '',
     otherProofUrl: event.otherProofUrl || '',
     auditStatus: 'unreviewed', // 默认未审核
-    payStatus: 'unpaid', //默认未支付
     createdAt: new Date()
   };
   // 职业报考校验

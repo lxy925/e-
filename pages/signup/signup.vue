@@ -35,14 +35,47 @@
           
           <view class="input-group">
             <text class="label">考试级别<span class="required">*</span></text>
-            <picker :range="examLevels" :value="form.examLevelIndex" @change="onPickerChange('examLevelIndex', $event)">
-              <view class="picker-input">{{ examLevels[form.examLevelIndex] || '请选择考试级别' }}</view>
+            <picker :range="availableLevels" :value="form.examLevelIndex" @change="onPickerChange('examLevelIndex', $event)">
+              <view class="picker-input">{{ availableLevels[form.examLevelIndex] || '请选择考试级别' }}</view>
             </picker>
           </view>
         </view>
         
         <view class="submit">
+          <button class="notice-btn" @click="showNotice" :disabled="!canShowNotice">查看报考须知</button>
           <button class="submit-btn" @click="handleSubmit">提交报名</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 报考须知弹窗 -->
+    <view class="notice-modal" v-if="showNoticeModal" @click="hideNotice">
+      <view class="notice-content" @click.stop>
+        <view class="notice-header">
+          <text class="notice-title">报考须知</text>
+          <view class="close-btn" @click="hideNotice">×</view>
+        </view>
+        <view class="notice-body" v-if="selectedJobInfo">
+          <view class="notice-item">
+            <text class="notice-label">工种名称：</text>
+            <text class="notice-value">{{ selectedJobInfo.jobName }}</text>
+          </view>
+          <view class="notice-item">
+            <text class="notice-label">考试方式：</text>
+            <text class="notice-value">{{ selectedJobInfo.examMethod }}</text>
+          </view>
+          <view class="notice-item">
+            <text class="notice-label">理论考试时长：</text>
+            <text class="notice-value">{{ selectedJobInfo.theoryDuration }}</text>
+          </view>
+          <view class="notice-item">
+            <text class="notice-label">实操考试时长：</text>
+            <text class="notice-value">{{ selectedJobInfo.practicalDuration }}</text>
+          </view>
+          <view class="notice-item" v-if="selectedJobInfo.description">
+            <text class="notice-label">工种描述：</text>
+            <text class="notice-value">{{ selectedJobInfo.description }}</text>
+          </view>
         </view>
       </view>
     </view>
@@ -55,12 +88,14 @@ export default {
     if (options && options.user_id) {
       this.user_id = options.user_id;
     }
+    this.loadJobTypes();
   },
   data() {
     return {
       examTypes: ['专业报考', '职业报考'],
-      jobTypes: ['健康管理师', '营养师与公共营养师', '社群健康助理员'],
-      examLevels: ['一级', '二级', '三级', '四级', '五级'],
+      jobTypes: [],
+      availableLevels: [],
+      jobTypesData: [], // 存储从数据库获取的工种数据
       form: {
         name: '',
         idNumber: '',
@@ -68,12 +103,62 @@ export default {
         jobTypeIndex: null,
         examLevelIndex: null
       },
-      user_id: ''
+      user_id: '',
+      showNoticeModal: false
+    }
+  },
+  computed: {
+    selectedJobInfo() {
+      if (this.form.jobTypeIndex !== null && this.jobTypesData.length > 0) {
+        return this.jobTypesData[this.form.jobTypeIndex];
+      }
+      return null;
+    },
+    canShowNotice() {
+      return this.form.jobTypeIndex !== null;
     }
   },
   methods: {
+    async loadJobTypes() {
+      try {
+        const res = await uniCloud.callFunction({
+          name: 'getJobTypes'
+        });
+        if (res.result && res.result.code === 0) {
+          this.jobTypesData = res.result.data;
+          this.jobTypes = this.jobTypesData.map(item => item.jobName);
+        } else {
+          console.error('获取工种信息失败:', res.result.msg);
+          // 如果获取失败，使用默认数据
+        }
+      } catch (e) {
+        console.error('加载工种信息异常:', e);
+      }
+    },
     onPickerChange(field, e) {
       this.form[field] = e.detail.value;
+      
+      // 当工种改变时，更新可选的考试级别
+      if (field === 'jobTypeIndex') {
+        this.updateAvailableLevels();
+        this.form.examLevelIndex = null; // 重置考试级别选择
+      }
+    },
+    updateAvailableLevels() {
+      if (this.form.jobTypeIndex !== null && this.jobTypesData.length > 0) {
+        const selectedJob = this.jobTypesData[this.form.jobTypeIndex];
+        this.availableLevels = selectedJob.examLevels || [];
+      } else {
+        this.availableLevels = [];
+      }
+    },
+    showNotice() {
+      if (this.canShowNotice) {
+        this.showNoticeModal = true;
+      }
+    },
+    hideNotice() {
+      this.showNoticeModal = false;
     },
     async handleSubmit() {
       // 校验
@@ -90,7 +175,7 @@ export default {
           idNumber: this.form.idNumber,
           examType: this.examTypes[this.form.examTypeIndex],
           jobType: this.jobTypes[this.form.jobTypeIndex],
-          examLevel: this.examLevels[this.form.examLevelIndex]
+          examLevel: this.availableLevels[this.form.examLevelIndex]
         };
         
         console.log('提交云函数数据:', JSON.stringify(submitData));
@@ -217,9 +302,26 @@ export default {
 .submit {
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   margin-top: 40rpx;
+  gap: 20rpx;
+}
+
+.notice-btn {
+  width: 90%;
+  height: 60rpx;
+  line-height: 60rpx;
+  background: #f0f0f0;
+  color: #666;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  border: none;
+}
+
+.notice-btn:disabled {
+  background: #e0e0e0;
+  color: #999;
 }
 
 .submit-btn {
@@ -231,5 +333,78 @@ export default {
   border-radius: 40rpx;
   font-size: 28rpx;
   border: none;
+}
+
+/* 弹窗样式 */
+.notice-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notice-content {
+  width: 90%;
+  max-width: 600rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.notice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20rpx;
+}
+
+.notice-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.close-btn {
+  font-size: 40rpx;
+  color: #999;
+  padding: 10rpx;
+  cursor: pointer;
+}
+
+.notice-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.notice-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.notice-label {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.notice-value {
+  font-size: 30rpx;
+  color: #333;
+  padding: 15rpx;
+  background: #f8f8f8;
+  border-radius: 10rpx;
+  line-height: 1.5;
 }
 </style> 

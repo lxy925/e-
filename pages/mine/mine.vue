@@ -114,7 +114,7 @@
 					<view class="order-item" v-if="userInfo.type == '陪诊师'">
 						<view class="box" style="margin-left: 0" @click="goToOrderManage('pending')">
 							<image src="../../static/images/mine/ordering.png"></image>
-							<text class="box-title">待接单</text>
+							<text class="box-title">待处理</text>
 						</view>
 						<view class="box" @click="goToOrderManage('processing')">
 							<image src="../../static/images/mine/willdo.png"></image>
@@ -168,7 +168,7 @@
 							<text class="boxed-title">信息</text>
 						</view>
 						<view class="boxed">
-							<image src="../../static/images/mine/application.png" alt=""></image>
+							<image src="../../static/images/mine/application.png" alt="" @click="goToApplication"></image>
 							<text class="box-title">报名申请</text>
 						</view>
 						<view class="boxed" @click="goSetting">
@@ -195,7 +195,7 @@
 							<text class="boxed-title">陪诊师入驻</text>
 						</view>
 						<view class="boxed">
-							<image src="../../static/images/mine/application.png" alt=""></image>
+							<image src="../../static/images/mine/application.png" alt="" @click="goToApplication"></image>
 							<text class="box-title">报名申请</text>
 						</view>
 						<view class="boxed" @click="goSetting">
@@ -592,6 +592,13 @@
 			},
 			goBack() {
 				uni.navigateBack();
+			},
+				
+			goToApplication(){
+				uni.navigateTo({
+					url: '/pages/application/application',
+					
+				});
 			}
 		},
 	};

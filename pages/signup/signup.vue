@@ -1,7 +1,7 @@
 <template>
-  <view class="page">
+  <view class="page" :style="{ paddingTop: navHeight + 'px' }">
     <custom-nav :title="'报名'" :isHomePage="false" />
-    <view class="signup-page">
+    <view class="signup-page" >
       <view class="container">
         <view class="userinfo">
           <view class="appointment-info">
@@ -43,7 +43,7 @@
         
         <view class="submit">
 			<view>
-			点击查看<span>报考须知</span>和<span @click="showNotice" :disabled="!canShowNotice">所选工种描述</span>
+			点击查看<span @click="findAndOpenHealthCertFile">报考须知</span>和<span @click="showNotice" :disabled="!canShowNotice">所选工种描述</span>
 			</view>
          <!-- <button class="notice-btn" @click="showNotice" :disabled="!canShowNotice">查看报考须知</button> -->
 		  <view class="pay">
@@ -107,9 +107,12 @@ export default {
       this.user_id = options.user_id;
     }
     this.loadJobTypes();
+	const systemInfo = uni.getSystemInfoSync();
+	this.navHeight = systemInfo.statusBarHeight + 44;
   },
   data() {
     return {
+		navHeight:0,
       examTypes: ['专业报考', '职业报考'],
       jobTypes: [],
       availableLevels: [],
@@ -138,6 +141,53 @@ export default {
     }
   },
   methods: {
+	  /**
+	   * 查找并打开云存储中的"杉本健康考证资料"文件
+	   */
+	 async findAndOpenHealthCertFile() {
+	   try {
+	     uni.showLoading({ title: '加载中...' });
+	 
+	     // 1. 拼接云存储路径（假设文件在 `file/` 目录下）
+	     const cloudPath = 'https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/file/杉本健康考证资料.docx'; // 替换为你的文件名
+	 
+	     // 2. 获取临时下载链接
+	     const { fileList } = await uniCloud.getTempFileURL({
+	       fileList: [cloudPath]
+	     });
+	 
+	     if (!fileList[0]?.tempFileURL) {
+	       uni.showToast({ title: '文件不存在', icon: 'none' });
+	       return;
+	     }
+	 
+	     // 3. 下载并打开文件
+	     uni.downloadFile({
+	       url: fileList[0].tempFileURL,
+	       success(res) {
+	         if (res.statusCode === 200) {
+	           uni.openDocument({
+	             filePath: res.tempFilePath,
+	             fileType: 'docx', // 根据文件类型调整
+	             showMenu: true, // 允许用户选择其他应用打开
+	           });
+	         }
+	       },
+	       fail(err) {
+	         uni.showToast({ title: '下载失败', icon: 'none' });
+	         console.error(err);
+	       },
+	       complete: () => uni.hideLoading(),
+	     });
+	   } catch (err) {
+	     uni.hideLoading();
+	     uni.showToast({ title: '操作失败', icon: 'none' });
+	     console.error(err);
+	   }
+	 },
+	 
+	 // // 调用
+	 // findAndOpenHealthCertFile();
     async loadJobTypes() {
       try {
         const res = await uniCloud.callFunction({
@@ -223,9 +273,9 @@ export default {
 
 <style>
 .page {
-  height: 100vh;
+ height: auto;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
 }
 

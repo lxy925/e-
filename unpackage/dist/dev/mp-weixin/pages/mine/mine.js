@@ -815,6 +815,11 @@ var _default = {
     },
     goBack: function goBack() {
       uni.navigateBack();
+    },
+    goToApplication: function goToApplication() {
+      uni.navigateTo({
+        url: '/pages/application/application'
+      });
     }
   }
 };

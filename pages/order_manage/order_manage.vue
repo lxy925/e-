@@ -424,6 +424,12 @@
 				});
 			},
 			formatStatus(order) {
+				const tabs = this.userRole === 'doctor' 
+				if(tabs){
+					if(order.audit_status==="approved")return '审核通过';
+					if(order.audit_status==="rejected")return '审核不通过';
+				}
+				
 				if (order.service_status === "completed") return '已完成';
 				if (order.status === "paid") {
 					return order.service_status === "pending" ? '待服务' :

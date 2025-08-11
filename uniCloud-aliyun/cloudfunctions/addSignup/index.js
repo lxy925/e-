@@ -8,25 +8,25 @@ exports.main = async (event, context) => {
   const data = {
     userId,
     name: event.name,
-    idType: event.idType,
+    // idType: event.idType,
     idNumber: event.idNumber,
     examType: event.examType,
     jobType: event.jobType,
     examLevel: event.examLevel,
-    applicationFormUrl: event.applicationFormUrl,
-    idCardImagesUrls: event.idCardImagesUrls,
-    educationProofUrl: event.educationProofUrl,
-    photoUrl: event.photoUrl,
-    workProofUrl: event.workProofUrl || '',
-    socialSecurityUrl: event.socialSecurityUrl || '',
-    otherProofUrl: event.otherProofUrl || '',
+    // applicationFormUrl: event.applicationFormUrl,
+    // idCardImagesUrls: event.idCardImagesUrls,
+    // educationProofUrl: event.educationProofUrl,
+    // photoUrl: event.photoUrl,
+    // workProofUrl: event.workProofUrl || '',
+    // socialSecurityUrl: event.socialSecurityUrl || '',
+    // otherProofUrl: event.otherProofUrl || '',
     auditStatus: 'unreviewed', // 默认未审核
     createdAt: new Date()
   };
   // 职业报考校验
-  if (data.examType === '职业报考' && (!data.workProofUrl || !data.socialSecurityUrl || !data.otherProofUrl)) {
-    return { code: 400, msg: '职业报考需上传相关证明材料' };
-  }
+  // if (data.examType === '职业报考' && (!data.workProofUrl || !data.socialSecurityUrl || !data.otherProofUrl)) {
+  //   return { code: 400, msg: '职业报考需上传相关证明材料' };
+  // }
   try {
     await db.collection('signup').add(data);
     return { code: 0, msg: '报名成功' };

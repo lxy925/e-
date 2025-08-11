@@ -673,6 +673,11 @@ var _default = {
       });
     },
     formatStatus: function formatStatus(order) {
+      var tabs = this.userRole === 'doctor';
+      if (tabs) {
+        if (order.audit_status === "approved") return '审核通过';
+        if (order.audit_status === "rejected") return '审核不通过';
+      }
       if (order.service_status === "completed") return '已完成';
       if (order.status === "paid") {
         return order.service_status === "pending" ? '待服务' : order.service_status === "processing" ? '进行中' : '已完成';

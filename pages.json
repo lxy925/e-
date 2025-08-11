@@ -270,6 +270,13 @@
 			    "usingComponents": {},
 			    "navigationBarTitleText": "报名"
 			}
+		},
+		{
+			"path" : "pages/application/application",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
 		}
 	],
 	"globalStyle": {

@@ -3,8 +3,8 @@
 		<!-- pages/doctor/doctor.wxml -->
 		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" ref="customNav" />
 		<!-- 内容区域 -->
-		<scroll-view class="page-container" @scroll="handleScroll" :style="{ paddingTop: navHeight + 'px' }">
-
+		  <scroll-view class="page-container" :style="{ paddingTop: navHeight + 'px' }">
+		
 			<view class="content" style="padding: 0rpx;">
 				<view class="first">
 					<swiper class="swiper" circular autoplay interval="3000" duration="500">
@@ -15,9 +15,9 @@
 					</swiper>
 				</view>
 				<view class="second">
-					<view class="second-item1">
+					<view class="second-item1" @click="handleSignUp">
 						<view class="second-item1-text">
-							<text class="second-item1-text1">考证通道</text>
+							<text class="second-item1-text1" >报名</text>
 							<text class="second-item1-text2">精选推荐</text>
 							<text class="second-item1-text3">了解更多</text>
 						</view>
@@ -25,26 +25,15 @@
 					</view>
 					<view class="second-item2" @click="goToStudyPage">
 						<view class="second-item2-text">
-							<text class="second-item2-text1">学习通道</text>
+							<text class="second-item2-text1">学习</text>
 							<text class="second-item2-text2">一起来分享</text>
 							<text class="second-item2-text3">了解更多</text>
 						</view>
 						<image src="../../static/images/index/money.png" alt=""></image>
 					</view>
 				</view>
-				<!-- <view class="third">
-					<text class="third-title">课程推荐</text>
-					<text class="third-text">更多 ></text>
-				</view>
-				<view class="next">
-					<img class="next-image" src="" alt="" />
-					<view class="next-text">
-						<text class="next-text1">如何提高陪诊师考证通过率？</text>
-						<text class="next-text2">主讲人：金老师</text>
-						<text class="next-text3">时间：2023/4/17 - 7/16</text>
-						<text class="next-text4">￥199</text>
-					</view>
-				</view> -->
+
+			
 				<view class="third">
 					<text class="third-title">优秀陪诊师</text>
 					<text class="third-text" @click="goToDoctorListPage">更多 ></text>
@@ -81,7 +70,9 @@
 									:class="['doctor-certification', doctor.is_certified  ? 'certified' : 'uncertified']">
 									{{ doctor.is_certified ? '已认证' : '未认证' }}
 								</text>
-
+								<text :class="['doctor-availability', doctor.is_bookable? 'available' : 'unavailable']">
+									{{ doctor.is_bookable ? '可预约' : '不可预约' }}
+								</text>
 							</view>
 						</view>
 						<view class="doctor-need">
@@ -131,6 +122,11 @@
 				navHeight: 0, // 存储导航栏高度
 			};
 		},
+		// 在页面的生命周期中监听滚动
+		onPageScroll(e) {
+			// console.log('页面滚动:', e.scrollTop);
+			this.scrollTop = e.scrollTop;
+		},
 		/**
 		 * 生命周期函数--监听页面加载
 		 */
@@ -176,19 +172,14 @@
 		 * 用户点击右上角分享
 		 */
 		onShareAppMessage() {},
-		// 在页面的生命周期中监听滚动
-		onPageScroll(e) {
-			// console.log('页面滚动:', e.scrollTop);
-			this.scrollTop = e.scrollTop;
-		},
 		methods: {
 			//监视页面滚动情况
-			handleScroll(e) {
-				if (this.scrollTimer) clearTimeout(this.scrollTimer)
-				this.scrollTimer = setTimeout(() => {
-					this.scrollTop = e.detail.scrollTop
-				}, 16) // 约60fps
-			},
+			// handleScroll(e) {
+			// 	if (this.scrollTimer) clearTimeout(this.scrollTimer)
+			// 	this.scrollTimer = setTimeout(() => {
+			// 		this.scrollTop = e.detail.scrollTop
+			// 	}, 16) // 约60fps
+			// },
 
 			async fetchDoctors() {
 				try {
@@ -198,22 +189,23 @@
 					}
 					console.log("timeObj", timeObj)
 					const res = await uniCloud.callFunction({
-						name: 'getEscorts',
-						data: {
-							timeObj,
-							isFromOrder: this.fromOrder,
-						} // 新增参数，标识是否来自order页面}
-					});
-
-					if (res.result.success) {
-						this.doctors = res.result.data;
-					} else {
-						console.error('获取陪诊师数据失败:', res.result.error);
+							name: 'getEscorts',
+							data: {
+								timeObj,
+								isFromOrder: this.fromOrder,
+								}// 新增参数，标识是否来自order页面}
+							});
+			
+						if (res.result.success) {
+							this.doctors = res.result.data;
+						} else {
+							console.error('获取陪诊师数据失败:', res.result.error);
+						}
 					}
-				} catch (err) {
-					console.error('调用云函数失败:', err);
-				}
-			},
+					catch (err) {
+						console.error('调用云函数失败:', err);
+					}
+				},
 			goToDoctorDetailPage(doctor) {
 
 				const doctorData = encodeURIComponent(JSON.stringify(doctor));
@@ -253,11 +245,53 @@
 					uni.hideLoading();
 				}
 			},
-			goToStudyPage() {
-				uni.navigateTo({
-					url: "/pages/study/study",
-				});
+			async handleSignUp() {
+				try {
+					const userInfo = uni.getStorageSync('userInfo');
+					if (!userInfo || !userInfo.user_id) {
+						uni.showToast({ title: '请先登录', icon: 'none' });
+						return;
+					}
+					// 查询数据库是否有报名记录
+					const res = await uniCloud.database().collection('signup')
+						.where({ userId: userInfo.user_id })
+						.orderBy('createdAt', 'desc')
+						.limit(1)
+						.get();
+						console.log("res",res)
+					const record = res.result && res.result.data && res.result.data[0];
+					if (!record) {
+						// 第一次报名，跳转报名页面并传递user_id
+						uni.navigateTo({ url: `/pages/signup/signup?user_id=${userInfo.user_id}` });
+						return;
+					}
+					// 有报名记录，检查审核状态
+					if (record.auditStatus === 'approved') {
+						uni.navigateTo({
+							url: '/pages/web-view/web-view?url=' + encodeURIComponent('https://xueqisecurity.chinaedu.net/mars/outer/wxrequest.do?serviceCode=alioth&clientType=2&customerCode=gdykdx&tenantCode=xq10679')
+						});
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '已成功报名请等待审核',
+							showCancel: false
+						});
+					}
+				} catch (e) {
+					console.error('报名跳转异常:', e);
+					uni.showToast({ title: '操作失败:' + (e.message || e), icon: 'none' });
+				}
 			},
+			goToStudyPage() {
+				let url = 'https://xueqisecurity.chinaedu.net/mars/outer/wxrequest.do?serviceCode=alioth&clientType=2&customerCode=gdykdx&tenantCode=xq10679';
+				if (!url.startsWith('http://') && !url.startsWith('https://')) {
+					url = 'http://' + url;
+				}
+				uni.navigateTo({
+					url: `/pages/web-view/web-view?url=${encodeURIComponent(url)}`
+				});
+			}
+			
 		},
 	};
 </script>
@@ -267,19 +301,24 @@
 	.page {
 		height: 100vh;
 		/* background-color: #2ecc71; */
-
+		
 	}
-
 	.page-container {
-		width: 100%;
-		box-sizing: border-box;
-		/* 关键：让 padding 包含在宽度内 */
+		min-height: 100vh;
+		position: relative;
+		
 		padding-left: 25rpx;
 		padding-right: 25rpx;
-		height: calc(100vh - var(--nav-height));
-		overflow-y: auto;
+		margin: 0;
+		width: 100%;
+		box-sizing: border-box;
+		/* 关键：让 width 包含 padding */
+		-webkit-overflow-scrolling: touch;
+		/* 平滑滚动 */
+		scrollbar-width: none;
+		/* Firefox */
 	}
-
+	
 	.page-container ::-webkit-scrollbar {
 		display: none;
 		/* Chrome/Safari */
@@ -300,7 +339,7 @@
 	.swiper {
 		width: 100%;
 		height: 100%;
-
+		
 	}
 
 	.swiper-image {

@@ -263,6 +263,13 @@
 				"navigationStyle": "custom",
 				"navigationBarTitleText": "医院官网"
 			}
+		},
+		{
+			"path": "pages/signup/signup",
+			"style": {
+			    "usingComponents": {},
+			    "navigationBarTitleText": "报名"
+			}
 		}
 	],
 	"globalStyle": {

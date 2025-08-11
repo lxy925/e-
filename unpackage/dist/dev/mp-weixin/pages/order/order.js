@@ -207,12 +207,12 @@ var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/hel
 var _components$data$onPa;
 var PaymentComponent = function PaymentComponent() {
   __webpack_require__.e(/*! require.ensure | components/PaymentComponent */ "components/PaymentComponent").then((function () {
-    return resolve(__webpack_require__(/*! @/components/PaymentComponent.vue */ 710));
+    return resolve(__webpack_require__(/*! @/components/PaymentComponent.vue */ 718));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var ServiceNoticePopup = function ServiceNoticePopup() {
   __webpack_require__.e(/*! require.ensure | components/service-notice-popup */ "components/service-notice-popup").then((function () {
-    return resolve(__webpack_require__(/*! @/components/service-notice-popup.vue */ 717));
+    return resolve(__webpack_require__(/*! @/components/service-notice-popup.vue */ 725));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var _default = (_components$data$onPa = {

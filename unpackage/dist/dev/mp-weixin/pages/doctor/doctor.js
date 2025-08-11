@@ -284,15 +284,6 @@ var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/r
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 // pages/doctor/doctor.js
 var _default = {
   data: function data() {
@@ -310,6 +301,11 @@ var _default = {
       scrollTop: 0,
       navHeight: 0 // 存储导航栏高度
     };
+  },
+  // 在页面的生命周期中监听滚动
+  onPageScroll: function onPageScroll(e) {
+    // console.log('页面滚动:', e.scrollTop);
+    this.scrollTop = e.scrollTop;
   },
   /**
    * 生命周期函数--监听页面加载
@@ -354,22 +350,16 @@ var _default = {
    * 用户点击右上角分享
    */
   onShareAppMessage: function onShareAppMessage() {},
-  // 在页面的生命周期中监听滚动
-  onPageScroll: function onPageScroll(e) {
-    // console.log('页面滚动:', e.scrollTop);
-    this.scrollTop = e.scrollTop;
-  },
   methods: {
     //监视页面滚动情况
-    handleScroll: function handleScroll(e) {
-      var _this = this;
-      if (this.scrollTimer) clearTimeout(this.scrollTimer);
-      this.scrollTimer = setTimeout(function () {
-        _this.scrollTop = e.detail.scrollTop;
-      }, 16); // 约60fps
-    },
+    // handleScroll(e) {
+    // 	if (this.scrollTimer) clearTimeout(this.scrollTimer)
+    // 	this.scrollTimer = setTimeout(() => {
+    // 		this.scrollTop = e.detail.scrollTop
+    // 	}, 16) // 约60fps
+    // },
     fetchDoctors: function fetchDoctors() {
-      var _this2 = this;
+      var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
         var timeObj, res;
         return _regenerator.default.wrap(function _callee$(_context) {
@@ -377,8 +367,8 @@ var _default = {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
-                if (_this2.fromOrder && _this2.timeObj !== undefined) {
-                  timeObj = _this2.timeObj;
+                if (_this.fromOrder && _this.timeObj !== undefined) {
+                  timeObj = _this.timeObj;
                 }
                 console.log("timeObj", timeObj);
                 _context.next = 5;
@@ -386,13 +376,13 @@ var _default = {
                   name: 'getEscorts',
                   data: {
                     timeObj: timeObj,
-                    isFromOrder: _this2.fromOrder
+                    isFromOrder: _this.fromOrder
                   } // 新增参数，标识是否来自order页面}
                 });
               case 5:
                 res = _context.sent;
                 if (res.result.success) {
-                  _this2.doctors = res.result.data;
+                  _this.doctors = res.result.data;
                 } else {
                   console.error('获取陪诊师数据失败:', res.result.error);
                 }
@@ -422,7 +412,7 @@ var _default = {
       });
     },
     getBanners: function getBanners() {
-      var _this3 = this;
+      var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
         var _yield$uniCloud$callF, result;
         return _regenerator.default.wrap(function _callee2$(_context2) {
@@ -444,7 +434,7 @@ var _default = {
                   _context2.next = 10;
                   break;
                 }
-                _this3.banners = result.data;
+                _this2.banners = result.data;
                 _context2.next = 11;
                 break;
               case 10:
@@ -471,9 +461,80 @@ var _default = {
         }, _callee2, null, [[0, 13, 16, 19]]);
       }))();
     },
+    handleSignUp: function handleSignUp() {
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+        var userInfo, res, record;
+        return _regenerator.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                userInfo = uni.getStorageSync('userInfo');
+                if (!(!userInfo || !userInfo.user_id)) {
+                  _context3.next = 5;
+                  break;
+                }
+                uni.showToast({
+                  title: '请先登录',
+                  icon: 'none'
+                });
+                return _context3.abrupt("return");
+              case 5:
+                _context3.next = 7;
+                return uniCloud.database().collection('signup').where({
+                  userId: userInfo.user_id
+                }).orderBy('createdAt', 'desc').limit(1).get();
+              case 7:
+                res = _context3.sent;
+                console.log("res", res);
+                record = res.result && res.result.data && res.result.data[0];
+                if (record) {
+                  _context3.next = 13;
+                  break;
+                }
+                // 第一次报名，跳转报名页面并传递user_id
+                uni.navigateTo({
+                  url: "/pages/signup/signup?user_id=".concat(userInfo.user_id)
+                });
+                return _context3.abrupt("return");
+              case 13:
+                // 有报名记录，检查审核状态
+                if (record.auditStatus === 'approved') {
+                  uni.navigateTo({
+                    url: '/pages/web-view/web-view?url=' + encodeURIComponent('https://xueqisecurity.chinaedu.net/mars/outer/wxrequest.do?serviceCode=alioth&clientType=2&customerCode=gdykdx&tenantCode=xq10679')
+                  });
+                } else {
+                  uni.showModal({
+                    title: '提示',
+                    content: '已成功报名请等待审核',
+                    showCancel: false
+                  });
+                }
+                _context3.next = 20;
+                break;
+              case 16:
+                _context3.prev = 16;
+                _context3.t0 = _context3["catch"](0);
+                console.error('报名跳转异常:', _context3.t0);
+                uni.showToast({
+                  title: '操作失败:' + (_context3.t0.message || _context3.t0),
+                  icon: 'none'
+                });
+              case 20:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 16]]);
+      }))();
+    },
     goToStudyPage: function goToStudyPage() {
+      var url = 'https://xueqisecurity.chinaedu.net/mars/outer/wxrequest.do?serviceCode=alioth&clientType=2&customerCode=gdykdx&tenantCode=xq10679';
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'http://' + url;
+      }
       uni.navigateTo({
-        url: "/pages/study/study"
+        url: "/pages/web-view/web-view?url=".concat(encodeURIComponent(url))
       });
     }
   }

@@ -1,11 +1,14 @@
 <template>
   <view class="webview-container">
-    <web-view :src="url"></web-view>
+    <custom-nav :title="'医院官网'" :isHomePage="false" />
+    <web-view :src="url" style="margin-top: 44px;" />
   </view>
 </template>
 
 <script>
+import customNav from '@/components/custom-nav/custom-nav.vue'
 export default {
+  components: { customNav },
   data() {
     return {
 	

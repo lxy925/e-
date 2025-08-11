@@ -244,6 +244,11 @@
       </view>
     </view>
 
+    <!-- 隐藏 custom-nav，仅用于调用定位方法 -->
+    <custom-nav
+      ref="navRef"
+      v-show="false"
+    />
     <!-- 打卡弹窗 -->
     <view class="check-in-modal" v-if="showCheckInModal">
       <view class="check-in-content">
@@ -258,6 +263,7 @@
               <text class="location-text">{{currentLocation.address}}</text>
               <button class="refresh-btn" @click="refreshLocation">刷新</button>
             </view>
+			
             <button class="get-location-btn" @click="getLocation" v-else>获取位置</button>
           </view>
           <view class="image-section">
@@ -276,14 +282,14 @@
               </view>
             </view>
           </view>
-          <view class="description-section">
+          <!-- <view class="description-section">
             <text class="section-title">备注说明（选填）</text>
             <textarea 
               v-model="checkInDescription" 
               placeholder="请输入备注说明" 
               class="description-textarea"
             ></textarea>
-          </view>
+          </view> -->
         </view>
         <button class="submit-btn" @click="submitCheckIn" :disabled="!canSubmitCheckIn">提交打卡</button>
       </view>
@@ -294,8 +300,12 @@
 <script>
 const db = uniCloud.database();
 const messageCollection = db.collection('messages');
+import customNav from '@/components/custom-nav/custom-nav.vue';
 
 export default {
+  components: {
+    customNav
+  },
   data() {
     return {
       messageText: '',
@@ -327,7 +337,7 @@ export default {
       currentCheckIn: null,
       currentLocation: null,
       checkInImages: [],
-      checkInDescription: '',
+      //checkInDescription: '',
       checkInTimer: null
     }
   },
@@ -1222,46 +1232,74 @@ export default {
         uni.hideLoading();
       }
     },
-	// 获取当前位置
-	    async getLocation() {
-	      try {
-	        const [err, res] = await uni.chooseLocation({
-	          latitude: 23.12463,  // 默认纬度
-	          longitude: 113.36199, // 默认经度
-	        });
-	        
-	        if (err) {
-	          throw new Error('获取位置失败');
-	        }
-	        
-	        console.log('获取到的位置信息:', res);
-	        
-	        // 直接使用微信返回的位置信息
-	        this.currentLocation = {
-	          latitude: parseFloat(res.latitude),
-	          longitude: parseFloat(res.longitude),
-	          address: res.address,
-	          name: res.name
-	        };
-	        
-	        // 保存位置信息到本地存储
-	        if (res.province) {
-	          uni.setStorageSync('provinceName', res.province);
-	        }
-	        if (res.city) {
-	          uni.setStorageSync('cityName', res.city);
-	        }
-	        if (res.district) {
-	          uni.setStorageSync('areaName', res.district);
-	        }
-	      } catch (e) {
-	        console.error('获取位置失败:', e);
-	        uni.showToast({
-	          title: e.message || '获取位置失败',
-	          icon: 'none'
-	        });
+	// 获取当前位置（自动获取并逆地理编码详细地址）
+	async getLocation() {
+	  try {
+	    // 1. 获取经纬度
+	    const [err, loc] = await uni.getLocation({ type: 'gcj02' });
+	    if (err) throw new Error('获取位置失败');
+	    const { latitude, longitude } = loc;
+	
+	    // 2. 调高德逆地理编码
+	    const [reqErr, geoRes] = await uni.request({
+	      url: 'https://restapi.amap.com/v3/geocode/regeo',
+	      data: {
+	        location: `${longitude},${latitude}`,
+	        key: '588c83165bf098b125e621655239f1af',
+	        extensions: 'base'
 	      }
-	    },
+	    });
+	    if (reqErr) throw new Error('网络异常');
+	
+	    const data = geoRes?.data;
+	    if (!data || data.status !== '1') throw new Error('逆地理编码失败');
+	
+	    // 3. 拼装完整地址
+	    const c = data.regeocode.addressComponent;
+	    const city    = c.city || c.province || '';
+	    const district = c.district || '';
+	    const township = c.township || '';
+	    const street   = (c.streetNumber?.street || '') + (c.streetNumber?.number || '');
+	    const fullAddress = `${city}${district}${township}${street}`.trim();
+	
+	    // 4. 保存
+	    this.currentLocation = { latitude, longitude, address: fullAddress, name: '' };
+	    console.log('完整地址:', fullAddress);
+	  } catch (e) {
+	    console.error(e);
+	    uni.showToast({ title: e.message || '获取位置失败', icon: 'none' });
+	  }
+	},
+
+    //  getLocation() 方法2
+    /*async getLocation() {
+      try {
+        // 调用 custom-nav 的 getLocationInfo 方法
+        await this.$refs.navRef.getLocationInfo();
+    
+        // 从 custom-nav 中读取定位结果
+        const { locationName, location } = this.$refs.navRef;
+    
+        if (!locationName || !location.latitude || !location.longitude) {
+          throw new Error('未能获取到详细地址');
+        }
+    
+        this.currentLocation = {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          address: locationName, // 使用 custom-nav 的城市名
+          name: ''
+        };
+    
+        console.log('custom-nav 获取到的位置信息:', this.currentLocation);
+      } catch (e) {
+        console.error('custom-nav 获取位置失败:', e);
+        uni.showToast({
+          title: e.message || '获取位置失败',
+          icon: 'none'
+        });
+      }
+    },*/
 
     // 打开位置
     openLocation(location) {
@@ -1592,7 +1630,7 @@ export default {
                 name: this.currentLocation.name
               },
               images: uploadedImages,
-              description: this.checkInDescription
+              //description: this.checkInDescription
             }
           }
         });
@@ -1631,7 +1669,7 @@ export default {
       this.currentCheckIn = null;
       this.currentLocation = null;
       this.checkInImages = [];
-      this.checkInDescription = '';
+      //this.checkInDescription = '';
     }
   }
 }
@@ -2293,14 +2331,14 @@ export default {
   margin-bottom: 30rpx;
 }
 
-.description-textarea {
+/* .description-textarea {
   width: 100%;
   height: 200rpx;
   background: #f5f5f5;
   border-radius: 10rpx;
   padding: 20rpx;
   font-size: 28rpx;
-}
+} */
 
 .submit-btn {
   width: 100%;

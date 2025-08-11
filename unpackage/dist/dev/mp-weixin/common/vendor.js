@@ -18715,6 +18715,12 @@ var _default = {
       "navigationStyle": "custom",
       "navigationBarTitleText": "医院官网"
     }
+  }, {
+    "path": "pages/signup/signup",
+    "style": {
+      "usingComponents": {},
+      "navigationBarTitleText": "报名"
+    }
   }],
   "globalStyle": {
     "backgroundColor": "#1fc7d6",
@@ -66502,7 +66508,15 @@ exports.default = _default;
 /* 733 */,
 /* 734 */,
 /* 735 */,
-/* 736 */
+/* 736 */,
+/* 737 */,
+/* 738 */,
+/* 739 */,
+/* 740 */,
+/* 741 */,
+/* 742 */,
+/* 743 */,
+/* 744 */
 /*!************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-icons/uniicons_file_vue.js ***!
   \************************************************************************************/
@@ -67005,14 +67019,14 @@ var fontData = [{
 exports.fontData = fontData;
 
 /***/ }),
-/* 737 */,
-/* 738 */,
-/* 739 */,
-/* 740 */,
-/* 741 */,
-/* 742 */,
-/* 743 */,
-/* 744 */
+/* 745 */,
+/* 746 */,
+/* 747 */,
+/* 748 */,
+/* 749 */,
+/* 750 */,
+/* 751 */,
+/* 752 */
 /*!************************************************************!*\
   !*** D:/陪诊小程序/e-/uni_modules/vk-uni-pay/js_sdk/vk-util.js ***!
   \************************************************************/
@@ -67355,12 +67369,12 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27)["uniCloud"]))
 
 /***/ }),
-/* 745 */,
-/* 746 */,
-/* 747 */,
-/* 748 */,
-/* 749 */,
-/* 750 */
+/* 753 */,
+/* 754 */,
+/* 755 */,
+/* 756 */,
+/* 757 */,
+/* 758 */
 /*!*****************************************************************************!*\
   !*** D:/陪诊小程序/e-/uni_modules/vk-uni-pay/components/vk-uni-qrcode/qrcode.js ***!
   \*****************************************************************************/
@@ -68371,14 +68385,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 751 */,
-/* 752 */,
-/* 753 */,
-/* 754 */,
-/* 755 */,
-/* 756 */,
-/* 757 */,
-/* 758 */
+/* 759 */,
+/* 760 */,
+/* 761 */,
+/* 762 */,
+/* 763 */,
+/* 764 */,
+/* 765 */,
+/* 766 */
 /*!*********************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/index.js ***!
   \*********************************************************************************/
@@ -68393,9 +68407,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 759));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 760));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 761));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 767));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 768));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 769));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -68404,7 +68418,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 759 */
+/* 767 */
 /*!********************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/en.json ***!
   \********************************************************************************/
@@ -68414,7 +68428,7 @@ exports.default = _default;
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show more\",\"uni-load-more.contentrefresh\":\"loading...\",\"uni-load-more.contentnomore\":\"No more data\"}");
 
 /***/ }),
-/* 760 */
+/* 768 */
 /*!*************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hans.json ***!
   \*************************************************************************************/
@@ -68424,7 +68438,7 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show mo
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多\",\"uni-load-more.contentrefresh\":\"正在加载...\",\"uni-load-more.contentnomore\":\"没有更多数据了\"}");
 
 /***/ }),
-/* 761 */
+/* 769 */
 /*!*************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hant.json ***!
   \*************************************************************************************/
@@ -68434,14 +68448,6 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉顯示更多\",\"uni-load-more.contentrefresh\":\"正在加載...\",\"uni-load-more.contentnomore\":\"沒有更多數據了\"}");
 
 /***/ }),
-/* 762 */,
-/* 763 */,
-/* 764 */,
-/* 765 */,
-/* 766 */,
-/* 767 */,
-/* 768 */,
-/* 769 */,
 /* 770 */,
 /* 771 */,
 /* 772 */,
@@ -68469,7 +68475,15 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉顯示更多
 /* 794 */,
 /* 795 */,
 /* 796 */,
-/* 797 */
+/* 797 */,
+/* 798 */,
+/* 799 */,
+/* 800 */,
+/* 801 */,
+/* 802 */,
+/* 803 */,
+/* 804 */,
+/* 805 */
 /*!***************************************************************************************!*\
   !*** D:/陪诊小程序/e-/node_modules/@dcloudio/uni-ui/lib/uni-transition/createAnimation.js ***!
   \***************************************************************************************/

@@ -27,15 +27,12 @@
 }
 .content {
 	width: 100%;
-	  max-width: 100%; /* 限制最大宽度（可选） */
-	  margin: 0 ; /* 水平居中 */
-	  padding:0;
-	  box-sizing: border-box;
-	background: linear-gradient(to bottom,
-			#0bd6c8,
-			#99efe9,
-			#ddf5f4,
-			rgb(226, 226, 226));
+	max-width: 100%;
+	/* 限制最大宽度（可选） */
+	margin: 0;
+	/* 水平居中 */
+	padding: 0;
+	box-sizing: border-box;
 	padding-top: 50rpx;
 }
 .header {
@@ -227,6 +224,7 @@
 	border-radius: 15rpx;
 	padding: 20rpx;
 	padding: 20 0rpx;
+	box-sizing: border-box;
 	width: 100%;
 }
 .order-title {
@@ -238,6 +236,7 @@
 .order-item {
 	margin-top: 20rpx;
 	display: flex;
+	justify-content: space-between;
 	flex-wrap: wrap;
 }
 .boxed {
@@ -245,9 +244,9 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	width: 30%;
 	margin-bottom: 20rpx;
-	margin-left: 15rpx;
+	width: 25%;
+	/* margin-left: 15rpx; */
 }
 .boxed image {
 	width: 70rpx;

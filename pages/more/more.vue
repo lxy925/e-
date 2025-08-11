@@ -3,7 +3,7 @@
 	      paddingTop: navHeight + 'px',
 	      height: 'calc(100vh - ' + navHeight + 'px)'
 	    }" :scroll-top="scrollTop">
-		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" />
+		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" />
 		<view class="content" >
 		<!-- 顶部搜索和切换区域 -->
 		<view class="header">
@@ -93,7 +93,7 @@
 		    <view class="hospital-card" v-for="hospital in filteredHospitals" :key="hospital._id"
 		      @tap="handleHospitalTap(hospital)">
 		      <!-- 修改图片部分，添加默认图片 -->
-		      <image src="/static/images/hospital.png" mode="aspectFill"></image>
+		      <image src="/static/images/more/hospital.png" mode="aspectFill"></image>
 		      <view class="hospital-info">
 		        <text class="hospital-name">{{hospital.name}}</text>
 		        <view class="type-level-container">
@@ -113,6 +113,7 @@
 	export default {
 		data() {
 			return {
+				pageTitle:"医院列表",
 				navHeight: 0, // 添加导航栏高度存储
 				currentType: 'hospital',
 				searchText: '',

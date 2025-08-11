@@ -1,326 +1,518 @@
 <template>
-	<view class="page-container">
-		<custom-nav title="服务对象列表" :isHomePage="false"></custom-nav>
-		<scroll-view class="content-container" scroll-y :style="{height: scrollHeight + 'px'}">
-			<view class="content-wrapper">
-				<view v-if="patients.length > 0" class="patients-list">
-					<view v-for="(patient, index) in patients" :key="index" class="patient-item"
-						@click="selectPatient(patient)">
-						<view class="patient-info">
-							<image v-if="patient.photo" :src="patient.photo" mode="aspectFill" class="patient-photo" />
-							<text class="patient-name">{{ patient.name }}</text>
-						</view>
-						<text class="patient-details-text">年龄: <text class="highlight">{{ patient.age }}</text></text>
-						<text class="patient-details-text">性别: <text
-								class="highlight">{{ patient.gender }}</text></text>
-						<text class="patient-relationship">关系: <text
-								class="highlight">{{ patient.relationship }}</text></text>
-						<text class="patient-phone">电话: <text class="highlight">{{ patient.phone }}</text></text>
-						<text class="patient-medical-info">医疗信息: <text
-								class="highlight">{{ patient.medicalInfo }}</text></text>
-						<view v-if="patient.uploadedImages.length > 0" class="uploaded-images">
-							<text>上传的图片:</text>
-							<view class="image-list">
-								<view v-for="(image, imgIndex) in patient.uploadedImages" :key="imgIndex"
-									class="image-item">
-									<image :src="image" mode="aspectFill" class="image"
-										@click="previewImage(patient.uploadedImages, imgIndex)" />
-								</view>
-							</view>
-						</view>
-						<view class="divider"></view>
-					</view>
-				</view>
-				<view v-else class="no-data">
-					<text>没有找到就诊人信息</text>
-				</view>
-			</view>
-		</scroll-view>
-
-		<!-- 底部按钮移到scroll-view外部 -->
-		<view class="add-patient-btn-container">
-			<button class="add-patient-btn" @click="goToAddPatient">
-				<text class="btn-text">添加就诊人</text>
-			</button>
-		</view>
-	</view>
+  <view class="page-container">
+    <custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+    
+    <scroll-view 
+      scroll-y 
+      class="main-scroll" 
+      @scroll="handleScroll" 
+      :style="{ 
+        paddingTop: navHeight + 'px',
+        height: 'calc(100vh - ' + navHeight + 'px)'
+      }" 
+      :scroll-top="scrollTop" 
+      :show-scrollbar="false"
+    >
+ 
+      
+      <!-- 主要内容区域 -->
+      <view class="content-container">
+        <!-- 数据列表 -->
+        <view v-if="patients.length > 0" class="patients-list">
+          <view 
+            v-for="(patient, index) in patients" 
+            :key="index" 
+            class="patient-card"
+            @click="selectPatient(patient)"
+            @touchstart="touchStart(index)"
+            @touchend="touchEnd(index)"
+            :class="{ 'touched': activeIndex === index }"
+          >
+            <view class="card-header">
+              <image 
+                v-if="patient.photo" 
+                :src="patient.photo" 
+                mode="aspectFill" 
+                class="patient-avatar" 
+              />
+              <image 
+                v-else
+                src="../../static/images/default-avatar.png" 
+                mode="aspectFill" 
+                class="patient-avatar" 
+              />
+              
+              <view class="patient-basic-info">
+                <text class="patient-name">{{ patient.name }}</text>
+                <view class="patient-tags">
+                  <text class="tag age">{{ patient.age }}岁</text>
+                  <text class="tag gender">{{ patient.gender }}</text>
+                  <text class="tag relationship">{{ patient.relationship }}</text>
+                </view>
+              </view>
+              
+              <view class="contact-btn" @click.stop="callPatient(patient.phone)">
+                <uni-icons type="phone" size="20" color="#5A7BFF"></uni-icons>
+              </view>
+            </view>
+            
+            <view class="card-body">
+              <view class="info-row">
+                <uni-icons type="phone" size="16" color="#999"></uni-icons>
+                <text class="info-text">{{ patient.phone || '未填写电话' }}</text>
+              </view>
+              
+              <view class="info-row" v-if="patient.medicalInfo">
+                <uni-icons type="info" size="16" color="#999"></uni-icons>
+                <text class="info-text">{{ patient.medicalInfo }}</text>
+              </view>
+              
+              <view v-if="patient.uploadedImages.length > 0" class="image-section">
+                <text class="section-title">相关图片</text>
+                <scroll-view scroll-x class="image-scroll">
+                  <view 
+                    v-for="(image, imgIndex) in patient.uploadedImages" 
+                    :key="imgIndex"
+                    class="image-wrapper"
+                    @click.stop="previewImage(patient.uploadedImages, imgIndex)"
+                  >
+                    <image :src="image" mode="aspectFill" class="thumbnail" />
+                    <view class="image-overlay"></view>
+                  </view>
+                </scroll-view>
+              </view>
+            </view>
+            
+            <view class="card-footer">
+              <view class="action-btns">
+                <view class="edit-btn" @click.stop="editPatient(patient)">
+                  <uni-icons type="compose" size="18" color="#999"></uni-icons>
+                  <text>编辑</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 空状态 -->
+        <view v-else class="empty-state">
+          <image src="../../static/images/empty-patient.png" class="empty-image" />
+          <text class="empty-title">暂无就诊人信息</text>
+          <text class="empty-desc">点击下方按钮添加您的就诊人</text>
+        </view>
+      </view>
+      
+      <!-- 底部安全间距 -->
+      <view class="bottom-safe-area"></view>
+    </scroll-view>
+    
+    <!-- 添加按钮 -->
+    <view class="floating-btn-container" @click="goToAddPatient">
+      <view class="floating-btn">
+        <uni-icons type="plusempty" size="24" color="#fff"></uni-icons>
+        <text class="btn-text">添加就诊人</text>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				patients: [], // 用于存储陪诊人数据
-				scrollHeight: 0
-			};
-		},
-		onShow() {
-			this.getOpenId(); // 刷新数据的方法
-		},
-		onLoad() {
-			this.calculateScrollHeight();
-			this.getOpenId(); // 页面加载时获取openid
-		},
-		methods: {
-			calculateScrollHeight() {
-				const query = uni.createSelectorQuery().in(this);
-				query.select('.header').boundingClientRect(header => {
-					const systemInfo = uni.getSystemInfoSync();
-					const navHeight = 180; // 导航栏高度(rpx)
-					const btnHeight = 120; // 按钮区域高度(rpx)
-
-					// 转换为px计算
-					const windowPx = systemInfo.windowHeight;
-					const rpxRatio = systemInfo.windowWidth / 750;
-
-					this.scrollHeight = windowPx - (navHeight * rpxRatio) - (btnHeight * rpxRatio);
-				}).exec();
-			},
-			goToAddPatient() {
-				uni.navigateTo({
-					url: '/pages/object/object'
-				});
-			},
-			getOpenId() {
-				const user_id = uni.getStorageSync("userInfo").user_id;
-				this.fetchPatients(user_id); // 直接传递openid给fetchPatients
-			},
-			fetchPatients(openid) {
-				// 调用云函数查询陪诊人数据
-				uniCloud.callFunction({
-					name: 'getPatients', // 云函数名称
-					data: {
-						userid: openid
-					}, // 传递的参数
-					success: (res) => {
-						console.log('云函数返回结果：', res);
-						if (res.result.code === 0) {
-							this.patients = res.result.data || []; // 更新patients数据
-						} else {
-							console.error('查询陪诊人数据失败:', res.result.msg);
-							uni.showToast({
-								title: res.result.msg || '数据查询失败',
-								icon: 'none'
-							});
-						}
-					},
-					fail: (err) => {
-						console.error('云函数调用失败：', err);
-						uni.showToast({
-							title: '数据查询失败',
-							icon: 'none'
-						});
-					}
-				});
-			},
-			selectPatient(patient) {
-				// 将整个 patient 对象存储到本地
-				uni.setStorageSync('selectedPatient', patient);
-				// 跳转到 order 页面
-				uni.navigateBack({
-					
-				});
-			},
-			previewImage(images, currentIndex) {
-				uni.previewImage({
-					current: images[currentIndex], // 当前显示图片的http链接
-					urls: images // 需要预览的图片http链接列表
-				});
-			}
-		}
-	};
+export default {
+  data() {
+    return {
+      navHeight: 0,
+      pageTitle: '我的就诊人',
+      scrollTop: 0,
+      patients: [],
+      activeIndex: -1,
+      scrollHeight: 0
+    };
+  },
+  onShow() {
+    this.getOpenId();
+  },
+  onLoad() {
+    const systemInfo = uni.getSystemInfoSync();
+    this.navHeight = systemInfo.statusBarHeight + 44;
+    this.calculateScrollHeight();
+    this.getOpenId();
+  },
+  methods: {
+    handleScroll(e) {
+      if (this.scrollTimer) clearTimeout(this.scrollTimer);
+      this.scrollTimer = setTimeout(() => {
+        this.scrollTop = e.detail.scrollTop;
+      }, 16);
+    },
+    
+    touchStart(index) {
+      this.activeIndex = index;
+    },
+    
+    touchEnd() {
+      this.activeIndex = -1;
+    },
+    
+    calculateScrollHeight() {
+      const systemInfo = uni.getSystemInfoSync();
+      this.scrollHeight = systemInfo.windowHeight - this.navHeight;
+    },
+    
+    goToAddPatient() {
+      uni.navigateTo({
+        url: '/pages/object/object'
+      });
+    },
+    
+    getOpenId() {
+      const user_id = uni.getStorageSync("userInfo").user_id;
+      this.fetchPatients(user_id);
+    },
+    
+    fetchPatients(openid) {
+      uni.showLoading({ title: '加载中...' });
+      
+      uniCloud.callFunction({
+        name: 'getPatients',
+        data: { userid: openid },
+        success: (res) => {
+          uni.hideLoading();
+          if (res.result.code === 0) {
+            this.patients = res.result.data || [];
+          } else {
+            uni.showToast({
+              title: res.result.msg || '数据查询失败',
+              icon: 'none'
+            });
+          }
+        },
+        fail: (err) => {
+          uni.hideLoading();
+          uni.showToast({
+            title: '数据查询失败',
+            icon: 'none'
+          });
+        }
+      });
+    },
+    
+    selectPatient(patient) {
+      uni.setStorageSync('selectedPatient', patient);
+      uni.navigateBack();
+    },
+    
+    editPatient(patient) {
+      uni.navigateTo({
+        url: `/pages/object/object?editMode=true&patientId=${patient._id}`
+      });
+    },
+    
+    callPatient(phone) {
+      if (!phone) {
+        uni.showToast({ title: '该就诊人未填写电话', icon: 'none' });
+        return;
+      }
+      uni.makePhoneCall({ phoneNumber: phone });
+    },
+    
+    previewImage(images, currentIndex) {
+      uni.previewImage({
+        current: images[currentIndex],
+        urls: images
+      });
+    },
+    
+    formatDate(timestamp) {
+      if (!timestamp) return '未知时间';
+      const date = new Date(timestamp);
+      return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    }
+  }
+};
 </script>
 
-<style>
-	.page-container {
-		height: 100vh;
-		width: 100vw;
-		display: flex;
-		flex-direction: column;
-		position: relative;
-	}
+<style lang="scss">
+.page-container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
 
-	/* 隐藏滚动条但保留滚动功能 */
-	.content-container ::-webkit-scrollbar {
-		display: none;
-		/* Chrome/Safari */
-		width: 0 !important;
-		/* Firefox */
-		height: 0 !important;
-		/* Firefox */
-		-webkit-appearance: none;
-		/* iOS */
-	}
+.main-scroll {
+  width: 100%;
+}
 
-	.content-container {
-		-ms-overflow-style: none;
-		/* IE/Edge */
-		scrollbar-width: none;
-		/* Firefox */
-		/* 其他原有样式保持不变 */
-		margin-top: 160rpx;
-		flex: 1;
-		width: 100%;
-		padding: 20rpx 30rpx;
-		box-sizing: border-box;
-	}
+.decorative-header {
+  position: relative;
+  height: 160rpx;
+  overflow: hidden;
+}
 
-	.content-wrapper {
-		min-height: 100%;
-		padding-bottom: 140rpx;
-		/* 为底部按钮留出空间 */
-	}
+.decorative-wave {
+  position: absolute;
+  top: -100rpx;
+  left: -50%;
+  width: 200%;
+  height: 300rpx;
+  
+  border-radius: 0 0 50% 50%;
+}
 
-	/* 头部样式优化 */
-	.header {
-		background: linear-gradient(135deg, #007aff, #00aaff);
-		padding: 25rpx 30rpx;
-		color: white;
-		border-radius: 0 0 20rpx 20rpx;
-		box-shadow: 0 4rpx 12rpx rgba(0, 122, 255, 0.2);
-		margin-bottom: 20rpx;
-	}
+.content-container {
+  padding: 30rpx;
+  
+  position: relative;
+  z-index: 2;
+}
 
-	.title {
-		font-size: 36rpx;
-		font-weight: 600;
-		text-align: center;
-		text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
-	}
+.patients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
 
-	/* 患者卡片样式优化 */
-	.patient-item {
-		background-color: #fff;
-		border-radius: 16rpx;
-		padding: 30rpx;
-		margin-bottom: 24rpx;
-		box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
-		transition: all 0.3s ease;
-	}
+.patient-card {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 6rpx 20rpx rgba(92, 123, 255, 0.08);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  
+  &.touched {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8rpx;
+    height: 100%;
+    background: linear-gradient(to bottom, #5A7BFF, #8E54FF);
+  }
+}
 
-	.patient-item:active {
-		transform: scale(0.98);
-		box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
-	}
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+  position: relative;
+}
 
-	.patient-info {
-		display: flex;
-		align-items: center;
-		margin-bottom: 20rpx;
-	}
+.patient-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(90, 123, 255, 0.2);
+  margin-right: 20rpx;
+}
 
-	.patient-photo {
-		width: 120rpx;
-		height: 120rpx;
-		border-radius: 50%;
-		margin-right: 25rpx;
-		border: 2rpx solid #e0e0e0;
-		object-fit: cover;
-	}
+.patient-basic-info {
+  flex: 1;
+}
 
-	.patient-name {
-		font-size: 34rpx;
-		font-weight: 600;
-		color: #333;
-	}
+.patient-name {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10rpx;
+  display: block;
+}
 
-	/* 详细信息样式 */
-	.patient-details-text,
-	.patient-relationship,
-	.patient-phone,
-	.patient-medical-info {
-		display: block;
-		color: #666;
-		font-size: 28rpx;
-		margin-top: 12rpx;
-		line-height: 1.6;
-	}
+.patient-tags {
+  display: flex;
+  gap: 15rpx;
+}
 
-	.highlight {
-		font-weight: 500;
-		color: #007aff;
-	}
+.tag {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  
+  &.age {
+    background-color: rgba(90, 123, 255, 0.1);
+    color: #5A7BFF;
+  }
+  
+  &.gender {
+    background-color: rgba(255, 76, 158, 0.1);
+    color: #FF4C9E;
+  }
+  
+  &.relationship {
+    background-color: rgba(0, 200, 150, 0.1);
+    color: #00C896;
+  }
+}
 
-	/* 图片区域样式 */
-	.uploaded-images {
-		margin-top: 25rpx;
-		padding-top: 20rpx;
-		border-top: 1rpx dashed #e0e0e0;
-	}
+.contact-btn {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 50%;
+  background-color: rgba(90, 123, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-	.uploaded-images text {
-		display: block;
-		color: #888;
-		font-size: 26rpx;
-		margin-bottom: 15rpx;
-	}
+.card-body {
+  padding-left: 120rpx;
+}
 
-	.image-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 15rpx;
-	}
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
 
-	.image {
-		width: 120rpx;
-		height: 120rpx;
-		border-radius: 8rpx;
-		border: 1rpx solid #f0f0f0;
-	}
+.info-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-left: 10rpx;
+}
 
-	/* 无数据样式 */
-	.no-data {
-		text-align: center;
-		padding: 100rpx 0;
-		color: #999;
-		font-size: 30rpx;
-	}
+.image-section {
+  margin-top: 30rpx;
+  padding-top: 30rpx;
+  border-top: 1rpx dashed #eee;
+}
 
-	.no-data image {
-		width: 200rpx;
-		height: 200rpx;
-		margin-bottom: 30rpx;
-		opacity: 0.6;
-	}
+.section-title {
+  font-size: 26rpx;
+  color: #999;
+  display: block;
+  margin-bottom: 20rpx;
+}
 
-	/* 底部按钮样式优化 */
-	.add-patient-btn-container {
-		position: fixed;
-		bottom: 40rpx;
-		left: 0;
-		right: 0;
-		padding: 0 50rpx;
-		z-index: 100;
-	}
+.image-scroll {
+  white-space: nowrap;
+  width: 100%;
+}
 
-	.add-patient-btn {
-		background: linear-gradient(135deg, #007aff, #00aaff);
-		color: white;
-		border-radius: 50rpx;
-		height: 100rpx;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		box-shadow: 0 6rpx 20rpx rgba(0, 122, 255, 0.3);
-		border: none;
-		font-weight: 500;
-		transition: all 0.3s ease;
-	}
+.image-wrapper {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  display: inline-block;
+  margin-right: 20rpx;
+  position: relative;
+}
 
-	.add-patient-btn:active {
-		transform: scale(0.96);
-		opacity: 0.9;
-	}
+.thumbnail {
+  width: 100%;
+  height: 100%;
+}
 
-	.btn-text {
-		font-size: 34rpx;
-		font-weight: 500;
-	}
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
 
-	/* 分隔线优化 */
-	.divider {
-		height: 1rpx;
-		background: linear-gradient(to right, transparent, #e0e0e0, transparent);
-		margin: 25rpx 0;
-	}
+.image-wrapper:active .image-overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #f5f5f5;
+}
+
+.last-update {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.action-btns {
+  display: flex;
+  gap: 30rpx;
+}
+
+.edit-btn {
+  display: flex;
+  align-items: center;
+  color: #999;
+  font-size: 26rpx;
+  
+  text {
+    margin-left: 6rpx;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.empty-image {
+  width: 300rpx;
+  height: 300rpx;
+  opacity: 0.6;
+  margin-bottom: 40rpx;
+}
+
+.empty-title {
+  font-size: 32rpx;
+  color: #999;
+  margin-bottom: 20rpx;
+}
+
+.empty-desc {
+  font-size: 28rpx;
+  color: #ccc;
+}
+
+.bottom-safe-area {
+  height: 150rpx;
+}
+
+.floating-btn-container {
+  position: fixed;
+  bottom: 60rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+}
+
+.floating-btn {
+  background: linear-gradient(135deg, #5A7BFF, #8E54FF);
+  color: white;
+  border-radius: 50rpx;
+  height: 90rpx;
+  padding: 0 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10rpx 30rpx rgba(90, 123, 255, 0.3);
+  transition: all 0.3s;
+  
+  &:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+}
+
+.btn-text {
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-left: 10rpx;
+}
 </style>

@@ -1,0 +1,7 @@
+{
+  "name": "getEscortAccountData",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

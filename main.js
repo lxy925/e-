@@ -1,16 +1,21 @@
 import App from './App';
 import CustomNav from '@/components/custom-nav/custom-nav.vue';
+import Vue from 'vue'
+export const EventBus = new Vue();
 
-// 全局mixins，用于实现setData等功能，请勿删除！';
-import zpMixins from '@/uni_modules/zp-mixins/index.js';
+// 全局mixins，用于实现setData等功能，请勿删除！
+import zpMixins from '@/uni_modules/zp-mixins/index.js'
+// import api from './Utils/api'
+import uView from 'uview-ui'
 
 // #ifndef VUE3
-import Vue from 'vue';
-
-Vue.use(zpMixins);
-
-Vue.config.productionTip = false;
-App.mpType = 'app';
+Vue.use(uView)
+Vue.use(zpMixins)
+Vue.prototype.$EventBus = EventBus;
+Vue.config.productionTip = false
+App.mpType = 'app'
+// Vue.prototype.$api = api
+// 全局mixins，用于实现setData等功能，请勿删除！';
 
 // 全局注册 custom-nav 组件
 Vue.component('custom-nav', CustomNav);

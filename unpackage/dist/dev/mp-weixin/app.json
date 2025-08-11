@@ -5,7 +5,6 @@
     "pages/doctor/doctor",
     "pages/mine/mine",
     "pages/more/more",
-    "pages/web-view/web-view",
     "pages/service/service",
     "pages/prevent/prevent",
     "pages/doctorlist/doctorlist",
@@ -39,13 +38,16 @@
     "uni_modules/uni-pay/pages/success/success",
     "uni_modules/uni-pay/pages/ad-interactive-webview/ad-interactive-webview",
     "pages/chatList/chatList",
-    "pages/consult/consult"
+    "pages/consult/consult",
+    "pages/help/help",
+    "pages/web-view/web-view",
+    "pages/signup/signup"
   ],
   "subPackages": [],
   "window": {
-    "backgroundColor": "#0bd6c8",
+    "backgroundColor": "#1fc7d6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#0bd6c8",
+    "navigationBarBackgroundColor": "#1fc7d6",
     "navigationBarTitleText": "e陪无忧",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom"

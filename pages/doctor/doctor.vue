@@ -25,9 +25,9 @@
 					</swiper>
 				</view>
 				<view class="second">
-					<view class="second-item1">
+					<view class="second-item1" @click="handleSignUp">
 						<view class="second-item1-text">
-							<text class="second-item1-text1">报名</text>
+							<text class="second-item1-text1" >报名</text>
 							<text class="second-item1-text2">精选推荐</text>
 							<text class="second-item1-text3">了解更多</text>
 						</view>
@@ -261,11 +261,52 @@
 					uni.hideLoading();
 				}
 			},
-			goToStudyPage() {
-				uni.navigateTo({
-					url: "/pages/study/study",
-				});
+			async handleSignUp() {
+				try {
+					const userInfo = uni.getStorageSync('userInfo');
+					if (!userInfo || !userInfo.user_id) {
+						uni.showToast({ title: '请先登录', icon: 'none' });
+						return;
+					}
+					// 查询数据库是否有报名记录
+					const res = await uniCloud.database().collection('signup')
+						.where({ userId: userInfo.user_id })
+						.orderBy('createdAt', 'desc')
+						.limit(1)
+						.get();
+					const record = res.result && res.result.data && res.result.data[0];
+					if (!record) {
+						// 第一次报名，跳转报名页面并传递user_id
+						uni.navigateTo({ url: `/pages/signup/signup?user_id=${userInfo.user_id}` });
+						return;
+					}
+					// 有报名记录，检查审核状态
+					if (record.auditStatus === 'approved') {
+						uni.navigateTo({
+							url: '/pages/web-view/web-view?url=' + encodeURIComponent('https://xueqisecurity.chinaedu.net/mars/outer/wxrequest.do?serviceCode=alioth&clientType=2&customerCode=gdykdx&tenantCode=xq10679')
+						});
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '已成功报名请等待审核',
+							showCancel: false
+						});
+					}
+				} catch (e) {
+					console.error('报名跳转异常:', e);
+					uni.showToast({ title: '操作失败:' + (e.message || e), icon: 'none' });
+				}
 			},
+			goToStudyPage() {
+				let url = 'https://xueqisecurity.chinaedu.net/mars/outer/wxrequest.do?serviceCode=alioth&clientType=2&customerCode=gdykdx&tenantCode=xq10679';
+				if (!url.startsWith('http://') && !url.startsWith('https://')) {
+					url = 'http://' + url;
+				}
+				uni.navigateTo({
+					url: `/pages/web-view/web-view?url=${encodeURIComponent(url)}`
+				});
+			}
+			
 		},
 	};
 </script>

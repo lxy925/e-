@@ -35,14 +35,6 @@
 			}
 		},
 		{
-			"path": "pages/web-view/web-view",
-			"style": {
-				"usingComponents": {},
-				"navigationBarTitleText": "医院官网",
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/service/service",
 			"style": {
 				"usingComponents": {},
@@ -111,8 +103,7 @@
 		{
 			"path": "pages/userInfoDetail/userInfoDetail",
 			"style": {
-				"navigationBarTitleText": "完善用户信息",
-				"usingComponents": {}
+				"navigationBarTitleText": "完善用户信息"
 			}
 		},
 		{
@@ -226,12 +217,12 @@
 			}
 		},
 
-        {
-             "path": "uni_modules/uni-pay/pages/pay-desk/pay-desk",
-             "style": {
-             "backgroundColor": "#F8F8F8",
-             "navigationBarTitleText": "收银台"
-            }
+		{
+			"path": "uni_modules/uni-pay/pages/pay-desk/pay-desk",
+			"style": {
+				"backgroundColor": "#F8F8F8",
+				"navigationBarTitleText": "收银台"
+			}
 		},
 		{
 			"path": "uni_modules/uni-pay/pages/success/success",
@@ -258,12 +249,33 @@
 			"style": {
 				"navigationBarTitleText": ""
 			}
+		},
+		{
+			"path": "pages/help/help",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/web-view/web-view",
+			"style": {
+				"usingComponents": {},
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "医院官网"
+			}
+		},
+		{
+			"path": "pages/signup/signup",
+			"style": {
+			    "usingComponents": {},
+			    "navigationBarTitleText": "报名"
+			}
 		}
 	],
 	"globalStyle": {
-		"backgroundColor": "#0bd6c8",
+		"backgroundColor": "#1fc7d6",
 		"backgroundTextStyle": "light",
-		"navigationBarBackgroundColor": "#0bd6c8",
+		"navigationBarBackgroundColor": "#1fc7d6",
 		"navigationBarTitleText": "e陪无忧",
 		"navigationBarTextStyle": "white",
 		"navigationStyle": "custom"

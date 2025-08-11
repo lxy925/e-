@@ -11,6 +11,7 @@ export default {
   components: { customNav },
   data() {
     return {
+	
       url: ''
     }
   },

@@ -628,10 +628,17 @@
 				type: String,
 				required: true
 			},
-			serviceDesc: {
+			serviceDesc: { // 虽然数据中是service_details，但保持组件接口一致
 				type: String,
 				required: true
 			}
+		},
+		mounted() {
+			console.log('PaymentComponent 初始化完成');
+			console.log('serviceId:', this.serviceId);
+			console.log('serviceName:', this.serviceName);
+			console.log('serviceDesc:', this.serviceDesc);
+			console.log('orderInfo:', this.orderInfo);
 		},
 		data() {
 			return {
@@ -849,13 +856,20 @@
 					const orderData = {
 						patient_phone: this.orderInfo.patient_phone,
 						patient_name: this.orderInfo.patient_name,
-						service_id: this.serviceId,
-						service_info: this.orderInfo,
+						service_id: this.serviceId, // 使用组件prop
+						service_name: this.serviceName, // 使用组件prop
+						service_desc: this.serviceDesc, // 使用组件prop
+						service_info: {
+							...this.orderInfo,
+							service_id: this.serviceId, // 使用组件prop
+							service_name: this.serviceName, // 使用组件prop
+						},
 						doctor_id: this.orderInfo.doctor_id,
 						total_price: this.servicePrice,
 						status: 'unpaid',
 						create_time: new Date(),
-						js_code: code
+						js_code: code,
+						address: this.orderInfo.address,
 					};
 					console.log('发送到云函数的orderData:', orderData);
 
@@ -865,11 +879,11 @@
 						data: orderData,
 						authMode: 'requireAuth'
 					});
-
+					console.log("在数据库里创建订单:", createRes.result);
 					if (createRes.result.code !== 200) {
 						throw new Error(createRes.result.message || '订单创建失败');
 					}
-					console.log("在数据库里创建订单:", createRes.result);
+
 
 					// 4. 获取订单号和商户订单号
 					this.orderNo = createRes.result.data.order_no;

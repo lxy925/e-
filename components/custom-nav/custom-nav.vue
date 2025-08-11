@@ -1,43 +1,37 @@
 <template>
- <view 
-     class="custom-nav" 
-     :style="{ 
+	<view class="custom-nav" :style="{ 
        height: navHeight + 'px',
        backgroundColor: `rgba(114, 221, 232, ${navOpacity})`,
        color: '#fff' // 强制字体颜色为白色
-     }"
-   >
-    <view class="nav-content" :style="{ marginTop: statusBarHeight + 'px' }">
-      <view class="nav-left">
-        <template v-if="isHomePage">
-          <view class="location" @click="chooseLocation">
-            <view class="location-icon">
-              <image src="/static/images/icons/position.png"></image>
-            </view>
-            <text class="location-text" :style="{ color: textColor }">
-              {{ locationName }} 
-            </text>
-          </view>
-        </template>
-        <template v-else>
-          <view class="back-button" @click="goBack">
-            <image 
-              src="/static/images/icons/left-arrow.png" 
-              :style="{ 
+     }">
+		<view class="nav-content" :style="{ marginTop: statusBarHeight + 'px' }">
+			<view class="nav-left">
+				<template v-if="isHomePage">
+					<view class="location" @click="chooseLocation">
+						<view class="location-icon">
+							<image src="/static/images/icons/position.png"></image>
+						</view>
+						<text class="location-text" :style="{ color: textColor }">
+							{{ locationName }}
+						</text>
+					</view>
+				</template>
+				<template v-else>
+					<view class="back-button" @click="goBack">
+						<image src="/static/images/icons/left-arrow.png" :style="{ 
                 width: '50rpx',
                 height: '50rpx',
                 filter: textColor === '#fff' ? 'brightness(10)' : 'brightness(1)'
-              }"
-            />
-          </view>
-        </template>
-      </view>
-      <view class="nav-title" :style="{ color: textColor }">
-        {{ title }}
-      </view>
-      <view class="nav-right"></view>
-    </view>
-  </view>
+              }" />
+					</view>
+				</template>
+			</view>
+			<view class="nav-title" :style="{ color: textColor }">
+				{{ title }}
+			</view>
+			<view class="nav-right"></view>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -181,56 +175,56 @@ export default {
 </script>
 
 <style scoped>
-.custom-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  transition: all 0.3s ease;
-}
+	.custom-nav {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 999;
+		transition: all 0.3s ease;
+	}
 
-.nav-content {
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px;
-}
+	.nav-content {
+		height: 44px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 15px;
+	}
 
-.nav-left {
-  display: flex;
-  align-items: center;
-}
+	.nav-left {
+		display: flex;
+		align-items: center;
+	}
 
-.location {
-  display: flex;
-  align-items: center;
-}
+	.location {
+		display: flex;
+		align-items: center;
+	}
 
-.location-icon image {
-  width: 20px;
-  height: 20px;
-}
+	.location-icon image {
+		width: 20px;
+		height: 20px;
+	}
 
-.location-text {
-  font-size: 14px;
-  margin-left: 5px;
-  transition: color 0.3s ease;
-}
+	.location-text {
+		font-size: 14px;
+		margin-left: 5px;
+		transition: color 0.3s ease;
+	}
 
-.back-button {
-  margin-right: 75rpx;
-}
+	.back-button {
+		margin-right: 75rpx;
+	}
 
-.nav-title {
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-  transition: color 0.3s ease;
-}
+	.nav-title {
+		font-size: 16px;
+		font-weight: bold;
+		text-align: center;
+		transition: color 0.3s ease;
+	}
 
-.nav-right {
-  width: 60px;
-}
+	.nav-right {
+		width: 60px;
+	}
 </style>

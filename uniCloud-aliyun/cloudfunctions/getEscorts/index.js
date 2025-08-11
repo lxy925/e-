@@ -10,8 +10,8 @@ exports.main = async (event, context) => {
 		searchKeyword,
 		startTime, // 查询的服务开始时间（ISO字符串）
 		endTime, // 查询的服务结束时间（ISO字符串）
-		page, // 新增：当前页码，默认第1页
-		pageSize // 新增：每页条数，默认10条
+		page = 1, // 新增：当前页码，默认第1页
+		pageSize = 10 // 新增：每页条数，默认10条
 	} = event;
 	// 计算分页偏移量
 	const skip = (page - 1) * pageSize;
@@ -30,8 +30,14 @@ exports.main = async (event, context) => {
 				as: 'moreInfo'
 			})
 			.unwind('$moreInfo')
-			.skip(skip) // 新增：分页跳过条数
-			.limit(pageSize); // 新增：分页限制条数;
+		// 仅当从订单页面进入时，才筛选已认证的陪诊师
+		if (isFromOrder) {
+			query = query.match({
+				is_certified: true
+			});
+			console.log("从订单页面进入，仅显示已认证陪诊师");
+		}
+		query = query.skip(skip).limit(pageSize);
 
 		// 2. 添加姓名搜索条件（如果有搜索关键词）
 		if (searchKeyword && searchKeyword.trim()) {
@@ -135,7 +141,13 @@ exports.main = async (event, context) => {
 			};
 		}
 
+		console.log("5.1 待查询的时间范围：", {
+			startTime: queryStart.toISOString(),
+			endTime: queryEnd.toISOString()
+		});
+
 		// 5.2 查询可用陪诊师在[startTime, endTime]范围内的有效订单
+		console.log("5.2 待查询冲突的陪诊师ID：", [...availableEscortIds]);
 		const conflictingOrders = await db.collection('orders') // 订单集合名，需与实际一致
 			.where({
 				doctor_id: _.in([...availableEscortIds]), // 只查可用陪诊师的订单
@@ -148,13 +160,16 @@ exports.main = async (event, context) => {
 				doctor_id: 1
 			}) // 只返回陪诊师ID，提升查询效率
 			.get();
+		console.log("5.2 冲突订单查询结果：", conflictingOrders.data);
 
 		// 5.3 提取有冲突的陪诊师ID（需要排除）
 		const conflictingIds = new Set(
 			conflictingOrders.data.map(order => order.doctor_id)
 		);
+		console.log("5.3 有冲突的陪诊师ID：", [...conflictingIds]);
 		// 5.4 最终可用陪诊师：排除有冲突订单的ID
 		const finallyAvailableIds = [...availableEscortIds].filter(id => !conflictingIds.has(id));
+		console.log("5.4 排除冲突后最终可用ID：", finallyAvailableIds);
 		availableEscortIds = new Set(finallyAvailableIds);
 
 		// 6. 筛选出符合条件的陪诊师
@@ -162,6 +177,7 @@ exports.main = async (event, context) => {
 				availableEscortIds.has(escort.user_id))
 			.sort((a, b) => b.moreInfo.rating - a.moreInfo.rating);
 
+		console.log("6. 最终返回的陪诊师列表：", availableEscorts.map(e => e.user_id)); // 新增日志
 		return {
 			success: true,
 			data: availableEscorts,

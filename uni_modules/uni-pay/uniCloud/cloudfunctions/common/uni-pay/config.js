@@ -36,7 +36,7 @@ module.exports = {
 		},
 		// 微信 - APP支付
 		"app": {
-			"appId": "", // app开放平台下的应用的appid
+			"appId": "wxf8afb6dce14d487a", // app开放平台下的应用的appid
 			"secret": "", // app开放平台下的应用的secret
 			"mchId": "", // 商户id
 			// "key": "", // v2的api key
@@ -50,12 +50,12 @@ module.exports = {
 		},
 		// 微信 - 扫码支付
 		"native": {
-			"appId": "", // 可以是小程序或公众号或app开放平台下的应用的任意一个appid
-			"secret": "", // secret
-			"mchId": "", // 商户id
+			"appId": "wxf8afb6dce14d487a", // 小程序的appid
+			"secret": "06d3e5f2f7ed1bf8504fe90a1a1e04e5", // 小程序的secret
+			"mchId": "1711967249", // 商户id
 			// "key": "", // v2的api key
 			// "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
-			"v3Key": "", // v3的api key
+			"v3Key": "Epwy9402123456789012345678901940", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
 			"wxpayPublicKeyPath": path.join(__dirname,

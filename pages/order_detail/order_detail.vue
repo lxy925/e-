@@ -32,19 +32,16 @@
 					</div>
 				</view>
 
-				<view v-if="orderStatus === 'cancelled' && isOrderExpired" class="status-card expired-card">
+				<view v-if="orderStatus === 'cancelled' || isOrderExpired" class="status-card expired-card">
 					<div class="status-icon expired-icon">✖</div>
 					<h3 class="status-title">订单已取消</h3>
 					<p class="status-message">支付超时，订单已自动取消</p>
 				</view>
 
-				<view v-if="orderStatus === 'pay_fail'" class="status-card failed-card">
+				<view v-if="orderStatus === 'pay_fail' && !isOrderExpired" class="status-card failed-card">
 					<div class="status-icon failed-icon">✖</div>
 					<h3 class="status-title">支付失败</h3>
 					<p class="status-message">请重试或联系客服</p>
-					<view class="status-illustration">
-						<image src="/static/failed.svg" mode="aspectFit" class="illustration-image"></image>
-					</view>
 					<button class="btn retry-btn" @click="retryPayment">重试支付</button>
 				</view>
 

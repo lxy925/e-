@@ -85,12 +85,20 @@ async function createOrder(event, openid) {
 	const order_no = `ORD${timestamp}${random}`;
 
 	let doctor_user_id = null;
-	const input_doctor_id = event.doctor_id; // 从event获取的doctor_id
+	// 打印初始值和输入的doctor_id
+	console.log("===== 开始处理doctor_id =====");
+	console.log("初始doctor_user_id值:", doctor_user_id);
+	const input_doctor_id = event.doctor_id;
+	console.log("从event获取的doctor_id:", input_doctor_id, "（类型:", typeof input_doctor_id, "）");
+
 	// 1. 查询 escorts 表，获取陪诊师信息
 	if (input_doctor_id && input_doctor_id.trim() !== '') {
+		console.log("输入的doctor_id有效，开始查询escorts集合...");
 		const escortRes = await db.collection('escorts').where({
 			user_id: input_doctor_id
 		}).get();
+		console.log("escorts查询结果:", JSON.stringify(escortRes.data));
+
 		if (!escortRes.data || escortRes.data.length === 0) {
 			return {
 				code: 404,
@@ -98,8 +106,17 @@ async function createOrder(event, openid) {
 			};
 		}
 		const escortInfo = escortRes.data[0];
-		const doctor_user_id = escortInfo.user_id; // 从数据库获取的user_id
+		console.log("找到的陪诊师信息:", JSON.stringify(escortInfo));
+		// 关键：打印陪诊师信息中的user_id
+		console.log("陪诊师信息中的user_id:", escortInfo.user_id, "（类型:", typeof escortInfo.user_id, "）");
+
+		doctor_user_id = escortInfo.user_id; // 从数据库获取的user_id
+		console.log("赋值后doctor_user_id:", doctor_user_id);
+	} else {
+		console.log("输入的doctor_id为空或无效，不执行查询");
 	}
+
+	console.log("===== doctor_id处理结束 =====");
 
 	// 构建订单数据，保持您原有的订单数据结构
 	const orderData = {

@@ -834,7 +834,7 @@
 					length: 7
 				}, (_, i) => {
 					const date = new Date();
-					date.setDate(date.getDate() + i);
+					date.setDate(date.getDate() + i + 1);
 					return {
 						day: `${date.getMonth() + 1}月${date.getDate()}日`,
 						week: days[date.getDay()]

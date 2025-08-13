@@ -3,5 +3,18 @@
   "projectname": "e-",
   "setting": {
     "compileHotReLoad": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/signup/signup",
+          "pathName": "pages/signup/signup",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
   }
 }

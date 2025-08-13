@@ -27,16 +27,40 @@ exports.main = async (event, context) => {
 
   } catch (err) {
    return { code: 401, msg: err };
-
+    
+    // // 3. 使用refreshToken获取新token
+    // const newTokenRes = await uniCloud.callFunction({
+    //   name: 'refresh-token',
+    //   data: { refreshToken }  // 注意这里要传对象
+    // });
+    // console.log("新token",newTokenRes.result.data.token)
+    
+    
+    // 4. 验证新token并再次获取用户数据
+ //    const newDecoded = jwt.verifyToken(newTokenRes.result.data.token);  // 确保使用正确的字段
+ //    const newOpenid = newDecoded.uid;
+ //    let newCatchUserInfo = await getUserFromDB(newOpenid, type, newTokenRes.result.data.token);
+ //    newCatchUserInfo.userInfo.user_id=newTokenRes.result.data.token;
+	// if(type=="陪诊师"){
+	// 	console.log("重新获取用户数据后对数据加密",newCatchUserInfo.userInfo)
+	// 	newCatchUserInfo.userInfo.moreInfo.user_id=newTokenRes.result.data.token;
+	// 	newCatchUserInfo.userInfo.accountInfo.user_id=newTokenRes.result.data.token;
+	// }
+	
+ //    return {
+ //      code: 200,
+ //      data:newCatchUserInfo.userInfo,
+       
+ //    };
   }
 };
 
-async function getUserFromDB(user_id, userType) {
+async function getUserFromDB(user_id, userType, token) {
   const usersCollection = db.collection('users');
   let query;
   
   if (userType === "陪诊师") {
-	  console.log("陪诊师query",query)
+	  
     query = usersCollection.aggregate()
       .match({ user_id })
       .lookup({
@@ -57,7 +81,6 @@ async function getUserFromDB(user_id, userType) {
 	 
   } else {
     query = usersCollection.where({ user_id }).get();
-	console.log("query",query)
   }
 
   const res = await query;

@@ -1,5 +1,5 @@
 <script>
-	const jwt = require("./utils/jwt")
+	const jwt = require("./Utils/jwt")
 	// app.js
 	export default {
 		data() {

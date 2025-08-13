@@ -2,7 +2,7 @@
 	<view class="page">
 		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
 		<scroll-view class="page-container" @scroll="handleScroll" :style="{ paddingTop: navHeight + 'px' }">
-			
+
 
 			<view class="container">
 				<!-- 头像上传 -->
@@ -187,7 +187,7 @@
 	import {
 		ref
 	} from 'vue';
-	import citys from '../../utils/citys.js'; // 引入外部文件
+	import citys from '../../Utils/citys.js'; // 引入外部文件
 
 	export default {
 		data() {

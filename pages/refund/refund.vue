@@ -5,10 +5,17 @@
 		<view class="refund-container">
 			<!-- 服务信息 -->
 			<view class="product-info">
-				<text class="product-name">{{orderInfo.service_name || '陪诊服务'}}</text>
-				<text class="product-spec">服务时间：{{orderInfo.service_time || ''}}</text>
-				<text class="product-spec">订单号：{{orderInfo.order_no || ''}}</text>
-				<text class="product-spec">商户单号：{{orderInfo.out_trade_no || '无'}}</text>
+				<text class="product-name">
+					{{ orderInfo.order_type === 1
+				      ? (orderInfo.service_name || '认证考试申请') 
+				      : '陪诊服务'
+				    }}
+				</text>
+				<text class="product-spec" v-if="orderInfo.order_type === 2">
+					服务时间：{{ orderInfo.service_time || '未设置' }}
+				</text>
+				<text class="product-spec">订单号：{{orderInfo.order_no || '暂无'}}</text>
+				<text class="product-spec">商户单号：{{orderInfo.out_trade_no || '暂无'}}</text>
 			</view>
 
 			<!-- 退款表单 -->
@@ -33,10 +40,23 @@
 					</picker>
 				</view>
 
-				<!-- 申请金额 -->
+
 				<view class="form-item">
 					<text class="item-label">申请金额</text>
-					<view class="amount">¥{{orderInfo.total_price || '0.00'}}</view>
+					<view class="amount">¥{{orderInfo.total_price|| '0.00'}}</view>
+				</view>
+
+				<!-- 申请金额 -->
+				<view class="form-item">
+					<text class="item-label">退款金额</text>
+					<!-- 仅已支付（status 为 paid/pay_success 等）显示真实金额 -->
+					<view class="amount" v-if="['paid'].includes(orderInfo.status)">
+						¥{{ orderInfo.total_price ||  '0.00' }}
+					</view>
+					<!-- 未支付时提示 -->
+					<view class="amount" v-else>
+						{{'0.00'}}
+					</view>
 				</view>
 
 				<!-- 申请说明 -->
@@ -64,7 +84,7 @@
 	export default {
 		data() {
 			return {
-				orderInfo: {}, // 初始化为空对象，将从订单页面传入
+				orderInfo: {}, // 仅保留orderInfo，删除realOrderInfo
 				refundTypes: ["全额退款"],
 				refundTypeIndex: 0,
 				refundType: "全额退款",
@@ -80,16 +100,25 @@
 				reason: "行程有变，不需要服务了",
 				description: "",
 				phoneNumber: "",
-				refundResult: null
+				refundResult: null, // 保留（用于记录退款接口响应）
 			};
 		},
 		onLoad(options) {
-			// 从订单列表页传入的订单信息
 			if (options.orderInfo) {
+				// 直接解析订单对象，无需遍历提取
 				this.orderInfo = JSON.parse(decodeURIComponent(options.orderInfo));
-				// 设置默认联系电话
+				// 初始化联系电话（优先用订单中的patient_phone，无则用默认）
 				this.phoneNumber = this.orderInfo.patient_phone || "1371999999";
 				console.log('加载订单信息:', this.orderInfo);
+				// 直接从orderInfo获取order_type
+				console.log('当前 order_type:', this.orderInfo.order_type);
+			} else {
+				// 订单信息缺失时提示并返回
+				uni.showToast({
+					title: '订单信息缺失',
+					icon: 'none'
+				});
+				setTimeout(() => uni.navigateBack(), 1500);
 			}
 		},
 		methods: {
@@ -130,27 +159,39 @@
 				});
 
 				try {
-					// 1. 调用微信退款接口
-					const refundRes = await this.refund();
-					console.log('微信退款接口响应:', refundRes);
-					this.refundResult = refundRes;
+					// 关键判断：是否为“认证考试未支付订单”
+					const isUnpaidExam = this.orderInfo.order_type === 1 && this.orderInfo.status !== 'paid';
 
-					// 2. 插入退款记录
+					// 1. 仅“已支付订单”或“陪诊服务”调用退款接口
+					let refundRes = null;
+					if (!isUnpaidExam) {
+						refundRes = await this.refund(); // 调用微信退款接口
+						console.log('微信退款接口响应:', refundRes);
+						this.refundResult = refundRes;
+					} else {
+						console.log('认证考试未支付订单，跳过退款接口调用');
+					}
+
+					// 2. 插入退款记录（所有场景都需要）
 					const addRes = await this.insertRefundRecord();
 					console.log('退款记录插入成功:', addRes);
 
-					// 3. 更新订单状态为"退款中"
-					const updateRes = await this.updateOrderStatus();
+					// 3. 更新订单状态（根据场景设置不同状态）
+					const targetStatus = isUnpaidExam ? 'cancelled' : 'refunding'; // 未支付考试单直接设为“已取消”
+					const updateRes = await this.updateOrderStatus(targetStatus);
 					console.log('订单状态更新成功:', updateRes);
 
-					// 4. 更新退款记录状态（可选）
-					if (refundRes && refundRes.result && refundRes.result.refundId) {
+					// 4. 仅已支付订单更新退款记录状态
+					if (!isUnpaidExam && refundRes && refundRes.result && refundRes.result.refundId) {
 						await this.updateRefundStatus('success', refundRes.result);
 					}
 
-					// 操作成功
+					// 操作成功提示（区分场景）
+					const successMsg = isUnpaidExam ?
+						'申请已提交，未支付订单已取消' :
+						'退款申请已提交，请注意查收退款';
 					uni.showToast({
-						title: '退款申请已提交，请注意查收退款',
+						title: successMsg,
 						icon: 'success',
 						duration: 3000
 					});
@@ -264,7 +305,6 @@
 				if (!tradeNo) {
 					throw new Error('商户订单号不存在，无法发起退款');
 				}
-
 				// 确保金额为实际订单金额（单位：分）
 				const totalFee = Math.round(this.orderInfo.total_price * 100);
 				if (totalFee <= 0) {

@@ -24,7 +24,7 @@
 					<view class="card-header">
 						<text class="application-no">申请编号: {{ application._id.slice(-8) }}</text>
 						<text :class="['application-status', getStatusClass(application)]">
-							{{ formatStatus(application.auditStatus) }}
+							{{ formatStatus(application) }}
 						</text>
 					</view>
 
@@ -74,7 +74,8 @@
 					</view>
 
 					<view class="card-footer">
-						<button class="action-btn btn-detail" v-if="application.auditStatus === 'unreviewed'" @click="applyRefund(relatedOrders)">
+						<button class="action-btn btn-detail" v-if="application.auditStatus === 'unreviewed'"
+							@click="applyRefund(application)">
 							撤销申请
 						</button>
 
@@ -183,22 +184,55 @@
 			},
 
 			getStatusClass(application) {
+				// 1. 检查订单数据是否已加载（relatedOrders 不为空且包含当前订单）
+				const isOrderLoaded = Object.keys(this.relatedOrders).length > 0 &&
+					application.order_no &&
+					this.relatedOrders[application.order_no] !== undefined;
+
+				// 2. 未加载完成时，直接返回基础状态（不判断退款状态）
+				if (!isOrderLoaded) {
+					// 可选：仅在开发环境打印未加载提示
+					// console.log(`订单数据未加载（申请ID: ${application._id}）`);
+					return {
+						'status-unreviewed': application.auditStatus === 'unreviewed',
+						'status-pending': application.auditStatus === 'pending_review',
+						'status-approved': application.auditStatus === 'approved',
+						'status-rejected': application.auditStatus === 'rejected',
+						'status-refunded': false // 未加载时默认非退款状态
+					};
+				}
+
+				// 3. 订单数据已加载，正常判断
+				const relatedOrder = this.relatedOrders[application.order_no];
+				const isRefundedOrder = ['refunded'].includes(relatedOrder.status);
+
+				// 仅在订单数据就绪后打印日志（避免重复）
+				console.log(`申请ID: ${application._id} 退款状态:`, isRefundedOrder);
+
 				return {
+					'status-refunded': isRefundedOrder,
 					'status-unreviewed': application.auditStatus === 'unreviewed',
 					'status-pending': application.auditStatus === 'pending_review',
 					'status-approved': application.auditStatus === 'approved',
-					'status-rejected': application.auditStatus === 'rejected'
+					'status-rejected': application.auditStatus === 'rejected',
 				};
 			},
 
-			formatStatus(status) {
+			formatStatus(application) {
+				// 1. 先判断是否有退款相关的订单状态（优先显示）
+				const relatedOrder = this.relatedOrders[application.order_no];
+				if (relatedOrder && relatedOrder.status === 'refunded') {
+					return '已取消'; // 订单已退款时，显示“已取消”
+				}
+
+				// 2. 若无退款状态，再使用申请的 auditStatus
 				const statusMap = {
 					'unreviewed': '待审核',
 					'pending_review': '审核中',
 					'approved': '已通过',
 					'rejected': '未通过'
 				};
-				return statusMap[status] || status;
+				return statusMap[application.auditStatus] || application.auditStatus;
 			},
 
 			formatOrderStatus(status) {
@@ -228,10 +262,34 @@
 					url: `/pages/order/detail?order_no=${orderNo}`
 				});
 			},
-			applyRefund(order) {
-				// 将订单对象编码为URL安全的字符串
-				const encodedOrderInfo = encodeURIComponent(JSON.stringify(order));
+			// 认证考试页面（我的申请页）的methods中
+			applyRefund(application) {
+				// 关键：根据当前申请的order_no，从relatedOrders中获取对应的单个订单对象
+				const order = this.relatedOrders[application.order_no];
+				if (!order) {
+					uni.showToast({
+						title: '未找到关联订单',
+						icon: 'none'
+					});
+					return;
+				}
 
+				// 确保订单对象结构与陪诊服务一致
+				const standardizedOrder = {
+					// 核心字段（与陪诊服务订单对齐）
+					order_no: order.order_no,
+					total_price: order.total_price,
+					status: order.status,
+					out_trade_no: order.out_trade_no,
+					create_time: order.create_time,
+					// 认证考试特有字段
+					examType: application.examType,
+					jobType: application.jobType,
+					order_type: 1,
+				};
+
+				// 编码单个订单对象（与陪诊服务传入格式一致）
+				const encodedOrderInfo = encodeURIComponent(JSON.stringify(standardizedOrder));
 				uni.navigateTo({
 					url: `/pages/refund/refund?orderInfo=${encodedOrderInfo}`
 				});
@@ -392,10 +450,10 @@
 
 	.card-footer {
 		display: flex;
-		justify-content:space-between;
+		justify-content: space-between;
 		border-top: 1rpx solid #eee;
 		padding-top: 15rpx;
-		
+
 	}
 
 	.action-btn {

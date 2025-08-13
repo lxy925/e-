@@ -39,8 +39,21 @@
 									<image src="../../static/images/order/service-icon.png" mode="aspectFit" />
 								</view>
 								<view class="service-details">
-									<text class="service-name">{{ order.service_info.service_name }}</text>
-									<text class="service-id">服务ID: {{ order.service_id }}</text>
+									<!-- 服务名称 -->
+									<text class="service-name">
+										{{ order.order_type === 1 
+									    ? (order.jobType || '认证考试申请') 
+									    : ((order.service_info && order.service_info.service_name) || '陪诊服务') 
+									  }}
+									</text>
+
+									<!-- 服务ID -->
+									<text class="service-id">
+										{{ order.order_type === 1 
+									    ? `订单ID: ${order.order_no}` 
+									    : `服务ID: ${(order.service_id) || '未知'}` 
+									  }}
+									</text>
 								</view>
 							</view>
 
@@ -50,9 +63,15 @@
 									<text class="meta-label">金额</text>
 									<text class="meta-value price-value">¥{{ order.total_price }}</text>
 								</view>
-								<view class="meta-item">
+								<!-- 服务时长：仅陪诊服务（order_type=2）显示 -->
+								<view class="meta-item" v-if="order.order_type !=1">
 									<text class="meta-label">服务时长</text>
-									<text class="meta-value">{{ order.duration || '2小时' }}</text>
+									<text class="meta-value">{{ calculateDuration(order) }}</text>
+								</view>
+								<!-- 认证考试新增“考试类型”字段 -->
+								<view class="meta-item" v-if="order.order_type === 1">
+									<text class="meta-label">考试类型</text>
+									<text class="meta-value">{{ getJobNameByJobId(order.job_id)|| '未知类型' }}</text>
 								</view>
 							</view>
 						</view>
@@ -104,6 +123,7 @@
 				loading: false,
 				userRole: 'user', // user/doctor
 				initialStatus: '',
+				jobTypes: []
 			}
 		},
 		computed: {
@@ -222,11 +242,55 @@
 			this.userRole = role || (userInfo.type === '陪诊师' ? 'doctor' : 'user');
 			this.initTabs();
 			this.tabs = this.roleTabs; // 初始化tabs
-
+			this.loadJobTypes();
 			this.calculateScrollHeight();
 			this.getOrderList();
 		},
 		methods: {
+			// 计算服务时长（单位：小时，保留1位小数）
+			calculateDuration(order) {
+				// 非陪诊服务（无服务时间）直接返回默认值
+				if (order.order_type !== 2 || !order.service_start_time || !order.service_end_time) {
+					return '2小时'; // 陪诊服务默认时长
+				}
+
+				// 转换为时间戳（毫秒）
+				const startTime = new Date(order.service_start_time).getTime();
+				const endTime = new Date(order.service_end_time).getTime();
+
+				// 计算时间差（毫秒），避免负数
+				const timeDiff = Math.max(0, endTime - startTime);
+
+				// 转换为小时（1小时 = 3600000毫秒）
+				const hours = timeDiff / 3600000;
+
+				// 格式化显示（≥1小时显示小时，否则显示分钟）
+				if (hours >= 1) {
+					return `${hours.toFixed(1)}小时`;
+				} else {
+					const minutes = Math.round(timeDiff / 60000); // 转换为分钟
+					return `${minutes}分钟`;
+				}
+			},
+			// 加载job_types数据（从数据库获取）
+			async loadJobTypes() {
+				try {
+					const db = uniCloud.database();
+					const res = await db.collection('job_types').get(); // 假设集合名为job_types
+					this.jobTypes = res.result.data || [];
+				} catch (e) {
+					console.error('加载工种数据失败:', e);
+					this.jobTypes = []; // 异常时置空，避免后续报错
+				}
+			},
+
+			//  新增映射方法：根据job_id获取jobName
+			getJobNameByJobId(jobId) {
+				if (!jobId || !this.jobTypes.length) return '未知工种';
+				// 在jobTypes中查找匹配的记录
+				const matchedJob = this.jobTypes.find(item => item._id === jobId);
+				return matchedJob ? matchedJob.jobName : '未知工种';
+			},
 			//根据初始状态初始化标签页
 			initTabs() {
 				this.tabs = this.roleTabs;
@@ -424,12 +488,12 @@
 				});
 			},
 			formatStatus(order) {
-				const tabs = this.userRole === 'doctor' 
-				if(tabs){
-					if(order.audit_status==="approved")return '审核通过';
-					if(order.audit_status==="rejected")return '审核不通过';
+				const tabs = this.userRole === 'doctor'
+				if (tabs) {
+					if (order.audit_status === "approved") return '审核通过';
+					if (order.audit_status === "rejected") return '审核不通过';
 				}
-				
+
 				if (order.service_status === "completed") return '已完成';
 				if (order.status === "paid") {
 					return order.service_status === "pending" ? '待服务' :
@@ -665,6 +729,7 @@
 	}
 
 	.meta-value {
+		margin-left: 3px;
 		font-weight: 500;
 		color: #333;
 	}

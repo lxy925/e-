@@ -18,7 +18,7 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.8.11",
+  "libVersion": "3.9.0",
   "appid": "wxf8afb6dce14d487a",
   "projectname": "epwy",
   "condition": {},

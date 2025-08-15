@@ -22,29 +22,30 @@ exports.main = async (event, context) => {
 	try {
 		console.log('开始获取陪诊师数据（分页：第' + page + '页）');
 		// 1. 构建基础查询条件（关联陪诊师详情）
-			let query = db.collection('escorts').aggregate()
-					.lookup({
-						from: 'escorts_more',
-						localField: 'user_id',
-						foreignField: 'user_id',
-						as: 'moreInfo'
-					})
-					.unwind('$moreInfo')
-				// 仅当从订单页面进入时，才筛选已认证的陪诊师
-				if (isFromOrder) {
-					query = query.match({
-						is_certified: true
-					});
-					console.log("从订单页面进入，仅显示已认证陪诊师");
-				}
-				query = query.skip(skip).limit(pageSize);
-		
-				// 2. 添加姓名搜索条件（如果有搜索关键词）
-				if (searchKeyword && searchKeyword.trim()) {
-					query = query.match({
-						name: new RegExp(searchKeyword, 'i') // 不区分大小写的模糊搜索
-					});
-				}
+		let query = db.collection('escorts').aggregate()
+			.lookup({
+				from: 'escorts_more',
+				localField: 'user_id',
+				foreignField: 'user_id',
+				as: 'moreInfo'
+			})
+			.unwind('$moreInfo')
+		// 仅当从订单页面进入时，才筛选已认证的陪诊师
+		if (isFromOrder) {
+			query = query.match({
+				is_certified: true
+			});
+			console.log("从订单页面进入，仅显示已认证陪诊师");
+		}
+		query = query.skip(skip).limit(pageSize);
+
+		// 2. 添加姓名搜索条件（如果有搜索关键词）
+		if (searchKeyword && searchKeyword.trim()) {
+			query = query.match({
+				name: new RegExp(searchKeyword, 'i') // 不区分大小写的模糊搜索
+			});
+		}
+
 		// 3. 如果不是从order页面进入，直接返回所有陪诊师
 		if (!isFromOrder) {
 			const escortsRes = await query.end();

@@ -7,7 +7,7 @@
          height: 'calc(100vh - ' + navHeight + 'px)'
        }" :scroll-top="scrollTop" :show-scrollbar="false">
 			<view class="announcement-bar">
-				<img class="notice" src="../../static/images/health/notice.png" alt="">
+				<img class="notice" src="/static/images/health/notice.png" alt="">
 				<view class="announcement-text">复诊提醒！距离您下次复诊的时间还有三天！请注意安排时间，提前挂号预约哦！</view>
 			</view>
 
@@ -38,27 +38,27 @@
 			</view>
 			<view class="share">
 				<view class="share-title">
-					<img class="title-img" src="../../static/images/health/adver.png" alt="">
+					<img class="title-img" src="" alt="">
 					<text class="title">相关药物 / 药械推荐</text>
 					<text class="more">更多 ></text>
 				</view>
 				<view class="share-content">
 					<view class="share-item">
-						<img class="share-img" src="../../static/images/health/watch.jpg" alt="">
+						<img class="share-img" src="" alt="">
 						<text class="share-text">健康手环</text>
 						<view class="share-price">￥199
-							<img class="car" src="../../static/images/health/car.png" alt="">
+							<img class="car" src="" alt="">
 						</view>
 					</view>
 					<view class="share-item">
-						<img class="share-img" src="../../static/images/health/drug.jpg" alt="">
+						<img class="share-img" src="" alt="">
 						<text class="share-text">通血管药物</text>
 						<view class="share-price">￥199
 							<img class="car" src="../../static/images/health/car.png" alt="">
 						</view>
 					</view>
 					<view class="share-item">
-						<img class="share-img" src="../../static/images/health/seng.jpg" alt="">
+						<img class="share-img" src="" alt="">
 						<text class="share-text">人参</text>
 						<view class="share-price">￥199
 							<img class="car" src="../../static/images/health/car.png" alt="">
@@ -73,7 +73,7 @@
 					<text class="more">更多 ></text>
 				</view>
 				<view class="share-info">
-					<img class="share-img" src="../../static/images/health/daster.jpg" alt="">
+					<img class="share-img" src="" alt="">
 					<view class="details">
 						<text class="share-info-text">特殊疾病保险</text>
 						<text class="detail">高保险，包括心老血管相关疾病、脑神经等等都可以有保障</text>

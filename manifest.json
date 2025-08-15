@@ -62,7 +62,22 @@
             }
         },
         "plugins" : {},
-        "cloudfunctionRoot" : "cloudfunctions/"
+        "cloudfunctionRoot" : "cloudfunctions/",
+        "optimization" : {
+            "subPackages" : true,
+            "treeShaking" : {
+                "enable" : true
+            },
+            "lazyCodeLoading" : "requiredComponents",
+            "setting" : {
+                "minified" : true,
+                "minifywxss" : true, //.压缩wxss代码
+                "minifywXML" : true, //.压缩wxml代码
+                "ignoreUploadUnusedFiles" : true, //.上传时过滤无依赖文件
+                "es6" : true, //.ES6语法转ES5,可先设置为false,上传或显示异常改为true
+                "postcss" : false //.
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -78,7 +93,7 @@
     },
     "vueVersion" : "2",
     "locale" : "zh-Hans",
-	"uts": {
-	    "enabled": false
-	  }
+    "uts" : {
+        "enabled" : false
+    }
 }

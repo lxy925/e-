@@ -1,17 +1,1 @@
-{
-  "bsonType": "object",
-  "required": ["jobName", "examLevels", "examMethod", "theoryDuration", "practicalDuration"],
-  "properties": {
-    "jobName": { "bsonType": "string", "description": "工种名称" },
-    "examLevels": { "bsonType": "array", "items": { "bsonType": "string" }, "description": "可报考级别数组" },
-    "examMethod": { "bsonType": "string", "enum": ["机考", "笔试"], "description": "考试方式" },
-    "theoryDuration": { "bsonType": "string", "description": "理论考试时长" },
-    "practicalDuration": { "bsonType": "string", "description": "实操考试时长" },
-    "description": { "bsonType": "string", "description": "工种描述" },
-    "createdAt": { "bsonType": "date", "description": "创建时间" }
-  },
-  "permission": {
-    "read": true,
-    "write": false
-  }
-}
+{"bsonType":"object","required":["jobName","examLevels","examMethod","theoryDuration","practicalDuration"],"properties":{"jobName":{"bsonType":"string","description":"工种名称"},"examLevels":{"bsonType":"array","items":{"bsonType":"string"},"description":"可报考级别数组"},"examMethod":{"bsonType":"string","enum":["机考","笔试"],"description":"考试方式"},"theoryDuration":{"bsonType":"string","description":"理论考试时长"},"practicalDuration":{"bsonType":"string","description":"实操考试时长"},"position":{"bsonType":"string","description":"职业定位"},"suit":{"bsonType":"string","description":"适合人群"},"description":{"bsonType":"string","description":"报名描述"},"price":{"bsonType":"string","description":"价格"},"createdAt":{"bsonType":"date","description":"创建时间"}},"permission":{"read":true,"write":false}}

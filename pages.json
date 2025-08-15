@@ -27,195 +27,24 @@
 				"navigationBarTitleText": "我的"
 			}
 		},
-		{
-			"path": "pages/more/more",
-			"style": {
-				"navigationBarTitleText": "更多",
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/service/service",
-			"style": {
-				"usingComponents": {},
-				"navigationBarTitleText": "我要陪诊",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/prevent/prevent",
-			"style": {
-				"navigationBarTitleText": "疾病预防",
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/doctorlist/doctorlist",
-			"style": {
-				"navigationBarTitleText": "陪诊师",
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/doctordetail/doctordetail",
-			"style": {
-				"navigationBarTitleText": "陪诊师详情",
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/order/order",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/order_details/order_details",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/order_manage/order_manage",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/AI/AI",
-			"style": {
-				"navigationBarTitleText": "",
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/serviceSelection/serviceSelection",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/escortRegistration/escortRegistration",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/userInfoDetail/userInfoDetail",
-			"style": {
-				"navigationBarTitleText": "完善用户信息"
-			}
-		},
-		{
-			"path": "pages/doctorlogin/doctorlogin",
-			"style": {
-				"navigationBarTitleText": "",
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/department/department",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/myAddress/myAddress",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/object/object",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/object_serverDetail/object_serverDetail",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/patientManagement/patientManagement",
-			"style": {
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/order_detail/order_detail",
-			"style": {
-				"navigationBarTitleText": "",
-				"usingComponents": {}
-			}
-		},
-		{
-			"path": "pages/wx_pay/wx_pay",
-			"style": {
-				"navigationBarTitleText": "支付页面"
-			}
-		},
-		{
-			"path": "pages/setting/setting",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/about/about",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/withdraw/withdraw",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/study/study",
-			"style": {
-				"navigationBarTitleText": "考证题库"
-			}
-		},
-		{
-			"path": "pages/showerror/showerror",
-			"style": {
-				"navigationBarTitleText": "错题集"
-			}
-		},
-		{
-			"path": "pages/time/time",
-			"style": {
-				"navigationBarTitleText": "时间管理表"
-			}
-		},
-		{
-			"path": "pages/account/account",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/vkPayTest/vkPayTest",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/refund/refund",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/getMoney/getMoney",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
+
+
+
+		// {
+		// 	"path": "pages/doctorlogin/doctorlogin",
+		// 	"style": {
+		// 		"navigationBarTitleText": "",
+		// 		"usingComponents": {}
+		// 	}
+		// },
+
+		// {
+		// 	"path": "pages/object_serverDetail/object_serverDetail",
+		// 	"style": {
+		// 		"usingComponents": {}
+		// 	}
+		// },
+
 
 		{
 			"path": "uni_modules/uni-pay/pages/pay-desk/pay-desk",
@@ -237,48 +66,216 @@
 				"backgroundColor": "#F8F8F8",
 				"navigationBarTitleText": "ad"
 			}
-		},
-		{
-			"path": "pages/chatList/chatList",
-			"style": {
-				"navigationBarTitleText": "聊天列表"
-			}
-		},
-		{
-			"path": "pages/consult/consult",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/help/help",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
-			"path": "pages/web-view/web-view",
-			"style": {
-				"usingComponents": {},
-				"navigationStyle": "custom",
-				"navigationBarTitleText": "医院官网"
-			}
-		},
-		{
-			"path": "pages/signup/signup",
-			"style": {
-			    "usingComponents": {},
-			    "navigationBarTitleText": "报名"
-			}
-		},
-		{
-			"path" : "pages/application/application",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
 		}
 	],
+	"subPackages": [ 
+		{
+			"root": "subPackageA",
+			"pages": [{
+					"path": "pages/escortRegistration/escortRegistration",
+					"style": {
+						"usingComponents": {}
+					}
+				},
+				{
+					"path": "pages/help/help",
+					"style": {
+						"navigationBarTitleText": ""
+					}
+				},
+				{
+					"path": "pages/chatList/chatList",
+					"style": {
+						"navigationBarTitleText": "聊天列表"
+					}
+				},
+				{
+					"path": "pages/time/time",
+					"style": {
+						"navigationBarTitleText": "时间管理表"
+					}
+				},
+				{
+					"path": "pages/application/application",
+					"style": {
+						"navigationBarTitleText": ""
+					}
+				},
+				{
+					"path": "pages/withdraw/withdraw",
+					"style": {
+						"navigationBarTitleText": ""
+					}
+				},
+				{
+					"path": "pages/getMoney/getMoney",
+					"style": {
+						"navigationBarTitleText": ""
+					}
+				},
+				{
+					"path": "pages/consult/consult",
+					"style": {
+						"navigationBarTitleText": ""
+					}
+				},
+
+				{
+					"path": "pages/userInfoDetail/userInfoDetail",
+					"style": {
+						"navigationBarTitleText": "完善用户信息"
+					}
+				},
+				{
+					"path": "pages/object/object",
+					"style": {
+						"usingComponents": {}
+					}
+				}
+			]
+		},
+		{
+			"root": "subPackageB",
+			"pages": [{
+					"path": "pages/wx_pay/wx_pay",
+					"style": {
+						"navigationBarTitleText": "支付页面"
+					}
+				}, {
+					"path": "pages/patientManagement/patientManagement",
+					"style": {
+						"usingComponents": {}
+					}
+				},
+				{
+					"path": "pages/myAddress/myAddress",
+					"style": {
+						"usingComponents": {}
+					}
+				},
+				{
+					"path": "pages/order/order",
+					"style": {
+						"usingComponents": {}
+					}
+				},
+				{
+					"path": "pages/order_details/order_details",
+					"style": {
+						"usingComponents": {}
+					}
+				},
+				{
+					"path": "pages/order_manage/order_manage",
+					"style": {
+						"usingComponents": {}
+					}
+				},
+				{
+					"path": "pages/order_detail/order_detail",
+					"style": {
+						"navigationBarTitleText": "",
+						"usingComponents": {}
+					}
+				}, {
+					"path": "pages/department/department",
+					"style": {
+						"usingComponents": {}
+					}
+				}, {
+					"path": "pages/more/more",
+					"style": {
+						"navigationBarTitleText": "更多",
+						"usingComponents": {}
+					}
+				},
+				{
+					"path": "pages/refund/refund",
+					"style": {
+						"navigationBarTitleText": ""
+					}
+				}, {
+					"path": "pages/serviceSelection/serviceSelection",
+					"style": {
+						"usingComponents": {}
+					}
+				},
+
+				{
+					"path": "pages/service/service",
+					"style": {
+						"usingComponents": {},
+						"navigationBarTitleText": "我要陪诊",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
+		{
+			"root": "subPackageC",
+			"pages": [{
+					"path": "pages/AI/AI",
+					"style": {
+						"navigationBarTitleText": "",
+						"usingComponents": {}
+					}
+				}, {
+					"path": "pages/showerror/showerror",
+					"style": {
+						"navigationBarTitleText": "错题集"
+					}
+				},
+				{
+					"path": "pages/study/study",
+					"style": {
+						"navigationBarTitleText": "考证题库"
+					}
+				},
+				{
+					"path": "pages/signup/signup",
+					"style": {
+						"usingComponents": {},
+						"navigationBarTitleText": "报名"
+					}
+				},
+
+				{
+					"path": "pages/web-view/web-view",
+					"style": {
+						"usingComponents": {},
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "医院官网"
+					}
+				},
+				{
+					"path": "pages/doctorlist/doctorlist",
+					"style": {
+						"navigationBarTitleText": "陪诊师",
+						"usingComponents": {}
+					}
+				},
+				{
+					"path": "pages/doctordetail/doctordetail",
+					"style": {
+						"navigationBarTitleText": "陪诊师详情",
+						"usingComponents": {}
+					}
+				}, {
+					"path": "pages/prevent/prevent",
+					"style": {
+						"navigationBarTitleText": "疾病预防",
+						"usingComponents": {}
+					}
+				}
+			]
+		}
+	],
+	// "preloadRule": { // 预加载（可选）
+	// 	"pages/index/index": { // 进入首页后
+	// 		"network": "all"
+	// 		// "packages": ["subPackageA"] // 预下载子包A
+	// 	}
+	// },
 	"globalStyle": {
 		"backgroundColor": "#1fc7d6",
 		"backgroundTextStyle": "light",
@@ -320,7 +317,7 @@
 			}
 		]
 	},
-	"subPackages": [],
+
 	"uniIdRouter": {},
 	"easycom": {
 		"autoscan": true,

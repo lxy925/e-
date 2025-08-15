@@ -105,24 +105,24 @@
 				duration: 500,
 				endY: 0,
 				navItems: [{
-						icon: "/static/images/index/index-service.png",
+						icon: "https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/index-service.png",
 						text: "我要陪诊",
-						path: "/pages/serviceSelection/serviceSelection",
+						path: "/subPackageB/pages/serviceSelection/serviceSelection",
 					},
 					{
-						icon: "/static/images/index/index-help.png",
+						icon: "https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/index-help.png",
 						text: "急救方法",
 						path: "/pages/help/help",
 					},
 					{
-						icon: "/static/images/index/index-prevant.png",
+						icon: "https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/index-prevant.png",
 						text: "重疾防治",
-						path: "/pages/prevent/prevent",
+						path: "/subPackageC/pages/prevent/prevent",
 					},
 					{
-						icon: "/static/images/index/index-test.png",
+						icon: "https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/index-test.png",
 						text: "陪诊师考题",
-						path: "/pages/study/study",
+						path: "/subPackageC/pages/study/study",
 					},
 				],
 				hospitals: [], // 清空原有的模拟数据
@@ -226,7 +226,7 @@
 					}
 
 					uni.navigateTo({
-						url: `/pages/web-view/web-view?url=${encodeURIComponent(url)}`,
+						url: `/subPackageC/pages/web-view/web-view?url=${encodeURIComponent(url)}`,
 						fail: (err) => {
 							console.error('跳转失败:', err);
 							uni.showToast({
@@ -251,14 +251,14 @@
 
 			navigateToMore() {
 				uni.navigateTo({
-					url: '/pages/more/more?from=index'
+					url: '/subPackageB/pages/more/more'
 				})
 			},
 			// 跳转到AI问答页面
 			navigateToAI() {
 				if (!this.isDragging) { // 只有在非拖拽状态才触发跳转
 					uni.navigateTo({
-						url: '/pages/AI/AI'
+						url: '/subPackageC/pages/AI/AI'
 					});
 				}
 			},

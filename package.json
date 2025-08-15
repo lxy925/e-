@@ -4,23 +4,25 @@
 	"description": "",
 	"main": "main.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build:mp-weixin": "cross-env NODE_ENV=production uni build --platform mp-weixin"
 	},
 	"author": "",
 	"dependencies": {
-		"@dcloudio/uni-ui": "^1.5.8",
-		"@dcloudio/vue-cli-plugin-uni": "^2.0.2-4040520250103001",
-		"axios": "^1.8.3",
-		"crypto-browserify": "^3.12.1",
+		"@dcloudio/uni-ui": "^1.5.10",
+		"@dcloudio/vite-plugin-uni": "^3.0.0-alpha-3000020210521001",
 		"jsonwebtoken": "^8.5.1",
-		"koa-jwt": "^4.0.4",
 		"pinia": "^3.0.1",
-		"qrcode": "^1.5.4",
 		"uview-ui": "^2.0.38",
 		"vite": "^2.9.18",
-		"vue-loader": "^17.4.2",
-		"vuex": "^4.1.0",
-		"wx-server-sdk": "^3.0.1"
+		"vue": "^3.5.18",
+		"vuex": "^4.1.0"
 	},
-	"license": "ISC"
+	"license": "ISC",
+	"devDependencies": {
+		"@dcloudio/uni-cli-i18n": "^2.0.2-4070520250711001",
+		"@dcloudio/uni-cli-shared": "^2.0.2-4070520250711001",
+		"cross-env": "^10.0.0",
+		"webpack": "^5.101.2"
+	}
 }

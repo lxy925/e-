@@ -28,7 +28,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 var CustomNav = function CustomNav() {
   __webpack_require__.e(/*! require.ensure | components/custom-nav/custom-nav */ "components/custom-nav/custom-nav").then((function () {
-    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 559));
+    return resolve(__webpack_require__(/*! @/components/custom-nav/custom-nav.vue */ 561));
   }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 var EventBus = new _vue.default();
@@ -221,7 +221,7 @@ var _default = {
                     if (res.confirm) {
                       // 跳转到登录页面
                       uni.reLaunch({
-                        url: '/pages/userInfoDetail/userInfoDetail'
+                        url: '/subPackageA/pages/userInfoDetail/userInfoDetail'
                       });
                     }
                   }

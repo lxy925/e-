@@ -94,14 +94,14 @@
 					<view class="money">
 						<text class="money-num">0</text>
 						<view class="money-box">
-							<image src="../../static/images/index/money (2).png" alt=""></image>
+							<image src="https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/money (2).png" alt=""></image>
 							<text class="money-title"> 当前余额(元)</text>
 						</view>
 					</view>
 					<view class="benefit">
 						<text class="benefit-num"> 0</text>
 						<view class="benefit-box">
-							<image src="../../static/images/index/card.png" alt=""></image>
+							<image src="https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/card.png" alt=""></image>
 							<text class="benefit-title">优惠券</text>
 						</view>
 					</view>
@@ -165,7 +165,7 @@
 						</view>
 						<view class="boxed" @click="goToChat">
 							<image src="../../static/images/mine/chatIcon.png" alt=""></image>
-							<text class="boxed-title">信息</text>
+							<text class="box-title">信息</text>
 						</view>
 						<view class="boxed">
 							<image src="../../static/images/mine/application.png" alt="" @click="goToApplication"></image>
@@ -355,7 +355,7 @@
 
 			goMyAddress() {
 				uni.navigateTo({
-					url: '/pages/myAddress/myAddress'
+					url: '/subPackageB/pages/pages/myAddress/myAddress'
 				});
 			},
 
@@ -395,7 +395,7 @@
 				const role = userInfo.type === '陪诊师' ? 'doctor' : 'user';
 
 				uni.navigateTo({
-					url: `/pages/order_manage/order_manage?status=${status}&role=${role}`
+					url: `/subPackageB/pages/order_manage/order_manage?status=${status}&role=${role}`
 				});
 			},
 			// //监视页面滚动情况
@@ -407,7 +407,7 @@
 			// },
 			goToSetTime() {
 				uni.navigateTo({
-					url: `/pages/time/time`
+					url: '/subPackageA/pages/time/time'
 				});
 			},
 			selectTime(time) {
@@ -474,7 +474,7 @@
 						});
 						this.logout();
 						uni.navigateTo({
-							url: `/pages/userInfoDetail/userInfoDetail`,
+							url: `/subPackageA/userInfoDetail/userInfoDetail`,
 						});
 						// uni.redirectTo({ url: '/pages/userInfoDetail/userInfoDetail' })
 					} else {
@@ -521,20 +521,20 @@
 				} else {
 					console.log("登录");
 					uni.navigateTo({
-						url: "/pages/userInfoDetail/userInfoDetail",
+						url: "/subPackageA/pages/userInfoDetail/userInfoDetail",
 					});
 				}
 			},
 
 			goSetting() {
 				uni.navigateTo({
-					url: "/pages/help/help",
+					url: "/subPackageA/pages/help/help",
 				});
 
 			},
 			doctorRegister() {
 				uni.navigateTo({
-					url: "/pages/escortRegistration/escortRegistration",
+					url: "/subPackageA/pages/escortRegistration/escortRegistration",
 				});
 
 			},
@@ -542,14 +542,14 @@
 			toApply() {
 				const accountInfo = encodeURIComponent(JSON.stringify(this.userInfo.accountInfo));
 				uni.navigateTo({
-					url: `/pages/getMoney/getMoney?accountInfo=${accountInfo}`
+					url: `/subPackageA/pages/getMoney/getMoney?accountInfo=${accountInfo}`
 				});
 
 			},
 			//跳转到就诊人管理页面
 			goPationManager() {
 				uni.navigateTo({
-					url: "/pages/patientManagement/patientManagement"
+					url: "/subPackageB/pages/patientManagement/patientManagement"
 				});
 			},
 			toAccount() {
@@ -580,7 +580,7 @@
 				// console.log('准备存储的用户信息：', currentUserInfo);
 				// uni.setStorageSync('currentUserInfo', currentUserInfo);
 				uni.navigateTo({
-					url: '/pages/chatList/chatList',
+					url: '/subPackageA/pages/chatList/chatList',
 					fail: (err) => {
 						console.error('页面跳转失败:', err);
 						uni.showToast({
@@ -596,7 +596,7 @@
 				
 			goToApplication(){
 				uni.navigateTo({
-					url: '/pages/application/application',
+					url: '/subPackageA/pages/application/application',
 					
 				});
 			}

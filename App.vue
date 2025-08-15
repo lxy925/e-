@@ -50,7 +50,7 @@
 						if (res.confirm) {
 							// 跳转到登录页面
 							uni.reLaunch({
-								url: '/pages/userInfoDetail/userInfoDetail'
+								url: '/subPackageA/pages/userInfoDetail/userInfoDetail'
 							});
 						}
 					}

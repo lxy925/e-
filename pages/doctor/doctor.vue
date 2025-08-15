@@ -29,7 +29,7 @@
 							<text class="second-item2-text2">一起来分享</text>
 							<text class="second-item2-text3">了解更多</text>
 						</view>
-						<image src="../../static/images/index/money.png" alt=""></image>
+						<image src="../static/images/index/money.png" alt=""></image>
 					</view>
 				</view>
 
@@ -210,13 +210,13 @@
 
 				const doctorData = encodeURIComponent(JSON.stringify(doctor));
 				uni.navigateTo({
-					url: `/pages/doctordetail/doctordetail?doctor=${doctorData}`
+					url: `/subPackageC/pages/doctordetail/doctordetail?doctor=${doctorData}`
 				});
 			},
 			goToDoctorListPage() {
 
 				uni.navigateTo({
-					url: `/pages/doctorlist/doctorlist`
+					url: `/subPackageC/pages/doctorlist/doctorlist`
 				});
 			},
 			async getBanners() {
@@ -262,13 +262,13 @@
 					const record = res.result && res.result.data && res.result.data[0];
 					if (!record) {
 						// 第一次报名，跳转报名页面并传递user_id
-						uni.navigateTo({ url: `/pages/signup/signup?user_id=${userInfo.user_id}` });
+						uni.navigateTo({ url: `/subPackageC/pages/signup/signup?user_id=${userInfo.user_id}` });
 						return;
 					}
 					// 有报名记录，检查审核状态
 					if (record.auditStatus === 'approved') {
 						uni.navigateTo({
-							url: '/pages/web-view/web-view?url=' + encodeURIComponent('https://xueqisecurity.chinaedu.net/mars/outer/wxrequest.do?serviceCode=alioth&clientType=2&customerCode=gdykdx&tenantCode=xq10679')
+							url: '/subPackageC/pages/web-view/web-view?url=' + encodeURIComponent('http://GDPU.zhhn100.com')
 						});
 					} else {
 						uni.showModal({
@@ -288,7 +288,7 @@
 					url = 'http://' + url;
 				}
 				uni.navigateTo({
-					url: `/pages/web-view/web-view?url=${encodeURIComponent(url)}`
+					url: `/subPackageC/pages/web-view/web-view?url=${encodeURIComponent(url)}`
 				});
 			}
 			

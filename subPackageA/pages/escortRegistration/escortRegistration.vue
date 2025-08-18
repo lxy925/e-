@@ -187,7 +187,7 @@
 	import {
 		ref
 	} from 'vue';
-	import citys from '../../../utils/citys.js'; // 引入外部文件
+	import citys from '../../../Utils/citys.js'; // 引入外部文件
 
 	export default {
 		data() {
@@ -245,7 +245,7 @@
 		},
 		// 在页面的生命周期中监听滚动
 		onPageScroll(e) {
-			
+
 			this.scrollTop = e.scrollTop;
 		},
 		onLoad(options) {

@@ -11,9 +11,14 @@
 					<view class="address-item" v-for="(address, index) in addresses" :key="index"
 						:class="{ 'default-address': address.isDefault }">
 
-						<!-- 编辑按钮 -->
-						<image src="../../static/images/address/edit.png" class="edit-btn"
-							@click.stop="editAddress(index)" />
+						<view class="icon-container">
+							<!-- 编辑按钮 -->
+							<uni-icons class="icon-btn edit-btn" type="gear" size="28" color="#666"
+								@click.stop="editAddress(index)" />
+							<!-- 删除按钮 -->
+							<uni-icons class="icon-btn delete-btn" type="trash" size="24" color="#FF4C4C"
+								@click.stop="confirmDeleteAddress(index, address._id)" />
+						</view>
 
 						<!-- 地址内容 -->
 						<view class="address-content" @click="selectAddress(address)">
@@ -37,7 +42,7 @@
 			</view>
 
 			<!-- 弹出层 -->
-			
+
 			<view class="modal" v-if="showModal" :class="{ show: showModal }" @click="hideAddAddressModal">
 				<view class="modal-content" @click.stop>
 					<scroll-view class="scroll-content" scroll-y>
@@ -106,7 +111,7 @@
 	export default {
 		data() {
 			return {
-				title:"我的地址",
+				title: "我的地址",
 				scrollTop: 0,
 				navHeight: 0, // 存储导航栏高度
 				currentEditIndex: null,
@@ -233,6 +238,65 @@
 						fail: (err) => reject(new Error('登录失败: ' + err.message))
 					});
 				});
+			},
+
+			// 确认删除地址（显示提示框）
+			confirmDeleteAddress(index, addressId) {
+				uni.showModal({
+					title: '确认删除',
+					content: '确定要删除这个地址吗？',
+					confirmText: '删除',
+					cancelText: '取消',
+					success: async (res) => {
+						if (res.confirm) {
+							// 用户确认删除，执行删除逻辑
+							await this.deleteAddress(index, addressId);
+						}
+					}
+				});
+			},
+
+			// 执行删除地址的逻辑
+			async deleteAddress(index, addressId) {
+				try {
+					uni.showLoading({
+						title: '删除中...'
+					});
+
+					// 获取登录凭证
+					const {
+						code
+					} = await this.getLoginCode();
+					if (!code) throw new Error('获取登录凭证失败');
+
+					// 调用云函数删除地址
+					const res = await uniCloud.callFunction({
+						name: 'deleteUserAddress', // 假设云函数名为 deleteUserAddress
+						data: {
+							addressId: addressId, // 要删除的地址ID
+							js_code: code
+						}
+					});
+
+					if (res.result.code === 200) {
+						// 删除成功，更新本地列表
+						this.addresses.splice(index, 1); // 从数组中移除该地址
+						uni.showToast({
+							title: '删除成功',
+							icon: 'success'
+						});
+					} else {
+						throw new Error(res.result.message || '删除地址失败');
+					}
+				} catch (error) {
+					console.error('删除地址失败:', error);
+					uni.showToast({
+						title: error.message || '删除失败，请稍后重试',
+						icon: 'none'
+					});
+				} finally {
+					uni.hideLoading();
+				}
 			},
 
 			// 编辑地址
@@ -707,15 +771,28 @@
 		font-size: 24rpx;
 	}
 
-	.edit-btn {
+
+	/* 图标容器：固定在右侧，水平排列 */
+	.icon-container {
 		position: absolute;
 		right: 30rpx;
-		top: 80rpx;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		flex-direction: column;
+		gap: 25rpx;
+		z-index: 10;
+	}
+
+	/* 统一图标按钮样式 */
+	.icon-btn {
 		width: 50rpx;
 		height: 50rpx;
-		padding: 15rpx;
-		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
+
 
 	.address-district,
 	.address-detail,

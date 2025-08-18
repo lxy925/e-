@@ -3,5 +3,18 @@
   "projectname": "e-",
   "setting": {
     "compileHotReLoad": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "subPackageB/pages/myAddress/myAddress",
+          "pathName": "subPackageB/pages/myAddress/myAddress",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
   }
 }

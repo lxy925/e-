@@ -74,7 +74,7 @@
 					</view>
 
 					<view class="card-footer">
-						<button class="action-btn btn-detail" v-if="application.auditStatus === 'unreviewed'"
+						<button class="action-btn btn-detail" v-if="application.auditStatus === 'unreviewed'&&relatedOrders[application.order_no].status!='refunded'"
 							@click="applyRefund(application)">
 							撤销申请
 						</button>
@@ -84,7 +84,7 @@
 							订单详情
 						</button> -->
 
-						<button class="action-btn btn-reapply" v-if="application.auditStatus === 'rejected'"
+						<button class="action-btn btn-reapply" v-if="application.auditStatus === 'rejected'||relatedOrders[application.order_no].status==='refunded'"
 							@click="reapply(application)">
 							重新申请
 						</button>
@@ -257,11 +257,7 @@
 				});
 			},
 
-			viewOrderDetail(orderNo) {
-				uni.navigateTo({
-					url: `/pages/order/detail?order_no=${orderNo}`
-				});
-			},
+
 			// 认证考试页面（我的申请页）的methods中
 			applyRefund(application) {
 				// 关键：根据当前申请的order_no，从relatedOrders中获取对应的单个订单对象

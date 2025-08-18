@@ -15,22 +15,33 @@
 					</swiper>
 				</view>
 				<view class="second">
-					<view class="second-item1" @click="handleSignUp">
-						<view class="second-item1-text">
-							<text class="second-item1-text1" >报名</text>
-							<text class="second-item1-text2">精选推荐</text>
-							<text class="second-item1-text3">了解更多</text>
-						</view>
-						<image src="../../static/images/index/listen.png" alt=""></image>
-					</view>
-					<view class="second-item2" @click="goToStudyPage">
-						<view class="second-item2-text">
-							<text class="second-item2-text1">学习</text>
-							<text class="second-item2-text2">一起来分享</text>
-							<text class="second-item2-text3">了解更多</text>
-						</view>
-						<image src="../static/images/index/money.png" alt=""></image>
-					</view>
+				  <!-- 报名入口 -->
+				  <view class="action-card action-card-signup" @click="handleSignUp">
+				    <view class="action-content">
+				      <view class="action-icon">
+				        <uni-icons type="plus" size="28" color="#fff"></uni-icons>
+				      </view>
+				      <view class="action-text">
+				        <text class="action-title">立即报名</text>
+				        <text class="action-desc">成为专业陪诊师</text>
+				      </view>
+				    </view>
+				   <!-- <image class="action-bg" src="../../static/images/index/listen.png" mode="aspectFill"></image> -->
+				  </view>
+				  
+				  <!-- 学习入口 -->
+				  <view class="action-card action-card-study" @click="goToStudyPage">
+				    <view class="action-content">
+				      <view class="action-icon">
+				        <uni-icons type="star" size="28" color="#fff"></uni-icons>
+				      </view>
+				      <view class="action-text">
+				        <text class="action-title">专业培训</text>
+				        <text class="action-desc">提升陪诊技能</text>
+				      </view>
+				    </view>
+				   <!-- <image class="action-bg" src="../../static/images/index/money.png" mode="aspectFill"></image> -->
+				  </view>
 				</view>
 
 			
@@ -53,9 +64,11 @@
 							<view class="doctor-location">{{doctor.address.cityName}}&nbsp;{{doctor.address.areaName}}
 							</view>
 							<view class="doctor-department">
-								<img class="value-icon" src="../../static/images/index/value.png" alt="" />
+							<uni-icons type="star-filled" size="30"></uni-icons>
+							
 								{{ doctor.moreInfo.rating }} &nbsp; | &nbsp;
-								<img class="order-icon" src="../../static/images/doctor/order.png" alt="" />
+							<uni-icons type="wallet-filled" size="30"></uni-icons>
+
 								{{ doctor.moreInfo.order }}
 							</view>
 							<!--  <view class="specialty-container">
@@ -70,9 +83,9 @@
 									:class="['doctor-certification', doctor.is_certified  ? 'certified' : 'uncertified']">
 									{{ doctor.is_certified ? '已认证' : '未认证' }}
 								</text>
-								<text :class="['doctor-availability', doctor.is_bookable? 'available' : 'unavailable']">
+							<!-- 	<text :class="['doctor-availability', doctor.is_bookable? 'available' : 'unavailable']">
 									{{ doctor.is_bookable ? '可预约' : '不可预约' }}
-								</text>
+								</text> -->
 							</view>
 						</view>
 						<view class="doctor-need">
@@ -246,41 +259,68 @@
 				}
 			},
 			async handleSignUp() {
-				try {
-					const userInfo = uni.getStorageSync('userInfo');
-					if (!userInfo || !userInfo.user_id) {
-						uni.showToast({ title: '请先登录', icon: 'none' });
-						return;
-					}
-					// 查询数据库是否有报名记录
-					const res = await uniCloud.database().collection('signup')
-						.where({ userId: userInfo.user_id })
-						.orderBy('createdAt', 'desc')
-						.limit(1)
-						.get();
-						console.log("res",res)
-					const record = res.result && res.result.data && res.result.data[0];
-					if (!record) {
-						// 第一次报名，跳转报名页面并传递user_id
-						uni.navigateTo({ url: `/subPackageC/pages/signup/signup?user_id=${userInfo.user_id}` });
-						return;
-					}
-					// 有报名记录，检查审核状态
-					if (record.auditStatus === 'approved') {
-						uni.navigateTo({
-							url: '/subPackageC/pages/web-view/web-view?url=' + encodeURIComponent('http://GDPU.zhhn100.com')
-						});
-					} else {
-						uni.showModal({
-							title: '提示',
-							content: '已成功报名请等待审核',
-							showCancel: false
-						});
-					}
-				} catch (e) {
-					console.error('报名跳转异常:', e);
-					uni.showToast({ title: '操作失败:' + (e.message || e), icon: 'none' });
-				}
+			  try {
+			    const userInfo = uni.getStorageSync('userInfo');
+			    if (!userInfo?.user_id) {
+			      uni.showToast({ title: '请先登录', icon: 'none' });
+			      return;
+			    }
+			
+			    // 1. 查最近一次报名记录
+			    const signRes = await uniCloud.database()
+			      .collection('signup')
+			      .where({ userId: userInfo.user_id })
+			      .orderBy('createdAt', 'desc')
+			      .limit(1)
+			      .get();
+			
+			    const signRecord = signRes.result?.data?.[0];
+			    if (!signRecord) {
+			      // 没有任何报名记录 -> 去报名
+			      uni.navigateTo({
+			        url: `/subPackageC/pages/signup/signup?user_id=${userInfo.user_id}`
+			      });
+			      return;
+			    }
+			
+			    // 2. 有报名记录，再查对应订单
+			    const orderRes = await uniCloud.database()
+			      .collection('orders')
+			      .where({ order_no: signRecord.order_no })
+			      .limit(1)
+			      .get();
+			
+			    const orderRecord = orderRes.result?.data?.[0];
+			
+			    // 3. 判断是否能重新报名
+			    const canReSign =
+			      !orderRecord ||
+			      ['refunded', 'cancelled'].includes(orderRecord.status);
+			
+			    if (canReSign) {
+			      uni.navigateTo({
+			        url: `/subPackageC/pages/signup/signup?user_id=${userInfo.user_id}`
+			      });
+			      return;
+			    }
+			
+			    // 4. 已报名且未退款/取消
+			    if (signRecord.auditStatus === 'approved' && orderRecord.status === 'paid') {
+			      uni.showModal({
+			        title: '提示',
+			        content: '您的报名已审核通过',
+			        showCancel: false
+			      });
+			    } else {
+			      uni.showModal({
+			        title: '提示',
+			        content: '已成功报名，请等待审核',
+			        showCancel: false
+			      });
+			    }
+			  } catch (e) {
+			    uni.showToast({ title: '操作失败：' + (e.message || e), icon: 'none' });
+			  }
 			},
 			goToStudyPage() {
 				let url = 'https://xueqisecurity.chinaedu.net/mars/outer/wxrequest.do?serviceCode=alioth&clientType=2&customerCode=gdykdx&tenantCode=xq10679';
@@ -359,103 +399,77 @@
 	}
 
 	.second {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin-top: 20px;
-		gap: 50rpx;
-	}
-
-	.second-item1 {
-		width: 350rpx;
-		height: 180rpx;
-		background-color: #fff0b9;
-		border-radius: 20rpx;
-		overflow: hidden;
-	}
-
-	.second-item2 {
-		width: 350rpx;
-		height: 180rpx;
-		background-color: #bae7ff;
-		border-radius: 20rpx;
-		overflow: hidden;
-	}
-
-	.second-item1-text {
-		display: flex;
-		flex-direction: column;
-		margin-left: 10px;
-	}
-
-	.second-item1 image {
-		width: 150rpx;
-		height: 150rpx;
-		margin-left: 80px;
-		margin-top: -80px;
-	}
-
-	.second-item1-text1 {
-		font-size: 40rpx;
-		font-weight: bold;
-		margin-top: 20px;
-		color: #ac6800;
-	}
-
-	.second-item1-text2 {
-		font-size: 20rpx;
-		color: #fbae13;
-		margin-top: 2px;
-	}
-
-	.second-item1-text3 {
-		font-size: 18rpx;
-		color: #d38806;
-		margin-top: 5px;
-		background-color: #ffffff;
-		border-radius: 20px;
-		padding: 5px;
-		width: 40px;
-		text-align: center;
-	}
-
-	.second-item2-text {
-		display: flex;
-		flex-direction: column;
-		margin-left: 10px;
-	}
-
-	.second-item2 image {
-		width: 150rpx;
-		height: 150rpx;
-		margin-left: 90px;
-		margin-top: -80px;
-	}
-
-	.second-item2-text1 {
-		font-size: 40rpx;
-		font-weight: bold;
-		margin-top: 20px;
-		color: #0050b2;
-	}
-
-	.second-item2-text2 {
-		font-size: 20rpx;
-		color: #178fff;
-		margin-top: 2px;
-	}
-
-	.second-item2-text3 {
-		font-size: 18rpx;
-		color: #0a6dd9;
-		margin-top: 5px;
-		background-color: #ffffff;
-		border-radius: 20px;
-		padding: 5px;
-		width: 40px;
-		text-align: center;
-	}
-
+	    display: flex;
+	    justify-content: space-between;
+	    margin: 30rpx 0;
+	    gap: 20rpx;
+	  }
+	  
+	  .action-card {
+	    flex: 1;
+	    height: 200rpx;
+	    border-radius: 16rpx;
+	    overflow: hidden;
+	    position: relative;
+	    display: flex;
+	    align-items: center;
+	    padding: 0 30rpx;
+	    box-shadow: 0 6rpx 12rpx rgba(0,0,0,0.08);
+	  }
+	  
+	  .action-card-signup {
+	  background: linear-gradient(135deg, #fff0b9 0%, #ffe082 100%);
+	  }
+	  
+	  .action-card-study {
+	  background: linear-gradient(135deg, #bae7ff 0%, #87cefa 100%);
+	  }
+	  
+	  .action-content {
+	    z-index: 2;
+	    display: flex;
+	    align-items: center;
+	  }
+	  
+	  .action-icon {
+	    width: 80rpx;
+	    height: 80rpx;
+	    border-radius: 50%;
+	    background-color: rgba(255,255,255,0.2);
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    margin-right: 20rpx;
+	  }
+	  
+	  .action-text {
+	    display: flex;
+	    flex-direction: column;
+	  }
+	  
+	  .action-title {
+	    font-size: 36rpx;
+	    font-weight: bold;
+		/* color: #666; */
+	  /*  color: #fff; */
+	    margin-bottom: 8rpx;
+	  }
+	  
+	  .action-desc {
+	    font-size: 24rpx;
+	/* 	color: #666; */
+	   /* color: rgba(255,255,255,0.8); */
+	  }
+	  
+	  .action-bg {
+	    position: absolute;
+	    right: 0;
+	    bottom: 0;
+	    width: 180rpx;
+	    height: 180rpx;
+	    opacity: 0.8;
+	    z-index: 1;
+	  }
 	.third {
 		margin-top: 20px;
 		display: flex;

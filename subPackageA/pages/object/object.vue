@@ -8,7 +8,7 @@
 					<text class="label">服务对象照片</text>
 					<view class="photo-input">
 						<button class="upload-photo-button" @tap="uploadPhoto">
-							<image :src="photoUrl||'../../static/images/mine/avatar.png'" class="default-upload-photo"
+							<image :src="photoUrl||'../../../static/images/mine/avatar.png'" class="default-upload-photo"
 								mode="aspectFill" @click="previewImage(photoUrl)" />
 						</button>
 					</view>
@@ -78,6 +78,7 @@
 		name: 'OrderComponent',
 		data() {
 			return {
+				server:'',
 				name: '', // 服务对象姓名
 				isSubmitting: false,
 				selectedGender: '',
@@ -96,6 +97,27 @@
 				isLoggedIn: uni.getStorageSync('isLoggedIn') || false,
 				photoUrl: '' // 用于存储可访问的服务对象照片的 URL
 			};
+		},
+		onLoad(options) {
+			if (!this.isLoggedIn) {
+				this.login();
+			}
+		  // 如果是编辑模式
+		 
+		    const patient = JSON.parse(decodeURIComponent(options.patient || '{}'));
+			console.log("patient",patient)
+		    // 直接填充表单
+			this.server_id=patient.server_id||'';
+		    this.name = patient.name || '';
+		    this.selectedGender = patient.gender || '';
+		    this.age = patient.age?.toString() || '';
+		    this.phone = patient.phone || '';
+		    this.relationship = patient.relationship || '';
+		    this.medicalInfo = patient.medicalInfo || '';
+		    this.address = patient.address || '';
+		    this.photoUrl = patient.photo || '';
+		    this.uploadedImages = patient.uploadedImages || [];
+		  
 		},
 		methods: {
 			showGenderPicker() {
@@ -271,7 +293,7 @@
 			submitDataWithImages() {
 				const randomId = Math.random().toString(36).substr(2, 9);
 				const dataToSubmit = {
-					server_id: randomId,
+					server_id: this.server_id?this.server_id:randomId,
 					name: this.name.trim(),
 					gender: this.selectedGender,
 					age: parseInt(this.age),
@@ -495,11 +517,7 @@
 				});
 			}
 		},
-		onLoad() {
-			if (!this.isLoggedIn) {
-				this.login();
-			}
-		}
+	
 	};
 </script>
 

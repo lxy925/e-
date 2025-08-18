@@ -1,7 +1,7 @@
 {
   "name": "getParents",
   "dependencies": {
-	  "jwt": "file:../common/jwt.js"
+	  
   },
   "extensions": {
     "uni-cloud-jql": {}

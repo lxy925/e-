@@ -48,11 +48,15 @@
     "quickapp" : {},
     "mp-weixin" : {
         "appid" : "wxf8afb6dce14d487a",
+		"lazyCodeLoading": "requiredComponents",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,
-            "postcss" : true,
-            "minified" : true
+            "minified" : true,
+			"minifywxss" : true, //.压缩wxss代码
+			"minifywXML" : true, //.压缩wxml代码
+			"ignoreUploadUnusedFiles" : true, //.上传时过滤无依赖文件
+			"postcss" : false //.
         },
         "usingComponents" : true,
         "requiredPrivateInfos" : [ "getLocation", "chooseLocation" ],
@@ -67,15 +71,6 @@
             "subPackages" : true,
             "treeShaking" : {
                 "enable" : true
-            },
-            "lazyCodeLoading" : "requiredComponents",
-            "setting" : {
-                "minified" : true,
-                "minifywxss" : true, //.压缩wxss代码
-                "minifywXML" : true, //.压缩wxml代码
-                "ignoreUploadUnusedFiles" : true, //.上传时过滤无依赖文件
-                "es6" : true, //.ES6语法转ES5,可先设置为false,上传或显示异常改为true
-                "postcss" : false //.
             }
         }
     },

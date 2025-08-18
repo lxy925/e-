@@ -49,7 +49,7 @@
 				<view v-if="orderStatus !== 'paying' || !isOrderExpired" class="info-section">
 					<h2 class="section-title">服务详情</h2>
 					<div class="service-card">
-						<image :src="serviceImage" mode="aspectFill" class="service-image"></image>
+						<image :src="orderInfo.service_image" mode="aspectFill" class="service-image"></image>
 						<div class="service-details">
 							<h3 class="service-name">{{orderInfo.service_name || '未获取到服务名称'}}</h3>
 							<p class="service-desc">{{orderInfo.service_desc || '暂无服务描述'}}</p>
@@ -428,6 +428,7 @@
 								service_price: serviceInfo.service_price,
 								service_time: orderInfo.service_info.service_time,
 								service_desc: serviceInfo.service_desc || '服务支付',
+								service_image:serviceInfo.image
 
 							};
 						} else {

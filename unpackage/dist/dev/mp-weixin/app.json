@@ -94,6 +94,7 @@
       }
     ]
   },
+  "lazyCodeLoading": "requiredComponents",
   "requiredPrivateInfos": [
     "getLocation",
     "chooseLocation"

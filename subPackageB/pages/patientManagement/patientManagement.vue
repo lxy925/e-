@@ -1,18 +1,7 @@
 <template>
   <view class="page-container">
-    <custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
-    
-    <scroll-view 
-      scroll-y 
-      class="main-scroll" 
-      @scroll="handleScroll" 
-      :style="{ 
-        paddingTop: navHeight + 'px',
-        height: 'calc(100vh - ' + navHeight + 'px)'
-      }" 
-      :scroll-top="scrollTop" 
-      :show-scrollbar="false"
-    >
+   <custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+     <scroll-view class="page-container" :style="{ paddingTop: navHeight + 'px' }">
  
       
       <!-- 主要内容区域 -->
@@ -37,7 +26,7 @@
               />
               <image 
                 v-else
-                src="../../static/images/default-avatar.png" 
+                src="../../../static/images/default-avatar.png" 
                 mode="aspectFill" 
                 class="patient-avatar" 
               />
@@ -96,7 +85,7 @@
         
         <!-- 空状态 -->
         <view v-else class="empty-state">
-          <image src="../../static/images/empty-patient.png" class="empty-image" />
+          <image src="../../../static/images/empty-patient.png" class="empty-image" />
           <text class="empty-title">暂无就诊人信息</text>
           <text class="empty-desc">点击下方按钮添加您的就诊人</text>
         </view>
@@ -127,6 +116,10 @@ export default {
       activeIndex: -1,
       scrollHeight: 0
     };
+  },
+  onPageScroll(e) {
+  	// console.log('页面滚动:', e.scrollTop);
+  	this.scrollTop = e.scrollTop;
   },
   onShow() {
     this.getOpenId();
@@ -203,7 +196,7 @@ export default {
     
     editPatient(patient) {
       uni.navigateTo({
-        url: `/pages/object/object?editMode=true&patientId=${patient._id}`
+        url: `/subPackageA/pages/object/object?editMode=true&patient=${encodeURIComponent(JSON.stringify(patient))}`
       });
     },
     
@@ -233,9 +226,9 @@ export default {
 
 <style lang="scss">
 .page-container {
-  height: 100vh;
+  // height: 100vh;
   width: 100vw;
-  position: relative;
+  // position: relative;
 }
 
 .main-scroll {
@@ -292,7 +285,7 @@ export default {
     left: 0;
     width: 8rpx;
     height: 100%;
-    background: linear-gradient(to bottom, #5A7BFF, #8E54FF);
+    background: linear-gradient(to bottom, #1fc7d6, #5A7BFF);
   }
 }
 

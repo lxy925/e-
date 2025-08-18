@@ -102,7 +102,7 @@
 				cachedLongTerm: null,
 				cachedTemp: null,
 				lastLoadTime: null, // 新增最后加载时间
-				cache:{}
+				cache: {}
 			};
 		},
 		/**
@@ -162,8 +162,8 @@
 			async loadFromCache() {
 				try {
 					const cache = uni.getStorageSync('scheduleCache');
-					this.cache=cache;
-					console.log("从缓存加载数据",cache)
+					this.cache = cache;
+					console.log("从缓存加载数据", cache)
 					if (cache) {
 						const {
 							longTermData,
@@ -176,7 +176,7 @@
 							// console.log("longTermData",longTermData)
 							this.applyLongTermData(longTermData);
 							this.cachedLongTerm = true;
-							console.log("更新后的值",this.cellColors)
+							console.log("更新后的值", this.cellColors)
 						}
 
 						if (tempData) {
@@ -203,346 +203,346 @@
 				const oneHour = 3600000; // 1小时毫秒数
 
 				if (isMonday && (!this.lastLoadTime || (now - new Date(this.lastLoadTime)) > oneHour)) {
-						return true;
+					return true;
+				}
+
+				return false;
+			},
+			// 应用长期安排数据
+			applyLongTermData(data) {
+				data.forEach(item => {
+					const row = item.time_period - 1;
+					const col = item.day_of_week - 1;
+					if (row >= 0 && row < 2 && col >= 0 && col < 7) {
+						this.$set(this.cellColors[row], col,
+							item.status === 1 ?
+							this.optionColors['长期出诊'] :
+							this.optionColors['长期不出诊']
+						);
+					}
+				});
+			},
+
+			// 应用临时安排数据
+			applyTempData(data) {
+				data.forEach(item => {
+					const row = item.time_period - 1;
+					const col = item.day_of_week - 1;
+					if (row >= 0 && row < 2 && col >= 0 && col < 7) {
+						const option = item.status === 1 ?
+							'本周临时出诊' :
+							'本周临时不出诊';
+						this.$set(this.cellOptions[row], col, [option]);
+					}
+				});
+			},
+
+			// 加载安排数据
+			async loadSchedules() {
+				const doctorInfo = uni.getStorageSync('userInfo');
+				if (!doctorInfo || !doctorInfo.user_id) {
+					console.log('未获取到用户信息，跳过加载安排');
+					return;
+				}
+				const user_id = doctorInfo.user_id;
+
+				try {
+					// 调用云函数获取长期安排
+					const longTermRes = await uniCloud.callFunction({
+						name: 'getLongTermSchedules',
+						data: {
+							user_id
+						}
+					});
+
+					if (longTermRes.result.code === 200) {
+						console.log("longTermRes.result.data", longTermRes.result.data)
+						this.applyLongTermData(longTermRes.result.data);
+						this.cachedLongTerm = true;
 					}
 
-					return false;
-				},
-				// 应用长期安排数据
-				applyLongTermData(data) {
-						data.forEach(item => {
-							const row = item.time_period - 1;
-							const col = item.day_of_week - 1;
-							if (row >= 0 && row < 2 && col >= 0 && col < 7) {
-								this.$set(this.cellColors[row], col,
-									item.status === 1 ?
-									this.optionColors['长期出诊'] :
-									this.optionColors['长期不出诊']
-								);
-							}
-						});
-					},
+					// 调用云函数获取临时安排
+					const tempRes = await uniCloud.callFunction({
+						name: 'getTempSchedules',
+						data: {
+							user_id
+						}
+					});
 
-					// 应用临时安排数据
-					applyTempData(data) {
-						data.forEach(item => {
-							const row = item.time_period - 1;
-							const col = item.day_of_week - 1;
-							if (row >= 0 && row < 2 && col >= 0 && col < 7) {
-								const option = item.status === 1 ?
-									'本周临时出诊' :
-									'本周临时不出诊';
-								this.$set(this.cellOptions[row], col, [option]);
-							}
-						});
-					},
+					if (tempRes.result.code === 200) {
+						console.log("tempRes.result.data", tempRes.result.data)
+						this.applyTempData(tempRes.result.data);
+						this.cachedTemp = true;
+					}
 
-					// 加载安排数据
-					async loadSchedules() {
-							const doctorInfo = uni.getStorageSync('userInfo');
-							if (!doctorInfo || !doctorInfo.user_id){
-								console.log('未获取到用户信息，跳过加载安排');
-								return;
-							}
-							const user_id = doctorInfo.user_id;
+					// 更新缓存
+					this.updateCache(longTermRes.result.data, tempRes.result.data);
 
-							try {
-								// 调用云函数获取长期安排
-								const longTermRes = await uniCloud.callFunction({
-									name: 'getLongTermSchedules',
-									data: {
-										user_id
-									}
-								});
+					await this.generateScheduleLog();
+				} catch (error) {
+					console.error('加载安排失败:', error);
+				}
+			},
 
-								if (longTermRes.result.code === 200) {
-									console.log("longTermRes.result.data",longTermRes.result.data)
-									this.applyLongTermData(longTermRes.result.data);
-									this.cachedLongTerm = true;
-								}
+			// 更新缓存
+			updateCache(longTermData, tempData) {
+				console.log("更新缓存前参数检测", longTermData, tempData)
+				const cache = {
+					longTermData: longTermData,
+					tempData: tempData,
+					timestamp: new Date().getTime()
+				};
+				uni.setStorageSync('scheduleCache', cache);
+				console.log("更新缓存", uni.getStorageSync('scheduleCache'));
+				this.lastLoadTime = cache.timestamp;
+			},
 
-								// 调用云函数获取临时安排
-								const tempRes = await uniCloud.callFunction({
-									name: 'getTempSchedules',
-									data: {
-										user_id
-									}
-								});
+			// 保存长期安排
+			async saveLongTermSchedules(user_id) {
+				const longTermData = this.prepareLongTermData(user_id);
 
-								if (tempRes.result.code === 200) {
-									console.log("tempRes.result.data",tempRes.result.data)
-									this.applyTempData(tempRes.result.data);
-									this.cachedTemp = true;
-								}
+				try {
+					const res = await uniCloud.callFunction({
+						name: "saveLongTermSchedules",
+						data: {
+							user_id,
+							longTermData
+						}
+					});
 
-								// 更新缓存
-								this.updateCache(longTermRes.result.data, tempRes.result.data);
-
-								await this.generateScheduleLog();
-							} catch (error) {
-								console.error('加载安排失败:', error);
-							}
-						},
-
+					if (res.result.code === 200) {
 						// 更新缓存
-						updateCache(longTermData, tempData) {
-							console.log("更新缓存前参数检测",longTermData, tempData)
-							const cache = {
-								longTermData: longTermData,
-								tempData: tempData,
-								timestamp: new Date().getTime()
-							};
-							uni.setStorageSync('scheduleCache', cache);
-							console.log("更新缓存",uni.getStorageSync('scheduleCache'));
-							this.lastLoadTime = cache.timestamp;
-						},
+						const tempData = uni.getStorageSync('scheduleCache').tempData
+						this.updateCache(longTermData, tempData);
 
-						// 保存长期安排
-						async saveLongTermSchedules(user_id) {
-								const longTermData = this.prepareLongTermData(user_id);
+						return true;
+					}
+					return false;
+				} catch (e) {
+					console.error('保存长期安排失败:', e);
+					return false;
+				}
+			},
 
-								try {
-									const res = await uniCloud.callFunction({
-										name: "saveLongTermSchedules",
-										data: {
-											user_id,
-											longTermData
-										}
-									});
+			// 准备长期安排数据
+			prepareLongTermData(user_id) {
+				const longTermData = [];
+				const timestamp = Math.floor(Date.now() / 1000);
 
-									if (res.result.code === 200) {
-										// 更新缓存
-										const tempData=uni.getStorageSync('scheduleCache').tempData
-										this.updateCache(longTermData, tempData);
-										
-										return true;
-									}
-									return false;
-								} catch (e) {
-									console.error('保存长期安排失败:', e);
-									return false;
-								}
-							},
+				for (let row = 0; row < 2; row++) {
+					for (let col = 0; col < 7; col++) {
+						const day_of_week = col + 1;
+						const time_period = row + 1;
+						let status = 0;
 
-							// 准备长期安排数据
-							prepareLongTermData(user_id) {
-								const longTermData = [];
-								const timestamp = Math.floor(Date.now() / 1000);
+						if (this.cellColors[row][col] === this.optionColors['长期出诊']) {
+							status = 1;
+						}
 
-								for (let row = 0; row < 2; row++) {
-									for (let col = 0; col < 7; col++) {
-										const day_of_week = col + 1;
-										const time_period = row + 1;
-										let status = 0;
+						longTermData.push({
 
-										if (this.cellColors[row][col] === this.optionColors['长期出诊']) {
-											status = 1;
-										}
+							day_of_week,
+							time_period,
+							status,
+							created_at: timestamp,
+							updated_at: timestamp
+						});
+					}
+				}
+				console.log("longTermData", longTermData)
+				return longTermData;
+			},
 
-										longTermData.push({
-											
-											day_of_week,
-											time_period,
-											status,
-											created_at: timestamp,
-											updated_at: timestamp
-										});
-									}
-								}
-								console.log("longTermData",longTermData)
-								return longTermData;
-							},
+			// 保存临时安排
+			async saveTemporarySchedules(user_id) {
+				const tempData = this.prepareTempData();
 
-							// 保存临时安排
-							async saveTemporarySchedules(user_id) {
-									const tempData = this.prepareTempData();
+				try {
+					const res = await uniCloud.callFunction({
+						name: "saveTemporarySchedules",
+						data: {
+							user_id,
+							tempData
+						}
+					});
+					console.log("res", res)
+					if (res.result.code === 200) {
+						// 更新缓存
+						const longTermData = uni.getStorageSync('scheduleCache').longTermData
+						this.updateCache(longTermData, tempData);
+						return true;
+					}
+					return false;
+				} catch (e) {
+					console.error('保存临时安排失败:', e);
+					return false;
+				}
+			},
 
-									try {
-										const res = await uniCloud.callFunction({
-											name: "saveTemporarySchedules",
-											data: {
-												user_id,
-												tempData
-											}
-										});
-console.log("res",res)
-										if (res.result.code === 200) {
-											// 更新缓存
-											const longTermData=uni.getStorageSync('scheduleCache').longTermData
-											this.updateCache(longTermData, tempData);
-											return true;
-										}
-										return false;
-									} catch (e) {
-										console.error('保存临时安排失败:', e);
-										return false;
-									}
-								},
+			// 准备临时安排数据
+			prepareTempData() {
+				const currentDate = new Date();
+				const dayOfWeek = currentDate.getDay() || 7;
+				const monday = new Date(currentDate);
+				monday.setDate(currentDate.getDate() - (dayOfWeek - 1));
+				monday.setHours(0, 0, 0, 0);
+				const timestamp = Math.floor(Date.now() / 1000);
+				const weekStartTimestamp = monday.getTime();
 
-								// 准备临时安排数据
-								prepareTempData() {
-									const currentDate = new Date();
-									const dayOfWeek = currentDate.getDay() || 7;
-									const monday = new Date(currentDate);
-									monday.setDate(currentDate.getDate() - (dayOfWeek - 1));
-									monday.setHours(0, 0, 0, 0);
-									const timestamp = Math.floor(Date.now() / 1000);
-									const weekStartTimestamp = monday.getTime();
+				const tempData = [];
 
-									const tempData = [];
+				for (let row = 0; row < 2; row++) {
+					for (let col = 0; col < 7; col++) {
+						const options = this.cellOptions[row][col];
 
-									for (let row = 0; row < 2; row++) {
-										for (let col = 0; col < 7; col++) {
-											const options = this.cellOptions[row][col];
+						if (options && options.length > 0) {
+							const day_of_week = col + 1;
+							const time_period = row + 1;
+							const option = options[0];
 
-											if (options && options.length > 0) {
-												const day_of_week = col + 1;
-												const time_period = row + 1;
-												const option = options[0];
+							tempData.push({
 
-												tempData.push({
-													
-													day_of_week,
-													time_period,
-													status: option === '本周临时出诊' ? 1 : 0,
-													week_start_date: weekStartTimestamp,
-													created_at: timestamp,
-													updated_at: timestamp
-												});
-											}
-										}
-									}
-									return tempData;
-								},
-								// 点击时间块显示picker
-								showPickerOptions(rowIndex, cellIndex) {
-									this.rowIndex = rowIndex;
-									this.cellIndex = cellIndex;
-									this.showPicker = true;
-									// 重置为初始状态
-									this.multiIndex = [0, 0];
-									this.multiArray = [
-										['长期时间安排', '临时时间安排'],
-										this.subOptions['长期时间安排'] // 强制第二列为长期子选项
-									];
-								},
-								handleColumnChange(e) {
-									const column = e.detail.column;
-									const value = e.detail.value;
-									if (column === 0) {
-										const main = this.multiArray[0][value];
-										this.multiArray.splice(1, 1, this.subOptions[main]);
-										this.multiIndex = [value, 0];
-									}
-								},
-								handleMultiChange(e) {
-									const value = e.detail.value;
-									const main = this.multiArray[0][value[0]];
-									const sub = this.multiArray[1][value[1]];
+								day_of_week,
+								time_period,
+								status: option === '本周临时出诊' ? 1 : 0,
+								week_start_date: weekStartTimestamp,
+								created_at: timestamp,
+								updated_at: timestamp
+							});
+						}
+					}
+				}
+				return tempData;
+			},
+			// 点击时间块显示picker
+			showPickerOptions(rowIndex, cellIndex) {
+				this.rowIndex = rowIndex;
+				this.cellIndex = cellIndex;
+				this.showPicker = true;
+				// 重置为初始状态
+				this.multiIndex = [0, 0];
+				this.multiArray = [
+					['长期时间安排', '临时时间安排'],
+					this.subOptions['长期时间安排'] // 强制第二列为长期子选项
+				];
+			},
+			handleColumnChange(e) {
+				const column = e.detail.column;
+				const value = e.detail.value;
+				if (column === 0) {
+					const main = this.multiArray[0][value];
+					this.multiArray.splice(1, 1, this.subOptions[main]);
+					this.multiIndex = [value, 0];
+				}
+			},
+			handleMultiChange(e) {
+				const value = e.detail.value;
+				const main = this.multiArray[0][value[0]];
+				const sub = this.multiArray[1][value[1]];
 
 
-									if (main === '临时时间安排') {
-										// 临时选项：替换选项数组的第一个元素（如果存在）或添加新元素
-										if (this.cellOptions[this.rowIndex][this.cellIndex].length > 0) {
-											this.$set(this.cellOptions[this.rowIndex][this.cellIndex], 0, sub);
-										} else {
-											this.$set(this.cellOptions[this.rowIndex][this.cellIndex], this.cellOptions[
-												this.rowIndex][this.cellIndex].length, sub);
-										}
-									} else {
-										// 长期选项：设置颜色并清空文本
-										this.$set(this.cellColors[this.rowIndex], this.cellIndex, this.optionColors[sub]);
-										this.cellOptions[this.rowIndex][this.cellIndex] = [];
-									}
-									this.showPicker = false;
-								},
-								async comfirm() {
-										// 检查所有单元格，将未设置的设置为"长期不出诊"
-										for (let row = 0; row < 2; row++) {
-											for (let col = 0; col < 7; col++) {
-												if (this.cellColors[row][col] === 'transparent') {
-													this.$set(this.cellColors[row], col, this.optionColors['长期不出诊']);
-												}
-											}
-										}
+				if (main === '临时时间安排') {
+					// 临时选项：替换选项数组的第一个元素（如果存在）或添加新元素
+					if (this.cellOptions[this.rowIndex][this.cellIndex].length > 0) {
+						this.$set(this.cellOptions[this.rowIndex][this.cellIndex], 0, sub);
+					} else {
+						this.$set(this.cellOptions[this.rowIndex][this.cellIndex], this.cellOptions[
+							this.rowIndex][this.cellIndex].length, sub);
+					}
+				} else {
+					// 长期选项：设置颜色并清空文本
+					this.$set(this.cellColors[this.rowIndex], this.cellIndex, this.optionColors[sub]);
+					this.cellOptions[this.rowIndex][this.cellIndex] = [];
+				}
+				this.showPicker = false;
+			},
+			async comfirm() {
+				// 检查所有单元格，将未设置的设置为"长期不出诊"
+				for (let row = 0; row < 2; row++) {
+					for (let col = 0; col < 7; col++) {
+						if (this.cellColors[row][col] === 'transparent') {
+							this.$set(this.cellColors[row], col, this.optionColors['长期不出诊']);
+						}
+					}
+				}
 
-										// 获取当前用户ID - 修改为从本地存储获取医生信息
-										const userInfo = uni.getStorageSync('userInfo');
-										if (!userInfo || !userInfo.user_id) {
-											uni.showToast({
-												title: '请先登录',
-												icon: 'error',
-												duration: 2000
-											});
-											return;
-										}
-										const user_id = userInfo.user_id;
+				// 获取当前用户ID - 修改为从本地存储获取医生信息
+				const userInfo = uni.getStorageSync('userInfo');
+				if (!userInfo || !userInfo.user_id) {
+					uni.showToast({
+						title: '请先登录',
+						icon: 'error',
+						duration: 2000
+					});
+					return;
+				}
+				const user_id = userInfo.user_id;
 
-										try {
-											// 保存长期安排
-											await this.saveLongTermSchedules(user_id);
+				try {
+					// 保存长期安排
+					await this.saveLongTermSchedules(user_id);
 
-											// 保存临时安排
-											await this.saveTemporarySchedules(user_id);
+					// 保存临时安排
+					await this.saveTemporarySchedules(user_id);
 
-											uni.showToast({
-												title: '保存成功',
-												icon: 'success',
-												duration: 2000
-											});
+					uni.showToast({
+						title: '保存成功',
+						icon: 'success',
+						duration: 2000
+					});
 
-											setTimeout(() => {
-												uni.navigateBack();
-											}, 2000);
-										} catch (error) {
-											console.error('保存失败:', error);
-											uni.showToast({
-												title: '保存失败: ' + (error.message || error.errMsg || '未知错误'),
-												icon: 'error',
-												duration: 2000
-											});
-										}
-									},
-									generateScheduleLog() {
-										const logEntries = [];
-										const periodMap = ['上午', '下午'];
-										const weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+					setTimeout(() => {
+						uni.navigateBack();
+					}, 2000);
+				} catch (error) {
+					console.error('保存失败:', error);
+					uni.showToast({
+						title: '保存失败: ' + (error.message || error.errMsg || '未知错误'),
+						icon: 'error',
+						duration: 2000
+					});
+				}
+			},
+			generateScheduleLog() {
+				const logEntries = [];
+				const periodMap = ['上午', '下午'];
+				const weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 
-										for (let row = 0; row < 2; row++) {
-											for (let col = 0; col < 7; col++) {
-												const timePeriod = periodMap[row];
-												const weekday = weekdays[col];
+				for (let row = 0; row < 2; row++) {
+					for (let col = 0; col < 7; col++) {
+						const timePeriod = periodMap[row];
+						const weekday = weekdays[col];
 
-												// 获取临时安排
-												const tempOptions = this.cellOptions[row][col];
-												const hasTemp = tempOptions && tempOptions.length > 0;
+						// 获取临时安排
+						const tempOptions = this.cellOptions[row][col];
+						const hasTemp = tempOptions && tempOptions.length > 0;
 
-												// 获取长期安排颜色
-												const longTermColor = this.cellColors[row][col];
-												const isLongTerm = longTermColor === this.optionColors['长期出诊'];
+						// 获取长期安排颜色
+						const longTermColor = this.cellColors[row][col];
+						const isLongTerm = longTermColor === this.optionColors['长期出诊'];
 
-												// 判断逻辑
-												let status = '不出诊';
-												let reason = '';
+						// 判断逻辑
+						let status = '不出诊';
+						let reason = '';
 
-												if (hasTemp) {
-													status = tempOptions[0].includes('出诊') ? '出诊' : '不出诊';
-													reason = `临时安排：${tempOptions[0]}`;
-												} else {
-													status = isLongTerm ? '出诊' : '不出诊';
-													reason = `长期安排：${isLongTerm ? '长期出诊' : '长期不出诊'}`;
-												}
+						if (hasTemp) {
+							status = tempOptions[0].includes('出诊') ? '出诊' : '不出诊';
+							reason = `临时安排：${tempOptions[0]}`;
+						} else {
+							status = isLongTerm ? '出诊' : '不出诊';
+							reason = `长期安排：${isLongTerm ? '长期出诊' : '长期不出诊'}`;
+						}
 
-												logEntries.push(`${weekday}${timePeriod}：${status}（${reason}）`);
-											}
-										}
+						logEntries.push(`${weekday}${timePeriod}：${status}（${reason}）`);
+					}
+				}
 
-										// 输出日志（控制台和页面提示）
-										console.log('==== 出诊状态日志 ====');
-										logEntries.forEach(entry => console.log(entry));
-									}
+				// 输出日志（控制台和页面提示）
+				console.log('==== 出诊状态日志 ====');
+				logEntries.forEach(entry => console.log(entry));
 			}
-		};
+		}
+	};
 </script>
 
 <style>

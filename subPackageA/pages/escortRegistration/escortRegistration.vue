@@ -175,7 +175,7 @@
 				</view>
 
 				<!-- 注册按钮 -->
-				<button type="primary" block @click="submitForm" :disabled="!agreeTerms" class="button">
+				<button  block @click="submitForm" :disabled="!agreeTerms" class="button">
 					{{ isUpdate ? '保存修改' : '注册陪诊师' }}
 				</button>
 			</view>
@@ -268,7 +268,7 @@
 					duration: 2000,
 				});
 				uni.navigateTo({
-					url: '/pages/userInfoDetail/userInfoDetail?from=mine'
+					url: '/subPackageA/pages/userInfoDetail/userInfoDetail'
 				});
 			} else {
 				console.log("登录后的用户userInfo", userInfo)
@@ -580,7 +580,7 @@
 			goToSelectHospitals() {
 				// 传递当前选中的医院列表
 				uni.navigateTo({
-					url: '/pages/more/more?familiarHospitals=' + JSON.stringify(this.formData.familiar_hospitals),
+					url: '/subPackageB/pages/more/more?familiarHospitals=' + JSON.stringify(this.formData.familiar_hospitals),
 				});
 			},
 			toggleDepartmentSelection(department) {
@@ -747,12 +747,12 @@
 
 	.button {
 		margin-top: 60rpx;
-		width: 500rpx;
+		width: 400rpx;
 		border-radius: 20rpx;
-		background-color: #0bd6c8;
+		background-color: #1fc7d6;
 		color: white;
 		text-align: center;
-		padding: 20rpx 0;
+		padding: 10rpx 0;
 	}
 
 	.deal {
@@ -822,7 +822,7 @@
 	}
 
 	.tag.selected {
-		background-color: #0bd6c8;
+		background-color: #1fc7d6;
 		color: white;
 	}
 
@@ -834,7 +834,7 @@
 
 	.hospital-item {
 		background-color: #ddf5f4;
-		color: #0bd6c8;
+		color: #1fc7d6;
 		padding: 10rpx;
 		border-radius: 10rpx;
 		display: flex;
@@ -847,7 +847,7 @@
 		font-size: 26rpx;
 		color: #333;
 		text-align: left;
-		color: #0bd6c8;
+		color: #1fc7d6;
 		margin-left: 5rpx;
 	}
 

@@ -1,79 +1,83 @@
 <template>
-	<view class="page">
-		<custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
-		<scroll-view scroll-y class="page-container" @scroll="handleScroll" :style="{ 
-		  paddingTop: navHeight + 'px',
-		  height: 'calc(100vh - ' + navHeight + 'px)'
-		}" :scroll-top="scrollTop" :show-scrollbar="false">
-
-			<view class="container">
-				<scroll-view scroll-y="true" class="scroll-content">
-					<view class="accompany-service">
-						<image v-if="details.length > 0" :src="details[0].image" id="service-introduce"
-							mode="aspectFill" />
-						<view class="intro_1">
-							<text>认证陪诊师提供专业服务</text>
-							<text>家人般温暖</text>
-						</view>
-						<view class="intro_2">
-							<view class="text-with-icon">
-								<image src="../../../static/images/order/icon_6.png" class="icon" />
-								<view class="text-container">
-									<text class="i_1">全程陪诊</text>
-									<text class="i_2">全程陪同服务，手续代办服务</text>
-								</view>
-							</view>
-							<view class="text-container_1">
-								<text class="i_3">[半天陪诊/全天陪诊] 仅供白天医院正常工作时间使用,如在非医院正常工作时间需要陪诊服务,您需选择[夜间急诊]</text>
-							</view>
-						</view>
-					</view>
-					<view class="service-information">
-						<view class="service-info">
-							<text class="s_1">优惠价 </text>
-							<text class="s_2">¥</text>
-							<text class="s_3">{{serviceData ? serviceData.service_price : '加载失败'}}</text>
-							<!-- <text class="s_4">起/次 日常价 ¥178 起</text> -->
-							<text class="s_5">已售{{serviceData ? serviceData.sold_quantity : '加载失败'}}单</text>
-						</view>
-						<text class="s_6">{{serviceData ? serviceData.service_name : '加载失败'}}</text>
-						<view class="text-container_2">
-							<text class="s_7">平安自营</text>
-							<text class="s_8">持证上岗更安心</text>
-						</view>
-					</view>
-					<view class="options">
-						<view class="selection">
-							<text id="name">规格解释</text>
-							<text id="description">{{serviceData ? serviceData.service_details : '加载失败'}}</text>
-						</view>
-						<view class="quantity">
-							<text>数量</text>
-							<text>1</text>
-						</view>
-					</view>
-					<view class="service-content">
-						<view class="service-title">
-							<text>服</text>
-							<text class="green">务内</text>
-							<text>容</text>
-						</view>
-						<view class="service-image">
-							<image v-if="details.length > 0" :src="details[1].image" mode="aspectFill" />
-						</view>
-					</view>
-				</scroll-view>
-				<view class="fixed-buttons">
-					<button class="customer-service">
-						<image src="../../../static/images/order/icon_7.png" alt="" />
-					</button>
-					<button class="order-now" style="border: none; position: relative;" @click="goToOrder">
-						<text class="button-text">立即下单</text>
-					</button>
-				</view>
-			</view>
-		</scroll-view>
-	</view>
+  <view class="page">
+    <!-- 导航栏保持不变 -->
+    <custom-nav :title="pageTitle" :isHomePage="false" :scrollTop="scrollTop" ref="customNav" />
+    
+    <view scroll-y 
+	class="container"
+          :style="{
+            paddingTop: navHeight + 'px',
+            height: `calc(100vh - ${navHeight + bottomBarHeight}px)`
+          }">
+        <!--  <view class="container" :style="{ paddingTop: navHeight + 'px' }"> -->
+            <!-- 服务图片区域 -->
+            <view class="service-image-container">
+              <image :src="serviceData.image" mode="aspectFill" class="main-image" />
+              <view class="image-overlay"></view>
+            </view>
+            
+            <!-- 整合后的卡片容器 -->
+            <view class="spec-card">
+              <!-- 服务信息卡片 -->
+              <view class="spec-item service-info-item">
+              <!--  <text class="spec-name">服务信息</text> -->
+                <view class="service-info-content">
+                  <view class="price-section">
+                    <text class="discount-tag">限时优惠</text>
+                    <view class="price-group">
+                      <text class="price-symbol">¥</text>
+                      <text class="price">{{serviceData && serviceData.service_price ? serviceData.service_price : '--'}}</text>
+                      <text class="original-price">日常价 ¥178</text>
+                    </view>
+                    <text class="sales">已售{{serviceData && serviceData.sold_quantity ? serviceData.sold_quantity : '0'}}单</text>
+                  </view>
+                  
+                  <text class="service-title">{{serviceData && serviceData.service_name ? serviceData.service_name : '服务加载中'}}</text>
+                  
+                  <view class="badge-group">
+                    <text class="badge orange">平安自营</text>
+                    <text class="badge green">持证上岗</text>
+                    <text class="badge blue">100%好评</text>
+                  </view>
+                </view>
+              </view>
+              
+              <view class="divider"></view>
+              
+              <!-- 服务规格 -->
+              <view class="spec-item">
+                <text class="spec-name">服务规格</text>
+                <text class="spec-value">{{serviceData && serviceData.service_details ? serviceData.service_details : '标准服务'}}</text>
+              </view>
+              
+              <view class="divider"></view>
+              
+          
+              
+              <view class="divider"></view>
+              
+              <!-- 服务内容 -->
+              <view class="spec-item service-content-item">
+                <text class="spec-name">服务内容</text>
+                <view class="content-container">
+                  <image v-if="details.length > 0" :src="details[1].image" mode="widthFix" class="content-image" />
+                </view>
+              </view>
+            </view>
+         <!-- </view> -->
+        </view>
+    
+    <!-- 底部按钮 - 更现代的设计 -->
+    <view class="action-bar">
+      <button class="action-btn contact">
+        <image src="../../../static/images/order/icon_7.png" class="btn-icon" />
+        <text>客服</text>
+      </button>
+      <button class="action-btn primary" @click="goToOrder">
+        <text>立即预约</text>
+      </button>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -90,10 +94,6 @@
 				service_id: 0, //用于存储服务类型,
 				include_transport: false,
 			};
-		},
-		onLoad() {
-			const systemInfo = uni.getSystemInfoSync();
-			this.navHeight = systemInfo.statusBarHeight + 44;
 		},
 		methods: {
 			//监视页面滚动情况
@@ -141,6 +141,9 @@
 			}
 		},
 		onLoad(options) {
+			const systemInfo = uni.getSystemInfoSync();
+			this.navHeight = systemInfo.statusBarHeight + 44;
+			console.log("this.navHeight",this.navHeight)
 			console.log("options 参数:", options);
 			this.getDetailsImage();
 			// 从 options 中获取 service 参数
@@ -163,370 +166,273 @@
 		}
 	}
 </script>
-
 <style scoped>
-	/**index.wxss**/
-	/* pages/order_details/order_details.wxss */
-	page {
-		height: 100vh;
-	}
-
-	.page-container {
-		min-height: 100vh;
-		position: relative;
-
-		padding-left: 25rpx;
-		padding-right: 25rpx;
-		margin: 0;
-		width: 100%;
-		box-sizing: border-box;
-		/* 关键：让 width 包含 padding */
-		-webkit-overflow-scrolling: touch;
-		/* 平滑滚动 */
-		scrollbar-width: none;
-		/* Firefox */
-	}
-
-	.page-container ::-webkit-scrollbar {
-		display: none;
-		/* Chrome/Safari */
-		width: 0 !important;
-		/* 微信小程序可能需要 */
-		height: 0 !important;
-	}
-
-	.container {
-		margin-top: 200rpx;
-		/* 根据导航栏高度调整 */
-		padding-bottom: 120rpx;
-		/* 避免底部按钮遮挡内容 */
-	}
-
-	.fixed-nav {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 1000;
-		/* 确保导航栏在最上层 */
-	}
-
-	.scroll-content {
-		height: calc(100vh - 200rpx - 120rpx);
-		/* 动态高度：视窗高度 - 导航栏 - 底部按钮 */
-		overflow-y: auto;
-	}
-
-	.image-container {
-		position: relative;
-		/* 使子元素可以绝对定位 */
-	}
-
-	.fixed-buttons {
-		position: fixed;
-		/* 固定在页面底部 */
-		bottom: 0;
-		/* 距离底部0 */
-		left: 0;
-		/* 距离左边0 */
-		right: 0;
-		/* 距离右边0 */
-		display: flex;
-		justify-content: space-between;
-		padding: 20rpx 10rpx;
-		background-color: #FFFFFF;
-		border-top: 1px solid #ccc;
-	}
-
-	.order-now {
-		flex: 0 0 60%;
-		/* 右边按钮宽度 */
-		background-color: #00BAAD;
-		color: #ffffff;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 25rpx;
-		border: none;
-		box-shadow: 0 5rpx 5rpx 3rpx #00baae54;
-	}
-
-	#service-introduce {
-		margin: 0;
-		padding: 0;
-		width: 100%;
-		height: 450rpx;
-		object-fit: cover;
-		/* 保持比例并填充容器 */
-	}
-
-	.accompany-service {
-		position: relative;
-	}
-
-	.intro_1 {
-		position: absolute;
-		/* 绝对定位 */
-		left: 5%;
-		/* 距离左边5% */
-		top: 10%;
-		/* 距离顶部10% */
-		color: white;
-		/* 文字颜色 */
-		padding: 5rpx;
-		/* 内边距 */
-		display: flex;
-		flex-direction: column;
-		/* 垂直排列 */
-		font-size: 24rpx;
-	}
-
-	.intro_2 {
-		position: absolute;
-		/* 绝对定位 */
-		left: 5%;
-		/* 距离左边5% */
-		bottom: 25%;
-		/* 距离底部20% */
-		padding: 5rpx;
-		/* 内边距 */
-	}
-
-	.text-with-icon {
-		display: flex;
-		/* 使用flex布局 */
-		align-items: flex-start;
-		/* 垂直对齐 */
-		margin-top: 10rpx;
-		/* 调整文本与图片的间距 */
-	}
-
-	.text-container {
-		display: flex;
-		flex-direction: column;
-		/* 垂直排列文本 */
-	}
-
-	.icon {
-		width: 80rpx;
-		/* 图标宽度 */
-		height: 80rpx;
-		/* 图标高度 */
-		margin-right: 15rpx;
-		/* 图标与文本之间的间距 */
-	}
-
-	.i_1 {
-		margin-top: 5rpx;
-		font-size: 30rpx;
-		font-weight: 500;
-	}
-
-	.i_2 {
-		margin-top: 5rpx;
-		color: #C0C0C0;
-		font-size: 18rpx;
-	}
-
-	.i_3 {
-		color: #464646;
-		display: block;
-		/* 确保是块级元素 */
-		white-space: normal;
-		/* 允许换行 */
-		font-size: 13rpx;
-		/* 字体大小 */
-		line-height: 22rpx;
-		/* 行间距 */
-		margin: 0;
-		/* 确保没有外边距 */
-		margin-top: 10rpx;
-		padding: 0;
-		/* 确保没有内边距 */
-		overflow-wrap: break-word;
-		/* 允许单词换行 */
-		word-break: break-all;
-		/* 强制换行 */
-	}
-
-	.text-container_1 {
-		width: 90%;
-		/* 设置容器宽度 */
-		max-width: 340rpx;
-		/* 最大宽度 */
-	}
-
-	.service-information {
-		background-color: #ffffff;
-		margin: 0 20rpx;
-		margin-top: 30rpx;
-		padding-bottom: 25rpx;
-		border-radius: 10rpx;
-	}
-
-	.service-info {
-		color: #02A89D;
-		padding: 20rpx;
-		padding-bottom: 5rpx;
-		display: flex;
-		/* 使用 Flexbox 布局 */
-		justify-content: flex-end;
-		/* 默认情况下，内容靠右对齐 */
-		align-items: flex-end;
-		flex-wrap: wrap;
-		/* 允许换行 */
-	}
-
-	.s_1 {
-		margin-left: 10rpx;
-		font-size: 30rpx;
-	}
-
-	.s_2 {
-		margin-left: 3rpx;
-		font-weight: bold;
-		font-size: 40rpx;
-	}
-
-	.s_3 {
-		font-weight: bold;
-		font-size: 50rpx;
-	}
-
-	.s_4 {
-		font-weight: 300;
-	}
-
-	.s_5 {
-		flex: 1;
-		/* 允许文本占据剩余空间 */
-		text-align: left;
-		/* 换行时文本居左对齐 */
-		white-space: nowrap;
-		color: #909090;
-		text-align: right;
-		display: block;
-	}
-
-	.s_6 {
-		color: #000000;
-		margin-left: 27rpx;
-		font-weight: normal;
-		font-size: 40rpx;
-	}
-
-	.text-container_2 {
-		margin-top: 30rpx;
-	}
-
-	.s_7 {
-		color: #FF8D1A;
-		border: 0.5rpx solid #FF8D1A;
-		font-size: 25rpx;
-		border-radius: 10rpx;
-		margin-left: 25rpx;
-		padding: 3rpx 5rpx;
-	}
-
-	.s_8 {
-		color: #43CF7C;
-		border: 0.5rpx solid #43CF7C;
-		font-size: 25rpx;
-		border-radius: 10rpx;
-		margin-left: 20rpx;
-		padding: 3rpx 5rpx;
-	}
-
-	.options {
-		background-color: #ffffff;
-		margin: 0 20rpx;
-		margin-top: 30rpx;
-		padding-bottom: 25rpx;
-		border-radius: 10rpx;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.selection,
-	.quantity {
-		display: flex;
-		justify-content: space-between;
-		margin: 25rpx 50rpx;
-		margin-bottom: 0;
-		padding-left: 20rpx;
-		padding-right: 10rpx;
-	}
-
-	.selection {
-		padding-bottom: 30rpx;
-		border-bottom: 1px solid #EDEDED;
-	}
-
-	#name {
-		z-index: 2;
-		width: 180rpx;
-		margin-right: 30rpx;
-	}
-
-	#description {
-		z-index: 1;
-	}
-
-	.quantity {
-		padding-right: 30rpx;
-	}
-
-	.service-content {
-		background-color: #ffffff;
-		margin: 0 20rpx;
-		margin-top: 30rpx;
-		padding-bottom: 25rpx;
-		border-radius: 10rpx;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.service-title {
-		margin-top: 40rpx;
-		margin-left: 58rpx;
-		font-weight: bold;
-		font-size: 35rpx;
-	}
-
-	.green {
-		background: linear-gradient(to bottom, transparent 50%, #4bcb7e93 100%);
-		padding: 0 2rpx;
-		/* 上下内边距为0，左右内边距为2rpx */
-	}
-
-	.service-image {
-		display: flex;
-		/* 使用 flexbox 布局 */
-		justify-content: center;
-		/* 水平居中 */
-		align-items: center;
-		/* 垂直居中 */
-		margin: 30rpx auto;
-		/* 上下外边距为20rpx，左右自动 */
-	}
-
-	.customer-service {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		/* 垂直居中 */
-		flex: 0 0 14%;
-		/* 左边按钮宽度 */
-		height: 100rpx;
-		padding: 5rpx;
-		/* 添加内边距以增加按钮大小 */
-		border: 6rpx solid #8FE1DB;
-		border-radius: 25rpx;
-	}
-
-	.customer-service image {
-		width: 80%;
-		height: 80%;
-		object-fit: contain;
-	}
+  /* 基础样式 */
+  .page {
+    /* background-color: #f8f8f8; */
+  }
+  
+  .container {
+    padding-left: 25rpx;
+	padding-right: 25rpx;
+   /* padding-bottom: 160rpx; */
+  }
+  
+  /* 服务图片区域 */
+  .service-image-container {
+    position: relative;
+    border-radius: 16rpx;
+    overflow: hidden;
+    box-shadow: 0 8rpx 24rpx rgba(0, 186, 173, 0.1);
+   width: 100%; /* 必须设置宽度 */
+     height: 400rpx;
+  }
+  
+  .main-image {
+    width: 100%;
+    height: 100%;
+	display: block;
+  }
+  
+  .image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120rpx;
+    background: linear-gradient(transparent, rgba(0,0,0,0.5));
+  }
+  
+  /* 服务卡片 */
+  .service-card {
+    background: white;
+    border-radius: 16rpx;
+    padding: 30rpx;
+    margin-top: 30rpx;
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  }
+  
+  .price-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20rpx;
+  }
+  
+  .discount-tag {
+    background: #FF5A5F;
+    color: white;
+    padding: 4rpx 12rpx;
+    border-radius: 6rpx;
+    font-size: 24rpx;
+  }
+  
+  .price-group {
+    display: flex;
+    align-items: baseline;
+  }
+  
+  .price-symbol {
+    color: #FF5A5F;
+    font-size: 36rpx;
+    font-weight: bold;
+    margin-right: 4rpx;
+  }
+  
+  .price {
+    color: #FF5A5F;
+    font-size: 48rpx;
+    font-weight: bold;
+  }
+  
+  .original-price {
+    color: #999;
+    font-size: 24rpx;
+    text-decoration: line-through;
+    margin-left: 16rpx;
+  }
+  
+  .sales {
+    color: #999;
+    font-size: 24rpx;
+  }
+  
+  .service-title {
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20rpx;
+    line-height: 1.4;
+  }
+  
+  /* 徽章组 */
+  .badge-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12rpx;
+  }
+  
+  .badge {
+    padding: 6rpx 16rpx;
+    border-radius: 20rpx;
+    font-size: 24rpx;
+  }
+  
+  .orange {
+    background: #FFF2E8;
+    color: #FF7D00;
+    border: 1rpx solid #FF7D00;
+  }
+  
+  .green {
+    background: #E8F8F1;
+    color: #00BAAD;
+    border: 1rpx solid #00BAAD;
+  }
+  
+  .blue {
+    background: #E8F3FF;
+    color: #1890FF;
+    border: 1rpx solid #1890FF;
+  }
+  
+  .spec-card {
+      background: white;
+      border-radius: 16rpx;
+      padding: 0 30rpx;
+      margin-top: 30rpx;
+      box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+    }
+  
+    .spec-item {
+      padding: 30rpx 0;
+      display: flex;
+      justify-content: space-between;
+    }
+  
+    .service-info-item,
+    .service-content-item {
+      align-items: flex-start;
+    }
+  
+    .spec-name {
+      width: 160rpx;
+      color: #666;
+      font-size: 28rpx;
+      flex-shrink: 0;
+    }
+  
+    .service-info-content,
+    .content-container {
+      flex: 1;
+      margin-left: 20rpx;
+    }
+  
+    /* 服务信息区域调整 */
+    .price-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 20rpx;
+      flex-wrap: wrap;
+    }
+  
+    .price-group {
+      display: flex;
+      align-items: baseline;
+    }
+  
+    .service-title {
+      font-size: 32rpx;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20rpx;
+      line-height: 1.4;
+    }
+  
+    /* 徽章组调整 */
+    .badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12rpx;
+      margin-top: 15rpx;
+    }
+  
+    /* 服务内容图片调整 */
+    .content-image {
+      width: 100%;
+      border-radius: 8rpx;
+      margin-top: 15rpx;
+    }
+  .section-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30rpx;
+  }
+  
+  .title-decoration {
+    width: 8rpx;
+    height: 36rpx;
+    background: #1fc7d6;
+    border-radius: 4rpx;
+    margin-right: 16rpx;
+  }
+  
+  .title-text {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .content-image {
+    width: 100%;
+    border-radius: 8rpx;
+  }
+  
+  /* 底部操作栏 */
+  .action-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    padding: 20rpx;
+    background: white;
+    box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.05);
+  }
+  
+  .action-btn {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90rpx;
+    border-radius: 45rpx;
+    font-size: 32rpx;
+    transition: all 0.3s;
+  }
+  
+  .contact {
+    background: white;
+    border: 1rpx solid #1fc7d6;
+    color: #1fc7d6;
+    margin-right: 20rpx;
+  }
+  
+  .primary {
+    background: linear-gradient(90deg, #1fc7d6, #1fc7d6);
+    color: white;
+    box-shadow: 0 8rpx 16rpx rgba(0, 186, 173, 0.3);
+  }
+  
+  .primary:active {
+    opacity: 0.9;
+    transform: translateY(2rpx);
+  }
+  
+  .btn-icon {
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 10rpx;
+  }
 </style>

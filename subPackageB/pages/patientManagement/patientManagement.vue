@@ -75,7 +75,7 @@
 
 				<!-- 空状态 -->
 				<view v-else class="empty-state">
-					<image src="../../static/images/empty-patient.png" class="empty-image" />
+					<image src="../../../static/images/empty-patient.png" class="empty-image" />
 					<text class="empty-title">暂无就诊人信息</text>
 					<text class="empty-desc">点击下方按钮添加您的就诊人</text>
 				</view>
@@ -104,8 +104,12 @@
 				scrollTop: 0,
 				patients: [],
 				activeIndex: -1,
-				scrollHeight: 0
+				scrollHeight: 0,
+				scrollTimer: null,
 			};
+		},
+		onPageScroll(e) {
+			this.scrollTop = e.scrollTop;
 		},
 		onShow() {
 			this.getOpenId();
@@ -185,8 +189,9 @@
 			},
 
 			editPatient(patient) {
+				// 采用远程的“传递完整patient对象”+“子包路径”，避免后续编辑页缺数据
 				uni.navigateTo({
-					url: `/pages/object/object?editMode=true&patientId=${patient._id}`
+					url: `/subPackageA/pages/object/object?editMode=true&patient=${encodeURIComponent(JSON.stringify(patient))}`
 				});
 			},
 			deletePatient(patientId, index) {
@@ -273,11 +278,12 @@
 
 <style lang="scss">
 	.page-container {
-		height: 100vh;
+		height: 100vh; // 恢复本地的全屏高度，避免布局错乱
 		width: 100vw;
-		position: relative;
+		position: relative; // 恢复本地定位，确保悬浮按钮层级正确
 	}
 
+	// 保留本地的 main-scroll 样式（滚动容器核心样式）
 	.main-scroll {
 		width: 100%;
 	}
@@ -294,15 +300,13 @@
 		left: -50%;
 		width: 200%;
 		height: 300rpx;
-
 		border-radius: 0 0 50% 50%;
 	}
 
 	.content-container {
 		padding: 30rpx;
-
 		position: relative;
-		z-index: 2;
+		z-index: 2; // 保留本地定位，避免被其他元素遮挡
 	}
 
 	.patients-list {
@@ -311,6 +315,7 @@
 		gap: 30rpx;
 	}
 
+	// 保留本地的 patient-card 完整样式，删除远程重复定义
 	.patient-card {
 		background-color: #fff;
 		border-radius: 20rpx;
@@ -332,10 +337,11 @@
 			left: 0;
 			width: 8rpx;
 			height: 100%;
-			background: linear-gradient(to bottom, #5A7BFF, #8E54FF);
+			background: linear-gradient(to bottom, #5A7BFF, #8E54FF); // 保留本地渐变色
 		}
 	}
 
+	// 以下样式无冲突，直接保留本地完整定义
 	.card-header {
 		display: flex;
 		align-items: center;

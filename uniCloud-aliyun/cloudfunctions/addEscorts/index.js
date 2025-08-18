@@ -72,7 +72,7 @@ exports.main = async (event, context) => {
                 certificate: certificateList,
                 is_certified: false,
                 parentId: parentId,
-                state: "待审核",
+                // state: "待审核",
                 create_time: Date.now(),
                 update_time: Date.now()
             });
@@ -111,6 +111,7 @@ exports.main = async (event, context) => {
                     user_id: user_id
                 })
                 .update({
+					language:language,
                     provide_transport: provide_transport,
                     self_introduction: self_introduction,
                     familiar_hospitals: familiar_hospitals,
@@ -122,6 +123,7 @@ exports.main = async (event, context) => {
                 user_id: user_id,
                 rating: 0,
                 order: 0,
+				language:language,
                 provide_transport: provide_transport,
                 self_introduction: self_introduction,
                 familiar_hospitals: familiar_hospitals,

@@ -196,14 +196,22 @@
 					if (!orderNo) throw new Error('创建订单失败，未获取到订单号');
 					console.log('[PaymentButton] 支付订单创建成功，订单号:', orderNo);
 
-					// 3. 创建报名记录时直接传入 order_no
-					console.log('[PaymentButton] 开始创建报名记录（含订单号）...');
-					await this.createSignupRecord(orderNo); // 传入订单号
-
-					// 4. 发起支付
+					// 3. 发起支付
 					console.log('[PaymentButton] 开始发起支付...');
-					await this.initiatePayment(orderData);
+					const paymentResult = await this.initiatePayment(orderData);
 
+					// 4. 创建报名记录时直接传入 order_no
+					if (paymentResult.success) {
+						console.log('[PaymentButton] 支付成功，开始创建报名记录...');
+						await this.createSignupRecord(orderNo);
+						console.log('[PaymentButton] 报名记录创建成功');
+
+						// 支付成功后的其他操作（如跳转成功页）
+						this.showToast('支付成功，报名已完成');
+						// uni.navigateTo({ url: '/pages/success-page' });
+					} else {
+						throw new Error('支付未完成或被取消');
+					}
 				} catch (error) {
 					console.error('[PaymentButton] 支付流程错误:', error);
 					this.showToast(error.message || '支付流程出错');

@@ -19,13 +19,14 @@
 </template>
 
 <script>
+	const jwt = require("../../../Utils/jwt")
 	export default {
 		data() {
 			return {
 				services: [
 
 				],
-				navHeight:0
+				navHeight: 0
 			};
 		},
 		onPageScroll(e) {
@@ -53,12 +54,44 @@
 					console.error('调用云函数失败:', err);
 				}
 			},
-			bookService(service) {
-				const serviceData = encodeURIComponent(JSON.stringify(service));
-				// 在服务选择页面的跳转代码中
-				uni.navigateTo({
-					url: `/subPackageB/pages/order_details/order_details?service=${encodeURIComponent(JSON.stringify(service))}&from=serviceSelection`
+			async checkToken() {
+				try {
+					// 从缓存中获取token
+					const token = uni.getStorageSync('token');
+					console.log("token", token)
+					jwt.verifyToken(token)
+					console.log('Token有效');
+					return true;
+				} catch (error) {
+					console.error('检查token出错:', error);
+					this.loginAndCacheToken();
+					return false;
+				}
+			},
+			loginAndCacheToken() {
+				uni.showModal({
+					title: '提示',
+					content: '使用完整服务前请先登录',
+					showCancel: false,
+					success: (res) => {
+						if (res.confirm) {
+							// 跳转到登录页面
+							uni.reLaunch({
+								url: '/subPackageA/pages/userInfoDetail/userInfoDetail'
+							});
+						}
+					}
 				});
+			},
+			async bookService(service) {
+				const isTokenValid = await this.checkToken();
+				// 只有 Token 有效时，才执行跳转
+				if (isTokenValid) {
+					const serviceData = encodeURIComponent(JSON.stringify(service));
+					uni.navigateTo({
+						url: `/subPackageB/pages/order_details/order_details?service=${serviceData}&from=serviceSelection`
+					});
+				}
 			}
 		}
 	};
@@ -67,125 +100,127 @@
 <style>
 	/* 全局变量：支持暗黑模式 */
 	page {
-	  --bg-color: #f5f7fa;
-	  --card-bg: #ffffff;
-	  --text-main: #2c3e50;
-	  --text-sub: #7f8c8d;
-	  --primary: #007AFF;
-	  --danger: #e74c3c;
-	  --green: #1fc7d6;
-	  --radius: 20rpx;
-	  --shadow: 0 8rpx 24rpx rgba(0, 0, 0, .06);
+		--bg-color: #f5f7fa;
+		--card-bg: #ffffff;
+		--text-main: #2c3e50;
+		--text-sub: #7f8c8d;
+		--primary: #007AFF;
+		--danger: #e74c3c;
+		--green: #1fc7d6;
+		--radius: 20rpx;
+		--shadow: 0 8rpx 24rpx rgba(0, 0, 0, .06);
 	}
+
 	@media (prefers-color-scheme: dark) {
-	  page {
-	    --bg-color: #121212;
-	    --card-bg: #1e1e1e;
-	    --text-main: #f5f5f5;
-	    --text-sub: #9e9e9e;
-	    --shadow: 0 8rpx 24rpx rgba(0, 0, 0, .4);
-	  }
+		page {
+			--bg-color: #121212;
+			--card-bg: #1e1e1e;
+			--text-main: #f5f5f5;
+			--text-sub: #9e9e9e;
+			--shadow: 0 8rpx 24rpx rgba(0, 0, 0, .4);
+		}
 	}
-	
+
 	/* 页面背景 */
 	.page {
-	/*  background: var(--bg-color); */
-	/*  padding: 200rpx 20rpx 40rpx; */
-	
+		/*  background: var(--bg-color); */
+		/*  padding: 200rpx 20rpx 40rpx; */
+
 	}
-	
+
 	/* 列表容器 */
 	.service-list {
-	  /* padding: 0 20rpx; */
-	  width: 100%;
-	  box-sizing: border-box;
-	  /* 关键：让 padding 包含在宽度内 */
-	  padding-left: 25rpx;
-	  padding-right: 25rpx;
-	  height: calc(100vh - var(--nav-height));
-	  overflow-y: auto;
-	  display: flex;
-	  flex-direction: column;
-	  gap: 30rpx;
+		/* padding: 0 20rpx; */
+		width: 100%;
+		box-sizing: border-box;
+		/* 关键：让 padding 包含在宽度内 */
+		padding-left: 25rpx;
+		padding-right: 25rpx;
+		height: calc(100vh - var(--nav-height));
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 30rpx;
 	}
-	
+
 	/* 卡片 */
 	.service-card {
-	  display: flex;
-	  align-items: center;
-	  background: var(--card-bg);
-	  border-radius: var(--radius);
-	  box-shadow: var(--shadow);
-	  padding: 30rpx;
-	  position: relative;
-	  overflow: hidden;
+		display: flex;
+		align-items: center;
+		background: var(--card-bg);
+		border-radius: var(--radius);
+		box-shadow: var(--shadow);
+		padding: 30rpx;
+		position: relative;
+		overflow: hidden;
 	}
-	
+
 	/* 图片 */
 	.service-image {
-	  width: 160rpx;
-	  height: 160rpx;
-	  border-radius: var(--radius);
-	  flex-shrink: 0;
+		width: 160rpx;
+		height: 160rpx;
+		border-radius: var(--radius);
+		flex-shrink: 0;
 	}
-	
+
 	/* 标签：含接送/无接送 */
 	.provide_transport {
-	  position: absolute;
-	  top: 20rpx;
-	  left: 20rpx;
-	  background: var(--green);
-	  color: #fff;
-	  font-size: 22rpx;
-	  font-weight: 600;
-	  padding: 6rpx 14rpx;
-	  border-radius: 8rpx;
-	  letter-spacing: 1rpx;
+		position: absolute;
+		top: 20rpx;
+		left: 20rpx;
+		background: var(--green);
+		color: #fff;
+		font-size: 22rpx;
+		font-weight: 600;
+		padding: 6rpx 14rpx;
+		border-radius: 8rpx;
+		letter-spacing: 1rpx;
 	}
-	
+
 	/* 信息区 */
 	.service-info {
-	  flex: 1;
-	  margin-left: 30rpx;
-	  display: flex;
-	  flex-direction: column;
-	  justify-content: space-between;
+		flex: 1;
+		margin-left: 30rpx;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 	}
-	
+
 	.service-name {
-	  font-size: 34rpx;
-	  font-weight: 700;
-	  color: var(--text-main);
-	  line-height: 1.3;
-	  margin-bottom: 12rpx;
+		font-size: 34rpx;
+		font-weight: 700;
+		color: var(--text-main);
+		line-height: 1.3;
+		margin-bottom: 12rpx;
 	}
-	
+
 	.service-price {
-	  font-size: 28rpx;
-	  color: var(--danger);
-	  font-weight: 600;
-	  margin-bottom: 8rpx;
+		font-size: 28rpx;
+		color: var(--danger);
+		font-weight: 600;
+		margin-bottom: 8rpx;
 	}
-	
+
 	.service-sold {
-	  font-size: 24rpx;
-	  color: var(--text-sub);
+		font-size: 24rpx;
+		color: var(--text-sub);
 	}
-	
+
 	/* 预约按钮 */
 	.book-button {
-	  margin-left: auto;
-	  background: linear-gradient(135deg, #007AFF 0%, #005eef 100%);
-	  color: #fff;
-	  font-size: 28rpx;
-	  font-weight: 600;
-	  padding: 10rpx 15rpx;
-	  border-radius: var(--radius);
-	  border: none;
-	  box-shadow: 0 4rpx 12rpx rgba(0, 122, 255, .35);
-	  transition: transform .15s;
+		margin-left: auto;
+		background: linear-gradient(135deg, #007AFF 0%, #005eef 100%);
+		color: #fff;
+		font-size: 28rpx;
+		font-weight: 600;
+		padding: 10rpx 15rpx;
+		border-radius: var(--radius);
+		border: none;
+		box-shadow: 0 4rpx 12rpx rgba(0, 122, 255, .35);
+		transition: transform .15s;
 	}
+
 	.book-button:active {
-	  transform: scale(.96);
+		transform: scale(.96);
 	}
 </style>

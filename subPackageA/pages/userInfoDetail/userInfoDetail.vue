@@ -10,24 +10,24 @@
 
 		<view class="user-info-detail">
 			<view class="user-info-item">
-				<image src="../../static/images/mine/user.png" alt=""></image>
+			<!-- 	<image src="../../static/images/mine/user.png" alt=""></image> -->
 				<view class="user-info-item-title">昵称</view>
 				<input type="nickname" class="username" @blur="getName" :placeholder="nickName || '设置你的昵称'" />
 			</view>
 			<view class="user-info-item">
-				<image src="../../static/images/mine/name.png" alt=""></image>
+				<!-- <image src="../../static/images/mine/name.png" alt=""></image> -->
 
 				<view class="user-info-item-title">真实姓名</view>
 				<input type="text" class="username" placeholder="设置你的真实姓名" v-model="realName" />
 			</view>
 			<view class="user-info-item">
-				<image src="../../static/images/mine/name.png" alt=""></image>
+			<!-- 	<image src="../../static/images/mine/name.png" alt=""></image> -->
 
 				<view class="user-info-item-title">身份证号码</view>
 				<input type="text" class="username" placeholder="输入你的身份证号码" v-model="idCard" />
 			</view>
 			<view class="user-info-item">
-				<image src="../../static/images/mine/phone.png" alt=""></image>
+			<!-- 	<image src="../../static/images/mine/phone.png" alt=""></image> -->
 				<view class="user-info-item-title">手机号</view>
 				<input type="text" class="username" placeholder="请输入你的手机号" v-model="phoneNumber" />
 				<button class="get-code" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">获取</button>

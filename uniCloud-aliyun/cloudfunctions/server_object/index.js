@@ -1,7 +1,5 @@
 // server_object/index.js
 const db = uniCloud.database(); // 获取数据库实例
-const jwt = require('jwt');
-console.log(jwt)
 exports.main = async (event, context) => {
   const {
     server_id, 
@@ -27,30 +25,50 @@ exports.main = async (event, context) => {
 
   // 将数据插入到数据库
   try {
-	  // 1. 验证主token
-	  let decoded = jwt.verifyToken(userid);
-	  let openid = decoded.userId;
-	  console.log(decoded);
-	  
-	  
-	  if (!openid) {
-	    return { code: 403, msg: 'Token过期' };
-	  }
-    const result = await db.collection('server_object').add({
-      server_id,
-      name,
-      gender,
-      age,
-      phone,
-      relationship,
-      medicalInfo, // 允许为空
-      uploadedImages, // 允许为空
-      userid:openid, // 添加用户ID
-      photo, // 添加服务对象照片
-	  address,
-      createdAt: new Date(), // 添加创建时间
-    });
-
+	const res= await db.collection('server_object').where({
+		server_id:server_id
+	})
+	.get()
+	console.log("res",res)
+	let result;
+	if(res.data.length>0){
+		 result = db.collection('server_object')
+			
+		.where({
+			server_id:server_id
+		})
+		.update({
+		  
+		  name,
+		  gender,
+		  age,
+		  phone,
+		  relationship,
+		  medicalInfo, // 允许为空
+		  uploadedImages, // 允许为空
+		  userid:userid, // 添加用户ID
+		  photo, // 添加服务对象照片
+		  address,
+		  createdAt: new Date(), // 添加创建时间
+		});
+	}else{
+		result = db.collection('server_object').add({
+		  server_id,
+		  name,
+		  gender,
+		  age,
+		  phone,
+		  relationship,
+		  medicalInfo, // 允许为空
+		  uploadedImages, // 允许为空
+		  userid:userid, // 添加用户ID
+		  photo, // 添加服务对象照片
+		  address,
+		  createdAt: new Date(), // 添加创建时间
+		});
+		
+	}
+    
     return {
       code: 0,
       message: '数据提交成功',

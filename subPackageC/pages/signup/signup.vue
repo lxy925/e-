@@ -172,6 +172,7 @@
 					title: '支付成功',
 					icon: 'success'
 				});
+				uni.navigateBack()
 			},
 			handlePaymentFail(err) {
 				uni.showToast({

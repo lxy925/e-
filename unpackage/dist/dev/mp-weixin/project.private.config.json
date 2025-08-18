@@ -8,8 +8,29 @@
     "miniprogram": {
       "list": [
         {
-          "name": "subPackageB/pages/myAddress/myAddress",
-          "pathName": "subPackageB/pages/myAddress/myAddress",
+          "name": "pages/mine/mine",
+          "pathName": "pages/mine/mine",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/doctor/doctor",
+          "pathName": "pages/doctor/doctor",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/health/health",
+          "pathName": "pages/health/health",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "subPackageB/pages/serviceSelection/serviceSelection",
+          "pathName": "subPackageB/pages/serviceSelection/serviceSelection",
           "query": "",
           "launchMode": "default",
           "scene": null

@@ -24,8 +24,7 @@ exports.main = async (event, context) => {
 	let openid,session_key,decryptedPhone;
 
 	// 1. 获取openid
-	const wxUrl =
-	`https://api.weixin.qq.com/sns/jscode2session?appid=${APPID}&secret=${SECRET}&js_code=${code}`;
+	const wxUrl = `https://api.weixin.qq.com/sns/jscode2session?appid=${APPID}&secret=${SECRET}&js_code=${code}&grant_type=authorization_code`;
 	let wxRes;
 	try {
 		wxRes = await uniCloud.httpclient.request(wxUrl, {

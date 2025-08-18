@@ -7,7 +7,7 @@
 		      height: 'calc(100vh - ' + navHeight + 'px)'
 		    }" :scroll-top="scrollTop" :show-scrollbar="false">
 			<view class="search-box">
-				<image class="search-icon" src="../../static/images/icons/search.png"></image>
+				<image class="search-icon" src="../../../static/images/icons/search.png"></image>
 				<input type="text" v-model="searchKeyword" placeholder="搜索陪诊师的名字" placeholder-class="placeholder-style"
 					@input="handleSearch" />
 			</view>
@@ -27,7 +27,8 @@
 						<view class="doctor-department">
 							<img class="value-icon" src="../../../static/images/index/value.png" alt="" />
 							{{ doctor.moreInfo.rating }} &nbsp; | &nbsp;
-							<img class="order-icon" src="../../../static/images/doctor/order.png" alt="" />
+							<uni-icons type="wallet-filled" size="30"></uni-icons>
+
 							{{ doctor.moreInfo.order }}
 						</view>
 						<view class="doctor-tags">
@@ -40,7 +41,7 @@
 					<view class="doctor-need">
 						<view class="doctor-need-item">
 							<view class="doctor-need-item-text">最近咨询</view>
-							<image src="../../static/images/index/star.png" alt=""></image>
+							<image src="../../../static/images/index/star.png" alt=""></image>
 						</view>
 					</view>
 				</view>
@@ -203,7 +204,7 @@
 					uni.navigateBack({});
 				} else {
 					uni.navigateTo({
-						url: `/pages/doctordetail/doctordetail?doctor=${encodeURIComponent(JSON.stringify(doctor))}`
+						url: `/subPackageC/pages/doctordetail/doctordetail?doctor=${encodeURIComponent(JSON.stringify(doctor))}`
 					});
 				}
 			},

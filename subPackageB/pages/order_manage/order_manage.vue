@@ -8,7 +8,7 @@
 					<view class="search-container">
 						<input class="search-input" placeholder="请输入交易名称" v-model="searchQuery"
 							@confirm="handleSearch" />
-						<image src="../../static/images/order/icon_4.png" class="search-icon" />
+						<image src="../../../static/images/order/icon_4.png" class="search-icon" />
 					</view>
 				</view>
 
@@ -36,7 +36,7 @@
 							<!-- 保持您原有的服务信息展示 -->
 							<view class="service-info">
 								<view class="service-icon">
-									<image src="../../static/images/order/service-icon.png" mode="aspectFit" />
+									<image src="../../../static/images/order/service-icon.png" mode="aspectFit" />
 								</view>
 								<view class="service-details">
 									<!-- 服务名称 -->
@@ -100,7 +100,7 @@
 
 				<!-- 保持您原有的空状态 -->
 				<view v-else class="empty-state">
-					<image src="../../static/images/order/img_1.png" class="empty-image" />
+					<image src="../../../static/images/order/img_1.png" class="empty-image" />
 					<text class="empty-text">暂无订单数据~</text>
 				</view>
 			</scroll-view>
@@ -369,68 +369,63 @@
 				}).exec();
 			},
 
-			// 修改：添加角色条件
-			async getOrderList() {
-				if (this.loading) return;
-				this.loading = true;
-
-				try {
-					const db = uniCloud.database();
-					const userInfo = uni.getStorageSync('userInfo') || {};
-
-					const _ = db.command;
-					// 构建查询条件
-					let query = db.collection('orders')
-						.where({
-							[this.userRole === 'doctor' ? 'doctor_id' : 'user_id']: userInfo.user_id
-						});
-
-					// 添加搜索条件 - 只根据服务名称或患者姓名搜索
-					if (this.searchQuery) {
-						const searchRegex = new RegExp(this.searchQuery, 'i');
-
-						// 创建复合查询条件：服务名称 OR 患者姓名
-						query = query.where(
-							_.or([{
-									'service_info.service_name': searchRegex
-								},
-								{
-									'patient_name': searchRegex
-								}
-							])
-						);
-					}
-
-
-					// 保持原有状态筛选逻辑
-					if (this.currentTab > 0) {
-						const tabValue = this.tabs[this.currentTab].value;
-						if (tabValue !== 'all') {
-							query = query.where(this.roleTabs.find(t => t.value === tabValue).filter);
-						}
-					}
-
-					// 保持原有分页逻辑
-					const res = await query
-						.orderBy('create_time', 'desc')
-						.skip((this.currentPage - 1) * this.pageSize)
-						.limit(this.pageSize)
-						.get();
-					// 正确方式：
-					console.log("查询到的订单结果:", res.result);
-
-					// 保持原有结果处理
-					if (res.result.data) {
-						this.orderList = this.currentPage === 1 ?
-							res.result.data : [...this.orderList, ...res.result.data];
-						this.hasMore = res.result.data.length >= this.pageSize;
-					}
-				} catch (e) {
-					console.error('查询失败:', e);
-				} finally {
-					this.loading = false;
-				}
-			},
+		async getOrderList() {
+		  if (this.loading) return;
+		  this.loading = true;
+		
+		  try {
+		    const db = uniCloud.database();
+		    const userInfo = uni.getStorageSync('userInfo') || {};
+		    const _ = db.command;
+		
+		    /* 1. 先收集所有条件 */
+		    let cond = {
+		      [this.userRole === 'doctor' ? 'doctor_id' : 'user_id']: userInfo.user_id,
+		      order_type: _.neq(1)
+		    };
+		
+		    /* 2. 搜索条件（OR）*/
+		    if (this.searchQuery) {
+		      const searchRegex = new RegExp(this.searchQuery, 'i');
+		      cond = _.and([
+		        cond,
+		        _.or([
+		          { 'service_info.service_name': searchRegex },
+		          { patient_name: searchRegex }
+		        ])
+		      ]);
+		    }
+		
+		    /* 3. 状态筛选条件（AND）*/
+		    if (this.currentTab > 0) {
+		      const tabValue = this.tabs[this.currentTab].value;
+		      if (tabValue !== 'all') {
+		        const filter = this.roleTabs.find(t => t.value === tabValue).filter;
+		        cond = _.and([cond, filter]);
+		      }
+		    }
+		
+		    /* 4. 只调用一次 where，不会覆盖 */
+		    const res = await db.collection('orders')
+		      .where(cond)
+		      .orderBy('create_time', 'desc')
+		      .skip((this.currentPage - 1) * this.pageSize)
+		      .limit(this.pageSize)
+		      .get();
+		
+		    /* 5. 渲染结果 */
+		    if (res.result.data) {
+		      this.orderList = this.currentPage === 1
+		        ? res.result.data
+		        : [...this.orderList, ...res.result.data];
+		      this.hasMore = res.result.data.length >= this.pageSize;
+		    }
+		  } catch (e) {
+		    console.error('查询失败:', e);
+		  } finally {
+		    this.loading = false;
+		  }
+		},
 
 			// 保持原有方法不变
 			selectTab(index) {
@@ -451,7 +446,7 @@
 			},
 			viewOrderDetail(order) {
 				uni.navigateTo({
-					url: `/subPackages/order_detail/order_detail?orderId=${order._id}`
+					url: `/subPackageB/pages/order_detail/order_detail?orderId=${order._id}`
 				});
 			},
 			applyRefund(order) {
@@ -463,6 +458,7 @@
 				});
 			},
 			deleteOrder(order) {
+				  const db = uniCloud.database();
 				uni.showModal({
 					title: '确认删除',
 					content: `确定删除订单 ${order.order_no} 吗？`,
@@ -478,6 +474,7 @@
 									title: '删除成功'
 								});
 							} catch (e) {
+								console.log("e",e)
 								uni.showToast({
 									title: '删除失败',
 									icon: 'none'

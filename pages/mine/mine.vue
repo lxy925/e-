@@ -1,7 +1,7 @@
 <template>
 	<view class="page">
 		<custom-nav :title="pageTitle" :isHomePage="true" :scrollTop="scrollTop" ref="customNav" />
-			<scroll-view class="page-container" @scroll="handleScroll" :style="{ paddingTop: navHeight + 'px' }">
+		<scroll-view class="page-container" @scroll="handleScroll" :style="{ paddingTop: navHeight + 'px' }">
 
 			<view class="content">
 				<view class="header" @click="handleHeaderClick">
@@ -94,14 +94,18 @@
 					<view class="money">
 						<text class="money-num">0</text>
 						<view class="money-box">
-							<image src="https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/money (2).png" alt=""></image>
+							<image
+								src="https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/money (2).png"
+								alt=""></image>
 							<text class="money-title"> 当前余额(元)</text>
 						</view>
 					</view>
 					<view class="benefit">
 						<text class="benefit-num"> 0</text>
 						<view class="benefit-box">
-							<image src="https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/card.png" alt=""></image>
+							<image
+								src="https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/card.png"
+								alt=""></image>
 							<text class="benefit-title">优惠券</text>
 						</view>
 					</view>
@@ -168,7 +172,8 @@
 							<text class="box-title">信息</text>
 						</view>
 						<view class="boxed">
-							<image src="../../static/images/mine/application.png" alt="" @click="goToApplication"></image>
+							<image src="../../static/images/mine/application.png" alt="" @click="goToApplication">
+							</image>
 							<text class="box-title">报名申请</text>
 						</view>
 						<view class="boxed" @click="goSetting">
@@ -195,7 +200,8 @@
 							<text class="boxed-title">陪诊师入驻</text>
 						</view>
 						<view class="boxed">
-							<image src="../../static/images/mine/application.png" alt="" @click="goToApplication"></image>
+							<image src="../../static/images/mine/application.png" alt="" @click="goToApplication">
+							</image>
 							<text class="box-title">报名申请</text>
 						</view>
 						<view class="boxed" @click="goSetting">
@@ -251,9 +257,9 @@
 			};
 		},
 		onReady: function() {
-		   this.userInfo = uni.getStorageSync("userInfo");
-		   this.getUser();
-		  },
+			this.userInfo = uni.getStorageSync("userInfo");
+			this.getUser();
+		},
 		onLoad() {
 			// 获取导航栏高度
 			const systemInfo = uni.getSystemInfoSync();
@@ -272,15 +278,47 @@
 		},
 		onShow() {
 
-
 			this.userInfo = uni.getStorageSync("userInfo");
 			this.getUser();
 			if (this.userInfo != '' && this.userInfo.type == "陪诊师") {
 				this.selectTime('today');
 			}
 
+			this.getAccountData();
 		},
 		methods: {
+
+			// 1. 登录状态检查方法（直接定义在当前页面）
+			async checkToken() {
+				try {
+					const token = uni.getStorageSync('token');
+					console.log("token", token);
+					// 验证 token 有效性（若为异步方法需加 await）
+					jwt.verifyToken(token);
+					console.log('Token有效');
+					return true; // 已登录且有效
+				} catch (error) {
+					console.error('检查token出错:', error);
+					this.loginAndCacheToken(); // 未登录时触发登录提示
+					return false; // 未登录或无效
+				}
+			},
+
+			// 2. 登录提示与跳转方法（直接定义在当前页面）
+			loginAndCacheToken() {
+				uni.showModal({
+					title: '提示',
+					content: '使用完整服务前请先登录',
+					showCancel: false,
+					success: (res) => {
+						if (res.confirm) {
+							uni.reLaunch({
+								url: '/subPackageA/pages/userInfoDetail/userInfoDetail'
+							});
+						}
+					}
+				});
+			},
 
 			async getAccountData() {
 				try {
@@ -353,10 +391,14 @@
 				}
 			},
 
-			goMyAddress() {
-				uni.navigateTo({
-					url: '/subPackageB/pages/pages/myAddress/myAddress'
-				});
+			// 地址管理
+			async goMyAddress() {
+				const isLoggedIn = await this.checkToken();
+				if (isLoggedIn) {
+					uni.navigateTo({
+						url: '/subPackageB/pages/pages/myAddress/myAddress'
+					});
+				}
 			},
 
 			getTimeRange(timeRange) {
@@ -389,14 +431,16 @@
 			},
 
 
-			//点击订单管理任意按钮跳转到order_manage页面
-			goToOrderManage(status) {
-				const userInfo = uni.getStorageSync('userInfo') || {};
-				const role = userInfo.type === '陪诊师' ? 'doctor' : 'user';
-
-				uni.navigateTo({
-					url: `/subPackageB/pages/order_manage/order_manage?status=${status}&role=${role}`
-				});
+			// 3.3 订单管理
+			async goToOrderManage(status) {
+				const isLoggedIn = await this.checkToken();
+				if (isLoggedIn) {
+					const userInfo = uni.getStorageSync('userInfo') || {};
+					const role = userInfo.type === '陪诊师' ? 'doctor' : 'user';
+					uni.navigateTo({
+						url: `/subPackageB/pages/order_manage/order_manage?status=${status}&role=${role}`
+					});
+				}
 			},
 			// //监视页面滚动情况
 			// handleScroll(e) {
@@ -414,13 +458,13 @@
 				this.selectedTime = time; // 更新选择的时间选项
 				this.fetchAccountData(time);
 				if (time === "today") {
-					this.pendingAmount = (this.userInfo.withdrawStats.dayAmount/ 100).toFixed(2);
+					this.pendingAmount = (this.userInfo.withdrawStats.dayAmount / 100).toFixed(2);
 				} else if (time === "month") {
-					this.pendingAmount = (this.userInfo.withdrawStats.monthAmount/ 100).toFixed(2);
+					this.pendingAmount = (this.userInfo.withdrawStats.monthAmount / 100).toFixed(2);
 				} else if (time === "week") {
-					this.pendingAmount = (this.userInfo.withdrawStats.weekAmount/ 100).toFixed(2);
+					this.pendingAmount = (this.userInfo.withdrawStats.weekAmount / 100).toFixed(2);
 				} else if (time === "year") {
-					this.pendingAmount = (this.userInfo.withdrawStats.yearAmount/ 100).toFixed(2);
+					this.pendingAmount = (this.userInfo.withdrawStats.yearAmount / 100).toFixed(2);
 				}
 
 			},
@@ -508,7 +552,7 @@
 				};
 
 				uni.showToast({
-					title: "退出登录成功",
+					title: "登录状态已过期，请重新登录",
 					icon: "success",
 					duration: 2000,
 				});
@@ -532,11 +576,13 @@
 				});
 
 			},
-			doctorRegister() {
-				uni.navigateTo({
-					url: "/subPackageA/pages/escortRegistration/escortRegistration",
-				});
-
+			async doctorRegister() {
+				const isLoggedIn = await this.checkToken();
+				if (isLoggedIn) {
+					uni.navigateTo({
+						url: "/subPackageA/pages/escortRegistration/escortRegistration"
+					});
+				}
 			},
 
 			toApply() {
@@ -547,10 +593,13 @@
 
 			},
 			//跳转到就诊人管理页面
-			goPationManager() {
-				uni.navigateTo({
-					url: "/subPackageB/pages/patientManagement/patientManagement"
-				});
+			async goPationManager() {
+				const isLoggedIn = await this.checkToken();
+				if (isLoggedIn) {
+					uni.navigateTo({
+						url: "/subPackageB/pages/patientManagement/patientManagement"
+					});
+				}
 			},
 			toAccount() {
 				uni.navigateTo({
@@ -593,13 +642,15 @@
 			goBack() {
 				uni.navigateBack();
 			},
-				
-			goToApplication(){
-				uni.navigateTo({
-					url: '/subPackageA/pages/application/application',
-					
-				});
-			}
+
+			async goToApplication() {
+				const isLoggedIn = await this.checkToken();
+				if (isLoggedIn) {
+					uni.navigateTo({
+						url: '/subPackageA/pages/application/application'
+					});
+				}
+			},
 		},
 	};
 </script>

@@ -10,7 +10,7 @@
 			<view class="container">
 				<view class="userinfo">
 					<view class="appointment-info">
-						<image src="../../static/images/order/icon_1.png" class="icon" />
+						<image src="../../../static/images/order/icon_1.png" class="icon" />
 						<text class="title">预约信息</text>
 					</view>
 					<!-- 输入框错误状态 -->
@@ -54,7 +54,7 @@
 						<!-- <input class="input" placeholder="请选择地址" :value="selectedAddress" @click="goToAddressList" /> -->
 					</view>
 					<view class="note-info">
-						<image src="../../static/images/order/icon_2.png" class="icon" />
+						<image src="../../../static/images/order/icon_2.png" class="icon" />
 						<text class="note">若不填陪诊师，我们将为您自动匹配优秀陪诊师</text>
 					</view>
 				</view>
@@ -91,13 +91,13 @@
 						<text class="label_2">(就诊卡、病例、挂号记录等)</text>
 					</view>
 					<button class="upload-button" @tap="chooseImage">
-						<image src="../../static/images/order/icon_3.png" class="upload-icon" />
+						<image src="../../../static/images/order/icon_3.png" class="upload-icon" />
 						<text class="upload-text">添加图片</text>
 					</button>
 					<view class="photo-list">
 						<view v-for="(item, index) in photoList" :key="index" class="photo-container">
 							<image class="photo" :src="item" mode="aspectFit" />
-							<image src="../../static/images/order/icon_8.png" class="delete-button" @tap="deletePhoto"
+							<image src="../../../static/images/order/icon_8.png" class="delete-button" @tap="deletePhoto"
 								:data-index="index" />
 						</view>
 					</view>
@@ -1177,7 +1177,7 @@
 	}
 
 	.department-item.selected {
-		background-color: #18d1c2;
+		background-color: #1fc7d6;
 		color: white;
 	}
 
@@ -1347,7 +1347,7 @@
 		color: #545454;
 		margin-bottom: 10rpx;
 		padding-left: 10rpx;
-		border-left: 4px solid #18d1c2;
+		border-left: 4px solid #1fc7d6;
 	}
 
 	.requirements-list {
@@ -1374,7 +1374,7 @@
 	}
 
 	.custom-checkbox.selected {
-		background-color: #18d1c2;
+		background-color:#1fc7d6;
 		color: white;
 	}
 
@@ -1468,7 +1468,7 @@
 	}
 
 	.picker-header text:last-child {
-		color: #18d1c2;
+		color: #1fc7d6;
 	}
 
 	.picker-content {
@@ -1512,11 +1512,11 @@
 	.date-item.active,
 	.time-item.active {
 		background-color: #f0f9f8;
-		color: #18d1c2;
+		color:#1fc7d6;
 	}
 
 	.date-item.active .week {
-		color: #18d1c2;
+		color:#1fc7d6;
 	}
 
 	.selected-department {

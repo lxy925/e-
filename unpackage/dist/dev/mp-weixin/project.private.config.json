@@ -3,5 +3,18 @@
   "projectname": "e-",
   "setting": {
     "compileHotReLoad": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "subPackageA/pages/time/time",
+          "pathName": "subPackageA/pages/time/time",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
   }
 }

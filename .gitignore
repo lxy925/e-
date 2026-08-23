@@ -1,16 +1,87 @@
-# Mac
-.DS_Store
-**/.DS_Store
-
-# vim/vi
-*.swp
-
-# JavaScript
+# ==========================================
+# 1. 依赖目录 (Dependencies)
+# ==========================================
 node_modules/
-.node_modules/
-.eslintcache
-unpackage/dist/build/
-unpackage/dist/dev/
+.pnpm-store/
 
-# python
-*.pyc
+# ==========================================
+# 2. 编译产物与缓存 (Build outputs & Cache)
+# ==========================================
+# uni-app 编译产物目录（避免上传庞大的微信小程序/H5等编译生成物与源码映射）
+unpackage/dist/
+unpackage/debug/
+unpackage/release/
+unpackage/.sourcemap/
+unpackage/
+# 保留自定义原生App资源（如需保留自定义图标/启动图）
+!unpackage/res/
+
+# Vite / Webpack / 构建缓存
+dist/
+dist-ssr/
+.cache/
+.vite/
+.temp/
+.eslintcache
+.stylelintcache
+
+# ==========================================
+# 3. 编辑器与 IDE 配置 (Editor / IDE configs)
+# ==========================================
+# HBuilderX 本地配置与状态
+.hbuilderx/
+# JetBrains (WebStorm / IDEA)
+.idea/
+# VS Code (排除私有状态，保留团队共享配置)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+# Vim / 临时交换文件
+*.swp
+*.swo
+*~
+
+# ==========================================
+# 4. 小程序开发者工具私有配置
+# ==========================================
+# 微信开发者工具私有配置（包含个人调试设置、本地配置等）
+project.private.config.json
+
+# ==========================================
+# 5. uniCloud 临时运行文件与本地缓存
+# ==========================================
+uniCloud*/.unicloud/
+cloudfunctions*/.unicloud/
+
+# ==========================================
+# 6. 环境变量与私有配置 (Env & Secrets)
+# ==========================================
+.env.local
+.env.*.local
+*.local
+
+# ==========================================
+# 7. 日志文件 (Logs)
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+transform.log
+
+# ==========================================
+# 8. 操作系统生成文件 (OS files)
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+

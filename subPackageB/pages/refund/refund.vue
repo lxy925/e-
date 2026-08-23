@@ -50,12 +50,8 @@
 				<view class="form-item">
 					<text class="item-label">退款金额</text>
 					<!-- 仅已支付（status 为 paid/pay_success 等）显示真实金额 -->
-					<view class="amount" v-if="['paid'].includes(orderInfo.status)">
-						¥{{ orderInfo.total_price ||  '0.00' }}
-					</view>
-					<!-- 未支付时提示 -->
-					<view class="amount" v-else>
-						{{'0.00'}}
+					<view class="amount">
+						¥{{ formattedRefundAmount }}
 					</view>
 				</view>
 
@@ -101,7 +97,38 @@
 				description: "",
 				phoneNumber: "",
 				refundResult: null, // 保留（用于记录退款接口响应）
+				refundAmountInput: ''
 			};
+		},
+		computed: {
+			actualRefundAmount() {
+				// 1. 解构订单关键信息（避免重复写 this.orderInfo）
+				const {
+					order_type: orderType,
+					status,
+					total_price: totalPrice = 0
+				} = this.orderInfo;
+
+				// 2. 定义“不可退款”的场景（金额设为 0）
+				const nonRefundScenarios = [
+					// 认证考试订单：未支付（status 不是 paid）
+					orderType === 1 && status !== 'paid',
+					// 所有订单：已取消/已退款/未支付（可根据实际业务扩展状态）
+					['cancelled', 'refunded', 'unpaid'].includes(status)
+				];
+
+				// 3. 满足任一不可退款场景，返回 0；否则返回订单金额（全额退，后续可扩展部分退）
+				if (nonRefundScenarios.some(scenario => scenario)) {
+					return 0;
+				}
+
+				// 4. 可退款场景：返回订单金额（若需部分退款，可在此处添加逻辑，如 this.refundAmountInput）
+				return Number(totalPrice) || 0;
+			},
+			// 格式化金额（保留2位小数，避免 .1 显示为 0.1）
+			formattedRefundAmount() {
+				return this.actualRefundAmount.toFixed(2);
+			}
 		},
 		onLoad(options) {
 			if (options.orderInfo) {
@@ -122,6 +149,7 @@
 			}
 		},
 		methods: {
+
 			bindTypeChange(e) {
 				this.refundTypeIndex = e.detail.value;
 				this.refundType = this.refundTypes[this.refundTypeIndex];
@@ -218,7 +246,7 @@
 				return new Promise(resolve => {
 					uni.showModal({
 						title: '确认提交退款申请',
-						content: `您确定要申请${this.refundType}吗？退款金额为¥${this.orderInfo.total_price}`,
+						content: `您确定要申请${this.refundType}吗？实际可退金额为¥${this.formattedRefundAmount}`,
 						confirmText: '确认提交',
 						cancelText: '返回修改',
 						success: (res) => {

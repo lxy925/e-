@@ -8,7 +8,7 @@
 					<image class="headerimg" :src="
           userInfo.moreInfo.avatarUrl || '../../static/images/mine/avatar.png'
         " v-if="userInfo.type == '陪诊师'" alt="" />
-					<image class="headerimg" :src="userInfo.avatar || '../../static/images/mine/avatar.png'" v-else
+					<image class="headerimg" :src="userInfo.avatar|| '../../static/images/mine/avatar.png'" v-else
 						alt="" />
 
 					<text class="username">{{ userInfo.nickName || "登录" }}</text>
@@ -223,6 +223,7 @@
 </template>
 
 <script>
+		const jwt = require("../../utils/jwt")
 	export default {
 		data() {
 			return {
@@ -287,6 +288,38 @@
 			this.getAccountData();
 		},
 		methods: {
+
+			// 1. 登录状态检查方法（直接定义在当前页面）
+			async checkToken() {
+				try {
+					const token = uni.getStorageSync('token');
+					console.log("token", token);
+					// 验证 token 有效性（若为异步方法需加 await）
+					jwt.verifyToken(token);
+					console.log('Token有效');
+					return true; // 已登录且有效
+				} catch (error) {
+					console.error('检查token出错:', error);
+					this.loginAndCacheToken(); // 未登录时触发登录提示
+					return false; // 未登录或无效
+				}
+			},
+
+			// 2. 登录提示与跳转方法（直接定义在当前页面）
+			loginAndCacheToken() {
+				uni.showModal({
+					title: '提示',
+					content: '使用完整服务前请先登录',
+					showCancel: false,
+					success: (res) => {
+						if (res.confirm) {
+							uni.navigateTo({
+								url: '/subPackageA/pages/userInfoDetail/userInfoDetail'
+							});
+						}
+					}
+				});
+			},
 
 			async getAccountData() {
 				try {
@@ -359,10 +392,15 @@
 				}
 			},
 
-			goMyAddress() {
-				uni.navigateTo({
-					url: '/subPackageB/pages/pages/myAddress/myAddress'
-				});
+			// 地址管理
+			async goMyAddress() {
+				const isLoggedIn = await this.checkToken();
+				console.log("isLoggedIn",isLoggedIn)
+				if (isLoggedIn) {
+					uni.navigateTo({
+						url: '/subPackageB/pages/myAddress/myAddress'
+					});
+				}
 			},
 
 			getTimeRange(timeRange) {
@@ -395,14 +433,16 @@
 			},
 
 
-			//点击订单管理任意按钮跳转到order_manage页面
-			goToOrderManage(status) {
-				const userInfo = uni.getStorageSync('userInfo') || {};
-				const role = userInfo.type === '陪诊师' ? 'doctor' : 'user';
-
-				uni.navigateTo({
-					url: `/subPackageB/pages/order_manage/order_manage?status=${status}&role=${role}`
-				});
+			// 3.3 订单管理
+			async goToOrderManage(status) {
+				const isLoggedIn = await this.checkToken();
+				if (isLoggedIn) {
+					const userInfo = uni.getStorageSync('userInfo') || {};
+					const role = userInfo.type === '陪诊师' ? 'doctor' : 'user';
+					uni.navigateTo({
+						url: `/subPackageB/pages/order_manage/order_manage?status=${status}&role=${role}`
+					});
+				}
 			},
 			// //监视页面滚动情况
 			// handleScroll(e) {
@@ -515,7 +555,7 @@
 
 				uni.showToast({
 					title: "登录状态已过期，请重新登录",
-					icon: "success",
+					icon: "warning",
 					duration: 2000,
 				});
 			},
@@ -538,11 +578,13 @@
 				});
 
 			},
-			doctorRegister() {
-				uni.navigateTo({
-					url: "/subPackageA/pages/escortRegistration/escortRegistration",
-				});
-
+			async doctorRegister() {
+				const isLoggedIn = await this.checkToken();
+				if (isLoggedIn) {
+					uni.navigateTo({
+						url: "/subPackageA/pages/escortRegistration/escortRegistration"
+					});
+				}
 			},
 
 			toApply() {
@@ -553,26 +595,22 @@
 
 			},
 			//跳转到就诊人管理页面
-			goPationManager() {
-				uni.navigateTo({
-					url: "/subPackageB/pages/patientManagement/patientManagement"
-				});
+			async goPationManager() {
+				const isLoggedIn = await this.checkToken();
+				if (isLoggedIn) {
+					uni.navigateTo({
+						url: "/subPackageB/pages/patientManagement/patientManagement"
+					});
+				}
 			},
 			toAccount() {
 				uni.navigateTo({
 					url: '/pages/account/account'
 				})
 			},
-			goToChat() {
+			async goToChat() {
 
-				if (!this.userInfo._id) {
-					uni.showToast({
-						title: '请先登录',
-						icon: 'none'
-					});
-					return;
-				}
-
+				const isLoggedIn = await this.checkToken();
 				// const currentUserInfo = {
 				// 	_id: this.userInfo._id,
 				// 	user_id: this.userInfo.user_id,
@@ -585,27 +623,32 @@
 
 				// console.log('准备存储的用户信息：', currentUserInfo);
 				// uni.setStorageSync('currentUserInfo', currentUserInfo);
-				uni.navigateTo({
-					url: '/subPackageA/pages/chatList/chatList',
-					fail: (err) => {
-						console.error('页面跳转失败:', err);
-						uni.showToast({
-							title: '页面跳转失败',
-							icon: 'none'
-						});
-					}
-				});
+				if(isLoggedIn){
+					uni.navigateTo({
+						url: '/subPackageA/pages/chatList/chatList',
+						fail: (err) => {
+							console.error('页面跳转失败:', err);
+							uni.showToast({
+								title: '页面跳转失败',
+								icon: 'none'
+							});
+						}
+					});
+				}
+				
 			},
 			goBack() {
 				uni.navigateBack();
 			},
 
-			goToApplication() {
-				uni.navigateTo({
-					url: '/subPackageA/pages/application/application',
-
-				});
-			}
+			async goToApplication() {
+				const isLoggedIn = await this.checkToken();
+				if (isLoggedIn) {
+					uni.navigateTo({
+						url: '/subPackageA/pages/application/application'
+					});
+				}
+			},
 		},
 	};
 </script>

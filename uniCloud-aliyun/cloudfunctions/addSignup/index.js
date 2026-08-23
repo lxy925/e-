@@ -6,7 +6,7 @@ exports.main = async (event, context) => {
 	    return { code: 401, msg: '未登录' };
 	  } */
 	const data = {
-		userId,
+		userId:event.user_id,
 		name: event.name,
 		// idType: event.idType,
 		idNumber: event.idNumber,

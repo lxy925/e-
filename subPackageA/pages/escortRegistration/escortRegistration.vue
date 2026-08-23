@@ -245,7 +245,7 @@
 		},
 		// 在页面的生命周期中监听滚动
 		onPageScroll(e) {
-			
+
 			this.scrollTop = e.scrollTop;
 		},
 		onLoad(options) {
@@ -561,11 +561,16 @@
 						duration: 2000,
 					});
 
-					// this.userInfo.type = "陪诊师",
+					this.userInfo.type = "陪诊师",
 					uni.setStorageSync('formData', this.formData); // 更新缓存中的 formData
 					uni.setStorageSync('userInfo', this.userInfo); // 更新缓存中的 userInfo,用于转换mine页面
 					// uni.setStorageSync('type', "陪诊师"); 
 					console.log("userInfo", uni.getStorageSync('userInfo'))
+					// const pages = getCurrentPages();
+					// const prevPage = pages[pages.length - 2]; // 上一个页面（mine页面）
+					// if (prevPage && prevPage.$vm && prevPage.$vm.getUser) {
+					//   prevPage.$vm.getUser(); // 手动调用mine页面的方法
+					// }
 					uni.navigateBack();
 				} else {
 					uni.showToast({

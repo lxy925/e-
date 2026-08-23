@@ -24,13 +24,14 @@
 						</view>
 						<view class="doctor-location">{{doctor.address.cityName}}&nbsp;{{doctor.address.areaName}}
 						</view>
-						<view class="doctor-department">
-							<img class="value-icon" src="../../../static/images/index/value.png" alt="" />
-							{{ doctor.moreInfo.rating }} &nbsp; | &nbsp;
-							<uni-icons type="wallet-filled" size="30"></uni-icons>
-
-							{{ doctor.moreInfo.order }}
-						</view>
+					<view class="doctor-department">
+						<uni-icons type="star-filled" size="20" color="#ffff7f"></uni-icons>
+					
+						{{ doctor.moreInfo.rating }} |
+						<uni-icons type="wallet-filled" size="20"color="#0055ff"></uni-icons>
+					
+						{{ doctor.moreInfo.order }}
+					</view>
 						<view class="doctor-tags">
 							<text :class="['doctor-certification', doctor.is_certified ? 'certified' : 'uncertified']">
 								{{ doctor.is_certified ? '已认证' : '未认证' }}
@@ -354,8 +355,11 @@
 		font-size: 24rpx;
 		color: #e74c3c;
 		margin-bottom: 5rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 10rpx;
 	}
-
 	.doctor-tags {
 		display: flex;
 		gap: 10rpx;

@@ -381,13 +381,13 @@
 
 			// 准备临时安排数据
 			prepareTempData() {
-				const currentDate = new Date();
-				const dayOfWeek = currentDate.getDay() || 7;
-				const monday = new Date(currentDate);
-				monday.setDate(currentDate.getDate() - (dayOfWeek - 1));
-				monday.setHours(0, 0, 0, 0);
+			  const currentDate = new Date();
+			  const dayOfWeek = currentDate.getUTCDay() || 7;
+			  const monday = new Date(currentDate);
+			  monday.setUTCDate(currentDate.getUTCDate() - (dayOfWeek - 1));
+			  monday.setUTCHours(0, 0, 0, 0);
+			  const weekStartTimestamp = monday.getTime();
 				const timestamp = Math.floor(Date.now() / 1000);
-				const weekStartTimestamp = monday.getTime();
 
 				const tempData = [];
 

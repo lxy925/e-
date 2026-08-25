@@ -3,7 +3,7 @@
 		<custom-nav title="陪诊服务选择" :isHomePage="false" :scrollTop="scrollTop"></custom-nav>
 		<view class="service-list" :style="{ paddingTop: navHeight + 'px' }">
 			<view class="service-card" v-for="(service, index) in services" :key="index">
-				<image :src="service.image" mode="aspectFill" class="service-image"></image>
+				<image :src="serviceImage" mode="aspectFill" class="service-image"></image>
 				<view class="provide_transport"> {{ service.include_transport ? "含接送" : "无接送" }}</view>
 				<view class="service-info">
 					<view class="service-name">{{ service.service_name }}</view>
@@ -26,7 +26,8 @@
 				services: [
 
 				],
-				navHeight: 0
+				navHeight: 0,
+				serviceImage:'https://mp-4a957f51-d071-4dd1-b83f-240df3a73de3.cdn.bspapp.com/banners/1.webp'
 			};
 		},
 		onPageScroll(e) {

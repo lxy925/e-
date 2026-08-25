@@ -12,7 +12,7 @@
         <!--  <view class="container" :style="{ paddingTop: navHeight + 'px' }"> -->
             <!-- 服务图片区域 -->
             <view class="service-image-container">
-              <image :src="serviceData.image" mode="aspectFill" class="main-image" />
+              <image :src="serviceDataImage" mode="aspectFill" class="main-image" />
               <view class="image-overlay"></view>
             </view>
             
@@ -93,6 +93,7 @@
 				serviceData: null, // 用于存储接收到的数据
 				service_id: 0, //用于存储服务类型,
 				include_transport: false,
+        serviceDataImage:'https://mp-4a957f51-d071-4dd1-b83f-240df3a73de3.cdn.bspapp.com/banners/3.webp'
 			};
 		},
 		methods: {

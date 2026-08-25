@@ -105,22 +105,22 @@
 				duration: 500,
 				endY: 0,
 				navItems: [{
-						icon: "https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/index-service.png",
+						icon: "https://mp-4a957f51-d071-4dd1-b83f-240df3a73de3.cdn.bspapp.com/index-icon/index-server.png",
 						text: "我要陪诊",
 						path: "/subPackageB/pages/serviceSelection/serviceSelection",
 					},
 					{
-						icon: "https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/index-help.png",
+						icon: "https://mp-4a957f51-d071-4dd1-b83f-240df3a73de3.cdn.bspapp.com/index-icon/index-help.png",
 						text: "急救方法",
 						path: "/pages/help/help",
 					},
 					{
-						icon: "https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/index-prevant.png",
+						icon: "https://mp-4a957f51-d071-4dd1-b83f-240df3a73de3.cdn.bspapp.com/index-icon/index-prevant.png",
 						text: "重疾防治",
 						path: "/subPackageC/pages/prevent/prevent",
 					},
 					{
-						icon: "https://mp-f5303e3c-7928-482e-b2e2-0cf6877289c6.cdn.bspapp.com/static/index/index-test.png",
+						icon: "https://mp-4a957f51-d071-4dd1-b83f-240df3a73de3.cdn.bspapp.com/index-icon/index-test.png",
 						text: "陪诊师考题",
 						path: "/subPackageC/pages/study/study",
 					},
